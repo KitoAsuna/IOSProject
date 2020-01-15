@@ -64,12 +64,12 @@
     //[self.view addSubview:btn];
     
     [self CreatHeader];
-    [self SetCurrentUser];
     [self CreatUserItemTable];
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden = YES;
+    [self SetCurrentUser];
     [self InitData];
 }
 
@@ -147,6 +147,16 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    /**
+     cell.accessoryType = UITableViewCellAccessoryNone;//cell没有任何的样式
+     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;//cell的右边有一个小箭头，距离右边有十几像素；
+     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;//cell右边有一个蓝色的圆形button；
+     cell.accessoryType = UITableViewCellAccessoryCheckmark;//cell右边的形状是对号;
+     
+     cell.selectionStyle = UITableViewCellSelectionStyleNone;//无色
+     cell.selectionStyle = UITableViewCellSelectionStyleBlue;//蓝色
+     cell.selectionStyle = UITableViewCellSelectionStyleGray;//灰色
+     */
     static NSString *cellIdentifier = @"cell";
     //初始化cell，并指定其类型
     UITableViewCell *cell = [tableView  dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -159,6 +169,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
     cell.imageView.image = [UIImage imageNamed:ItemLogoArray[row]];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.textLabel.text = ItemArray[row];
     //返回cell
     return cell;

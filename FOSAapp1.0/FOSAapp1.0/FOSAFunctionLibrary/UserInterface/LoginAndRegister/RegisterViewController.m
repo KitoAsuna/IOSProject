@@ -15,6 +15,7 @@
 }
 // 当前获取焦点的UITextField
 @property (strong, nonatomic) UITextField *currentResponderTextField;
+@property(nonatomic,strong) NSUserDefaults *userDefaults;
 @end
 @implementation RegisterViewController
 
@@ -135,7 +136,7 @@
     [self.logoContainer addSubview:self.FOSALogo];
     
     self.userNameInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/12-10);
-    self.userNameInput.placeholder = @"    Phone Number/E-Mail";
+    self.userNameInput.placeholder = @"    Phone Number/email";
     self.userNameInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     self.userNameInput.returnKeyType = UIReturnKeyDone;
     self.userNameInput.delegate = self;
@@ -167,17 +168,8 @@
     self.passwordInput.layer.cornerRadius = self.passwordInput.frame.size.height/3;
     [self.passwordContainer addSubview:self.passwordInput];
     
-        //创建渐变色
-//        CAGradientLayer * gradientLayer = [CAGradientLayer layer];
-//        gradientLayer.cornerRadius = self.login.frame.size.height/2;
-//        gradientLayer.frame = self.login.bounds;
-//        gradientLayer.colors = @[(__bridge id)FOSAgreen.CGColor,(__bridge id)FOSARed.CGColor];
-//        gradientLayer.startPoint = CGPointMake(0, 0);
-//        gradientLayer.endPoint = CGPointMake(1.0, 1.0);
-//        gradientLayer.locations = @[@(1.0f), @(0.5f)];
-//        [self.login.layer addSublayer:gradientLayer];
-//
     self.remember.frame = CGRectMake(screen_width/12, screen_width+screen_height/4, 51.0, 40);
+    [self.remember addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.remember];
     self.rememberLabel.frame = CGRectMake(screen_width/12+60, screen_width+screen_height/4, screen_width/2, 40);
     [self.view addSubview:self.rememberLabel];
@@ -199,6 +191,24 @@
         [self SystemAlert:@"账号或密码不能为空"];
     }else{
         [self CreatSqlDatabase:@"FOSA"];
+    }
+}
+//记住用户名和密码
+-(void)switchAction:(id)sender
+{
+UISwitch *switchButton = (UISwitch*)sender;
+BOOL isButtonOn = [switchButton isOn];
+if (isButtonOn) {
+    NSLog(@"YES");
+    NSString *username = self.userNameInput.text;
+    NSString *password = self.passwordInput.text;
+     NSLog(@"%@======%@",username,password);
+    [self.userDefaults setObject:username forKey:@"username"];
+    [self.userDefaults setObject:password forKey:@"password"];
+    [self.userDefaults setBool:isButtonOn forKey:@"isOn"];
+    [self.userDefaults synchronize];
+}else {
+    NSLog(@"NO");
     }
 }
 //弹出系统提示

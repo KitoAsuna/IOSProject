@@ -208,6 +208,7 @@
     [self.LoginContainer addSubview:self.signUp];
     
 }
+
 //记住用户名和密码
 -(void)switchAction:(id)sender
 {
@@ -245,13 +246,13 @@ if (isButtonOn) {
         NSString *pwd = self.passwordInput.text;
         isSecure = false;
         self.passwordInput.secureTextEntry = NO;
-        [self.checkPassword setBackgroundImage:[UIImage imageNamed:@"icon_checkHL"] forState:UIControlStateNormal];
+        [self.checkPassword setImage:[UIImage imageNamed:@"icon_checkHL"] forState:UIControlStateNormal];
         self.passwordInput.text = pwd;
     }else{
         NSString *pwd = self.passwordInput.text;
         isSecure = true;
         self.passwordInput.secureTextEntry = YES;
-        [self.checkPassword setBackgroundImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
+        [self.checkPassword setImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
         self.passwordInput.text = pwd;
     }
 }
@@ -312,6 +313,15 @@ if (isButtonOn) {
         }else{
             NSString *sql_userName = [set stringForColumn:@"userName"];
             NSString *sql_password = [set stringForColumn:@"password"];
+            if ([self.remember isOn]) {
+                NSString *username = self.userNameInput.text;
+                NSString *password = self.passwordInput.text;
+                 NSLog(@"%@======%@",username,password);
+                [self.userDefaults setObject:username forKey:@"username"];
+                [self.userDefaults setObject:password forKey:@"password"];
+                [self.userDefaults setBool:true forKey:@"isOn"];
+                [self.userDefaults synchronize];
+            }
             NSLog(@"%@-------%@",sql_userName,sql_password);
                 if ([sql_userName isEqualToString:self.userNameInput.text]&&[sql_password isEqualToString:self.passwordInput.text]) {
                     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

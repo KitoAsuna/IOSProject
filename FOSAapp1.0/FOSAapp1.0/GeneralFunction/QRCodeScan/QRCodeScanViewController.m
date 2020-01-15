@@ -18,6 +18,7 @@
     CGPoint scanLineHorizontalCenter; //横屏的扫描线的起始中心点
     Boolean stopAnimation;     //停止扫描标志
     Boolean isJump;            //控制器跳转标志
+    Boolean isFirstOpen;
     NSMutableArray<UIImage *> *imgArray;
     //数据库对象
     FMDatabase *db;
@@ -115,15 +116,18 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    if (self.ScanModel == 0) {
-        stopAnimation = false;
-        self.scanLine.center = scanLineVerticalCenter;
-        [self VerticalScanLineAnimation];
-    }else{
-        stopAnimation = false;
-        self.scanLine.center = scanLineHorizontalCenter;
-        [self HorizontalScanLineAnimation];
+    if (!isFirstOpen) {
+        if (self.ScanModel == 0) {
+            stopAnimation = false;
+            self.scanLine.center = scanLineVerticalCenter;
+            [self VerticalScanLineAnimation];
+        }else{
+            stopAnimation = false;
+            self.scanLine.center = scanLineHorizontalCenter;
+            [self HorizontalScanLineAnimation];
+        }
     }
+    
     [self.captureSession startRunning];
     [self InitData];
     [self CreatNavigationButtonAndFocusBtn];

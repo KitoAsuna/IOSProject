@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DeviceCollectionViewCell : UICollectionViewCell
 @property (nonatomic,strong) UIImageView *productImageView;
+@property (nonatomic,strong) UILabel *productName;
 @end
 
 NS_ASSUME_NONNULL_END

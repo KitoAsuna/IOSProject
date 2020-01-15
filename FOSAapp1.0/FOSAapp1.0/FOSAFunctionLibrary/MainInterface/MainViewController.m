@@ -21,6 +21,7 @@
     //刷新标识
     Boolean isUpdate;
     
+
 }
 @property (nonatomic,strong) NSMutableArray<UIImage *> *imageArray;
 @property (nonatomic,strong) UILongPressGestureRecognizer *longPress;//长按手势
@@ -28,7 +29,6 @@
 
 @property (nonatomic,strong) FosaNotification *notification;
 @property (nonatomic,strong) LoadCircleView *circleview;
-
 @property (nonatomic,strong) NSMutableArray *categoryArray;
 
 @end
@@ -492,9 +492,10 @@
 - (void)lonePressMoving:(UILongPressGestureRecognizer *)longPress
 {
     NSLog(@"长按了item");
+    [self becomeFirstResponder];
     if (longPress.state == UIGestureRecognizerStateBegan) {
             FoodItemCollectionViewCell *cell = (FoodItemCollectionViewCell *)longPress.view;
-            NSLog(@"%@",cell.model.foodName);
+            NSLog(@"!!!!!!!!!!!!!!!!!!!!!!%@",cell.model.foodName);
             [cell becomeFirstResponder];
             UIMenuItem *item1 = [[UIMenuItem alloc]initWithTitle:@"删除"action:@selector(DeleteCell:)];
             UIMenuItem *item2 = [[UIMenuItem alloc]initWithTitle:@"取消"action:@selector(CancelEdit:)];
