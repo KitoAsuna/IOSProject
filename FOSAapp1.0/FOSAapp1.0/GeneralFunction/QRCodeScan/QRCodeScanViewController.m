@@ -179,7 +179,7 @@
 #pragma mark - 视图创建与初始化
 /**初始化标志与参数*/
 - (void)InitData{
-    UIImage *image = [UIImage imageNamed:@"icon_logoHL"];
+    UIImage *image  = [UIImage imageNamed:@"icon_logoHL"];
     UIImage *image1 = [UIImage imageNamed:@"icon_logoHL"];
     UIImage *image2 = [UIImage imageNamed:@"icon_logoHL"];
     imgArray = [[NSMutableArray alloc]init];
@@ -310,15 +310,15 @@
 
     self.focusCursor1 = [[UIImageView alloc] initWithFrame:CGRectMake(50, 50, 50, 50)];
     self.focusCursor1.alpha = 0;
-    self.focusCursor1.image = [UIImage imageNamed:@"icon_focusRed"];
+    self.focusCursor1.image = [UIImage imageNamed:@"icon_bluefocus"];
 
     self.focusCursor2 = [[UIImageView alloc] initWithFrame:CGRectMake(50, 50, 50, 50)];
     self.focusCursor2.alpha = 0;
-    self.focusCursor2.image = [UIImage imageNamed:@"icon_focusGreen"];
+    self.focusCursor2.image = [UIImage imageNamed:@"icon_greenfocus"];
 
     self.focusCursor3 = [[UIImageView alloc] initWithFrame:CGRectMake(50, 50, 50, 50)];
     self.focusCursor3.alpha = 0;
-    self.focusCursor3.image = [UIImage imageNamed:@"icon_focusBlue"];
+    self.focusCursor3.image = [UIImage imageNamed:@"icon_yellowfocus"];
 
     [self.view addSubview:focusCursor];
     [self.view addSubview:self.focusCursor1];
@@ -458,7 +458,7 @@
 - (void)captureOutput:(AVCaptureOutput *)output didOutputMetadataObjects:(NSArray<__kindof AVMetadataObject *> *)metadataObjects fromConnection:(AVCaptureConnection *)connection{
     //NSLog(@"停止扫描");
     //[self.captureSession stopRunning];
-    stopAnimation = true;
+    NSLog(@"**************************************************************************"); stopAnimation = true;
     //用于标志每次捕获是否识别到新的二维码
     _flag = 0;
     if(metadataObjects.count > 0) {
@@ -467,6 +467,7 @@
         if (_ScanModel == 0) {//当前是单个扫码模式，对每一个二维码进行逐个处理
             [self.captureSession stopRunning];
             [self ScanResultOperationOnLandScape:result code:(AVMetadataMachineReadableCodeObject *)mobject];
+            
         }else if(_ScanModel == 1){//当前是多个扫码模式
             [self ScanResultOperationOnPortait:metadataObjects];
         }
@@ -475,10 +476,10 @@
 //竖屏扫描结果处理
 - (void)ScanResultOperationOnLandScape:(NSString *)result code:(AVMetadataMachineReadableCodeObject *)mobject{
     if([[mobject type] isEqualToString:AVMetadataObjectTypeQRCode]){//如果是一个可读二维码对象
-        self.isGetResult = true;                                    //修改标志，不再自动放大镜头
+        //self.isGetResult = true;                                    //修改标志，不再自动放大镜头
             if (self.food_photo.count == 0){//食物图片数组对象为空说明并不是在添加食物的过程进行扫码
-                    [self performSelectorOnMainThread:@selector(setFocusCursorWithPoint:) withObject:(AVMetadataMachineReadableCodeObject *) mobject waitUntilDone:NO];      //在主线程中标记二维码的位置（还不够准确）
-                    if([result hasPrefix:@"http://"]){//若是一个网站，就打开这个链接
+                    [self performSelectorOnMainThread:@selector(setFocusCursorWithPoint:) withObject:(AVMetadataMachineReadableCodeObject *) mobject waitUntilDone:NO];     //在主线程中标记二维码的位置（还不够准确）
+                    if([result hasPrefix:@"http://"]||[result hasPrefix:@"https://"]){//若是一个网站，就打开这个链接
                         if (!isJump) {
                             [self ScanSuccess:@"ding.wav"];
                             [self performSelectorOnMainThread:@selector(OpenURL:) withObject:result waitUntilDone:NO];
@@ -612,23 +613,22 @@
 }
 //弹出系统提示
 - (void)SystemAlert:(NSString *)message{
-    [self.captureSession stopRunning];
+    //[self.captureSession stopRunning];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notification" message:message preferredStyle:UIAlertControllerStyleAlert];
-    if ([message isEqualToString:@"NO Record,Please adding"]) {
-        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
-        [self presentViewController:alert animated:true completion:^{
-            //回掉
-            NSLog(@"SystemAlert------我把捕获打开了");
-            [self .captureSession startRunning];
-        }];
-    }else{
-        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
-        [self presentViewController:alert animated:true completion:^{
-            //回掉
-            NSLog(@"SystemAlert------我把捕获打开了");
-            [self .captureSession startRunning];
-        }];
-    }
+   // if ([message isEqualToString:@"NO Record,Please adding"]) {
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+            //点击回调
+            [self.captureSession startRunning];
+        }]];
+        [self presentViewController:alert animated:true completion:nil];
+//    }else{
+//        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+//        [self presentViewController:alert animated:true completion:^{
+//            //回掉
+//            NSLog(@"SystemAlert------我把捕获打开了");
+//            [self .captureSession startRunning];
+//        }];
+//    }
 }
 //跳转到添加界面
 - (void)JumpToAdd:(NSString *)message{

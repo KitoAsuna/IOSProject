@@ -25,6 +25,7 @@
     CGPoint clickPoint;
     /**查看具体信息时的参数*/
     Boolean isEdit;
+    NSInteger currentPictureIndex;
 }
 //日期选择器
 @property (nonatomic,weak) FosaDatePickerView *fosaDatePicker;
@@ -275,8 +276,6 @@
     return _categoryLable;
 }
 
-
-
 #pragma mark - 初始化日期选择器
 -(void)InitialDatePicker{
     FosaDatePickerView *DatePicker = [[FosaDatePickerView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 300)];
@@ -286,7 +285,6 @@
     self.fosaDatePicker = DatePicker;
     self.fosaDatePicker.hidden = YES;
 }
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -367,25 +365,27 @@
     self.pictureScrollerView.showsHorizontalScrollIndicator = NO;
     self.pictureScrollerView.bounces = NO;
     self.pictureScrollerView.contentSize = CGSizeMake(headerWidth*3, headerHeight);
-    for (int i = 0; i < 3; i++) {
+    for (NSInteger i = 0; i < 3; i++) {
         CGRect frame = CGRectMake(i*headerWidth, 0, headerWidth, headerHeight);
-//        imageArray[i] = [[UIImageView alloc]initWithFrame:frame];
-//        imageArray[i].contentMode = UIViewContentModeScaleAspectFill;
-//        imageArray[i].clipsToBounds = YES;
-//        imageArray[i].image = self.food_image[i];
-//        UITapGestureRecognizer *clickRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(EnlargePhoto:)];
-//        clickRecognizer.view.tag = i;
-//        [imageArray[i] addGestureRecognizer:clickRecognizer];
-//        [self.pictureScrollerView addSubview:imageArray[i]];
-        UIImageView *image = [[UIImageView alloc]initWithFrame:frame];
-        image.userInteractionEnabled = YES;
-        image.contentMode = UIViewContentModeScaleAspectFill;
-        image.clipsToBounds = YES;
-        image.image = self.food_image[i];
+        imageArray[i] = [[UIImageView alloc]initWithFrame:frame];
+        imageArray[i].userInteractionEnabled = YES;
+        imageArray[i].contentMode = UIViewContentModeScaleAspectFill;
+        imageArray[i].clipsToBounds = YES;
+        imageArray[i].image = self.food_image[i];
         UITapGestureRecognizer *clickRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(EnlargePhoto:)];
         clickRecognizer.view.tag = i;
-        [image addGestureRecognizer:clickRecognizer];
-        [self.pictureScrollerView addSubview:image];
+        NSLog(@"==========%ld",(long)i);
+        [imageArray[i] addGestureRecognizer:clickRecognizer];
+        [self.pictureScrollerView addSubview:imageArray[i]];
+//        UIImageView *image = [[UIImageView alloc]initWithFrame:frame];
+//        image.userInteractionEnabled = YES;
+//        image.contentMode = UIViewContentModeScaleAspectFill;
+//        image.clipsToBounds = YES;
+//        image.image = self.food_image[i];
+//        UITapGestureRecognizer *clickRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(EnlargePhoto:)];
+//        clickRecognizer.view.tag = i;
+//        [image addGestureRecognizer:clickRecognizer];
+//        [self.pictureScrollerView addSubview:image];
     }
     [self.headerView addSubview:self.pictureScrollerView];
     //轮播页面指示器
@@ -399,6 +399,7 @@
 - (void)EnlargePhoto:(UITapGestureRecognizer *)sender{
     self.navigationController.navigationBar.hidden = YES;   //隐藏导航栏
     [UIApplication sharedApplication].statusBarHidden = YES;             //隐藏状态栏
+    
     //底层视图
     self.backGround = [[UIScrollView alloc]init];
     _backGround.backgroundColor = [UIColor blackColor];
@@ -413,7 +414,7 @@
 
     self.bigImage = [[UIImageView alloc]init];
     _bigImage.frame = self.view.frame;
-    _bigImage.image = self.food_image[sender.view.tag];
+    _bigImage.image = self.food_image[currentPictureIndex];
     _bigImage.userInteractionEnabled = YES;
     _bigImage.contentMode = UIViewContentModeScaleToFill;
     _bigImage.clipsToBounds = YES;
@@ -771,6 +772,7 @@
     CGFloat offset = scrollView.contentOffset.x;
     NSInteger index = offset/self.headerView.frame.size.width;
     self.pageControl.currentPage = index;
+    currentPictureIndex = index;
 }
 #pragma mark -- 键盘事件
 //点击键盘以外的地方退出键盘
