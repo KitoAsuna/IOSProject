@@ -34,7 +34,6 @@
 @property (strong, nonatomic) UITextField *currentResponderTextField;
 
 //图片放大视图
-@property (nonatomic,strong) UIImageView  *imageview1,*imageview2,*imageview3;
 @property (nonatomic,strong) UIScrollView *backGround;
 @property (nonatomic,strong) UIImageView  *bigImage;
 
@@ -345,13 +344,6 @@
 }
 /**创建图片轮播器*/
 - (void)creatPicturePlayer{
-    self.imageview1 = [[UIImageView alloc]init];
-    self.imageview2 = [[UIImageView alloc]init];
-    self.imageview3 = [[UIImageView alloc]init];
-    NSMutableArray<UIImageView *> *imageArray = [[NSMutableArray alloc]init];
-    [imageArray addObject:self.imageview1];
-    [imageArray addObject:self.imageview2];
-    [imageArray addObject:self.imageview3];
     //头部视图
     self.headerView.frame = CGRectMake(0, 0, screen_width, screen_height/3);
     int headerWidth = self.headerView.frame.size.width;
@@ -367,25 +359,33 @@
     self.pictureScrollerView.contentSize = CGSizeMake(headerWidth*3, headerHeight);
     for (NSInteger i = 0; i < 3; i++) {
         CGRect frame = CGRectMake(i*headerWidth, 0, headerWidth, headerHeight);
-        imageArray[i] = [[UIImageView alloc]initWithFrame:frame];
-        imageArray[i].userInteractionEnabled = YES;
-        imageArray[i].contentMode = UIViewContentModeScaleAspectFill;
-        imageArray[i].clipsToBounds = YES;
-        imageArray[i].image = self.food_image[i];
+
+        UIImageView *image = [[UIImageView alloc]initWithFrame:frame];
+        image.userInteractionEnabled = YES;
+        
+        //图片的显示模式；
+        /*
+         UIViewContentModeScaleToFill,         // 拉伸充满整个载体；
+         UIViewContentModeScaleAspectFit,      //拉伸不改变比例，充满最小的一边；
+         UIViewContentModeScaleAspectFill,     // 拉伸不改变比例，充满最大的一边
+         UIViewContentModeRedraw,              // redraw on bounds change (calls -setNeedsDisplay)
+         UIViewContentModeCenter,              // contents remain same size. positioned adjusted.
+         UIViewContentModeTop,
+         UIViewContentModeBottom,
+         UIViewContentModeLeft,
+         UIViewContentModeRight,
+         UIViewContentModeTopLeft,
+         UIViewContentModeTopRight,
+         UIViewContentModeBottomLeft,
+         UIViewContentModeBottomRight,
+         */
+        image.contentMode = UIViewContentModeScaleAspectFill;
+        image.clipsToBounds = YES;
+        image.image = self.food_image[i];
         UITapGestureRecognizer *clickRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(EnlargePhoto:)];
-        clickRecognizer.view.tag = i;
-        NSLog(@"==========%ld",(long)i);
-        [imageArray[i] addGestureRecognizer:clickRecognizer];
-        [self.pictureScrollerView addSubview:imageArray[i]];
-//        UIImageView *image = [[UIImageView alloc]initWithFrame:frame];
-//        image.userInteractionEnabled = YES;
-//        image.contentMode = UIViewContentModeScaleAspectFill;
-//        image.clipsToBounds = YES;
-//        image.image = self.food_image[i];
-//        UITapGestureRecognizer *clickRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(EnlargePhoto:)];
-//        clickRecognizer.view.tag = i;
-//        [image addGestureRecognizer:clickRecognizer];
-//        [self.pictureScrollerView addSubview:image];
+        //clickRecognizer.view.tag = i;
+        [image addGestureRecognizer:clickRecognizer];
+        [self.pictureScrollerView addSubview:image];
     }
     [self.headerView addSubview:self.pictureScrollerView];
     //轮播页面指示器
@@ -399,7 +399,7 @@
 - (void)EnlargePhoto:(UITapGestureRecognizer *)sender{
     self.navigationController.navigationBar.hidden = YES;   //隐藏导航栏
     [UIApplication sharedApplication].statusBarHidden = YES;             //隐藏状态栏
-    
+    [self.view endEditing:YES];
     //底层视图
     self.backGround = [[UIScrollView alloc]init];
     _backGround.backgroundColor = [UIColor blackColor];
@@ -414,9 +414,9 @@
 
     self.bigImage = [[UIImageView alloc]init];
     _bigImage.frame = self.view.frame;
-    _bigImage.image = self.food_image[currentPictureIndex];
+    _bigImage.image = [self fixOrientation:self.food_image[currentPictureIndex]];
     _bigImage.userInteractionEnabled = YES;
-    _bigImage.contentMode = UIViewContentModeScaleToFill;
+    _bigImage.contentMode = UIViewContentModeScaleAspectFit;
     _bigImage.clipsToBounds = YES;
     UITapGestureRecognizer *shrinkRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(shirnkPhoto)];
     [shrinkRecognizer setNumberOfTapsRequired:1];
@@ -459,11 +459,12 @@
     
     [self.foodInfoView addSubview:self.foodNameInput];
     //分享按钮
-    self.shareBtn.frame = CGRectMake(foodInfoViewWidth*2/3+foodinfoViewHeight/5, foodinfoViewHeight*2/15, foodinfoViewHeight/5, foodinfoViewHeight/5);
+    self.shareBtn.frame = CGRectMake(foodInfoViewWidth*2/3+foodinfoViewHeight/5, foodinfoViewHeight*2/15, foodinfoViewHeight/4, foodinfoViewHeight/4);
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"icon_share"] forState:UIControlStateNormal];
+    [self.shareBtn addTarget:self action:@selector(beginShare) forControlEvents:UIControlEventTouchUpInside];
     [self.foodInfoView addSubview:self.shareBtn];
     
-    self.likeBtn.frame = CGRectMake(foodInfoViewWidth*2/3+foodinfoViewHeight/2, foodinfoViewHeight*2/15, foodinfoViewHeight/5, foodinfoViewHeight/5);
+    self.likeBtn.frame = CGRectMake(foodInfoViewWidth*2/3+foodinfoViewHeight/2, foodinfoViewHeight*2/15, foodinfoViewHeight/4, foodinfoViewHeight/4);
     [self.likeBtn setBackgroundImage:[UIImage imageNamed:@"icon_like"] forState:UIControlStateNormal];
     [self.foodInfoView addSubview:self.likeBtn];
     //食物描述框
@@ -503,7 +504,7 @@
     
     //提醒日期
     self.remindBtn.frame = CGRectMake(0, dateViewHeight*3/20, dateViewWidth*1/10, dateViewWidth*1/10);
-    [self.remindBtn setBackgroundImage:[UIImage imageNamed:@"icon_remindDate"] forState:UIControlStateNormal];
+    [self.remindBtn setBackgroundImage:[UIImage imageNamed:@"icon_remind"] forState:UIControlStateNormal];
     //添加点击事件
     //[self.remindBtn addTarget:self action:@selector(RemindDateSelect) forControlEvents:UIControlEventTouchUpInside];
     [self.DateView addSubview:self.remindBtn];
@@ -527,7 +528,7 @@
     
     //过期日期
     self.expireBtn.frame = CGRectMake(0, dateViewHeight*11/20, dateViewWidth*1/10, dateViewWidth*1/10);
-    [self.expireBtn setBackgroundImage:[UIImage imageNamed:@"icon_expireDate"] forState:UIControlStateNormal];
+    [self.expireBtn setBackgroundImage:[UIImage imageNamed:@"icon_expire"] forState:UIControlStateNormal];
     [self.DateView addSubview:self.expireBtn];
     
     self.expireLable.frame = CGRectMake(dateViewWidth*8/66, dateViewHeight*11/20, dateViewWidth/2-dateViewWidth*8/66, dateViewWidth*1/10);
@@ -767,6 +768,99 @@
         self.categoryLable.text     = self.infoArray[6];
     }
 }
+// 分享
+-(void)beginShare{
+    NSLog(@"点击了分享");
+    NSString *body = [NSString stringWithFormat:@"This is my food %@,you can scan the QRCode check it",self.foodNameInput.text];
+    UIView *view = [self CreatNotificatonViewWithContent:body];
+    UIImage *sharephoto1 = [self SaveViewAsPicture:view];
+    NSArray *activityItems = @[sharephoto1];
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
+    [self presentViewController:activityVC animated:TRUE completion:nil];
+}
+//分享视图与食物二维码
+//仿照系统通知绘制UIview
+- (UIView *)CreatNotificatonViewWithContent:(NSString *)body{
+    //分享二维码食物信息
+    NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@",self.foodNameInput.text,self.device,self.aboutFoodInput.text,self.expireDateLable.text,self.remindDateLable.text,selectedKind];
+    
+    NSLog(@"begin creating");
+    
+    int mainwidth = screen_width;
+    int mainHeight = screen_height;
+    
+    UIView *notification = [[UIView alloc]initWithFrame:CGRectMake(0, 0, mainwidth,mainHeight)];
+    notification.backgroundColor = [UIColor whiteColor];
+
+    //食物图片
+    UIImageView *image = [[UIImageView alloc]initWithFrame:CGRectMake(0,mainHeight/8, mainwidth, mainHeight/2)];
+    
+    //FOSA的logo
+    UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*2/5, mainHeight-mainwidth/5, mainwidth/10, mainwidth/10)];
+    
+    //FOSA
+    UILabel *brand = [[UILabel alloc]initWithFrame:CGRectMake(mainwidth/15, mainHeight*5/8, mainwidth/4, mainHeight/16)];
+    
+    //食物信息二维码
+    UIImageView *InfoCodeView = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*4/5-20, mainHeight*5/8+5, mainwidth/5, mainwidth/5)];
+
+    //提醒内容
+    UITextView *Nbody = [[UITextView alloc]initWithFrame:CGRectMake(mainwidth/15, mainHeight*11/16, mainwidth*3/5, mainwidth/5)];
+    Nbody.userInteractionEnabled = NO;
+
+    [notification addSubview:logo];
+    [notification addSubview:brand];
+    [notification addSubview:InfoCodeView];
+    [notification addSubview:image];
+    [notification addSubview:Nbody];
+
+    logo.image  = [UIImage imageNamed:@"icon_logoHL"];
+    image.image = self.food_image[0];
+    image.contentMode = UIViewContentModeScaleAspectFill;
+    image.clipsToBounds = YES;
+    InfoCodeView.image = [self GenerateQRCodeByMessage:message];
+    InfoCodeView.backgroundColor = [UIColor redColor];
+    InfoCodeView.contentMode = UIViewContentModeScaleAspectFill;
+    InfoCodeView.clipsToBounds = YES;
+    
+    brand.font  = [UIFont systemFontOfSize:15];
+    brand.textAlignment = NSTextAlignmentCenter;
+    brand.text  = @"FOSA";
+    
+    Nbody.font   = [UIFont systemFontOfSize:12];
+    Nbody.text = body;
+    
+    return notification;
+}
+
+//将UIView转化为图片并保存在相册
+- (UIImage *)SaveViewAsPicture:(UIView *)view{
+    NSLog(@"begin saving");
+    UIImage *imageRet = [[UIImage alloc]init];
+    //UIGraphicsBeginImageContextWithOptions(区域大小, 是否是非透明的, 屏幕密度);
+    UIGraphicsBeginImageContextWithOptions(view.frame.size, YES, [UIScreen mainScreen].scale);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    imageRet = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return imageRet;
+}
+
+- (UIImage *)GenerateQRCodeByMessage:(NSString *)message{
+    // 1. 创建一个二维码滤镜实例(CIFilter)
+    CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    // 滤镜恢复默认设置
+    [filter setDefaults];
+    // 2. 给滤镜添加数据
+    NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
+    [filter setValue:data forKeyPath:@"inputMessage"];
+    // 3. 生成二维码
+    CIImage *image = [filter outputImage];
+    //[self createNonInterpolatedUIImageFormCIImage:image withSize:];
+    return [UIImage imageWithCIImage:image];
+}
+
+//喜欢
+
 #pragma mark -- UIScrollerView
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     CGFloat offset = scrollView.contentOffset.x;
@@ -783,29 +877,7 @@
     [self.weightField resignFirstResponder];
     [self.calorieField resignFirstResponder];
 }
-//
-//-(void)keyboardWillShow:(NSNotification *)noti{
-//    NSLog(@"键盘弹出来了");
-//    //获取键盘的高度
-//        NSDictionary *userInfo = [noti userInfo];
-//        NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
-//        CGRect keyboardRect = [aValue CGRectValue];
-//        keyBoardHeight = keyboardRect.size.height;   //height 就是键盘的高度
-//        keyBoardWidth = keyboardRect.size.width;     //width  键盘宽度
-//    NSLog(@"%f-----%f",screen_height - editingViewHeight,keyBoardHeight);
-//    NSLog(@"%f --- %f",clickPoint.y,screen_height-keyBoardHeight);
-//        [UIView animateWithDuration:0.5 animations:^{
-//            self.view.center = CGPointMake(self.rootScrollerView.center.x, screen_height/2-self->keyBoardHeight);
-//            //[self.rootScrollerView setContentOffset:CGPointMake(0, self->keyBoardHeight/2)];
-//        }];
-//}
-//-(void)keyboardWillHide:(NSNotification *)noti{
-//    NSLog(@"键盘被收起来了");
-//     [UIView animateWithDuration:0.5 animations:^{
-//               self.view.center = CGPointMake(self.rootScrollerView.center.x, screen_height/2);
-//               //[self.rootScrollerView setContentOffset:CGPointMake(0, -NavigationBarHeight)];
-//           }];
-//}
+
 - (void)keyboardWillShow:(NSNotification *)notification {
     if (!(self.currentResponderTextField && [self.currentResponderTextField isKindOfClass:[UITextField class]])) {
         // 如果没有响应者不进行操作
@@ -978,17 +1050,18 @@
         }
     }
 }
-//- (void)SavephotoInSanBox:(UIImage *)image{
-//     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-//    NSString *photoName = [NSString stringWithFormat:@"%@%d.png",self.foodNameInput.text,1];
-//           NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent: photoName];// 保存文件的路径
-//           NSLog(@"这个是照片的保存地址:%@",filePath);
-//           UIImage *img = [self fixOrientation:image];
-//           BOOL result =[UIImagePNGRepresentation(img) writeToFile:filePath  atomically:YES];// 保存成功会返回YES
-//           if(result == YES) {
-//               NSLog(@"保存成功");
-//           }
-//}
+#pragma mark - <保存到相册>
+-(void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    NSString *msg = nil ;
+    if(error){
+        msg = @"保存图片失败" ;
+        NSLog(@"%@",msg);
+    }else{
+        msg = @"保存图片成功" ;
+        NSLog(@"%@",msg);
+        //[self SystemAlert:msg];
+    }
+}
 //纠正图片的方向
 - (UIImage *)fixOrientation:(UIImage *)aImage {
 // No-op if the orientation is already correct

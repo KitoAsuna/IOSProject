@@ -314,25 +314,6 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
         }
     }
 }
-////保存到沙盒
-//-(NSString *)Savephoto:(UIImage *)image name:(NSString *)foodname{
-//    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-//    NSString *photoName = [NSString stringWithFormat:@"%@%d.png",foodname,1];
-//    NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent: photoName];// 保存文件的路径
-//    NSLog(@"这个是照片的保存地址:%@",filePath);
-//    BOOL result =[UIImagePNGRepresentation(image) writeToFile:filePath  atomically:YES];// 保存成功会返回YES
-//    if(result == YES) {
-//        NSLog(@"保存成功");
-//    }
-//    return filePath;
-//}
-//弹出系统提示
-//-(void)SystemAlert:(NSString *)message{
-//    NSLog(@"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$SystemAlert");
-//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notification" message:message preferredStyle:UIAlertControllerStyleAlert];
-//    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
-//
-//}
 //取出保存在本地的图片
 - (void)getImage:(NSString *)filepath{
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);

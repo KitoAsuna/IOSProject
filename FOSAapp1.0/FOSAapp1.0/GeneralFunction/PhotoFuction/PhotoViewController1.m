@@ -140,9 +140,8 @@
 //    AVCaptureSessionPreset1280x720
 //    AVCaptureSessionPreset1920x1080
 //    AVCaptureSessionPreset3840x2160
-  //self.session.sessionPreset = AVCaptureSessionPreset640x480;
-  
     
+ // self.captureSession.sessionPreset = AVCaptureSessionPreset640x480;
     //将设备输入添加到会话中
     if ([_captureSession canAddInput:_captureDeviceInput]) {
         [_captureSession addInput:_captureDeviceInput];

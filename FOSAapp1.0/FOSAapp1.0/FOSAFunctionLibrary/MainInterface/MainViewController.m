@@ -111,6 +111,7 @@
 - (void)CollectionReload{
     [self.collectionDataSource removeAllObjects];
     [self.cellDictionary removeAllObjects];
+    NSLog(@"高度：%@",self.FOSALayout.maxYDic);
     [self OpenSqlDatabase:@"FOSA"];
     [self SelectDataFromFoodTable];
     [self.foodItemCollection reloadData];
@@ -190,7 +191,6 @@
     self.navigationItem.rightBarButtonItem = rightItem;
     //导航栏左侧提醒按钮
     UIButton *Remindbtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 40, 40)];
-    //Remindbtn setBackgroundImage:<#(nullable UIImage *)#> forState:<#(UIControlState)#>
     [Remindbtn setBackgroundImage:[UIImage imageNamed:@"icon_sendNotificationW"] forState:UIControlStateNormal];
     [Remindbtn addTarget:self action:@selector(SendRemindNotification) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:Remindbtn];
@@ -200,10 +200,20 @@
     //头部图片
     self.mainImageView.image = [UIImage imageNamed:@"img_MainInterfaceBackground"];
     [self.view addSubview:self.mainImageView];
+    
+    int collectionWidth = screen_width*11/12;
+    int collectionHeigt = screen_height*2/3-TabbarHeight;
+    
+    UICollectionViewFlowLayout *fosaFlowLayout = [[UICollectionViewFlowLayout alloc] init];
+    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(5, 5, 0, 5);//上、左、下、右
+    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-15)/2,(collectionHeigt-20)/3);
+    fosaFlowLayout.minimumLineSpacing = 5;  //行间距
+    fosaFlowLayout.minimumInteritemSpacing = 5; //列间距
+    //固定的itemsize
+    fosaFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;//滑动的方向 垂直
     //foodItem
-
-    self.foodItemCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(screen_width*1/12, screen_height/3, screen_width*11/12, screen_height*2/3-TabbarHeight) collectionViewLayout:self.FOSALayout];
-
+    self.foodItemCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(screen_width*1/12, screen_height/3, screen_width*11/12, screen_height*2/3-TabbarHeight) collectionViewLayout:fosaFlowLayout];
+    
    // 1 先判断系统版本
     if ([NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){10,0,0}])
     {
@@ -247,16 +257,6 @@
     //数据源
     self.menuDataSource = [self getCategoryArray];
     //初始化模糊层
-//    //创建渐变色
-//    CAGradientLayer * gradientLayer = [CAGradientLayer layer];
-//    gradientLayer.frame = self.CategoryMenuTable.bounds;
-//    gradientLayer.colors = @[(__bridge id)FOSAgreen.CGColor,(__bridge id)FOSAgreengrad.CGColor];
-//    gradientLayer.startPoint = CGPointMake(0, 0);
-//    gradientLayer.endPoint = CGPointMake(1.0, 1.0);
-//    gradientLayer.locations = @[@0,@1];
-//    UIView *view = [[UIView alloc]initWithFrame:self.CategoryMenuTable.bounds];
-//    [view.layer addSublayer:gradientLayer];
-//    [self.CategoryMenuTable setBackgroundView:view];
     self.CategoryMenuTable.layer.cornerRadius = 15;
     self.CategoryMenuTable.delegate = self;
     self.CategoryMenuTable.dataSource = self;

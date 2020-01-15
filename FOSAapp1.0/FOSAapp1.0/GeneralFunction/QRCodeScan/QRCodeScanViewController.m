@@ -112,10 +112,18 @@
     // Do any additional setup after loading the view.
     [self startScanQRCode];
     [self CreatVerticalScanView];
-    
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    if (self.ScanModel == 0) {
+        stopAnimation = false;
+        self.scanLine.center = scanLineVerticalCenter;
+        [self VerticalScanLineAnimation];
+    }else{
+        stopAnimation = false;
+        self.scanLine.center = scanLineHorizontalCenter;
+        [self HorizontalScanLineAnimation];
+    }
     [self.captureSession startRunning];
     [self InitData];
     [self CreatNavigationButtonAndFocusBtn];
@@ -289,15 +297,15 @@
     //两个按钮的父类view
         UIView *rightButtonView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
     //识别本地图片按钮
-        UIButton *historyBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+        UIButton *historyBtn = [[UIButton alloc] initWithFrame:CGRectMake(50, 0, 50, 50)];
         [rightButtonView addSubview:historyBtn];
-        [historyBtn setImage:[UIImage imageNamed:@"icon_qrcode"] forState:UIControlStateNormal];
+        [historyBtn setImage:[UIImage imageNamed:@"icon_photoLibraryW"] forState:UIControlStateNormal];
         [historyBtn addTarget:self action:@selector(selectPhoto) forControlEvents:UIControlEventTouchUpInside];
         
         //转换扫码模式按钮
-        UIButton *mainAndSearchBtn = [[UIButton alloc] initWithFrame:CGRectMake(50, 0, 50, 50)];
+        UIButton *mainAndSearchBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
         [rightButtonView addSubview:mainAndSearchBtn];
-        [mainAndSearchBtn setImage:[UIImage imageNamed:@"icon_switch"] forState:UIControlStateNormal];
+        [mainAndSearchBtn setImage:[UIImage imageNamed:@"icon_switchStyleW"] forState:UIControlStateNormal];
         [mainAndSearchBtn addTarget:self action:@selector(SwitchScanStyle) forControlEvents:UIControlEventTouchUpInside];
          
         //把右侧的两个按钮添加到rightBarButtonItem
@@ -833,6 +841,7 @@
         }
     }
 }
+
 - (UIImage *)getPartOfImage:(UIImage *)img inRect:(CGRect)rect
 {
     //把像 素rect 转化为 点rect（如无转化则按原图像素取部分图片）

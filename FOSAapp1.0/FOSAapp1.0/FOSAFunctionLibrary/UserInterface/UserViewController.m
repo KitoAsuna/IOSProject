@@ -75,7 +75,7 @@
 
 - (void)InitData{
     ItemArray = @[@"Tutorial",@"Language/Location",@"Setting",@"Notification",@"Help Center",@"About FOSA",@"About Apps"];
-    ItemLogoArray = @[@"icon_tutorial",@"icon_language",@"icon_setting",@"icon_notificationHL",@"icon_helpcenterHL",@"icon_fosalogo",@"icon_app"];
+    ItemLogoArray = @[@"icon_tutorial",@"icon_language",@"icon_setting",@"icon_notification",@"icon_helpBL",@"icon_fosalogo",@"icon_app"];
 }
 
 - (void)CreatHeader{

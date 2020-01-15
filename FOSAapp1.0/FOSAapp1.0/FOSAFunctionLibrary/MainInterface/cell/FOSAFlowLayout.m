@@ -14,10 +14,7 @@
 //static const CGFloat rowMargin = 10;
 
 @interface FOSAFlowLayout()
-/** 这个字典用来存储每一列item的高度 */
-@property (strong,nonatomic)NSMutableDictionary *maxYDic;
-/** 存放每一个item的布局属性 */
-@property (strong,nonatomic)NSMutableArray *attrsArray;
+
 @end
 
 @implementation FOSAFlowLayout

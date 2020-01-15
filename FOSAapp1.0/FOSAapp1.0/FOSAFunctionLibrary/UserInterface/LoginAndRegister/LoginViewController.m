@@ -143,7 +143,7 @@
     [self.logoContainer addSubview:self.FOSALogo];
     
     self.userNameInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/12-10);
-    self.userNameInput.placeholder = @"    Phone Number/E-Mail";
+    self.userNameInput.placeholder = @"    Phone Number/email";
     self.userNameInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     self.userNameInput.returnKeyType = UIReturnKeyDone;
     self.userNameInput.delegate = self;
@@ -160,7 +160,7 @@
     [self.passwordContainer addSubview:self.passwordInput];
     
     self.checkPassword.frame = CGRectMake(screen_width*5/6-screen_height/12, screen_height/48, screen_height/12-10, screen_height/24);
-    [self.checkPassword setBackgroundImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
+    [self.checkPassword setImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
     [self.passwordContainer addSubview:self.checkPassword];
     isSecure = true;
     [self.checkPassword addTarget:self action:@selector(pwdtextSwitch) forControlEvents:UIControlEventTouchUpInside];
@@ -186,15 +186,6 @@
     self.login.frame = CGRectMake(0, 0, self.LoginContainer.frame.size.width*4/9, self.LoginContainer.frame.size.height);
     [self.login setTitle:@"Login" forState:UIControlStateNormal];
     self.login.backgroundColor = FOSAgreen;
-        //创建渐变色
-//        CAGradientLayer * gradientLayer = [CAGradientLayer layer];
-//        gradientLayer.cornerRadius = self.login.frame.size.height/2;
-//        gradientLayer.frame = self.login.bounds;
-//        gradientLayer.colors = @[(__bridge id)FOSAgreen.CGColor,(__bridge id)FOSARed.CGColor];
-//        gradientLayer.startPoint = CGPointMake(0, 0);
-//        gradientLayer.endPoint = CGPointMake(1.0, 1.0);
-//        gradientLayer.locations = @[@(1.0f), @(0.5f)];
-//        [self.login.layer addSublayer:gradientLayer];
 
     self.login.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.login.titleLabel.font = [UIFont systemFontOfSize:25];
