@@ -26,6 +26,7 @@
     /**查看具体信息时的参数*/
     Boolean isEdit;
     NSInteger currentPictureIndex;
+    FoodModel *tempModel;
 }
 //日期选择器
 @property (nonatomic,weak) FosaDatePickerView *fosaDatePicker;
@@ -295,9 +296,16 @@
     //添加键盘弹出与收回的事件
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [self OpenSqlDatabase:@"FOSA"]; //打开数据库
+    if (self.foodNameInput.text != NULL && self.device != NULL) {
+        tempModel = [FoodModel modelWithName:self.foodNameInput.text DeviceID:self.device Description:self.aboutFoodInput.text RemindDate:self.remindDateLable.text ExpireDate:self.expireDateLable.text foodIcon:self.foodNameInput.text category:self.categoryLable.text];
+        selectedKind = tempModel.category;
+    }
+    
 }
 
 - (void)InitData{
+    //
     NSArray *array = @[@"Cereal",@"Fruit",@"Meat",@"Vegetable",@"Spice"];
     categoryArray = [[NSMutableArray alloc]initWithArray:array];
     kindID = @"kindCell";
@@ -309,12 +317,12 @@
 - (void)CreatMainAddFoodView{
     [self InitData];
     aboutFoodTips = @"You can make some description about your food which will be storaged in the device of FOSA in this text area";
-    
+
     UITapGestureRecognizer *tapGr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTappedToCloseKeyBoard:)];
     tapGr.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tapGr];
     self.view.backgroundColor = [UIColor whiteColor];
-    
+ 
     //导航栏按钮
     self.finishAndEdit = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, NavigationBarHeight, NavigationBarHeight)];
     if (self.isAdding) {
@@ -359,10 +367,8 @@
     self.pictureScrollerView.contentSize = CGSizeMake(headerWidth*3, headerHeight);
     for (NSInteger i = 0; i < 3; i++) {
         CGRect frame = CGRectMake(i*headerWidth, 0, headerWidth, headerHeight);
-
         UIImageView *image = [[UIImageView alloc]initWithFrame:frame];
         image.userInteractionEnabled = YES;
-        
         //图片的显示模式；
         /*
          UIViewContentModeScaleToFill,         // 拉伸充满整个载体；
@@ -446,6 +452,8 @@
     self.foodNameInput.backgroundColor = FOSAFoodBackgroundColor;
     self.foodNameInput.layer.cornerRadius = 5;
     [self.foodNameInput setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
+
+
     self.foodNameInput.font = [UIFont systemFontOfSize:15];
     
     self.foodNameInput.returnKeyType = UIReturnKeyDone;
@@ -459,12 +467,12 @@
     
     [self.foodInfoView addSubview:self.foodNameInput];
     //分享按钮
-    self.shareBtn.frame = CGRectMake(foodInfoViewWidth*2/3+foodinfoViewHeight/5, foodinfoViewHeight*2/15, foodinfoViewHeight/4, foodinfoViewHeight/4);
+    self.shareBtn.frame = CGRectMake(foodInfoViewWidth*2/3+foodinfoViewHeight/8, foodinfoViewHeight/15, foodinfoViewHeight/3, foodinfoViewHeight/3);
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"icon_share"] forState:UIControlStateNormal];
     [self.shareBtn addTarget:self action:@selector(beginShare) forControlEvents:UIControlEventTouchUpInside];
     [self.foodInfoView addSubview:self.shareBtn];
-    
-    self.likeBtn.frame = CGRectMake(foodInfoViewWidth*2/3+foodinfoViewHeight/2, foodinfoViewHeight*2/15, foodinfoViewHeight/4, foodinfoViewHeight/4);
+
+    self.likeBtn.frame = CGRectMake(foodInfoViewWidth*2/3+foodinfoViewHeight/2, foodinfoViewHeight/15, foodinfoViewHeight/3, foodinfoViewHeight/3);
     [self.likeBtn setBackgroundImage:[UIImage imageNamed:@"icon_like"] forState:UIControlStateNormal];
     [self.foodInfoView addSubview:self.likeBtn];
     //食物描述框
@@ -474,12 +482,12 @@
         self.aboutFoodInput.text = aboutFoodTips;
     }
     self.aboutFoodInput.textColor = [UIColor lightGrayColor];
-    self.aboutFoodInput.font = [UIFont systemFontOfSize:14*(screen_width/414.0)];
+    self.aboutFoodInput.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
     self.aboutFoodInput.layer.cornerRadius = 5;
     self.aboutFoodInput.delegate = self;
     self.aboutFoodInput.returnKeyType = UIReturnKeyNext;
     self.aboutFoodInput.backgroundColor = FOSAFoodBackgroundColor;
-    self.aboutFoodInput.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    self.aboutFoodInput.textContainerInset = UIEdgeInsetsMake(0, 5, 0, 0);//上、左、下、右
     [self.foodInfoView addSubview:self.aboutFoodInput];
     //输入字数限制与提醒
     int aboutFoodInputWidth = self.aboutFoodInput.frame.size.width;
@@ -553,7 +561,7 @@
 }
 /**存储*/
 - (void)CreatStorageView{
-    self.storageView.frame = CGRectMake(screen_width/15, CGRectGetMaxY(self.DateView.frame), screen_width*13/15, screen_height/6);
+    self.storageView.frame = CGRectMake(screen_width/15, CGRectGetMaxY(self.DateView.frame), screen_width*13/15, screen_height/7);
     [self.rootScrollerView addSubview:self.storageView];
     int storageViewWidth = self.storageView.frame.size.width;
     int storageViewHeight = self.storageView.frame.size.height;
@@ -570,31 +578,32 @@
     
     self.locationField.frame = CGRectMake(storageViewWidth/3, storageViewHeight/20, storageViewWidth*2/3, storageViewWidth/10);
     self.locationField.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
+    [self.locationField setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.locationField.layer.backgroundColor = [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1.0].CGColor;
     self.locationField.layer.cornerRadius = self.locationField.frame.size.height/4;
     self.locationField.returnKeyType = UIReturnKeyDone;
     self.locationField.delegate = self;
     [self.storageView addSubview:self.locationField];
     
-    self.weightBtn.frame = CGRectMake(0, storageViewWidth/10+storageViewHeight/20, storageViewWidth/10, storageViewWidth/10);
+    self.weightBtn.frame = CGRectMake(0, storageViewWidth/10+storageViewHeight/10, storageViewWidth/10, storageViewWidth/10);
     [self.weightBtn setImage:[UIImage imageNamed:@"icon_weight"] forState:UIControlStateNormal];
     [self.storageView addSubview:self.weightBtn];
-    self.weightLable.frame = CGRectMake(storageViewWidth*8/66, storageViewWidth/10+storageViewHeight/20, storageViewWidth/3, storageViewWidth/10);
+    self.weightLable.frame = CGRectMake(storageViewWidth*8/66, storageViewWidth/10+storageViewHeight/10, storageViewWidth/3, storageViewWidth/10);
     self.weightLable.text = @"Weight";
     self.weightLable.font = [UIFont systemFontOfSize: 15*(screen_width/414.0)];
     [self.storageView addSubview:self.weightLable];
     
-    self.calorieBtn.frame = CGRectMake(storageViewWidth*5/9, storageViewWidth/10+storageViewHeight/20, storageViewWidth/10, storageViewWidth/10);
+    self.calorieBtn.frame = CGRectMake(storageViewWidth*5/9, storageViewWidth/10+storageViewHeight/10, storageViewWidth/10, storageViewWidth/10);
     //self.calorieBtn.backgroundColor = FOSARed;
     [self.calorieBtn setImage:[UIImage imageNamed:@"icon_calorie"] forState:UIControlStateNormal];
     [self.storageView addSubview:self.calorieBtn];
     
-    self.calorieLable.frame = CGRectMake(storageViewWidth*8/66+storageViewWidth*5/9, storageViewWidth/10+storageViewHeight/20, storageViewWidth/3, storageViewWidth/10);
+    self.calorieLable.frame = CGRectMake(storageViewWidth*8/66+storageViewWidth*5/9, storageViewWidth/10+storageViewHeight/10, storageViewWidth/3, storageViewWidth/10);
     self.calorieLable.text = @"Calorie";
     self.calorieLable.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
     [self.storageView addSubview:self.calorieLable];
     
-    self.weightView.frame = CGRectMake(0, storageViewWidth/5+storageViewHeight/20, storageViewWidth*5/11, storageViewWidth/10);
+    self.weightView.frame = CGRectMake(0, storageViewWidth/5+storageViewHeight/10, storageViewWidth*5/11, storageViewWidth/10);
     self.weightView.backgroundColor = FOSAFoodBackgroundColor;
     self.weightView.layer.cornerRadius = self.weightView.frame.size.height/2;
     [self.storageView addSubview:self.weightView];
@@ -611,7 +620,7 @@
     self.weightUnit.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
     [self.weightView addSubview:self.weightUnit];
     
-    self.calorieView.frame = CGRectMake(storageViewWidth*6/11, storageViewWidth/5+storageViewHeight/20, storageViewWidth*5/11, storageViewWidth/10);
+    self.calorieView.frame = CGRectMake(storageViewWidth*6/11, storageViewWidth/5+storageViewHeight/10, storageViewWidth*5/11, storageViewWidth/10);
     self.calorieView.backgroundColor = FOSAFoodBackgroundColor;
     self.calorieView.layer.cornerRadius = self.calorieView.frame.size.height/2;
     [self.storageView addSubview:self.calorieView];
@@ -681,7 +690,6 @@
 #pragma mark -- 主视图按钮事件
 - (void)finishAdding{
     [self SavephotosInSanBox:self.food_image];
-    [self OpenSqlDatabase:@"FOSA"];
     [self CreatDataTable];
 }
 - (void)editInfo{
@@ -699,11 +707,13 @@
         self.showCategoryView.hidden = NO;
         self.categoryView.hidden = YES;
         self.categoryLable.text = selectedKind;
+        [self DeleteRecord];
+        [self finishAdding];
     }else{
         //当前锁编辑，则允许编辑，修改信息
         isEdit = true;
         [self.finishAndEdit setImage:[UIImage imageNamed:@"icon_done"] forState:UIControlStateNormal];
-        self.foodNameInput.userInteractionEnabled   = YES;
+        //self.foodNameInput.userInteractionEnabled   = YES;
         self.aboutFoodInput.userInteractionEnabled  = YES;
         self.remindDateLable.userInteractionEnabled = YES;
         self.expireDateLable.userInteractionEnabled = YES;
@@ -768,6 +778,7 @@
         self.categoryLable.text     = self.infoArray[6];
     }
 }
+//
 // 分享
 -(void)beginShare{
     NSLog(@"点击了分享");
@@ -783,9 +794,7 @@
 - (UIView *)CreatNotificatonViewWithContent:(NSString *)body{
     //分享二维码食物信息
     NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@",self.foodNameInput.text,self.device,self.aboutFoodInput.text,self.expireDateLable.text,self.remindDateLable.text,selectedKind];
-    
     NSLog(@"begin creating");
-    
     int mainwidth = screen_width;
     int mainHeight = screen_height;
     
@@ -860,7 +869,6 @@
 }
 
 //喜欢
-
 #pragma mark -- UIScrollerView
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     CGFloat offset = scrollView.contentOffset.x;
@@ -1178,7 +1186,7 @@
 }
 
 - (void)CreatDataTable{
-    NSString *Sql = @"CREATE TABLE IF NOT EXISTS FoodStorageInfo(id integer PRIMARY KEY AUTOINCREMENT, foodName text NOT NULL, device text NOT NULL, aboutFood text,remindDate text NOT NULL,expireDate text NOT NULL,foodImg text NOT NULL,category text NOT NULL);";
+    NSString *Sql = @"CREATE TABLE IF NOT EXISTS FoodStorageInfo(id integer PRIMARY KEY AUTOINCREMENT, foodName text NOT NULL, device text NOT NULL, aboutFood text,remindDate text NOT NULL,expireDate text NOT NULL,foodImg text NOT NULL,category text);";
      
     BOOL categoryResult = [self.db executeUpdate:Sql];
     if(categoryResult)
@@ -1203,6 +1211,42 @@
             }else{
                 [self SystemAlert:@"Error"];
             }
+        }
+    }
+}
+//删除记录
+- (void)DeleteRecord{
+    NSString *delSql = [NSString stringWithFormat:@"delete from FoodStorageInfo where foodName = '%@' and device = '%@';",tempModel.foodName,self.device];
+    if ([self.db open]) {
+         BOOL result = [self.db executeUpdate:delSql];
+        if (result) {
+            NSLog(@"delete data successfully");
+            if (![self.foodNameInput.text isEqualToString:tempModel.foodName]) {
+                for (int i = 1; i <= 3; i++) {
+                    NSString *photoName = [NSString stringWithFormat:@"%@%d",tempModel.foodName,i];
+                    [self deleteFile:photoName];
+                }
+            }
+        }else{
+            NSLog(@"Fail");
+        }
+    }
+}
+- (void)deleteFile:(NSString *)photoName {
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *photo = [NSString stringWithFormat:@"%@.png",photoName];
+    NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent: photo];
+    NSFileManager* fileManager=[NSFileManager defaultManager];
+    BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
+    if (!blHave) {
+        NSLog(@"no  have");
+    }else {
+        NSLog(@" have");
+        BOOL blDele= [fileManager removeItemAtPath:filePath error:nil];
+        if (blDele) {
+            NSLog(@"dele success");
+        }else {
+            NSLog(@"dele fail");
         }
     }
 }
@@ -1270,5 +1314,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillHideNotification
                                                   object:nil];
+}
+- (void)viewWillDisappear:(BOOL)animated{
+    [self.db close];
 }
 @end

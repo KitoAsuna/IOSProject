@@ -26,7 +26,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    
+    NSLog(@"********************AppDelegate");
     [AvoidCrash becomeEffective];
     //监听通知:AvoidCrashNotification, 获取AvoidCrash捕获的崩溃日志的详细信息
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dealwithCrashMessage:) name:AvoidCrashNotification object:nil];
@@ -48,7 +48,7 @@
     //根据系统版本选择视图生成方式
     if (@available(iOS 13,*)) {
         //[self GetJSONFromServerByAFN];
-        [NSThread sleepForTimeInterval:2];
+        [NSThread sleepForTimeInterval:1.5];
         return YES;
     }else{
         self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
@@ -58,7 +58,6 @@
         [self.window makeKeyAndVisible];
         [NSThread sleepForTimeInterval:2];
     }
-    
     return YES;
 }
 
@@ -67,7 +66,6 @@
     //你可以在这里收集相应的崩溃信息进行相应的处理(比如传到自己服务器)
     NSLog(@"%@",note.userInfo);
 }
-
 - (void)GetJSONFromServerByAFN{
     ///1.创建会话管理者
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];

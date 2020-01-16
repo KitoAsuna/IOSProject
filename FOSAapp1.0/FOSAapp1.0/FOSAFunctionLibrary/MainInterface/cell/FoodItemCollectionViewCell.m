@@ -15,8 +15,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        CGFloat cellWidth = self.frame.size.width;
-        CGFloat cellHeight = self.frame.size.height;
+        CGFloat cellWidth = self.bounds.size.width;
+        CGFloat cellHeight = self.bounds.size.height;
         
         //文字添加阴影
         NSShadow *shadow = [[NSShadow alloc] init];
@@ -29,24 +29,22 @@
 
         NSAttributedString * attributedText = [[NSAttributedString alloc] initWithString:@"" attributes:@{NSShadowAttributeName:shadow}];
         
-        self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, self.bounds.size.height*5/6-5, self.bounds.size.width, self.bounds.size.height/6)];
+        self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(cellWidth/8, cellHeight*5/6-5, cellWidth*7/8, cellHeight/6)];
         self.nameLabel.textColor = [UIColor whiteColor];
-        //self.nameLabel.textAlignment = NSTextAlignmentCenter;
-        self.nameLabel.font = [UIFont systemFontOfSize:16*([UIScreen mainScreen].bounds.size.width/414.0)];
+        [self.nameLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18*(screen_width/414.0)]];
         self.nameLabel.userInteractionEnabled = NO;
         self.nameLabel.attributedText = attributedText;
         [self insertSubview:_nameLabel atIndex:20];
 
-        self.dateLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 5, self.bounds.size.width,self.bounds.size.height/6)];
+        self.dateLabel = [[UILabel alloc]initWithFrame:CGRectMake(cellWidth/8, 5, cellWidth*7/8,cellHeight/6)];
         self.dateLabel.textColor = [UIColor whiteColor];
-        //self.dateLabel.textAlignment = NSTextAlignmentCenter;
-        self.dateLabel.font = [UIFont systemFontOfSize:10];
+    
+        [self.dateLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18*(screen_width/414.0)]];
         self.dateLabel.userInteractionEnabled = NO;
         self.dateLabel.attributedText = attributedText;
         [self insertSubview:_dateLabel atIndex:20];
         
         self.foodImageview = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, cellWidth, cellHeight)];
-        NSLog(@"#######################cellWidth = %f--------cellHeight = %f ",cellWidth,cellHeight);
         self.foodImageview.contentMode = UIViewContentModeScaleAspectFill;
         self.foodImageview.clipsToBounds = YES;
         [self.contentView addSubview:self.foodImageview];
@@ -60,7 +58,12 @@
     self.foodImageview.image = [self getImage:model.foodPhoto];
     self.nameLabel.text  = model.foodName;
     timeArray = [model.remindDate componentsSeparatedByString:@"/"];
-    self.dateLabel.text = [NSString stringWithFormat:@"%@/%@",timeArray[1],timeArray[0]];
+    self.dateLabel.text = [NSString stringWithFormat:@"%@  %@",timeArray[1],[mouth valueForKey:timeArray[0]]];
+    //NSDictionary *mouth = [NSDictionary dictionaryWithObjectsAndKeys:@"Jan",@"01",@"Feb",@"02",@"Mar",@"03",@"Apr",@"04",@"May",@"05",@"June",@"06",@"July",@"07",@"Aug",@"08",@"Sept",@"09",@"Oct",@"10",@"Nov",@"11",@"Dec",@"12",nil];
+    NSLog(@"对应月份：%@",[mouth valueForKey:timeArray[0]]);
+}
+- (void)initMouth{
+    
 }
 //取出保存在本地的图片
 - (UIImage*)getImage:(NSString *)filepath{

@@ -24,14 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UISlider *zoomSlider;           //用于放大缩小视图
 
 
-@property (nonatomic, strong) AVCaptureDevice *captureDevice;
-@property (nonatomic, strong) AVCaptureDeviceInput *captureInput;
-@property (nonatomic, strong) AVCaptureMetadataOutput * captureOutput;//元数据输出流，需要指定他的输出类型及扫描范围
-@property (nonatomic,strong) AVCaptureVideoDataOutput *VideoOutput;
-@property (nonatomic, strong) AVCaptureSession * captureSession; //AVFoundation框架捕获类的中心枢纽，协调输入输出设备以获得数据
-@property (nonatomic, strong) AVCaptureVideoPreviewLayer * previewLayer;//展示捕获图像的图层，是CALayer的子类
-@property (nonatomic, strong) AVCaptureStillImageOutput *captureStillImageOutput;//照片输出流
-
 
 @property (nonatomic,strong) UIImageView *focusCursor,*focusCursor1,*focusCursor2,*focusCursor3;       //标记二维码的位置
 @property (nonatomic ,strong) UILabel *label,*myQrcode;      //提示信息，选取我的二维码

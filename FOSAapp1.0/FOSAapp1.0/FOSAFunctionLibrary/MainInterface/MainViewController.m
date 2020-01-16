@@ -11,7 +11,6 @@
 #import "FoodViewController.h"
 #import "MenuTableViewCellXIB.h"
 #import "FosaNotification.h"
-#import "LoadCircleView.h"
 #import <UserNotifications/UserNotifications.h>
 #import "FMDB.h"
 
@@ -20,15 +19,13 @@
     NSString *docPath;
     //刷新标识
     Boolean isUpdate;
-    
-
 }
 @property (nonatomic,strong) NSMutableArray<UIImage *> *imageArray;
 @property (nonatomic,strong) UILongPressGestureRecognizer *longPress;//长按手势
 @property (nonatomic,strong) FMDatabase *db;
-
+@property (nonatomic,strong) UIActivityIndicatorView *FOSAloadingView;
 @property (nonatomic,strong) FosaNotification *notification;
-@property (nonatomic,strong) LoadCircleView *circleview;
+
 @property (nonatomic,strong) NSMutableArray *categoryArray;
 
 @end
@@ -36,9 +33,10 @@
 @implementation MainViewController
 
 /**懒加载属性*/
+
 - (UITableView *)CategoryMenuTable{
     if (_CategoryMenuTable == nil) {
-        _CategoryMenuTable = [[UITableView alloc]initWithFrame:CGRectMake(-screen_width/4, screen_height/6, screen_width/3, screen_height*2/3) style:UITableViewStylePlain];
+        _CategoryMenuTable = [[UITableView alloc]initWithFrame:CGRectMake(-screen_width*7/24, screen_height*15/48, screen_width/3, screen_height*33/48-TabbarHeight) style:UITableViewStylePlain];
     }
     return _CategoryMenuTable;
 }
@@ -91,15 +89,17 @@
     return _cellDictionary;
 }
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = FOSAWhite;
-    
+    NSLog(@"Main------------------------------------------");
     [self CreatMainView];
     [self CreateCategoryMenu];
 }
 - (void)viewWillAppear:(BOOL)animated{
+    NSLog(@"viewWillappear>>>>>>>>>>>>>>>");
     [super viewWillAppear:animated];
     if (isUpdate) {
         NSLog(@"异步刷新界面");
@@ -122,7 +122,26 @@
     QRScan.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:QRScan animated:YES];
 }
+- (void)CreatLoadView{
+    //self.loadView
+    if (@available(iOS 13.0, *)) {
+        self.FOSAloadingView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleLarge)];
+    } else {
+        // Fallback on earlier versions
+    }
+    [self.view addSubview:self.FOSAloadingView];
+    //设置小菊花的frame
+    self.FOSAloadingView.frame= CGRectMake(screen_width/2-50, screen_height-TabbarHeight-150, 100, 100);
+    //设置小菊花颜色
+    self.FOSAloadingView.color = FOSAgreen;
+    //设置背景颜色
+    self.FOSAloadingView.backgroundColor = [UIColor clearColor];
+//刚进入这个界面会显示控件，并且停止旋转也会显示，只是没有在转动而已，没有设置或者设置为YES的时候，刚进入页面不会显示
+    self.FOSAloadingView.hidesWhenStopped = YES;
+    [self.FOSAloadingView startAnimating];
+}
 - (void)SendRemindNotification{
+    [self CreatLoadView];
     [self.notification initNotification];
     UIImage *image = [[UIImage alloc]init];
     //标志
@@ -171,15 +190,11 @@
                 [_notification sendNotification:self.collectionDataSource[i] body:body image:image];
             }
         }
-    _circleview = [[LoadCircleView alloc]initWithFrame:CGRectMake(0  ,400,self.view.frame.size.width,100)];
-       //添加到视图上展示
-       [self.view addSubview:_circleview];
-       [self performSelector:@selector(removeLoading) withObject:nil afterDelay:2.0f];
+    [self performSelector:@selector(stopLoading) withObject:nil afterDelay:2.0];
 }
-- (void)removeLoading{
-    [self.circleview removeFromSuperview];
+- (void)stopLoading{
+    [self.FOSAloadingView stopAnimating];
 }
-
 - (void)CreatMainView{
     isUpdate = false;
     //导航栏右侧扫码按钮
@@ -201,19 +216,20 @@
     self.mainImageView.image = [UIImage imageNamed:@"img_MainInterfaceBackground"];
     [self.view addSubview:self.mainImageView];
     
-    int collectionWidth = screen_width*11/12;
-    int collectionHeigt = screen_height*2/3-TabbarHeight;
+    int collectionWidth = screen_width*23/24;
+    int collectionHeigt = screen_height*33/48-TabbarHeight;
     
     UICollectionViewFlowLayout *fosaFlowLayout = [[UICollectionViewFlowLayout alloc] init];
-    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(5, 5, 0, 5);//上、左、下、右
-    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-15)/2,(collectionHeigt-20)/3);
+    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(10, 10, 0, 10);//上、左、下、右
+    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-30)/2,(collectionHeigt-20)/3);
     fosaFlowLayout.minimumLineSpacing = 5;  //行间距
     fosaFlowLayout.minimumInteritemSpacing = 5; //列间距
     //固定的itemsize
     fosaFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;//滑动的方向 垂直
     //foodItem
-    self.foodItemCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(screen_width*1/12, screen_height/3, screen_width*11/12, screen_height*2/3-TabbarHeight) collectionViewLayout:fosaFlowLayout];
-    
+    self.foodItemCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(screen_width*1/24, screen_height*15/48, screen_width*23/24, screen_height*33/48-TabbarHeight) collectionViewLayout:fosaFlowLayout];
+    //self.foodItemCollection.layer.cornerRadius = 15;
+    [self setCornerOnRight:15 view:self.foodItemCollection];
    // 1 先判断系统版本
     if ([NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){10,0,0}])
     {
@@ -257,10 +273,12 @@
     //数据源
     self.menuDataSource = [self getCategoryArray];
     //初始化模糊层
-    self.CategoryMenuTable.layer.cornerRadius = 15;
+    //self.CategoryMenuTable.layer.cornerRadius = 15;
     self.CategoryMenuTable.delegate = self;
     self.CategoryMenuTable.dataSource = self;
     self.CategoryMenuTable.showsVerticalScrollIndicator = NO;
+    UIImageView *backgroundImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"icon_categoryBcg"]];
+    self.CategoryMenuTable.backgroundView = backgroundImage;
     self.CategoryMenuTable.bounces = NO;
     
     //关联NIB与tableview
@@ -283,9 +301,12 @@
 {
     if(recognizer.direction == UISwipeGestureRecognizerDirectionLeft) {
         NSLog(@"swipe left");
+        //self.CategoryMenuTable.layer.cornerRadius = 0;
+        [self setCornerOnRight:0 view:self.CategoryMenuTable];
+        [self.CategoryMenuTable setSeparatorStyle:UITableViewCellSeparatorStyleNone];
         //执行程序
         [UIView animateWithDuration:0.2 animations:^{
-            self.CategoryMenuTable.center = CGPointMake(-screen_width/12, self.CategoryMenuTable.center.y);
+            self.CategoryMenuTable.center = CGPointMake(-screen_width*3/24, self.CategoryMenuTable.center.y);
         }];
         self.visualView.hidden = YES;
         self.navigationController.navigationBar.hidden = NO;
@@ -293,6 +314,10 @@
     }
     if(recognizer.direction == UISwipeGestureRecognizerDirectionRight) {
         NSLog(@"swipe right");
+        //self.CategoryMenuTable.layer.cornerRadius = 15;
+        [self setCornerOnRight:15 view:self.CategoryMenuTable];
+        [self.CategoryMenuTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+        self.CategoryMenuTable.separatorColor = [UIColor whiteColor];
         //执行程序
         [UIView animateWithDuration:0.2 animations:^{
             self.CategoryMenuTable.center = CGPointMake(screen_width/6, self.CategoryMenuTable.center.y);
@@ -361,7 +386,8 @@
     }
     long int index = indexPath.row;
     [cell configCell:_menuDataSource[index]];
-    cell.backgroundColor = FOSAgreen;
+    cell.categoryTitle.textColor = [UIColor whiteColor];
+    cell.backgroundColor = [UIColor clearColor];
     cell.backgroundView.alpha = 1.0 - 0.1*(int)index;
     //取消点击cell时显示的背景色
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -687,9 +713,35 @@
     [category addObject:@"Add"];
     return category;
 }
+///*设置顶部圆角*/
+//- (void)setCornerOnTop:(CGFloat )cornerRadius view:(UICollectionView *)view{
+//    UIBezierPath *maskPath;
+//    maskPath = [UIBezierPath bezierPathWithRoundedRect:view.bounds
+//                                     byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight)
+//                                           cornerRadii:CGSizeMake(cornerRadius, cornerRadius)];
+//    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+//    maskLayer.frame = view.bounds;
+//    maskLayer.path = maskPath.CGPath;
+//    view.layer.mask = maskLayer;
+//}
+/*设置右边圆角*/
+- (void)setCornerOnRight:(CGFloat )cornerRadius view:(UIView *)view{
+    UIBezierPath *maskPath;
+    maskPath = [UIBezierPath bezierPathWithRoundedRect:view.bounds
+                                     byRoundingCorners:(UIRectCornerTopRight | UIRectCornerBottomRight)
+                                           cornerRadii:CGSizeMake(cornerRadius, cornerRadius)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = view.bounds;
+    maskLayer.path = maskPath.CGPath;
+    view.layer.mask = maskLayer;
+}
 /**隐藏底部横条，点击屏幕可显示*/
 - (BOOL)prefersHomeIndicatorAutoHidden{
     return YES;
+}
+//禁止应用屏幕自动旋转
+- (BOOL)shouldAutorotate{
+    return NO;
 }
 - (void)viewWillDisappear:(BOOL)animated{
     isUpdate = true;

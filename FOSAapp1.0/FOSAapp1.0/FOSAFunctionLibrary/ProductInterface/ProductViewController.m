@@ -14,11 +14,13 @@
 
 @interface ProductViewController ()<UISearchBarDelegate,UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>{
     NSArray *arrayData;
-    NSArray *array1,*array2,*array3,*array4,*array5;
+    NSArray *array1,*array2,*array3,*array4,*array5,*array6,*array7;
     NSMutableArray<NSString *> *fosaDataSource,*myDeviceSource;
+    CGFloat lastContentOffset;
     NSString *fosaDeviceID,*myDeviceID;
     NSInteger index;//当前滚动的位置
     NSIndexPath *currentFosaIndexPath,*currentMyIndexpath;
+    Boolean isFirstOpen;
 }
 //@property (nonatomic,strong) NSArray *array1,*array2,*array3,*array4,*array5;
 //@property (nonatomic,strong) NSMutableArray<NSString *> *fosaDataSource,*myDeviceSource;
@@ -125,11 +127,11 @@
 //    return _array5;
 //}
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
      self.view.backgroundColor = [UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1.0];;
+     NSLog(@"Product------------------------------------------");
     [self CreatHeader];
     [self CreatProductCategoryTable];
     [self CreatProductCollection];
@@ -139,20 +141,25 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden = YES;
     [self initData];
+    //种类栏默认选中第一个
+    UITableViewCell *cell = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentFosaIndexPath];
+    cell.textLabel.textColor = FOSAgreen;
+    [self.productCategory selectRowAtIndexPath:currentFosaIndexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+    self.indecator.frame = CGRectMake(0, cell.frame.size.height/4, 5, cell.frame.size.height/2);
+    self.indecator.backgroundColor = FOSAgreen;
+    self.indecator.layer.cornerRadius = 2;
+    [cell addSubview:self.indecator];
 }
 
 - (void)initData{
-    arrayData = @[@"Bottles",@"Fresh bag",@"Thaw board",@"Vacuum",@"Sealer"];
-//    array1 = @[@"img_FOSARound0001",@"img_FOSARound0002",@"img_FOSARound0003",@"img_FOSARound0004",@"img_FOSASquare0001",@"img_FOSASquare0002",@"img_FOSASquare0003",@"img_FOSASquare0004",@"img_FOSASquare0005",@"img_FOSASquare0006",@"img_FOSASquare0007",@"img_FOSAJuice001",@"img_FOSAJuice001"]; //圆罐
-//    array2 = @[@"img_FOSASealer001",@"img_FOSASealer002",@"img_FOSASealer003"];       //
-//    array3 = @[@"img_FOSA003"];
-//    array4 = @[@"img_FOSA002"];
-//    array5 = @[@"img_FOSA001"];  //真空机
-    array1 = @[@"FOSARound0001",@"FOSARound0002",@"FOSARound0003",@"FOSARound0004",@"FOSASquare0001",@"FOSASquare0002",@"FOSASquare0003",@"FOSASquare0004",@"FOSASquare0005",@"FOSASquare0006",@"FOSASquare0007",@"FOSAJuice001",@"FOSAJuice001"]; //圆罐
-    array2 = @[@"FOSASealer001",@"FOSASealer002",@"FOSASealer003"];       //
-    array3 = @[@"FOSA003"];
-    array4 = @[@"FOSA002"];
-    array5 = @[@"FOSA001"];  //真空机
+    arrayData = @[@"MADRID",@"BARCELONA",@"MALAGA",@"O2Go",@"O2Go WINE",@"New Product",@"All"];
+    array1 = @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04"];
+    array2 = @[@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07"];
+    array3 = @[@"S Size0.9L",@"M Size2L",@"L Size3.8L",@"V-ADAPTER"];
+    array4 = @[@"0.97L(33oz)",@"1.32L(45oz)"];
+    array5 = @[@"WINE_Pouchbag",@"WINE0.97L(33oz)"];
+    array6 = @[@"FOSA003",@"FOSA001",@"IMG_Pound"];
+    array7 = @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04",@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07"];
     fosaDataSource = [[NSMutableArray alloc]init];//默认选中1
     [self addObjectByArray:array1 target:fosaDataSource];
     myDeviceSource = [[NSMutableArray alloc]init];
@@ -176,21 +183,17 @@
 }
 
 - (void)CreatProductCategoryTable{
-    NSLog(@"%f---%f",screen_width,screen_height);
+    isFirstOpen = true;
     self.productCategoryView.frame = CGRectMake(0, NavigationBarHeight+StatusBarH, screen_width/4, screen_height-NavigationBarHeight-TabbarHeight);
     self.productCategoryView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.productCategoryView];
-    self.productCategory.frame = CGRectMake(0, 0, self.productCategoryView.frame.size.width, self.productCategoryView.frame.size.height*2/3);
+    self.productCategory.frame = CGRectMake(0, 0, self.productCategoryView.frame.size.width, self.productCategoryView.frame.size.height);
     self.productCategory.delegate = self;
     self.productCategory.dataSource = self;
     self.productCategory.bounces = NO;
     self.productCategory.showsVerticalScrollIndicator = NO;
     [self.productCategoryView addSubview:self.productCategory];
-    
-    UITableViewCell *cell = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentFosaIndexPath];
-    //CategoryTableViewCell *cell = (CategoryTableViewCell *)[self.productCategory cellForRowAtIndexPath:currentFosaIndexPath];
-    cell.textLabel.textColor = FOSAgreen;
-    [self.productCategory selectRowAtIndexPath:currentFosaIndexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+
 }
 
 - (void)CreatProductCollection{
@@ -204,13 +207,14 @@
     self.titleView.frame = CGRectMake(10, 10, self.productView.frame.size.width-20, 40);
     self.titleView.layer.borderWidth = 1;
     self.titleView.layer.cornerRadius = 10;
+    self.titleView.layer.borderColor = FOSAgreen.CGColor;
     self.titleView.backgroundColor = [UIColor whiteColor];
     [self.productView addSubview:self.titleView];
     // 添加标题按钮
     self.fosa.frame = CGRectMake(0, 0, self.productView.frame.size.width/2-10, 40);
     [self.fosa setTitle:@"FOSA" forState:UIControlStateNormal];
-    [self.fosa setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [self.fosa setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    //[self.fosa setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    //[self.fosa setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [self setCornerOnLeft:10 view:self.fosa];
     [self.fosa addTarget:self action:@selector(switchDevice:) forControlEvents:UIControlEventTouchUpInside];
     self.fosa.tag = 0;
@@ -245,13 +249,11 @@
     fosaFlowLayout.minimumInteritemSpacing = 5; //列间距
     fosaFlowLayout.itemSize = CGSizeMake((scrollerWidth-20)/3, (scrollerWidth-20)/2); //固定的itemsize
     fosaFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;//滑动的方向 垂直
-    
     UICollectionViewFlowLayout *myFlowLayout = [[UICollectionViewFlowLayout alloc] init];
     myFlowLayout.minimumLineSpacing = 5;  //行间距
     myFlowLayout.minimumInteritemSpacing = 5; //列间距
     myFlowLayout.itemSize = CGSizeMake((scrollerWidth-20)/3, scrollerWidth/2);; //固定的itemsize
     myFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;//滑动的方向 垂直
-
     //fosaDevice
     self.fosaProductCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, scrollerWidth, scrollerHeight) collectionViewLayout:fosaFlowLayout];
     self.fosaProductCollection.backgroundColor = [UIColor whiteColor];
@@ -261,8 +263,6 @@
     self.fosaProductCollection.bounces = NO;
     [self.fosaProductCollection registerClass:[DeviceCollectionViewCell class] forCellWithReuseIdentifier:fosaDeviceID];   //注册cell
     [self.mainScrollView addSubview:self.fosaProductCollection];
-
-
     self.myProductCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(scrollerWidth, 0, scrollerWidth, scrollerHeight) collectionViewLayout:myFlowLayout];
     self.myProductCollection.backgroundColor = [UIColor whiteColor];
     self.myProductCollection.delegate = self;
@@ -271,7 +271,6 @@
     self.myProductCollection.bounces = NO;
     [self.myProductCollection registerClass:[DeviceCollectionViewCell class] forCellWithReuseIdentifier:myDeviceID];   //注册cell
     [self.mainScrollView addSubview:self.myProductCollection];
-
     self.mainScrollView.contentSize = CGSizeMake(scrollerWidth*2, 0);
 }
 #pragma mark - UISearchBarDelegate
@@ -325,21 +324,12 @@
         //创建cell
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
     }
-    UIView *indecator = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 5, cell.contentView.frame.size.height)];
     //取消点击cell时显示的背景色
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.textLabel.font = [UIFont systemFontOfSize:13*(([UIScreen mainScreen].bounds.size.width/414.0))];
+    cell.textLabel.font = [UIFont systemFontOfSize:11*(([UIScreen mainScreen].bounds.size.width/414.0))];
+    cell.textLabel.textAlignment = NSTextAlignmentLeft;
     cell.textLabel.highlightedTextColor = FOSAgreen;
     cell.textLabel.text = arrayData[indexPath.row];
-//    CategoryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-//    if (cell == nil) {
-//        cell = [[CategoryTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-//    }
-//    cell.titleLable.text = arrayData[indexPath.row];
-//    cell.titleLable.textColor = [UIColor blackColor];
-//    cell.titleLable.font = [UIFont systemFontOfSize:10*(screen_width/414.0)];
-//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
     //返回cell
     return cell;
 }
@@ -367,6 +357,12 @@
             break;
         case 4:
             [self switchProductCategoryByArray:array5];
+            break;
+        case 5:
+            [self switchProductCategoryByArray:array6];
+            break;
+        case 6:
+            [self switchProductCategoryByArray:array7];
             break;
         default:
             break;
@@ -409,24 +405,9 @@
     if (btn.tag == 0) {
         [self.mainScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
         self.fosa.backgroundColor = FOSAgreen;
+        self.fosa.titleLabel.textColor = [UIColor whiteColor];
         self.myFosa.backgroundColor = [UIColor whiteColor];
-        index = 0;
-    }else if(btn.tag == 1){
-        index = 1;
-        [self.mainScrollView setContentOffset:CGPointMake(self.mainScrollView.frame.size.width, 0) animated:YES];
-        self.myFosa.backgroundColor = FOSAgreen;
-        self.fosa.backgroundColor = [UIColor whiteColor];
-    }
-}
-#pragma mark - UIScrollerViewDelegate
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    CGFloat offset = scrollView.contentOffset.x;
-    index = offset/self.mainScrollView.frame.size.width;
-    NSLog(@"%ld",(long)index);
-    if (index == 0) {
-        self.fosa.backgroundColor = FOSAgreen;
-        self.myFosa.backgroundColor = [UIColor whiteColor];
+        self.myFosa.titleLabel.textColor = [UIColor grayColor];
         UITableViewCell *cell1 = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentMyIndexpath];
         cell1.textLabel.textColor = [UIColor blackColor];
         [self.indecator removeFromSuperview];
@@ -435,9 +416,14 @@
         cell2.textLabel.textColor = FOSAgreen;
         [cell2 addSubview:self.indecator];
         [self.productCategory selectRowAtIndexPath:currentFosaIndexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
-    }else if(index == 1){
+        index = 0;
+    }else if(btn.tag == 1){
+        index = 1;
+        [self.mainScrollView setContentOffset:CGPointMake(self.mainScrollView.frame.size.width, 0) animated:YES];
         self.myFosa.backgroundColor = FOSAgreen;
+        self.myFosa.titleLabel.textColor = [UIColor whiteColor];
         self.fosa.backgroundColor = [UIColor whiteColor];
+        self.fosa.titleLabel.textColor = [UIColor grayColor];
         UITableViewCell *cell = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentFosaIndexPath];
         cell.textLabel.textColor = [UIColor blackColor];
         [self.indecator removeFromSuperview];
@@ -445,8 +431,46 @@
         cell1.textLabel.textColor = FOSAgreen;
         [cell1 addSubview:self.indecator];
         [self.productCategory selectRowAtIndexPath:currentMyIndexpath animated:YES scrollPosition:UITableViewScrollPositionNone];
-        
     }
+}
+#pragma mark - UIScrollerViewDelegate
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    lastContentOffset = scrollView.contentOffset.y;
+}
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    NSLog(@"当前滚动视图:%@",scrollView);
+//    if (![scrollView isKindOfClass:[self.fosaProductCollection class]]) {
+//        CGFloat offset = scrollView.contentOffset.x;
+//        index = offset/self.mainScrollView.frame.size.width;
+//        NSLog(@"%ld",(long)index);
+//        if (index == 0) {
+//            self.fosa.backgroundColor = FOSAgreen;
+//            self.fosa.titleLabel.textColor = [UIColor whiteColor];
+//            self.myFosa.backgroundColor = [UIColor whiteColor];
+//            self.myFosa.titleLabel.textColor = [UIColor grayColor];
+//            UITableViewCell *cell1 = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentMyIndexpath];
+//            cell1.textLabel.textColor = [UIColor blackColor];
+//            [self.indecator removeFromSuperview];
+//            
+//            UITableViewCell *cell2 = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentFosaIndexPath];
+//            cell2.textLabel.textColor = FOSAgreen;
+//            [cell2 addSubview:self.indecator];
+//            [self.productCategory selectRowAtIndexPath:currentFosaIndexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+//        }else if(index == 1){
+//            self.myFosa.backgroundColor = FOSAgreen;
+//            self.myFosa.titleLabel.textColor = [UIColor whiteColor];
+//            self.fosa.backgroundColor = [UIColor whiteColor];
+//            self.fosa.titleLabel.textColor = [UIColor grayColor];
+//            UITableViewCell *cell = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentFosaIndexPath];
+//            cell.textLabel.textColor = [UIColor blackColor];
+//            [self.indecator removeFromSuperview];
+//            UITableViewCell *cell1 = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentMyIndexpath];
+//            cell1.textLabel.textColor = FOSAgreen;
+//            [cell1 addSubview:self.indecator];
+//            [self.productCategory selectRowAtIndexPath:currentMyIndexpath animated:YES scrollPosition:UITableViewScrollPositionNone];
+//        }
+//    }
+         
 }
 #pragma mark - UICollectionViewDataSource
 
@@ -490,7 +514,6 @@
     }else{
         DeviceCollectionViewCell *cell = [self.myProductCollection dequeueReusableCellWithReuseIdentifier:myDeviceID forIndexPath:indexPath];
         NSInteger index = indexPath.row;
-        NSLog(@"myProduct<<<<<<<<<<<<<<<<%ld-----------MyProductDatasource:%lu",(long)index,myDeviceSource.count);
         cell.productImageView.image = [UIImage imageNamed:myDeviceSource[index]];
         cell.productName.text = myDeviceSource[index];
         cell.layer.cornerRadius = 5;

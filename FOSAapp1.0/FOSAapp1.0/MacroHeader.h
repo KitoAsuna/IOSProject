@@ -71,7 +71,7 @@
 
 // 7.全局颜色
 #define XYRMainColor YTHColor(254,48,131)//主色调
-#define FOSAgreen [UIColor colorWithRed:0/255.0 green:200/255.0 blue:70/255.0 alpha:1.0]
+#define FOSAgreen [UIColor colorWithRed:90/255.0 green:172/255.0 blue:51/255.0 alpha:1.0]
 #define FOSAgreengrad [UIColor colorWithRed:80/255.0 green:200/255.0 blue:80/255.0 alpha:1.0]
 #define FOSARed  [UIColor redColor]
 #define RandomColor ([UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1.0])//随机颜色
@@ -84,6 +84,8 @@
 #define FOSAAlertGreen     [UIColor colorWithRed:33/255.0 green:198/255.0 blue:42/255.0 alpha:1.0]
 #define FOSAAlertBacgYellow [UIColor colorWithRed:249/255.0 green:211/255.0 blue:51/255.0 alpha:1.0]
 #define FOSAAlertYellow     [UIColor colorWithRed:252/255.0 green:175/255.0 blue:0/255.0 alpha:1.0]
+//阴影
+#define FOSAshadowColor  [UIColor colorWithRed:238/255.0 green:238/255.0 blue:238/255.0 alpha:1.0]
 //可以添加其他常用颜色，方便修改
 
 // 8.解决日志打印不全的问题
@@ -121,5 +123,8 @@
 #define TOOLH (is_IPHONEX ? 34 : 0)
 //屏幕底部 toolbar高度 + 安全视图高度34pt
 #define ToolbarHeight self.navigationController.toolbar.frame.size.height
+
+#define mouth [NSDictionary dictionaryWithObjectsAndKeys:@"Jan",@"01",@"Feb",@"02",@"Mar",@"03",@"Apr",@"04",@"May",@"05",@"June",@"06",@"July",@"07",@"Aug",@"08",@"Sept",@"09",@"Oct",@"10",@"Nov",@"11",@"Dec",@"12",nil]
+
 
 #endif /* MacroHeader_h */

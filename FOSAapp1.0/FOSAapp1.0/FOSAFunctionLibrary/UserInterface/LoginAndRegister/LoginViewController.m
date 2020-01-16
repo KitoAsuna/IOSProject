@@ -30,27 +30,27 @@
 }
 - (UIView *)userContainer{
     if (_userContainer == nil) {
-        _userContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, screen_width, screen_width*5/6, screen_height/12)];
+        _userContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, screen_width, screen_width*5/6, screen_height/15)];
     }
     return _userContainer;
 }
 - (UIView *)passwordContainer{
     if (_passwordContainer == nil) {
-        _passwordContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, screen_height/12+screen_width, screen_width*5/6, screen_height/12)];
+        _passwordContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, screen_height/15+screen_width, screen_width*5/6, screen_height/15)];
     }
     return _passwordContainer;
 }
 
 - (UIView *)rememberContainer{
     if (_rememberContainer == nil) {
-        _rememberContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, screen_height/6+screen_width, screen_width*5/6, screen_height/15)];
+        _rememberContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.passwordContainer.frame), screen_width*5/6, screen_height/20)];
     }
     return _rememberContainer;
 }
 
 - (UIView *)LoginContainer{
     if (_LoginContainer == nil) {
-        _LoginContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, screen_height*7/30+screen_width, screen_width*5/6, screen_height/15)];
+        _LoginContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.rememberContainer.frame), screen_width*5/6, screen_height/20)];
     }
     return _LoginContainer;
 }
@@ -142,7 +142,7 @@
     self.FOSALogo.image = [UIImage imageNamed:@"icon_logoHL"];
     [self.logoContainer addSubview:self.FOSALogo];
     
-    self.userNameInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/12-10);
+    self.userNameInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
     self.userNameInput.placeholder = @"    Phone Number/email";
     self.userNameInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     self.userNameInput.returnKeyType = UIReturnKeyDone;
@@ -150,7 +150,7 @@
     self.userNameInput.layer.cornerRadius = self.userNameInput.frame.size.height/3;
     [self.userContainer addSubview:self.userNameInput];
     
-    self.passwordInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/12-10);
+    self.passwordInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
     self.passwordInput.placeholder = @"    Password";
     self.passwordInput.secureTextEntry = YES ; //隐藏密码
     self.passwordInput.returnKeyType = UIReturnKeyDone;

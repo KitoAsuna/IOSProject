@@ -96,7 +96,7 @@
     self.userIcon.image = [UIImage imageNamed:@"icon_User"];
     [self.header addSubview:self.userIcon];
     
-    self.userName.frame = CGRectMake(headerWidth/4+30, headerHeight/4, headerWidth/2, headerWidth/6);
+    self.userName.frame = CGRectMake(headerWidth/4+30, headerHeight/4, headerWidth/2, headerWidth/4);
     self.userName.userInteractionEnabled = YES;
     //self.userName.layer.borderWidth = 0.5;
     self.userName.layer.cornerRadius = 5;
@@ -116,6 +116,7 @@
     self.userItemTable.bounces = NO;
     self.userItemTable.layer.cornerRadius = 15;
     self.userItemTable.showsVerticalScrollIndicator = NO;
+    [self.userItemTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
     self.userItemTable.backgroundColor = [UIColor whiteColor];
 }
 

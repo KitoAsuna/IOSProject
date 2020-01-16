@@ -26,6 +26,14 @@
     int AlertCount;
     
 }
+@property (nonatomic, strong) AVCaptureDevice *captureDevice;
+@property (nonatomic, strong) AVCaptureDeviceInput *captureInput;
+@property (nonatomic, strong) AVCaptureMetadataOutput * captureOutput;//元数据输出流，需要指定他的输出类型及扫描范围
+@property (nonatomic,strong) AVCaptureVideoDataOutput *VideoOutput;
+@property (nonatomic, strong) AVCaptureSession * captureSession; //AVFoundation框架捕获类的中心枢纽，协调输入输出设备以获得数据
+@property (nonatomic, strong) AVCaptureVideoPreviewLayer * previewLayer;//展示捕获图像的图层，是CALayer的子类
+@property (nonatomic, strong) AVCaptureStillImageOutput *captureStillImageOutput;//照片输出流
+
 @property (nonatomic,strong) FoodMoreInfoView *circleAlertView1,*circleAlertView2,*circleAlertView3;
 @end
 
@@ -82,9 +90,10 @@
     if (_captureOutput == nil) {
         //设备输出
         _captureOutput = [[AVCaptureMetadataOutput alloc]init];
-        CGFloat ScreenWidth = self.view.frame.size.width;
+
         //设置扫描作用域范围(中间透明的扫描框)
-        CGRect intertRect = [self.previewLayer metadataOutputRectOfInterestForRect:CGRectMake(ScreenWidth*0.15, ScreenWidth*0.15+64, ScreenWidth*0.7, ScreenWidth*0.7)];
+        CGRect intertRect = [self.previewLayer metadataOutputRectOfInterestForRect:CGRectMake(screen_width*0.15, (screen_height-screen_width*0.7)/2, screen_width*0.7, screen_width*0.7)];
+        //_captureOutput.rectOfInterest = self.view.bounds;
         _captureOutput.rectOfInterest = intertRect;
     }
     return _captureOutput;
@@ -117,17 +126,16 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     if (!isFirstOpen) {
-        if (self.ScanModel == 0) {
-            stopAnimation = false;
-            self.scanLine.center = scanLineVerticalCenter;
-            [self VerticalScanLineAnimation];
-        }else{
-            stopAnimation = false;
-            self.scanLine.center = scanLineHorizontalCenter;
-            [self HorizontalScanLineAnimation];
-        }
+//        if (self.ScanModel == 0) {
+//            stopAnimation = false;
+//            self.scanLine.center = scanLineVerticalCenter;
+//            [self VerticalScanLineAnimation];
+//        }else{
+//            stopAnimation = false;
+//            self.scanLine.center = scanLineHorizontalCenter;
+//            [self HorizontalScanLineAnimation];
+//        }
     }
-    
     [self.captureSession startRunning];
     [self InitData];
     [self CreatNavigationButtonAndFocusBtn];
@@ -223,6 +231,7 @@
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
     maskLayer.path = maskPath.CGPath;
     self.scanMaskView.layer.mask = maskLayer;
+
     //扫描框
     self.scanFrame.frame = CGRectMake(imageX, imageY,screen_width*0.7,screen_width*0.7);
     self.scanFrame.image = [UIImage imageNamed:@"saoyisao@3x"];
@@ -249,7 +258,7 @@
     [self.zoomSlider addTarget:self action:@selector(ZoomSliderValueChanged) forControlEvents:UIControlEventValueChanged];
     
     //设置有效扫描区域
-    CGRect intertRect = [_previewLayer metadataOutputRectOfInterestForRect:CGRectMake(imageX, imageY,screen_width/2,screen_width/2)];
+    CGRect intertRect = [_previewLayer metadataOutputRectOfInterestForRect:CGRectMake(imageX, imageY,screen_width*0.7,screen_width*0.7)];
     _captureOutput.rectOfInterest = intertRect;
 }
 /**横屏布局*/
@@ -470,7 +479,7 @@
 - (void)captureOutput:(AVCaptureOutput *)output didOutputMetadataObjects:(NSArray<__kindof AVMetadataObject *> *)metadataObjects fromConnection:(AVCaptureConnection *)connection{
     //NSLog(@"停止扫描");
     //[self.captureSession stopRunning];
-    NSLog(@"**************************************************************************"); stopAnimation = true;
+NSLog(@"**************************************************************************"); stopAnimation = true;
     //用于标志每次捕获是否识别到新的二维码
     _flag = 0;
     if(metadataObjects.count > 0) {
@@ -896,7 +905,7 @@
     self.focusCursor.center = center;
     self.focusCursor.transform = CGAffineTransformMakeScale(3,3);
     self.focusCursor.alpha = 1.0;
-    [UIView animateWithDuration:1.5 animations:^{
+    [UIView animateWithDuration:1 animations:^{
         self.focusCursor.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished) {
         self.focusCursor.alpha = 0;

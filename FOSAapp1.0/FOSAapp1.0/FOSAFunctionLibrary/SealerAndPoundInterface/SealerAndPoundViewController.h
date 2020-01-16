@@ -11,6 +11,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SealerAndPoundViewController : UIViewController
+@property (nonatomic,strong) UIView *sealerView,*otherSealerView,*poundView;
+@property (nonatomic,strong) UIImageView *sealerImageView,*otherSealerImageView,*poundImageView;
+@property (nonatomic,strong) UIButton *sealerScanBtn,*sealerOpenbtn,*otherSealerScanBtn,*otherSealerOpenBtn,*poundScanBtn,*poundOpenBtn;
 
 @end
 

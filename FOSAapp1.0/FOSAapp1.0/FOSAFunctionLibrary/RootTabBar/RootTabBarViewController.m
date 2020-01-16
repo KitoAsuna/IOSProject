@@ -29,6 +29,7 @@
     [self addChildWithVCName:@"UserViewController" title:@"Me" image:@"icon_me" selectImage:@"icon_meHL"];
 }
 -(void)addChildWithVCName:(NSString *)vcName title:(NSString *)title image:(NSString *)image selectImage:(NSString *)selectImage{
+    NSLog(@"Title=========%@",title);
     //1.创建控制器
     Class class = NSClassFromString(vcName);//根据传入的控制器名称获得对应的控制器
     UIViewController *fosa = [[class alloc]init];
@@ -36,14 +37,13 @@
     //2.设置控制器属性
     fosa.navigationItem.title = title;
     fosa.tabBarItem.title = title;
-    
     fosa.tabBarItem.image = [UIImage imageNamed:image];
-    
     fosa.tabBarItem.selectedImage = [UIImage imageNamed:selectImage];
     
     //修改字体颜色
     [fosa.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:FOSAgreen} forState:UIControlStateHighlighted];
-    
+    [fosa.tabBarItem setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor blackColor],NSFontAttributeName:[UIFont fontWithName:@"Helvetica-Bold" size:15.0]}            forState:UIControlStateNormal];
+
     //3.创建导航控制器
     UINavigationController *nvc = [[UINavigationController alloc]initWithRootViewController:fosa];
     
@@ -62,7 +62,6 @@
 - (BOOL)shouldAutorotate{
     return NO;
 }
-
 /*
 #pragma mark - Navigation
 

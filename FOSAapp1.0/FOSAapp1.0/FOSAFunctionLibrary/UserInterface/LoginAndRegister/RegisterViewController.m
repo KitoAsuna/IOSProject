@@ -34,21 +34,21 @@
 
 - (UIView *)verificationView{
     if (_verificationView == nil) {
-        _verificationView = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, screen_height/12+screen_width, screen_width*5/6, screen_height/12)];
+        _verificationView = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, screen_height/15+screen_width, screen_width*5/6, screen_height/12)];
     }
     return _verificationView;
 }
 
 - (UIView *)passwordContainer{
     if (_passwordContainer == nil) {
-        _passwordContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, screen_height/6+screen_width, screen_width*5/6, screen_height/12)];
+        _passwordContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, screen_height*2/15+screen_width, screen_width*5/6, screen_height/12)];
     }
     return _passwordContainer;
 }
 
 - (UIView *)LoginContainer{
     if (_LoginContainer == nil) {
-        _LoginContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, screen_height/4+screen_width+40, screen_width*5/6, screen_height/15)];
+        _LoginContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, screen_height/5+screen_width+40, screen_width*5/6, screen_height/20)];
     }
     return _LoginContainer;
 }
@@ -135,50 +135,53 @@
     self.FOSALogo.image = [UIImage imageNamed:@"icon_logoHL"];
     [self.logoContainer addSubview:self.FOSALogo];
     
-    self.userNameInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/12-10);
+    self.userNameInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
     self.userNameInput.placeholder = @"    Phone Number/email";
     self.userNameInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
+    [self.userNameInput setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.userNameInput.returnKeyType = UIReturnKeyDone;
     self.userNameInput.delegate = self;
     self.userNameInput.layer.cornerRadius = self.userNameInput.frame.size.height/3;
     [self.userContainer addSubview:self.userNameInput];
     
-    self.verificatonInput.frame = CGRectMake(0, 5, self.verificationView.frame.size.width/2, screen_height/12-10);
+    self.verificatonInput.frame = CGRectMake(0, 5, self.verificationView.frame.size.width*3/5, screen_height/15-10);
     self.verificatonInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     self.verificatonInput.returnKeyType = UIReturnKeyDone;
     self.verificatonInput.delegate = self;
     self.verificatonInput.layer.cornerRadius = self.verificatonInput.frame.size.height/3;
     self.verificatonInput.returnKeyType = UIReturnKeyDone;;
     [self.verificationView addSubview:self.verificatonInput];
-    self.verificationLabel.frame = CGRectMake(self.verificationView.frame.size.width*3/5, 0, self.verificationView.frame.size.width*2/5, screen_height/12);
+    self.verificationLabel.frame = CGRectMake(self.verificationView.frame.size.width*3/5, 0, self.verificationView.frame.size.width*2/5, screen_height/15);
     self.verificationLabel.userInteractionEnabled = YES;
+    self.verificationLabel.textAlignment = NSTextAlignmentRight;
     self.verificationLabel.font = [UIFont systemFontOfSize:14*(screen_width/414)];
     //文字添加下划线
     NSDictionary * underAttribtDic  = @{NSUnderlineStyleAttributeName:[NSNumber numberWithInteger:NSUnderlineStyleSingle],NSForegroundColorAttributeName:[UIColor blackColor]};
-    NSMutableAttributedString * underAttr = [[NSMutableAttributedString alloc] initWithString:@"Get Veritigication" attributes:underAttribtDic];
+    NSMutableAttributedString * underAttr = [[NSMutableAttributedString alloc] initWithString:@"Get SMS code" attributes:underAttribtDic];
     
     self.verificationLabel.attributedText = underAttr;
     [self.verificationView addSubview:self.verificationLabel];
     
-    self.passwordInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/12-10);
+    self.passwordInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
     self.passwordInput.placeholder = @"    Password";
+    [self.passwordInput setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.passwordInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     self.passwordInput.returnKeyType = UIReturnKeyDone;
     self.passwordInput.delegate = self;
     self.passwordInput.layer.cornerRadius = self.passwordInput.frame.size.height/3;
     [self.passwordContainer addSubview:self.passwordInput];
     
-    self.remember.frame = CGRectMake(screen_width/12, screen_width+screen_height/4, 51.0, 40);
+    self.remember.frame = CGRectMake(screen_width/12, screen_width+screen_height/5, 51.0, 40);
     [self.remember addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.remember];
     self.rememberLabel.frame = CGRectMake(screen_width/12+60, screen_width+screen_height/4, screen_width/2, 40);
     [self.view addSubview:self.rememberLabel];
     
-    self.signUp.frame = CGRectMake(self.LoginContainer.frame.size.width/4, 0, self.LoginContainer.bounds.size.width/2, self.LoginContainer.frame.size.height);
+    self.signUp.frame = CGRectMake(self.LoginContainer.frame.size.width*5/18, 0, self.LoginContainer.bounds.size.width*4/9, self.LoginContainer.frame.size.height);
     [self.signUp setTitle:@"Sign Up" forState:UIControlStateNormal];
-    [self.signUp setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [self.signUp setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.signUp.backgroundColor = FOSAgreen;
-    self.signUp.layer.cornerRadius = self.signUp.frame.size.height/3;
+    self.signUp.layer.cornerRadius = self.signUp.frame.size.height/2;
     self.signUp.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.signUp.titleLabel.font = [UIFont systemFontOfSize:25];
     [self.signUp addTarget:self action:@selector(SignUpEvent) forControlEvents:UIControlEventTouchUpInside];
