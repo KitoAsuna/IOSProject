@@ -22,7 +22,6 @@
 		4500E12523BAEB14002EB9FE /* AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 4500E11423BAEB14002EB9FE /* AvoidCrash.m */; };
 		4500E12623BAEB14002EB9FE /* AvoidCrashStubProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4500E11723BAEB14002EB9FE /* AvoidCrashStubProxy.m */; };
 		4500E12D23BB1DCE002EB9FE /* QRCodeScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4500E12C23BB1DCE002EB9FE /* QRCodeScanViewController.m */; };
-		4500E13523BB1FF9002EB9FE /* saoyisao@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4500E13023BB1FF9002EB9FE /* saoyisao@3x.png */; };
 		4500E13723BB1FF9002EB9FE /* ding.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4500E13223BB1FF9002EB9FE /* ding.wav */; };
 		4500E13E23BB248A002EB9FE /* Fosa_QRCode_Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4500E13A23BB2489002EB9FE /* Fosa_QRCode_Queue.m */; };
 		4500E13F23BB248A002EB9FE /* Fosa_NSString_Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4500E13C23BB2489002EB9FE /* Fosa_NSString_Queue.m */; };
@@ -63,6 +62,7 @@
 		454421EE23CC1680002FADFE /* FoodMoreInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421EC23CC1680002FADFE /* FoodMoreInfoView.m */; };
 		454421F223CC6B70002FADFE /* AboutAppsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421F123CC6B70002FADFE /* AboutAppsViewController.m */; };
 		4544298623CF05B500662F18 /* CategoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4544298523CF05B500662F18 /* CategoryTableViewCell.m */; };
+		455F4AC723D157FE00BE3822 /* saoyisao@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 455F4AC623D157FE00BE3822 /* saoyisao@3x.png */; };
 		4590C81C23B9A58700691461 /* FoodModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C81B23B9A58700691461 /* FoodModel.m */; };
 		4590C83723B9C5F500691461 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C82C23B9C5F500691461 /* FMDatabaseQueue.m */; };
 		4590C83823B9C5F500691461 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C82F23B9C5F500691461 /* FMDatabaseAdditions.m */; };
@@ -152,7 +152,6 @@
 		4500E11B23BAEB14002EB9FE /* NSMutableArray+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+AvoidCrash.h"; sourceTree = "<group>"; };
 		4500E12B23BB1DCE002EB9FE /* QRCodeScanViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QRCodeScanViewController.h; sourceTree = "<group>"; };
 		4500E12C23BB1DCE002EB9FE /* QRCodeScanViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QRCodeScanViewController.m; sourceTree = "<group>"; };
-		4500E13023BB1FF9002EB9FE /* saoyisao@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saoyisao@3x.png"; sourceTree = "<group>"; };
 		4500E13223BB1FF9002EB9FE /* ding.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ding.wav; sourceTree = "<group>"; };
 		4500E13A23BB2489002EB9FE /* Fosa_QRCode_Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fosa_QRCode_Queue.m; sourceTree = "<group>"; };
 		4500E13B23BB2489002EB9FE /* Fosa_QRCode_Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fosa_QRCode_Queue.h; sourceTree = "<group>"; };
@@ -220,6 +219,7 @@
 		454421F123CC6B70002FADFE /* AboutAppsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AboutAppsViewController.m; sourceTree = "<group>"; };
 		4544298423CF05B500662F18 /* CategoryTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryTableViewCell.h; sourceTree = "<group>"; };
 		4544298523CF05B500662F18 /* CategoryTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CategoryTableViewCell.m; sourceTree = "<group>"; };
+		455F4AC623D157FE00BE3822 /* saoyisao@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saoyisao@3x.png"; sourceTree = "<group>"; };
 		4590C81A23B9A58700691461 /* FoodModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FoodModel.h; sourceTree = "<group>"; };
 		4590C81B23B9A58700691461 /* FoodModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FoodModel.m; sourceTree = "<group>"; };
 		4590C82B23B9C5F500691461 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
@@ -373,7 +373,7 @@
 				4528AAF323BDE12700957279 /* icon_flashON.png */,
 				4528AAEE23BD7DF100957279 /* scanLine_Horizontal.png */,
 				4528AAF023BD7DF800957279 /* scanLine_Vertical.png */,
-				4500E13023BB1FF9002EB9FE /* saoyisao@3x.png */,
+				455F4AC623D157FE00BE3822 /* saoyisao@3x.png */,
 				4500E12B23BB1DCE002EB9FE /* QRCodeScanViewController.h */,
 				4500E12C23BB1DCE002EB9FE /* QRCodeScanViewController.m */,
 				450A3C2623C4687E000D55C8 /* ResultViewController.h */,
@@ -885,9 +885,9 @@
 				4502FF7623CFF0140013AB31 /* IMG_OtherSealer.png in Resources */,
 				4597BD6B23C3104C0031DC4C /* img_fosa.jpg in Resources */,
 				45A506D923B8402E0046FC09 /* LaunchScreen.storyboard in Resources */,
-				4500E13523BB1FF9002EB9FE /* saoyisao@3x.png in Resources */,
 				4502FF7E23D033380013AB31 /* Assets.xcassets in Resources */,
 				4502FF7023CFE2480013AB31 /* IMG_Pound.png in Resources */,
+				455F4AC723D157FE00BE3822 /* saoyisao@3x.png in Resources */,
 				4528AAF423BDE12800957279 /* icon_flashOff.png in Resources */,
 				4539A21223C7268300079420 /* MenuTableViewCellXIB.xib in Resources */,
 				4502FF6F23CFE2480013AB31 /* IMG_Sealer.png in Resources */,

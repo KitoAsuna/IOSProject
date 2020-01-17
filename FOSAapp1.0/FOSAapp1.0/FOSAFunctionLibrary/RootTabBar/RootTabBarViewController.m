@@ -41,12 +41,11 @@
     fosa.tabBarItem.selectedImage = [UIImage imageNamed:selectImage];
     
     //修改字体颜色
-    [fosa.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:FOSAgreen} forState:UIControlStateHighlighted];
-    [fosa.tabBarItem setTitleTextAttributes:@{ NSForegroundColorAttributeName : [UIColor blackColor],NSFontAttributeName:[UIFont fontWithName:@"Helvetica-Bold" size:15.0]}            forState:UIControlStateNormal];
+    [fosa.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateNormal];
+    [fosa.tabBarItem setTitleTextAttributes:@{ NSForegroundColorAttributeName : FOSAgreen,NSFontAttributeName:[UIFont fontWithName:@"Helvetica-Bold" size:15.0]}            forState:UIControlStateHighlighted];
 
     //3.创建导航控制器
     UINavigationController *nvc = [[UINavigationController alloc]initWithRootViewController:fosa];
-    
     //设置背景透明图片,使得导航栏透明的同时item不透明
     [nvc.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     //去掉 bar 下面有一条黑色的线
@@ -54,7 +53,7 @@
     //[[UINavigationBar appearance]setTintColor:[UIColorwhiteColor]];
     nvc.navigationBar.tintColor = [UIColor grayColor];
    
-    [nvc.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+    [nvc.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:30*(screen_width/414.0)]}];
     //4.添加到标签栏控制器
     [self addChildViewController:nvc];
 }

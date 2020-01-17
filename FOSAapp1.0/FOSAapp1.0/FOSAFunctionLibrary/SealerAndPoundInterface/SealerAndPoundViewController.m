@@ -28,7 +28,7 @@
     self.sealerView = [[UIView alloc]initWithFrame:CGRectMake(screen_width/30, NavigationBarHeight, sealerViewWidth, sealerViewHeight)];
     self.sealerView.layer.shadowColor = FOSAshadowColor.CGColor;
     self.sealerView.backgroundColor = [UIColor whiteColor];
-    self.sealerView.layer.shadowOffset = CGSizeMake(0,2.0f);
+    self.sealerView.layer.shadowOffset = CGSizeMake(5,5.0f);
     self.sealerView.layer.cornerRadius = 10;
     self.sealerView.layer.shadowRadius = 10.0f;
     self.sealerView.layer.shadowOpacity =1.0f;
@@ -58,7 +58,7 @@
     self.otherSealerView = [[UIView alloc]initWithFrame:CGRectMake(screen_width/30, CGRectGetMaxY(self.sealerView.frame)+screen_width/30, otherSealerViewWidth, otherSealerViewHeight)];
     self.otherSealerView.layer.shadowColor = FOSAshadowColor.CGColor;
     self.otherSealerView.backgroundColor = [UIColor whiteColor];
-    self.otherSealerView.layer.shadowOffset = CGSizeMake(0,2.0f);
+    self.otherSealerView.layer.shadowOffset = CGSizeMake(5,5.0f);
     self.otherSealerView.layer.cornerRadius = 10;
     self.otherSealerView.layer.shadowRadius = 10.0f;
     self.otherSealerView.layer.shadowOpacity =1.0f;
@@ -87,7 +87,7 @@
     self.poundView = [[UIView alloc]initWithFrame:CGRectMake(screen_width/30, CGRectGetMaxY(self.otherSealerView.frame)+screen_width/30, poundViewWidth, poundViewHeight)];
     self.poundView.layer.shadowColor = FOSAshadowColor.CGColor;
     self.poundView.backgroundColor = [UIColor whiteColor];
-    self.poundView.layer.shadowOffset = CGSizeMake(0,2.0f);
+    self.poundView.layer.shadowOffset = CGSizeMake(5,5.0f);
     self.poundView.layer.cornerRadius = 10;
     self.poundView.layer.shadowRadius = 10.0f;
     self.poundView.layer.shadowOpacity =1.0f;

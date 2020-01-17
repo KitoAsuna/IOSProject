@@ -139,7 +139,7 @@
     CGFloat logoH = self.logoContainer.frame.size.height;
     CGFloat logoX = (logoW - logoH)/2;
     self.FOSALogo.frame = CGRectMake(logoX, 0, logoH, logoH);
-    self.FOSALogo.image = [UIImage imageNamed:@"icon_logoHL"];
+    self.FOSALogo.image = [UIImage imageNamed:@"icon_FOSAlogoHL"];
     [self.logoContainer addSubview:self.FOSALogo];
     
     self.userNameInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);

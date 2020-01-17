@@ -251,7 +251,7 @@
     [self.flashBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashOff.png"] forState:UIControlStateNormal];
     [self.flashBtn addTarget:self action:@selector(OpenOrCloseFlash) forControlEvents:UIControlEventTouchUpInside];
     //UISlider
-    self.zoomSlider.frame = CGRectMake(imageX,imageY+self.view.frame.size.width*0.7,self.view.frame.size.width*0.7,20);
+    self.zoomSlider.frame = CGRectMake(imageX,imageY+self.view.frame.size.width*0.7,self.view.frame.size.width*0.7+10,20);
     [self.view addSubview:self.zoomSlider];
     self.zoomSlider.minimumValue = 0;
     self.zoomSlider.maximumValue = 100;
@@ -295,7 +295,7 @@
     self.flashBtn.clipsToBounds = YES;
     [self.flashBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashOff.png"] forState:UIControlStateNormal];
     [self.flashBtn addTarget:self action:@selector(OpenOrCloseFlash) forControlEvents:UIControlEventTouchUpInside];
-    self.zoomSlider.frame = CGRectMake(imageX,screen_height-NavigationBarHeight*2,self.view.frame.size.width*0.5,20);
+    self.zoomSlider.frame = CGRectMake(imageX-10,screen_height-NavigationBarHeight*2,self.view.frame.size.width*0.5,20);
     [self.view addSubview:self.zoomSlider];
     self.zoomSlider.minimumValue = 0;
     self.zoomSlider.maximumValue = 100;

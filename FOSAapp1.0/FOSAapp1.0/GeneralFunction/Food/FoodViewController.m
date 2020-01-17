@@ -398,8 +398,8 @@
     self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth/3, headerHeight-30, headerWidth/3, 20)];
     self.pageControl.currentPage = 0;
     self.pageControl.numberOfPages = 3;
-    self.pageControl.pageIndicatorTintColor = [UIColor redColor];
-    self.pageControl.currentPageIndicatorTintColor = [UIColor greenColor];
+    self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
+    self.pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
     [self.headerView addSubview:self.pageControl];
 }
 - (void)EnlargePhoto:(UITapGestureRecognizer *)sender{

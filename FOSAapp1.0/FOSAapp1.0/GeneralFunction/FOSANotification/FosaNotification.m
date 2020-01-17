@@ -199,7 +199,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     UIImageView *image = [[UIImageView alloc]initWithFrame:CGRectMake(0,mainHeight/8, mainwidth, mainHeight/2)];
     
     //FOSA的logo
-    UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*2/5, mainHeight-mainwidth/5, mainwidth/10, mainwidth/10)];
+    UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*2/5, mainHeight-mainwidth/5, mainwidth/5, mainwidth/5)];
     
     //FOSA
     UILabel *brand = [[UILabel alloc]initWithFrame:CGRectMake(mainwidth/15, mainHeight*5/8, mainwidth/4, mainHeight/16)];
@@ -217,7 +217,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     [notification addSubview:image];
     [notification addSubview:Nbody];
 
-    logo.image  = [UIImage imageNamed:@"icon_logoHL"];
+    logo.image  = [UIImage imageNamed:@"icon_ntificationBrand"];
     NSLog(@"食物图片被添加到分享视图上:%@",self.image);
     image.image = self.image;
     image.contentMode = UIViewContentModeScaleAspectFill;
@@ -227,8 +227,8 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     InfoCodeView.contentMode = UIViewContentModeScaleAspectFill;
     InfoCodeView.clipsToBounds = YES;
     
-    brand.font  = [UIFont systemFontOfSize:15];
-    brand.textAlignment = NSTextAlignmentCenter;
+    brand.font  = [UIFont systemFontOfSize:20];
+    //brand.textAlignment = NSTextAlignmentCenter;
     brand.text  = @"FOSA";
     
     Nbody.font   = [UIFont systemFontOfSize:12];

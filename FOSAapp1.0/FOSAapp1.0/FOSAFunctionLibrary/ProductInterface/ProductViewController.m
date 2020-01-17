@@ -13,8 +13,8 @@
 #import "CategoryTableViewCell.h"
 
 @interface ProductViewController ()<UISearchBarDelegate,UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>{
-    NSArray *arrayData;
-    NSArray *array1,*array2,*array3,*array4,*array5,*array6,*array7;
+    //NSArray *arrayData;
+    //NSArray *array1,*array2,*array3,*array4,*array5,*array6,*array7;
     NSMutableArray<NSString *> *fosaDataSource,*myDeviceSource;
     CGFloat lastContentOffset;
     NSString *fosaDeviceID,*myDeviceID;
@@ -22,7 +22,7 @@
     NSIndexPath *currentFosaIndexPath,*currentMyIndexpath;
     Boolean isFirstOpen;
 }
-//@property (nonatomic,strong) NSArray *array1,*array2,*array3,*array4,*array5;
+@property (nonatomic,strong) NSArray *arrayData,*array1,*array2,*array3,*array4,*array5,*array6,*array7;
 //@property (nonatomic,strong) NSMutableArray<NSString *> *fosaDataSource,*myDeviceSource;
 @property (nonatomic,strong) UIView *indecator;
 @end
@@ -96,36 +96,54 @@
     }
     return _indecator;
 }
-//- (NSArray *)array1{
-//    if (_array1 == nil) {
-//
-//    }
-//    return _array1;
-//}
-//- (NSArray *)array2{
-//    if (_array2 == nil) {
-//
-//    }
-//    return _array2;
-//}
-//- (NSArray *)array3{
-//    if (_array3 == nil) {
-//
-//    }
-//    return _array3;
-//}
-//- (NSArray *)array4{
-//    if (_array4 == nil) {
-//
-//    }
-//    return _array4;
-//}
-//- (NSArray *)array5{
-//    if (_array5 == nil) {
-//
-//    }
-//    return _array5;
-//}
+- (NSArray *)arrayData{
+    if (_arrayData == nil) {
+        _arrayData = @[@"MADRID",@"BARCELONA",@"MALAGA",@"O2Go",@"O2Go WINE",@"New Product",@"All"];
+    }
+    return _arrayData;
+}
+- (NSArray *)array1{
+    if (_array1 == nil) {
+        _array1 = @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04"];
+    }
+    return _array1;
+}
+- (NSArray *)array2{
+    if (_array2 == nil) {
+        _array2 = @[@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07"];
+    }
+    return _array2;
+}
+- (NSArray *)array3{
+    if (_array3 == nil) {
+        _array3 = @[@"S Size0.9L",@"M Size2L",@"L Size3.8L",@"V-ADAPTER"];
+    }
+    return _array3;
+}
+- (NSArray *)array4{
+    if (_array4 == nil) {
+        _array4 = @[@"0.97L(33oz)",@"1.32L(45oz)"];
+    }
+    return _array4;
+}
+- (NSArray *)array5{
+    if (_array5 == nil) {
+        _array5 = @[@"WINE_Pouchbag",@"WINE0.97L(33oz)"];
+    }
+    return _array5;
+}
+- (NSArray *)array6{
+    if (_array6 == nil) {
+        _array6 = @[@"FOSA003",@"FOSA001",@"IMG_Pound"];
+    }
+    return _array6;
+}
+- (NSArray *)array7{
+    if (_array7 == nil) {
+        _array7 = @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04",@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07",@"S Size0.9L",@"M Size2L",@"L Size3.8L",@"V-ADAPTER",@"0.97L(33oz)",@"1.32L(45oz)",@"WINE_Pouchbag",@"WINE0.97L(33oz)",@"FOSA003",@"FOSA001",@"IMG_Pound"];
+    }
+    return _array7;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -152,18 +170,19 @@
 }
 
 - (void)initData{
-    arrayData = @[@"MADRID",@"BARCELONA",@"MALAGA",@"O2Go",@"O2Go WINE",@"New Product",@"All"];
-    array1 = @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04"];
-    array2 = @[@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07"];
-    array3 = @[@"S Size0.9L",@"M Size2L",@"L Size3.8L",@"V-ADAPTER"];
-    array4 = @[@"0.97L(33oz)",@"1.32L(45oz)"];
-    array5 = @[@"WINE_Pouchbag",@"WINE0.97L(33oz)"];
-    array6 = @[@"FOSA003",@"FOSA001",@"IMG_Pound"];
-    array7 = @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04",@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07"];
-    fosaDataSource = [[NSMutableArray alloc]init];//默认选中1
-    [self addObjectByArray:array1 target:fosaDataSource];
-    myDeviceSource = [[NSMutableArray alloc]init];
-    [self addObjectByArray:array1 target:myDeviceSource];
+    //arrayData = @[@"MADRID",@"BARCELONA",@"MALAGA",@"O2Go",@"O2Go WINE",@"New Product",@"All"];
+    //array1 = @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04"];
+    //array2 = @[@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07"];
+    //array3 = @[@"S Size0.9L",@"M Size2L",@"L Size3.8L",@"V-ADAPTER"];
+    //array4 = @[@"0.97L(33oz)",@"1.32L(45oz)"];
+    //array5 = @[@"WINE_Pouchbag",@"WINE0.97L(33oz)"];
+    //array6 = @[@"FOSA003",@"FOSA001",@"IMG_Pound"];
+    //array7 = @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04",@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07",@"S Size0.9L",@"M Size2L",@"L Size3.8L",@"V-ADAPTER",@"0.97L(33oz)",@"1.32L(45oz)",@"WINE_Pouchbag",@"WINE0.97L(33oz)",@"FOSA003",@"FOSA001",@"IMG_Pound"];
+
+    fosaDataSource = [[NSMutableArray alloc]initWithArray:self.array1];//默认选中1
+    //[self addObjectByArray:self.array1 target:fosaDataSource];
+    myDeviceSource = [[NSMutableArray alloc]initWithArray:self.array1];
+    //[self addObjectByArray:self.array1 target:myDeviceSource];
     
     fosaDeviceID = @"fosaDeviceCell";
     myDeviceID   = @"myDeviceCell";
@@ -240,7 +259,7 @@
     self.mainScrollView.showsVerticalScrollIndicator = NO;
     [self.productView addSubview:self.mainScrollView];
     
-//    //layout
+   //layout
     CGFloat scrollerWidth = self.mainScrollView.frame.size.width;
     CGFloat scrollerHeight = self.mainScrollView.frame.size.height;
     
@@ -308,7 +327,7 @@
 //每组多少行
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return arrayData.count;
+    return self.arrayData.count;
 }
 //多少组
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -329,7 +348,7 @@
     cell.textLabel.font = [UIFont systemFontOfSize:11*(([UIScreen mainScreen].bounds.size.width/414.0))];
     cell.textLabel.textAlignment = NSTextAlignmentLeft;
     cell.textLabel.highlightedTextColor = FOSAgreen;
-    cell.textLabel.text = arrayData[indexPath.row];
+    cell.textLabel.text = self.arrayData[indexPath.row];
     //返回cell
     return cell;
 }
@@ -344,25 +363,25 @@
     self.searchBar.showsCancelButton = NO;
     switch (indexPath.row) {
         case 0:
-            [self switchProductCategoryByArray:array1];
+            [self switchProductCategoryByArray:self.array1];
             break;
         case 1:
-            [self switchProductCategoryByArray:array2];
+            [self switchProductCategoryByArray:self.array2];
             break;
         case 2:
-            [self switchProductCategoryByArray:array3];
+            [self switchProductCategoryByArray:self.array3];
             break;
         case 3:
-            [self switchProductCategoryByArray:array4];
+            [self switchProductCategoryByArray:self.array4];
             break;
         case 4:
-            [self switchProductCategoryByArray:array5];
+            [self switchProductCategoryByArray:self.array5];
             break;
         case 5:
-            [self switchProductCategoryByArray:array6];
+            [self switchProductCategoryByArray:self.array6];
             break;
         case 6:
-            [self switchProductCategoryByArray:array7];
+            [self switchProductCategoryByArray:self.array7];
             break;
         default:
             break;
@@ -384,11 +403,15 @@
 
 - (void)switchProductCategoryByArray:(NSArray *)array{
     if (index == 0) {
-        [self addObjectByArray:array target:fosaDataSource];
+        //[self addObjectByArray:array target:fosaDataSource];
+        [fosaDataSource removeAllObjects];
+        [fosaDataSource addObjectsFromArray:array];
         NSLog(@"fosaProduct:%@",fosaDataSource);
         [self.fosaProductCollection reloadData];
     }else if(index == 1){
-        [self addObjectByArray:array target:myDeviceSource];
+        //[self addObjectByArray:array target:myDeviceSource];
+        [myDeviceSource removeAllObjects];
+        [myDeviceSource addObjectsFromArray:array];
         NSLog(@"myDevice:%@",myDeviceSource);
         [self.myProductCollection reloadData];
     }
@@ -439,37 +462,37 @@
 }
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     NSLog(@"当前滚动视图:%@",scrollView);
-//    if (![scrollView isKindOfClass:[self.fosaProductCollection class]]) {
-//        CGFloat offset = scrollView.contentOffset.x;
-//        index = offset/self.mainScrollView.frame.size.width;
-//        NSLog(@"%ld",(long)index);
-//        if (index == 0) {
-//            self.fosa.backgroundColor = FOSAgreen;
-//            self.fosa.titleLabel.textColor = [UIColor whiteColor];
-//            self.myFosa.backgroundColor = [UIColor whiteColor];
-//            self.myFosa.titleLabel.textColor = [UIColor grayColor];
-//            UITableViewCell *cell1 = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentMyIndexpath];
-//            cell1.textLabel.textColor = [UIColor blackColor];
-//            [self.indecator removeFromSuperview];
-//            
-//            UITableViewCell *cell2 = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentFosaIndexPath];
-//            cell2.textLabel.textColor = FOSAgreen;
-//            [cell2 addSubview:self.indecator];
-//            [self.productCategory selectRowAtIndexPath:currentFosaIndexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
-//        }else if(index == 1){
-//            self.myFosa.backgroundColor = FOSAgreen;
-//            self.myFosa.titleLabel.textColor = [UIColor whiteColor];
-//            self.fosa.backgroundColor = [UIColor whiteColor];
-//            self.fosa.titleLabel.textColor = [UIColor grayColor];
-//            UITableViewCell *cell = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentFosaIndexPath];
-//            cell.textLabel.textColor = [UIColor blackColor];
-//            [self.indecator removeFromSuperview];
-//            UITableViewCell *cell1 = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentMyIndexpath];
-//            cell1.textLabel.textColor = FOSAgreen;
-//            [cell1 addSubview:self.indecator];
-//            [self.productCategory selectRowAtIndexPath:currentMyIndexpath animated:YES scrollPosition:UITableViewScrollPositionNone];
-//        }
-//    }
+    if (![scrollView isKindOfClass:[self.fosaProductCollection class]]) {
+        CGFloat offset = scrollView.contentOffset.x;
+        index = offset/self.mainScrollView.frame.size.width;
+        NSLog(@"%ld",(long)index);
+        if (index == 0) {
+            self.fosa.backgroundColor = FOSAgreen;
+            self.fosa.titleLabel.textColor = [UIColor whiteColor];
+            self.myFosa.backgroundColor = [UIColor whiteColor];
+            self.myFosa.titleLabel.textColor = [UIColor grayColor];
+            UITableViewCell *cell1 = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentMyIndexpath];
+            cell1.textLabel.textColor = [UIColor blackColor];
+            [self.indecator removeFromSuperview];
+            
+            UITableViewCell *cell2 = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentFosaIndexPath];
+            cell2.textLabel.textColor = FOSAgreen;
+            [cell2 addSubview:self.indecator];
+            [self.productCategory selectRowAtIndexPath:currentFosaIndexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+        }else if(index == 1){
+            self.myFosa.backgroundColor = FOSAgreen;
+            self.myFosa.titleLabel.textColor = [UIColor whiteColor];
+            self.fosa.backgroundColor = [UIColor whiteColor];
+            self.fosa.titleLabel.textColor = [UIColor grayColor];
+            UITableViewCell *cell = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentFosaIndexPath];
+            cell.textLabel.textColor = [UIColor blackColor];
+            [self.indecator removeFromSuperview];
+            UITableViewCell *cell1 = (UITableViewCell *)[self.productCategory cellForRowAtIndexPath:currentMyIndexpath];
+            cell1.textLabel.textColor = FOSAgreen;
+            [cell1 addSubview:self.indecator];
+            [self.productCategory selectRowAtIndexPath:currentMyIndexpath animated:YES scrollPosition:UITableViewScrollPositionNone];
+        }
+    }
          
 }
 #pragma mark - UICollectionViewDataSource
@@ -503,11 +526,11 @@
         cell.productImageView.image = [UIImage imageNamed:fosaDataSource[index]];
         cell.productName.text = fosaDataSource[index];
         cell.layer.cornerRadius = 5;
-        
-        cell.layer.shadowColor = [UIColor lightGrayColor].CGColor;
-        cell.layer.shadowOffset = CGSizeMake(0,2.0f);
+
+        cell.layer.shadowColor = FOSAshadowColor.CGColor;
+        cell.layer.shadowOffset = CGSizeMake(3,3.0f);
         cell.layer.shadowRadius =2.0f;
-        cell.layer.shadowOpacity =1.0f;
+        cell.layer.shadowOpacity =0.5f;
         cell.layer.masksToBounds =NO;
         //cell.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:cell.contentView.layer.cornerRadius].CGPath;
         return cell;
@@ -518,10 +541,10 @@
         cell.productName.text = myDeviceSource[index];
         cell.layer.cornerRadius = 5;
         
-        cell.layer.shadowColor = [UIColor lightGrayColor].CGColor;
-        cell.layer.shadowOffset = CGSizeMake(0,2.0f);
+        cell.layer.shadowColor = FOSAshadowColor.CGColor;
+        cell.layer.shadowOffset = CGSizeMake(3,3.0f);
         cell.layer.shadowRadius =2.0f;
-        cell.layer.shadowOpacity =1.0f;
+        cell.layer.shadowOpacity =0.5f;
         cell.layer.masksToBounds =NO;
         //cell.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:cell.bounds cornerRadius:cell.contentView.layer.cornerRadius].CGPath;
         return cell;

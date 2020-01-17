@@ -42,7 +42,7 @@
 - (void)CreatView{
     self.view.backgroundColor = [UIColor whiteColor];
     self.logo.frame = CGRectMake(screen_width*2/5, screen_height/6, screen_width/5, screen_width/5);
-    self.logo.image = [UIImage imageNamed:@"icon_logoHL"];
+    self.logo.image = [UIImage imageNamed:@"icon_FOSAlogoHL"];
     [self.view addSubview:self.logo];
     
     self.versionTitleLable.frame = CGRectMake(screen_width/3, screen_height/6+screen_width/5, screen_width/3, 40);

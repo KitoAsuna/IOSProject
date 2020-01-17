@@ -25,7 +25,6 @@
 @property (nonatomic,strong) FMDatabase *db;
 @property (nonatomic,strong) UIActivityIndicatorView *FOSAloadingView;
 @property (nonatomic,strong) FosaNotification *notification;
-
 @property (nonatomic,strong) NSMutableArray *categoryArray;
 
 @end
@@ -111,7 +110,6 @@
 - (void)CollectionReload{
     [self.collectionDataSource removeAllObjects];
     [self.cellDictionary removeAllObjects];
-    NSLog(@"高度：%@",self.FOSALayout.maxYDic);
     [self OpenSqlDatabase:@"FOSA"];
     [self SelectDataFromFoodTable];
     [self.foodItemCollection reloadData];
@@ -244,15 +242,16 @@
         // 4 把创建的refreshControl赋值给scrollView的refreshControl属性
         self.foodItemCollection.refreshControl = refreshControl;
     }
+    //self.foodItemCollection.alwaysBounceVertical = YES;
     self.foodItemCollection.delegate   = self;
     self.foodItemCollection.dataSource = self;
     self.foodItemCollection.showsVerticalScrollIndicator = NO;
     self.foodItemCollection.backgroundColor = [UIColor whiteColor];
-    self.foodItemCollection.bounces = NO;
+    //self.foodItemCollection.bounces = NO;
     [self.view addSubview:self.foodItemCollection];
     //添加按钮
-    self.addContentBtn = [[UIButton alloc]initWithFrame:CGRectMake(screen_width*5/6, screen_height/6, screen_width/6, screen_width/6)];
-    [_addContentBtn setBackgroundImage:[UIImage imageNamed:@"icon_add"] forState:UIControlStateNormal];
+    self.addContentBtn = [[UIButton alloc]initWithFrame:CGRectMake(screen_width*3/4, screen_height/6, screen_width/6, screen_width/6)];
+    [_addContentBtn setBackgroundImage:[UIImage imageNamed:@"icon_AddBtnShadow"] forState:UIControlStateNormal];
     [self.view insertSubview:_addContentBtn atIndex:10];
     [_addContentBtn addTarget:self action:@selector(addFunction) forControlEvents:UIControlEventTouchUpInside];
 
@@ -273,13 +272,14 @@
     //数据源
     self.menuDataSource = [self getCategoryArray];
     //初始化模糊层
-    //self.CategoryMenuTable.layer.cornerRadius = 15;
+    self.CategoryMenuTable.layer.cornerRadius = 5;
     self.CategoryMenuTable.delegate = self;
     self.CategoryMenuTable.dataSource = self;
     self.CategoryMenuTable.showsVerticalScrollIndicator = NO;
-    UIImageView *backgroundImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"icon_categoryBcg"]];
-    self.CategoryMenuTable.backgroundView = backgroundImage;
-    self.CategoryMenuTable.bounces = NO;
+    self.CategoryMenuTable.backgroundColor = FOSAgreen;
+//    UIImageView *backgroundImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"icon_categoryBcg"]];
+//    self.CategoryMenuTable.backgroundView = backgroundImage;
+   self.CategoryMenuTable.bounces = NO;
     
     //关联NIB与tableview
     UINib *nib = [UINib nibWithNibName:@"MenuTableViewCellXIB" bundle:nil];
@@ -302,8 +302,8 @@
     if(recognizer.direction == UISwipeGestureRecognizerDirectionLeft) {
         NSLog(@"swipe left");
         //self.CategoryMenuTable.layer.cornerRadius = 0;
-        [self setCornerOnRight:0 view:self.CategoryMenuTable];
-        [self.CategoryMenuTable setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+        //[self setCornerOnRight:0 view:self.CategoryMenuTable];
+        //[self.CategoryMenuTable setSeparatorStyle:UITableViewCellSeparatorStyleNone];
         //执行程序
         [UIView animateWithDuration:0.2 animations:^{
             self.CategoryMenuTable.center = CGPointMake(-screen_width*3/24, self.CategoryMenuTable.center.y);
@@ -315,8 +315,8 @@
     if(recognizer.direction == UISwipeGestureRecognizerDirectionRight) {
         NSLog(@"swipe right");
         //self.CategoryMenuTable.layer.cornerRadius = 15;
-        [self setCornerOnRight:15 view:self.CategoryMenuTable];
-        [self.CategoryMenuTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+        //[self setCornerOnRight:15 view:self.CategoryMenuTable];
+        //[self.CategoryMenuTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
         self.CategoryMenuTable.separatorColor = [UIColor whiteColor];
         //执行程序
         [UIView animateWithDuration:0.2 animations:^{
@@ -385,9 +385,10 @@
         cell = [[MenuTableViewCellXIB alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"categoryCell"];
     }
     long int index = indexPath.row;
-    [cell configCell:_menuDataSource[index]];
+    [cell configCell:self.menuDataSource[index]];
+    NSLog(@"%ld-------%@",index,self.menuDataSource[index])
     cell.categoryTitle.textColor = [UIColor whiteColor];
-    cell.backgroundColor = [UIColor clearColor];
+    cell.backgroundColor = FOSAgreen;
     cell.backgroundView.alpha = 1.0 - 0.1*(int)index;
     //取消点击cell时显示的背景色
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -405,6 +406,7 @@
 }
 /**种类cell的点击事件*/
 - (void)cellAction:(MenuTableViewCellXIB *)cell{
+    NSLog(@"点击了种类%@",cell.categoryTitle.text);
    //执行程序
 //    [UIView animateWithDuration:0.2 animations:^{
 //        self.CategoryMenuTable.center = CGPointMake(-screen_width/12, self.CategoryMenuTable.center.y);
@@ -465,6 +467,12 @@
 //    }
     FoodItemCollectionViewCell *cell = [self.foodItemCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
 
+    cell.layer.shadowColor = [UIColor blackColor].CGColor;
+    cell.layer.shadowOffset = CGSizeMake(0.5f,0.5f);
+    cell.layer.shadowRadius =10.0f;
+    cell.layer.shadowOpacity =0.2f;
+    cell.layer.masksToBounds =NO;
+    
     //给自定义cell的model传值
     
     NSLog(@"--------------%lu~~~~~~~~~~~~~~~~~~%lu",index,indexPath.row);

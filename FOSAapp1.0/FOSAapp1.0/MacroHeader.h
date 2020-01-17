@@ -125,6 +125,13 @@
 #define ToolbarHeight self.navigationController.toolbar.frame.size.height
 
 #define mouth [NSDictionary dictionaryWithObjectsAndKeys:@"Jan",@"01",@"Feb",@"02",@"Mar",@"03",@"Apr",@"04",@"May",@"05",@"June",@"06",@"July",@"07",@"Aug",@"08",@"Sept",@"09",@"Oct",@"10",@"Nov",@"11",@"Dec",@"12",nil]
-
+//#define arrayData @[@"MADRID",@"BARCELONA",@"MALAGA",@"O2Go",@"O2Go WINE",@"New Product",@"All"];
+//#define array1 @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04"];
+//#define array2 @[@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07"];
+//#define array3 @[@"S Size0.9L",@"M Size2L",@"L Size3.8L",@"V-ADAPTER"];
+//#define array4 @[@"0.97L(33oz)",@"1.32L(45oz)"];
+//#define array5 @[@"WINE_Pouchbag",@"WINE0.97L(33oz)"];
+//#define array6 @[@"FOSA003",@"FOSA001",@"IMG_Pound"];
+//#define array7 @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04",@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07",@"S Size0.9L",@"M Size2L",@"L Size3.8L",@"V-ADAPTER",@"0.97L(33oz)",@"1.32L(45oz)",@"WINE_Pouchbag",@"WINE0.97L(33oz)",@"FOSA003",@"FOSA001",@"IMG_Pound"];
 
 #endif /* MacroHeader_h */
