@@ -148,6 +148,7 @@
     self.userNameInput.returnKeyType = UIReturnKeyDone;
     self.userNameInput.delegate = self;
     self.userNameInput.layer.cornerRadius = self.userNameInput.frame.size.height/3;
+    [self.userNameInput setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
     [self.userContainer addSubview:self.userNameInput];
     
     self.passwordInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
@@ -157,6 +158,7 @@
     self.passwordInput.delegate = self;
     self.passwordInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     self.passwordInput.layer.cornerRadius = self.passwordInput.frame.size.height/3;
+    [self.passwordInput setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
     [self.passwordContainer addSubview:self.passwordInput];
     
     self.checkPassword.frame = CGRectMake(screen_width*5/6-screen_height/12, screen_height/48, screen_height/12-10, screen_height/24);

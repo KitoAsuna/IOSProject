@@ -191,7 +191,7 @@
 //注册按钮事件
 - (void)SignUpEvent{
     if ([self.userNameInput.text isEqualToString:@""] || [self.passwordInput.text isEqualToString:@""]) {
-        [self SystemAlert:@"账号或密码不能为空"];
+        [self SystemAlert:@"please input your ID or password"];
     }else{
         [self CreatSqlDatabase:@"FOSA"];
     }
@@ -217,7 +217,7 @@ if (isButtonOn) {
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:message preferredStyle:UIAlertControllerStyleAlert];
-    if ([message isEqualToString:@"账号或密码不能为空"]) {
+    if ([message isEqualToString:@"please input your ID or password"]) {
         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
         [self presentViewController:alert animated:true completion:nil];
     }else{

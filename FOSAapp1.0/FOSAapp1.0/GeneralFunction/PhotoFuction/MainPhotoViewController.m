@@ -82,7 +82,7 @@
     self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(screen_width/3, screen_height-30, screen_width/3, 30)];
     _pageControl.numberOfPages = 3;
     _pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
-    _pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+    _pageControl.currentPageIndicatorTintColor = FOSAgreen;
     [self.view addSubview:self.pageControl];
     //[self.navigationController.navigationBar bringSubviewToFront:_pageControl];
     //self.navigationController.navigationBart

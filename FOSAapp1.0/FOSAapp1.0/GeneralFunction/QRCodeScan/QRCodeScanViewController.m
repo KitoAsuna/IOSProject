@@ -616,7 +616,8 @@ NSLog(@"************************************************************************
     food.isAdding = false;
     FoodModel *model = [self CheckFoodInfoWithName:result];
     if ([model.foodName isEqualToString:@"NO Record"]) {
-        [self SystemAlert:@"NO Record,Please adding"];
+        NSString *message = [NSString stringWithFormat:@"device %@    NO Record,Please adding",result];
+        [self SystemAlert:message];
     }else{
         food.foodNameInput.text = model.foodName;
         food.remindDateLable.text = model.remindDate;

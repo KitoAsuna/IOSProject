@@ -216,7 +216,7 @@
     
     int collectionWidth = screen_width*23/24;
     int collectionHeigt = screen_height*33/48-TabbarHeight;
-    
+
     UICollectionViewFlowLayout *fosaFlowLayout = [[UICollectionViewFlowLayout alloc] init];
     fosaFlowLayout.sectionInset = UIEdgeInsetsMake(10, 10, 0, 10);//上、左、下、右
     fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-30)/2,(collectionHeigt-20)/3);
@@ -236,7 +236,7 @@
         // 3.1 配置刷新控件
         refreshControl.tintColor = [UIColor brownColor];
         NSDictionary *attributes = @{NSForegroundColorAttributeName : [UIColor redColor]};
-        refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull To Refresh" attributes:attributes];
+        refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing" attributes:attributes];
         // 3.2 添加响应事件
         [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
         // 4 把创建的refreshControl赋值给scrollView的refreshControl属性
@@ -276,11 +276,11 @@
     self.CategoryMenuTable.delegate = self;
     self.CategoryMenuTable.dataSource = self;
     self.CategoryMenuTable.showsVerticalScrollIndicator = NO;
-    self.CategoryMenuTable.backgroundColor = FOSAgreen;
-//    UIImageView *backgroundImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"icon_categoryBcg"]];
-//    self.CategoryMenuTable.backgroundView = backgroundImage;
+    //self.CategoryMenuTable.backgroundColor = FOSAgreen;
+    UIImageView *backgroundImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"icon_categoryBcg"]];
+    self.CategoryMenuTable.backgroundView = backgroundImage;
    self.CategoryMenuTable.bounces = NO;
-    
+
     //关联NIB与tableview
     UINib *nib = [UINib nibWithNibName:@"MenuTableViewCellXIB" bundle:nil];
     [self.CategoryMenuTable registerNib:nib forCellReuseIdentifier:@"categoryCell"];
@@ -388,7 +388,7 @@
     [cell configCell:self.menuDataSource[index]];
     NSLog(@"%ld-------%@",index,self.menuDataSource[index])
     cell.categoryTitle.textColor = [UIColor whiteColor];
-    cell.backgroundColor = FOSAgreen;
+    cell.backgroundColor = [UIColor clearColor];
     cell.backgroundView.alpha = 1.0 - 0.1*(int)index;
     //取消点击cell时显示的背景色
     cell.selectionStyle = UITableViewCellSelectionStyleNone;

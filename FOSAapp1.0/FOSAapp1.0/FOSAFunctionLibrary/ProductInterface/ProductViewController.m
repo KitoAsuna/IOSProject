@@ -104,13 +104,13 @@
 }
 - (NSArray *)array1{
     if (_array1 == nil) {
-        _array1 = @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04"];
+        _array1 = @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"Round01",@"Round02",@"Round03",@"Round04"];
     }
     return _array1;
 }
 - (NSArray *)array2{
     if (_array2 == nil) {
-        _array2 = @[@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07"];
+        _array2 = @[@"BAR1000ml(33oz)",@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"BAR3450ml(116oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07"];
     }
     return _array2;
 }
@@ -140,7 +140,7 @@
 }
 - (NSArray *)array7{
     if (_array7 == nil) {
-        _array7 = @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04",@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07",@"S Size0.9L",@"M Size2L",@"L Size3.8L",@"V-ADAPTER",@"0.97L(33oz)",@"1.32L(45oz)",@"WINE_Pouchbag",@"WINE0.97L(33oz)",@"FOSA003",@"FOSA001",@"IMG_Pound"];
+        _array7 = @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"Round01",@"Round02",@"Round03",@"Round04",@"BAR1000ml(33oz)",@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"BAR3450ml(116oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07",@"S Size0.9L",@"M Size2L",@"L Size3.8L",@"V-ADAPTER",@"0.97L(33oz)",@"1.32L(45oz)",@"WINE_Pouchbag",@"WINE0.97L(33oz)",@"FOSA003",@"FOSA001",@"IMG_Pound"];
     }
     return _array7;
 }

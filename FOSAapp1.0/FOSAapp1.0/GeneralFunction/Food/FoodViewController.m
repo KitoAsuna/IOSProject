@@ -399,7 +399,7 @@
     self.pageControl.currentPage = 0;
     self.pageControl.numberOfPages = 3;
     self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
-    self.pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+    self.pageControl.currentPageIndicatorTintColor = FOSAgreen;
     [self.headerView addSubview:self.pageControl];
 }
 - (void)EnlargePhoto:(UITapGestureRecognizer *)sender{
@@ -441,7 +441,7 @@
 /**食品信息*/
 - (void)CreatFoodInfoView{
     //食物信息视图
-    self.foodInfoView.frame = CGRectMake(screen_width/15, CGRectGetMaxY(self.headerView.frame), screen_width*13/15, screen_height/6);
+    self.foodInfoView.frame = CGRectMake(screen_width/15, CGRectGetMaxY(self.headerView.frame), screen_width*13/15, screen_height/7);
     int foodInfoViewWidth = self.foodInfoView.frame.size.width;
     int foodinfoViewHeight = self.foodInfoView.frame.size.height;
     NSLog(@"headerWidth:%d-------headerheight:%d",foodInfoViewWidth,foodinfoViewHeight);
@@ -476,7 +476,7 @@
     [self.likeBtn setBackgroundImage:[UIImage imageNamed:@"icon_like"] forState:UIControlStateNormal];
     [self.foodInfoView addSubview:self.likeBtn];
     //食物描述框
-    self.aboutFoodInput.frame = CGRectMake(0, foodinfoViewHeight*7/15, foodInfoViewWidth, foodinfoViewHeight/2);
+    self.aboutFoodInput.frame = CGRectMake(0, foodinfoViewHeight*7/15, foodInfoViewWidth, foodinfoViewHeight*7/16);
     // 设置提醒内容的大小和颜色
     if (_isAdding) {
         self.aboutFoodInput.text = aboutFoodTips;
@@ -487,14 +487,18 @@
     self.aboutFoodInput.delegate = self;
     self.aboutFoodInput.returnKeyType = UIReturnKeyNext;
     self.aboutFoodInput.backgroundColor = FOSAFoodBackgroundColor;
-    self.aboutFoodInput.textContainerInset = UIEdgeInsetsMake(0, 5, 0, 0);//上、左、下、右
+    self.aboutFoodInput.textContainerInset = UIEdgeInsetsMake(10, 5, 0, 0);//上、左、下、右
     [self.foodInfoView addSubview:self.aboutFoodInput];
     //输入字数限制与提醒
     int aboutFoodInputWidth = self.aboutFoodInput.frame.size.width;
     int aboutFoodInputHeight = self.aboutFoodInput.frame.size.height;
     self.numberLable.frame = CGRectMake(aboutFoodInputWidth*5/6, aboutFoodInputHeight*3/4, aboutFoodInputWidth/6, aboutFoodInputHeight/4);
     self.numberLable.font = [UIFont systemFontOfSize:14*(screen_width/414.0)];
-    self.numberLable.text = [NSString stringWithFormat:@"%lu/80",(unsigned long)self.aboutFoodInput.text.length];
+    if ((unsigned long)self.aboutFoodInput.text.length > 80) {
+        self.numberLable.text = [NSString stringWithFormat:@"%d/80",0];
+    }else{
+        self.numberLable.text = [NSString stringWithFormat:@"%lu/80",(unsigned long)self.aboutFoodInput.text.length];
+    }
     self.numberLable.textColor = [UIColor grayColor];
     self.numberLable.textAlignment = 2;
     [self.aboutFoodInput addSubview:self.numberLable];
@@ -505,25 +509,25 @@
 }
 /**日期 */
 - (void)CreatDateView{
-    self.DateView.frame = CGRectMake(screen_width/15, CGRectGetMaxY(self.foodInfoView.frame), screen_width*13/15, screen_height/7);
+    self.DateView.frame = CGRectMake(screen_width/15, CGRectGetMaxY(self.foodInfoView.frame), screen_width*13/15, screen_height/9);
     int dateViewWidth = self.DateView.frame.size.width;
     int dateViewHeight = self.DateView.frame.size.height;
     [self.rootScrollerView addSubview:self.DateView];
     
     //提醒日期
-    self.remindBtn.frame = CGRectMake(0, dateViewHeight*3/20, dateViewWidth*1/10, dateViewWidth*1/10);
+    self.remindBtn.frame = CGRectMake(0, dateViewHeight/10, dateViewWidth*1/10, dateViewWidth*1/10);
     [self.remindBtn setBackgroundImage:[UIImage imageNamed:@"icon_remind"] forState:UIControlStateNormal];
     //添加点击事件
     //[self.remindBtn addTarget:self action:@selector(RemindDateSelect) forControlEvents:UIControlEventTouchUpInside];
     [self.DateView addSubview:self.remindBtn];
     
-    self.remindLable.frame = CGRectMake(dateViewWidth*8/66, dateViewHeight*3/20, dateViewWidth/2-dateViewWidth*8/66, dateViewWidth*1/10);
+    self.remindLable.frame = CGRectMake(dateViewWidth*8/66, dateViewHeight/10, dateViewWidth/2-dateViewWidth*8/66, dateViewWidth*1/10);
     self.remindLable.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
     self.remindLable.text = @"Remind Date";
     self.remindLable.textColor = [UIColor blackColor];
     [self.DateView addSubview:self.remindLable];
     
-    self.remindDateLable.frame = CGRectMake(dateViewWidth/2, dateViewHeight*3/20, dateViewWidth/2, dateViewWidth*1/10);
+    self.remindDateLable.frame = CGRectMake(dateViewWidth/2, dateViewHeight/10, dateViewWidth/2, dateViewWidth*1/10);
     self.remindDateLable.layer.cornerRadius = dateViewHeight*3/20;
     self.remindDateLable.layer.backgroundColor = FOSAFoodBackgroundColor.CGColor;
     self.remindDateLable.textAlignment = NSTextAlignmentCenter;
@@ -561,7 +565,7 @@
 }
 /**存储*/
 - (void)CreatStorageView{
-    self.storageView.frame = CGRectMake(screen_width/15, CGRectGetMaxY(self.DateView.frame), screen_width*13/15, screen_height/7);
+    self.storageView.frame = CGRectMake(screen_width/15, CGRectGetMaxY(self.DateView.frame), screen_width*13/15, screen_height/6);
     [self.rootScrollerView addSubview:self.storageView];
     int storageViewWidth = self.storageView.frame.size.width;
     int storageViewHeight = self.storageView.frame.size.height;
@@ -585,25 +589,25 @@
     self.locationField.delegate = self;
     [self.storageView addSubview:self.locationField];
     
-    self.weightBtn.frame = CGRectMake(0, storageViewWidth/10+storageViewHeight/10, storageViewWidth/10, storageViewWidth/10);
+    self.weightBtn.frame = CGRectMake(0, storageViewWidth/10+storageViewHeight*3/20, storageViewWidth/10, storageViewWidth/10);
     [self.weightBtn setImage:[UIImage imageNamed:@"icon_weight"] forState:UIControlStateNormal];
     [self.storageView addSubview:self.weightBtn];
-    self.weightLable.frame = CGRectMake(storageViewWidth*8/66, storageViewWidth/10+storageViewHeight/10, storageViewWidth/3, storageViewWidth/10);
+    self.weightLable.frame = CGRectMake(storageViewWidth*8/66, storageViewWidth/10+storageViewHeight*3/20, storageViewWidth/3, storageViewWidth/10);
     self.weightLable.text = @"Weight";
     self.weightLable.font = [UIFont systemFontOfSize: 15*(screen_width/414.0)];
     [self.storageView addSubview:self.weightLable];
     
-    self.calorieBtn.frame = CGRectMake(storageViewWidth*5/9, storageViewWidth/10+storageViewHeight/10, storageViewWidth/10, storageViewWidth/10);
+    self.calorieBtn.frame = CGRectMake(storageViewWidth*5/9, storageViewWidth/10+storageViewHeight*3/20, storageViewWidth/10, storageViewWidth/10);
     //self.calorieBtn.backgroundColor = FOSARed;
     [self.calorieBtn setImage:[UIImage imageNamed:@"icon_calorie"] forState:UIControlStateNormal];
     [self.storageView addSubview:self.calorieBtn];
     
-    self.calorieLable.frame = CGRectMake(storageViewWidth*8/66+storageViewWidth*5/9, storageViewWidth/10+storageViewHeight/10, storageViewWidth/3, storageViewWidth/10);
+    self.calorieLable.frame = CGRectMake(storageViewWidth*8/66+storageViewWidth*5/9, storageViewWidth/10+storageViewHeight*3/20, storageViewWidth/3, storageViewWidth/10);
     self.calorieLable.text = @"Calorie";
     self.calorieLable.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
     [self.storageView addSubview:self.calorieLable];
     
-    self.weightView.frame = CGRectMake(0, storageViewWidth/5+storageViewHeight/10, storageViewWidth*5/11, storageViewWidth/10);
+    self.weightView.frame = CGRectMake(0, storageViewWidth/5+storageViewHeight/5, storageViewWidth*5/11, storageViewWidth/10);
     self.weightView.backgroundColor = FOSAFoodBackgroundColor;
     self.weightView.layer.cornerRadius = self.weightView.frame.size.height/2;
     [self.storageView addSubview:self.weightView];
@@ -620,7 +624,7 @@
     self.weightUnit.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
     [self.weightView addSubview:self.weightUnit];
     
-    self.calorieView.frame = CGRectMake(storageViewWidth*6/11, storageViewWidth/5+storageViewHeight/10, storageViewWidth*5/11, storageViewWidth/10);
+    self.calorieView.frame = CGRectMake(storageViewWidth*6/11, storageViewWidth/5+storageViewHeight/5, storageViewWidth*5/11, storageViewWidth/10);
     self.calorieView.backgroundColor = FOSAFoodBackgroundColor;
     self.calorieView.layer.cornerRadius = self.calorieView.frame.size.height/2;
     [self.storageView addSubview:self.calorieView];
@@ -636,7 +640,7 @@
     [self.calorieView addSubview:self.calorieUnit];
     
     UIView *diveLine = [[UIView alloc]initWithFrame:CGRectMake(0, storageViewHeight-0.5, storageViewWidth, 0.5)];
-    diveLine.backgroundColor = FOSAFoodBackgroundColor;
+    diveLine.backgroundColor = [UIColor grayColor];
     [self.storageView addSubview:diveLine];
 }
 

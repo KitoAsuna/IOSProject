@@ -29,15 +29,15 @@
 
         NSAttributedString * attributedText = [[NSAttributedString alloc] initWithString:@"" attributes:@{NSShadowAttributeName:shadow}];
         
-        self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(cellWidth/8, cellHeight*5/6-5, cellWidth*7/8, cellHeight/6)];
-        self.nameLabel.textColor = [UIColor whiteColor];
+        self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, cellHeight*5/6-5, cellWidth*7/8, cellHeight/6)];
+        self.nameLabel.textColor = [UIColor colorWithWhite:30 alpha:1.0];
         [self.nameLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18*(screen_width/414.0)]];
         self.nameLabel.userInteractionEnabled = NO;
         self.nameLabel.attributedText = attributedText;
         [self insertSubview:_nameLabel atIndex:20];
 
-        self.dateLabel = [[UILabel alloc]initWithFrame:CGRectMake(cellWidth/8, 5, cellWidth*7/8,cellHeight/6)];
-        self.dateLabel.textColor = [UIColor whiteColor];
+        self.dateLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, cellWidth*7/8,cellHeight/6)];
+        self.dateLabel.textColor = [UIColor colorWithWhite:30 alpha:1.0];
     
         [self.dateLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18*(screen_width/414.0)]];
         self.dateLabel.userInteractionEnabled = NO;
@@ -58,7 +58,7 @@
     self.foodImageview.image = [self getImage:model.foodPhoto];
     self.nameLabel.text  = model.foodName;
     timeArray = [model.remindDate componentsSeparatedByString:@"/"];
-    self.dateLabel.text = [NSString stringWithFormat:@"%@  %@",timeArray[1],[mouth valueForKey:timeArray[0]]];
+    self.dateLabel.text = [NSString stringWithFormat:@"%@ %@",timeArray[1],[mouth valueForKey:timeArray[0]]];
     //NSDictionary *mouth = [NSDictionary dictionaryWithObjectsAndKeys:@"Jan",@"01",@"Feb",@"02",@"Mar",@"03",@"Apr",@"04",@"May",@"05",@"June",@"06",@"July",@"07",@"Aug",@"08",@"Sept",@"09",@"Oct",@"10",@"Nov",@"11",@"Dec",@"12",nil];
     NSLog(@"对应月份：%@",[mouth valueForKey:timeArray[0]]);
 }
