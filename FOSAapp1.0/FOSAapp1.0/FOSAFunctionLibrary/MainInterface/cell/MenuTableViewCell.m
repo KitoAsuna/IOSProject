@@ -24,16 +24,22 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-         NSLog(@"%f~~~~~~~~~~%f",self.bounds.size.width,self.bounds.size.height);
-           NSLog(@"%f<><><><>%f",self.contentView.frame.size.width,self.contentView.frame.size.height);
-        self.categoryIcon = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.bounds.size.height*2/3, self.bounds.size.height*2/3)];
+        self.categoryIcon = [[UIImageView alloc]init];
         [self.contentView addSubview:self.categoryIcon];
-        
-        self.categoryTitle = [[UILabel alloc]initWithFrame:CGRectMake(0, self.bounds.size.height*2/3, self.bounds.size.width, self.bounds.size.height/3)];
-        self.categoryTitle.font = [UIFont systemFontOfSize:14*(screen_width/414.0)];
+        self.categoryTitle = [[UILabel alloc]init];
         [self.contentView addSubview:self.categoryTitle];
+        self.categoryTitle.textAlignment = NSTextAlignmentCenter;
     }
     return self;
 }
 
+//设置控件的样式
+- (void)layoutSubviews{
+    [super layoutSubviews];
+
+    int cellWidth = self.bounds.size.width;
+    int cellHeight = self.bounds.size.height;
+    self.categoryIcon.frame = CGRectMake(cellWidth/2-cellHeight/3, 0, cellHeight*2/3, cellHeight*2/3);
+    self.categoryTitle.frame = CGRectMake(0, cellHeight*2/3, cellWidth, cellHeight/3);
+}
 @end

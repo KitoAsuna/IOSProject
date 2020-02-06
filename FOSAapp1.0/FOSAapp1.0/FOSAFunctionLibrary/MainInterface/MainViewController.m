@@ -10,6 +10,7 @@
 #import "MainPhotoViewController.h"
 #import "FoodViewController.h"
 #import "MenuTableViewCellXIB.h"
+#import "MenuTableViewCell.h"
 #import "FosaNotification.h"
 #import <UserNotifications/UserNotifications.h>
 #import "FMDB.h"
@@ -282,9 +283,13 @@
    self.CategoryMenuTable.bounces = NO;
 
     //关联NIB与tableview
-    UINib *nib = [UINib nibWithNibName:@"MenuTableViewCellXIB" bundle:nil];
-    [self.CategoryMenuTable registerNib:nib forCellReuseIdentifier:@"categoryCell"];
+//    UINib *nib = [UINib nibWithNibName:@"MenuTableViewCellXIB" bundle:nil];
+//    [self.CategoryMenuTable registerNib:nib forCellReuseIdentifier:@"categoryCell"];
+    
+    
     [self.view addSubview:self.CategoryMenuTable];
+    
+    
     //给view 添加滑动事件
     UISwipeGestureRecognizer *recognizer;
     //right--
@@ -379,15 +384,19 @@
 //每行显示的内容
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    MenuTableViewCellXIB *cell = [self.CategoryMenuTable dequeueReusableCellWithIdentifier:@"categoryCell"];
+    //MenuTableViewCellXIB *cell = [self.CategoryMenuTable dequeueReusableCellWithIdentifier:@"categoryCell"];
+    MenuTableViewCell *cell = [self.CategoryMenuTable dequeueReusableCellWithIdentifier:@"categoryCell"];
     if (cell == nil) {
         //创建cell
-        cell = [[MenuTableViewCellXIB alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"categoryCell"];
+        //cell = [[MenuTableViewCellXIB alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"categoryCell"];
+        cell = [[MenuTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"categoryCell"];
     }
     long int index = indexPath.row;
-    [cell configCell:self.menuDataSource[index]];
-    NSLog(@"%ld-------%@",index,self.menuDataSource[index])
+    //[cell configCell:self.menuDataSource[index]];
+    //NSLog(@"%ld-------%@",index,self.menuDataSource[index])
     cell.categoryTitle.textColor = [UIColor whiteColor];
+    cell.categoryIcon.image = [UIImage imageNamed:self.menuDataSource[index]];
+    cell.categoryTitle.text = self.menuDataSource[index];
     cell.backgroundColor = [UIColor clearColor];
     cell.backgroundView.alpha = 1.0 - 0.1*(int)index;
     //取消点击cell时显示的背景色
