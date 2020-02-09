@@ -8,6 +8,7 @@
 
 #import "MainViewController.h"
 #import "MainPhotoViewController.h"
+#import "fosaPhotoViewController.h"
 #import "FoodViewController.h"
 #import "MenuTableViewCellXIB.h"
 #import "MenuTableViewCell.h"
@@ -336,7 +337,7 @@
 - (void)closeVisualView{
     if (![self.visualView isHidden]) {
         [UIView animateWithDuration:0.2 animations:^{
-            self.CategoryMenuTable.center = CGPointMake(-screen_width/12, self.CategoryMenuTable.center.y);
+            self.CategoryMenuTable.center = CGPointMake(-screen_width*3/24, self.CategoryMenuTable.center.y);
         }];
         self.visualView.hidden = YES;
         self.navigationController.navigationBar.hidden = NO;
@@ -363,8 +364,10 @@
     food.hidesBottomBarWhenPushed = YES;
     
     MainPhotoViewController *photo = [[MainPhotoViewController alloc]init];
+    fosaPhotoViewController *fosaPhoto = [[fosaPhotoViewController alloc]init];
+    fosaPhoto.hidesBottomBarWhenPushed = YES;
     photo.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:photo animated:YES];
+    [self.navigationController pushViewController:fosaPhoto animated:YES];
 }
 #pragma mark - UITableViewDelegate
 //行高度

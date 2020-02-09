@@ -101,6 +101,7 @@
 		45D3747E23C075BA00192014 /* AFImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D3747523C075B900192014 /* AFImageDownloader.m */; };
 		45D3748023C075E200192014 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45D3747F23C075E200192014 /* CFNetwork.framework */; };
 		45D3748223C075F600192014 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45D3748123C075F600192014 /* Security.framework */; };
+		45F0C7F423F036DA002F323B /* fosaPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F0C7F323F036DA002F323B /* fosaPhotoViewController.m */; };
 		45F653EB23C75307008F08C2 /* foodKindCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F653EA23C75307008F08C2 /* foodKindCollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
@@ -302,6 +303,8 @@
 		45D3747523C075B900192014 /* AFImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageDownloader.m; sourceTree = "<group>"; };
 		45D3747F23C075E200192014 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		45D3748123C075F600192014 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		45F0C7F223F036DA002F323B /* fosaPhotoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fosaPhotoViewController.h; sourceTree = "<group>"; };
+		45F0C7F323F036DA002F323B /* fosaPhotoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fosaPhotoViewController.m; sourceTree = "<group>"; };
 		45F653E923C75307008F08C2 /* foodKindCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foodKindCollectionViewCell.h; sourceTree = "<group>"; };
 		45F653EA23C75307008F08C2 /* foodKindCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = foodKindCollectionViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -417,6 +420,8 @@
 				4513DD2C23BED3550005A1E2 /* PhotoViewController2.m */,
 				4513DD2A23BED3550005A1E2 /* MainPhotoViewController.h */,
 				4513DD2E23BED3550005A1E2 /* MainPhotoViewController.m */,
+				45F0C7F223F036DA002F323B /* fosaPhotoViewController.h */,
+				45F0C7F323F036DA002F323B /* fosaPhotoViewController.m */,
 			);
 			path = PhotoFuction;
 			sourceTree = "<group>";
@@ -970,6 +975,7 @@
 				4513DD3123BED3550005A1E2 /* PhotoViewController1.m in Sources */,
 				4544298623CF05B500662F18 /* CategoryTableViewCell.m in Sources */,
 				45D3747823C075BA00192014 /* AFNetworkActivityIndicatorManager.m in Sources */,
+				45F0C7F423F036DA002F323B /* fosaPhotoViewController.m in Sources */,
 				4500E14623BB25B9002EB9FE /* LandscapeScanView.m in Sources */,
 				45D3747D23C075BA00192014 /* AFAutoPurgingImageCache.m in Sources */,
 				4500E12523BAEB14002EB9FE /* AvoidCrash.m in Sources */,

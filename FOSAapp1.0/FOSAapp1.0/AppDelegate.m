@@ -35,91 +35,35 @@
     [AvoidCrash becomeEffective];
     //监听通知:AvoidCrashNotification, 获取AvoidCrash捕获的崩溃日志的详细信息
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dealwithCrashMessage:) name:AvoidCrashNotification object:nil];
-    
-  //判断是否有更新
-    NSUserDefaults *userDefault = NSUserDefaults.standardUserDefaults;
-    NSString *currentVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"];
-    NSString *localVersion = [userDefault valueForKey:@"localVersion"];
-    if (![currentVersion isEqualToString:localVersion]) {
-            //新特性界面
-    //      UIViewController *newVc = [[UIViewController alloc]init];
-    //      newVc.view.backgroundColor = [UIColor redColor];
-    //      self.window.rootViewController = newVc;
-            [self CreatSqlDatabase:@"FOSA"];
-            [self CreatDataTable];
-            [self CreatCategoryTable];
-            [userDefault setObject:currentVersion forKey:@"localVersion"];
-        }
+        //判断是否有更新
+           NSUserDefaults *userDefault = NSUserDefaults.standardUserDefaults;
+           NSString *currentVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"];
+           NSString *localVersion = [userDefault valueForKey:@"localVersion"];
+           if (![currentVersion isEqualToString:localVersion]) {
+                   //新特性界面
+           //      UIViewController *newVc = [[UIViewController alloc]init];
+           //      newVc.view.backgroundColor = [UIColor redColor];
+           //      self.window.rootViewController = newVc;
+                   [self CreatSqlDatabase:@"FOSA"];
+                   [self CreatDataTable];
+                   [self CreatCategoryTable];
+                   [userDefault setObject:currentVersion forKey:@"localVersion"];
+               }
     //根据系统版本选择视图生成方式
     if (@available(iOS 13,*)) {
         //[self GetJSONFromServerByAFN];
-        [NSThread sleepForTimeInterval:1.5];
         return YES;
     }else{
         self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
         self.root = [RootTabBarViewController new];
-//        
-//        //初始化VC
-//        MainViewController *main = (MainViewController *)[self addChildWithVCName:@"MainViewController" title:@"FOSA" image:@"icon_main" selectImage:@"icon_mainHL"];
-//        SealerAndPoundViewController *sealer = (SealerAndPoundViewController *)[self addChildWithVCName:@"SealerAndPoundViewController" title:@"Device" image:@"icon_sealer" selectImage:@"icon_sealerHL"];
-//        ProductViewController *product = (ProductViewController *)[self addChildWithVCName:@"ProductViewController" title:@"Product" image:@"icon_device" selectImage:@"icon_deviceHL"];
-//        UserViewController *user = (UserViewController *)[self addChildWithVCName:@"UserViewController" title:@"Me" image:@"icon_me" selectImage:@"icon_meHL"];
-//        
-//        [self.root addChildViewController:main];
-//        [self.root addChildViewController:sealer];
-//        [self.root addChildViewController:product];
-//        [self.root addChildViewController:user];
-//        
         //添加根控制器
         self.window.rootViewController = self.root;
         //显示window
         [self.window makeKeyAndVisible];
-        [NSThread sleepForTimeInterval:2];
+        [NSThread sleepForTimeInterval:1.5];
     }
     return YES;
 }
-//
-//-(UIViewController *)addChildWithVCName:(NSString *)vcName title:(NSString *)title image:(NSString *)image selectImage:(NSString *)selectImage{
-//    NSLog(@"Title=========%@",title);
-//    //1.创建控制器
-//    Class class = NSClassFromString(vcName);//根据传入的控制器名称获得对应的控制器
-//    UIViewController *fosa = [[class alloc]init];
-//
-//    //2.设置控制器属性
-//    fosa.navigationItem.title = title;
-//    fosa.tabBarItem.title = title;
-//    fosa.tabBarItem.image = [UIImage imageNamed:image];
-//    fosa.tabBarItem.selectedImage = [UIImage imageNamed:selectImage];
-//
-//    //修改字体颜色
-//    if (@available(iOS 13.0, *)) {
-//        NSLog(@"***************");
-//         UITabBarAppearance *appearance = [UITabBarAppearance new];
-//        // 设置未被选中的颜色
-//        appearance.stackedLayoutAppearance.normal.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor blackColor]};
-//        // 设置被选中时的颜色
-//        appearance.stackedLayoutAppearance.selected.titleTextAttributes = @{ NSForegroundColorAttributeName : FOSAgreen,NSFontAttributeName:[UIFont fontWithName:@"Helvetica-Bold" size:15.0]};
-//        fosa.tabBarItem.standardAppearance = appearance;
-//    }else{
-//        NSLog(@"#####################");
-//         [fosa.tabBarItem setTitleTextAttributes:@{ NSForegroundColorAttributeName : FOSAgreen,NSFontAttributeName:[UIFont fontWithName:@"Helvetica-Bold" size:15.0]}            forState:UIControlStateSelected];
-//    }
-//
-//    //3.创建导航控制器
-//    UINavigationController *nvc = [[UINavigationController alloc]initWithRootViewController:fosa];
-//    //设置背景透明图片,使得导航栏透明的同时item不透明
-//    [nvc.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-//    //去掉 bar 下面有一条黑色的线
-//    [nvc.navigationBar setShadowImage:[UIImage new]];
-//    //[[UINavigationBar appearance]setTintColor:[UIColorwhiteColor]];
-//    nvc.navigationBar.tintColor = [UIColor grayColor];
-//
-//    [nvc.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:30*(screen_width/414.0)]}];
-//    //4.添加到标签栏控制器
-//    [_root addChildViewController:nvc];
-//    return fosa;
-//}
-
 - (void)dealwithCrashMessage:(NSNotification *)note {
     //注意:所有的信息都在userInfo中
     //你可以在这里收集相应的崩溃信息进行相应的处理(比如传到自己服务器)
