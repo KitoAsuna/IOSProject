@@ -62,6 +62,7 @@
         [self.window makeKeyAndVisible];
         [NSThread sleepForTimeInterval:1.5];
     }
+    NSLog(@"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
     return YES;
 }
 - (void)dealwithCrashMessage:(NSNotification *)note {

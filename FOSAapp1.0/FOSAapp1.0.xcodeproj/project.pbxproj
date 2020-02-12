@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -31,7 +31,6 @@
 		4502FF7023CFE2480013AB31 /* IMG_Pound.png in Resources */ = {isa = PBXBuildFile; fileRef = 4502FF6E23CFE2480013AB31 /* IMG_Pound.png */; };
 		4502FF7623CFF0140013AB31 /* IMG_OtherSealer.png in Resources */ = {isa = PBXBuildFile; fileRef = 4502FF7523CFF0140013AB31 /* IMG_OtherSealer.png */; };
 		4502FF7E23D033380013AB31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4502FF7D23D033380013AB31 /* Assets.xcassets */; };
-		4502FF8023D03EF10013AB31 /* FOSAScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 4502FF7F23D03EF10013AB31 /* FOSAScreen.png */; };
 		450A3C2723C4687E000D55C8 /* ResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 450A3C2523C4687E000D55C8 /* ResultViewController.m */; };
 		450D586623C9B7D70032E905 /* LoadCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 450D586523C9B7D70032E905 /* LoadCircleView.m */; };
 		4513DD2523BECB3B0005A1E2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4513DD2423BECB3B0005A1E2 /* SystemConfiguration.framework */; };
@@ -56,12 +55,12 @@
 		4528AAF423BDE12800957279 /* icon_flashOff.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAF223BDE12700957279 /* icon_flashOff.png */; };
 		4528AAF523BDE12800957279 /* icon_flashON.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAF323BDE12700957279 /* icon_flashON.png */; };
 		453938D123C00F7B0006474E /* CategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453938D023C00F7B0006474E /* CategoryViewController.m */; };
-		4539A21123C7268300079420 /* MenuTableViewCellXIB.m in Sources */ = {isa = PBXBuildFile; fileRef = 4539A20F23C7268300079420 /* MenuTableViewCellXIB.m */; };
-		4539A21223C7268300079420 /* MenuTableViewCellXIB.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4539A21023C7268300079420 /* MenuTableViewCellXIB.xib */; };
 		454421EB23CBF5A0002FADFE /* FoodInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421EA23CBF5A0002FADFE /* FoodInfoView.m */; };
 		454421EE23CC1680002FADFE /* FoodMoreInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421EC23CC1680002FADFE /* FoodMoreInfoView.m */; };
 		454421F223CC6B70002FADFE /* AboutAppsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421F123CC6B70002FADFE /* AboutAppsViewController.m */; };
 		4544298623CF05B500662F18 /* CategoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4544298523CF05B500662F18 /* CategoryTableViewCell.m */; };
+		45514BEB23F2E285000E321E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
+		45514BEC23F2E287000E321E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
 		455F4AC723D157FE00BE3822 /* saoyisao@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 455F4AC623D157FE00BE3822 /* saoyisao@3x.png */; };
 		4590C81C23B9A58700691461 /* FoodModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C81B23B9A58700691461 /* FoodModel.m */; };
 		4590C83723B9C5F500691461 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C82C23B9C5F500691461 /* FMDatabaseQueue.m */; };
@@ -84,6 +83,7 @@
 		45A506DC23B8402E0046FC09 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A506DB23B8402E0046FC09 /* main.m */; };
 		45A506E623B8402E0046FC09 /* FOSAapp1_0Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A506E523B8402E0046FC09 /* FOSAapp1_0Tests.m */; };
 		45A506F123B8402E0046FC09 /* FOSAapp1_0UITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A506F023B8402E0046FC09 /* FOSAapp1_0UITests.m */; };
+		45CE418623F3971100B9F884 /* fosaLauch.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CE418523F3971100B9F884 /* fosaLauch.png */; };
 		45D3745B23C075B200192014 /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D3745123C075B100192014 /* AFURLResponseSerialization.m */; };
 		45D3745C23C075B200192014 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D3745223C075B100192014 /* AFHTTPSessionManager.m */; };
 		45D3745D23C075B200192014 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D3745423C075B100192014 /* AFURLSessionManager.m */; };
@@ -166,7 +166,6 @@
 		4502FF6E23CFE2480013AB31 /* IMG_Pound.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_Pound.png; sourceTree = "<group>"; };
 		4502FF7523CFF0140013AB31 /* IMG_OtherSealer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_OtherSealer.png; sourceTree = "<group>"; };
 		4502FF7D23D033380013AB31 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4502FF7F23D03EF10013AB31 /* FOSAScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FOSAScreen.png; sourceTree = "<group>"; };
 		450A3C2523C4687E000D55C8 /* ResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResultViewController.m; sourceTree = "<group>"; };
 		450A3C2623C4687E000D55C8 /* ResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResultViewController.h; sourceTree = "<group>"; };
 		450D586423C9B7D70032E905 /* LoadCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadCircleView.h; sourceTree = "<group>"; };
@@ -209,9 +208,6 @@
 		4528AAF323BDE12700957279 /* icon_flashON.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_flashON.png; sourceTree = "<group>"; };
 		453938CF23C00F7B0006474E /* CategoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryViewController.h; sourceTree = "<group>"; };
 		453938D023C00F7B0006474E /* CategoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CategoryViewController.m; sourceTree = "<group>"; };
-		4539A20E23C7268300079420 /* MenuTableViewCellXIB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuTableViewCellXIB.h; sourceTree = "<group>"; };
-		4539A20F23C7268300079420 /* MenuTableViewCellXIB.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewCellXIB.m; sourceTree = "<group>"; };
-		4539A21023C7268300079420 /* MenuTableViewCellXIB.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuTableViewCellXIB.xib; sourceTree = "<group>"; };
 		454421E923CBF5A0002FADFE /* FoodInfoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FoodInfoView.h; sourceTree = "<group>"; };
 		454421EA23CBF5A0002FADFE /* FoodInfoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FoodInfoView.m; sourceTree = "<group>"; };
 		454421EC23CC1680002FADFE /* FoodMoreInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoodMoreInfoView.m; sourceTree = "<group>"; };
@@ -267,6 +263,7 @@
 		45A506EC23B8402E0046FC09 /* FOSAapp1.0UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FOSAapp1.0UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		45A506F023B8402E0046FC09 /* FOSAapp1_0UITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FOSAapp1_0UITests.m; sourceTree = "<group>"; };
 		45A506F223B8402E0046FC09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		45CE418523F3971100B9F884 /* fosaLauch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fosaLauch.png; sourceTree = "<group>"; };
 		45D3744D23C075B100192014 /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFSecurityPolicy.h; sourceTree = "<group>"; };
 		45D3744E23C075B100192014 /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
 		45D3744F23C075B100192014 /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
@@ -629,7 +626,6 @@
 			children = (
 				4502FF7523CFF0140013AB31 /* IMG_OtherSealer.png */,
 				4502FF6E23CFE2480013AB31 /* IMG_Pound.png */,
-				4502FF6D23CFE2480013AB31 /* IMG_Sealer.png */,
 				4597BD6A23C3104B0031DC4C /* img_fosa.jpg */,
 				4500E0F923BACF89002EB9FE /* Img_mainimg.png */,
 			);
@@ -645,9 +641,6 @@
 				4500E0FF23BADC28002EB9FE /* FOSAFlowLayout.m */,
 				4500E10123BAEA98002EB9FE /* FoodItemCollectionViewCell.h */,
 				4500E10223BAEA98002EB9FE /* FoodItemCollectionViewCell.m */,
-				4539A20E23C7268300079420 /* MenuTableViewCellXIB.h */,
-				4539A20F23C7268300079420 /* MenuTableViewCellXIB.m */,
-				4539A21023C7268300079420 /* MenuTableViewCellXIB.xib */,
 			);
 			path = cell;
 			sourceTree = "<group>";
@@ -709,7 +702,8 @@
 				45A506D223B8402C0046FC09 /* Main.storyboard */,
 				4502FF7D23D033380013AB31 /* Assets.xcassets */,
 				45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */,
-				4502FF7F23D03EF10013AB31 /* FOSAScreen.png */,
+				4502FF6D23CFE2480013AB31 /* IMG_Sealer.png */,
+				45CE418523F3971100B9F884 /* fosaLauch.png */,
 				45A506DA23B8402E0046FC09 /* Info.plist */,
 				45A506DB23B8402E0046FC09 /* main.m */,
 				4590C85123B9CE0900691461 /* PrefixHeader.pch */,
@@ -863,7 +857,7 @@
 				};
 			};
 			buildConfigurationList = 45A506C123B8402C0046FC09 /* Build configuration list for PBXProject "FOSAapp1.0" */;
-			compatibilityVersion = "Xcode 9.3";
+			compatibilityVersion = "Xcode 11.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -893,11 +887,10 @@
 				4502FF7E23D033380013AB31 /* Assets.xcassets in Resources */,
 				4502FF7023CFE2480013AB31 /* IMG_Pound.png in Resources */,
 				455F4AC723D157FE00BE3822 /* saoyisao@3x.png in Resources */,
+				45CE418623F3971100B9F884 /* fosaLauch.png in Resources */,
 				4528AAF423BDE12800957279 /* icon_flashOff.png in Resources */,
-				4539A21223C7268300079420 /* MenuTableViewCellXIB.xib in Resources */,
 				4502FF6F23CFE2480013AB31 /* IMG_Sealer.png in Resources */,
 				4500E0FA23BACF89002EB9FE /* Img_mainimg.png in Resources */,
-				4502FF8023D03EF10013AB31 /* FOSAScreen.png in Resources */,
 				45A506D423B8402C0046FC09 /* Main.storyboard in Resources */,
 				4528AAF123BD7DF800957279 /* scanLine_Vertical.png in Resources */,
 				4528AAF523BDE12800957279 /* icon_flashON.png in Resources */,
@@ -910,6 +903,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45514BEB23F2E285000E321E /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -917,6 +911,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45514BEC23F2E287000E321E /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -948,7 +943,6 @@
 				4513DD4423BED4B00005A1E2 /* productCollectionViewCell.m in Sources */,
 				45A506CB23B8402C0046FC09 /* AppDelegate.m in Sources */,
 				4500E11F23BAEB14002EB9FE /* NSMutableDictionary+AvoidCrash.m in Sources */,
-				4539A21123C7268300079420 /* MenuTableViewCellXIB.m in Sources */,
 				45D3745F23C075B200192014 /* AFNetworkReachabilityManager.m in Sources */,
 				45D3745D23C075B200192014 /* AFURLSessionManager.m in Sources */,
 				45A506DC23B8402E0046FC09 /* main.m in Sources */,

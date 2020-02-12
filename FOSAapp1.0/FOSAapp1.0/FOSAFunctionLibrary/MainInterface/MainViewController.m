@@ -10,7 +10,6 @@
 #import "MainPhotoViewController.h"
 #import "fosaPhotoViewController.h"
 #import "FoodViewController.h"
-#import "MenuTableViewCellXIB.h"
 #import "MenuTableViewCell.h"
 #import "FosaNotification.h"
 #import <UserNotifications/UserNotifications.h>
@@ -28,6 +27,7 @@
 @property (nonatomic,strong) UIActivityIndicatorView *FOSAloadingView;
 @property (nonatomic,strong) FosaNotification *notification;
 @property (nonatomic,strong) NSMutableArray *categoryArray;
+@property (nonatomic,strong) UIImageView *index;
 
 @end
 
@@ -282,13 +282,11 @@
     UIImageView *backgroundImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"icon_categoryBcg"]];
     self.CategoryMenuTable.backgroundView = backgroundImage;
    self.CategoryMenuTable.bounces = NO;
-
-    //关联NIB与tableview
-//    UINib *nib = [UINib nibWithNibName:@"MenuTableViewCellXIB" bundle:nil];
-//    [self.CategoryMenuTable registerNib:nib forCellReuseIdentifier:@"categoryCell"];
-    
-    
     [self.view addSubview:self.CategoryMenuTable];
+    
+    self.index = [[UIImageView alloc]initWithFrame:CGRectMake(0, screen_height*15/48+self.CategoryMenuTable.frame.size.height/2, screen_width/24, screen_width/24)];
+    self.index.image = [UIImage imageNamed:@"icon_indexRight"];
+    [self.view addSubview:self.index];
     
     
     //给view 添加滑动事件
@@ -313,7 +311,10 @@
         //执行程序
         [UIView animateWithDuration:0.2 animations:^{
             self.CategoryMenuTable.center = CGPointMake(-screen_width*3/24, self.CategoryMenuTable.center.y);
+            self.index.frame = CGRectMake(0, screen_height*15/48+self.CategoryMenuTable.frame.size.height/2, screen_width/24, screen_width/24);
+            self.index.image = [UIImage imageNamed:@"icon_indexRight"];
         }];
+        
         self.visualView.hidden = YES;
         self.navigationController.navigationBar.hidden = NO;
         self.tabBarController.tabBar.hidden = NO;
@@ -327,7 +328,10 @@
         //执行程序
         [UIView animateWithDuration:0.2 animations:^{
             self.CategoryMenuTable.center = CGPointMake(screen_width/6, self.CategoryMenuTable.center.y);
+            self.index.frame = CGRectMake(screen_width*7/24, screen_height*15/48+self.CategoryMenuTable.frame.size.height/2, screen_width/24, screen_width/24);
+            self.index.image = [UIImage imageNamed:@"icon_indexLeft"];
         }];
+        
         self.visualView.hidden = NO;
         self.navigationController.navigationBar.hidden = YES;
         self.tabBarController.tabBar.hidden = YES;
@@ -407,7 +411,7 @@
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    MenuTableViewCellXIB *cell = [self.CategoryMenuTable cellForRowAtIndexPath:indexPath];
+    MenuTableViewCell *cell = [self.CategoryMenuTable cellForRowAtIndexPath:indexPath];
     cell.alpha = 0.5;
    
     [self cellAction:cell];
@@ -417,7 +421,7 @@
     cell.alpha = 1.0;
 }
 /**种类cell的点击事件*/
-- (void)cellAction:(MenuTableViewCellXIB *)cell{
+- (void)cellAction:(MenuTableViewCell *)cell{
     NSLog(@"点击了种类%@",cell.categoryTitle.text);
    //执行程序
 //    [UIView animateWithDuration:0.2 animations:^{
@@ -547,14 +551,16 @@
             UIMenuItem *item2 = [[UIMenuItem alloc]initWithTitle:@"取消"action:@selector(CancelEdit:)];
              UIMenuController *menu = [UIMenuController sharedMenuController];
             [menu setMenuItems:@[item1,item2]];
-        if (@available(iOS 13,*)) {
-            menu.accessibilityElements = @[cell.model.foodName,cell.model.device];
-            [menu showMenuFromView:self.foodItemCollection rect:cell.frame];
-        }else{
-            [menu setTargetRect:cell.frame inView:self.foodItemCollection];
-            menu.accessibilityElements = @[cell.model.foodName,cell.model.device];
-            [menu setMenuVisible:YES animated:YES];
-        }
+//        if (@available(iOS 13,*)) {
+//            menu.accessibilityElements = @[cell.model.foodName,cell.model.device];
+//            [menu showMenuFromView:self.foodItemCollection rect:cell.frame];
+//        }else{
+//            [menu setTargetRect:cell.frame inView:self.foodItemCollection];
+//            menu.accessibilityElements = @[cell.model.foodName,cell.model.device];
+//            [menu setMenuVisible:YES animated:YES];
+//        }
+         menu.accessibilityElements = @[cell.model.foodName,cell.model.device];
+         [menu showMenuFromView:self.foodItemCollection rect:cell.frame];
     }
 }
 - (void)refresh:(UIRefreshControl *)sender

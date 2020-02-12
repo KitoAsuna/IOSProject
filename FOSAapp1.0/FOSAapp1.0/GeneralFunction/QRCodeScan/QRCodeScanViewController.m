@@ -351,7 +351,7 @@
 //竖屏扫描动画
 - (void)VerticalScanLineAnimation{
     [UIView animateWithDuration:2.0 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.scanLine.center = CGPointMake(self.scanLine.center.x, CGRectGetMaxY(self->_scanFrame.frame));
+        self.scanLine.center = CGPointMake(self->scanLineVerticalCenter.x, CGRectGetMaxY(self->_scanFrame.frame));
     } completion:^(BOOL finished) {
         if (self->stopAnimation == false && self.ScanModel == 0) {
             self.scanLine.center = self->scanLineVerticalCenter;
@@ -362,7 +362,7 @@
 //横屏扫描事件
 - (void)HorizontalScanLineAnimation{
     [UIView animateWithDuration:2.0 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.scanLine.center = CGPointMake(screen_width*0.45,self.scanLine.center.y);
+        self.scanLine.center = CGPointMake(screen_width*0.45,self->scanLineHorizontalCenter.y);
     } completion:^(BOOL finished) {
         if (self->stopAnimation == false && self.ScanModel == 1) {
             self.scanLine.center = self->scanLineHorizontalCenter;
@@ -611,6 +611,7 @@ NSLog(@"************************************************************************
 }
 - (void)showOneMessage:(NSString *)result{
     NSLog(@"%@",result);
+    NSLog(@">>>>>>>>>>>>>>>>>>>多个扫码模式宽度：%f,高度：%f",screen_width,screen_height);
     isJump = true;
     FoodViewController *food = [[FoodViewController alloc]init];
     food.isAdding = false;
@@ -704,7 +705,8 @@ NSLog(@"************************************************************************
     CGFloat navHeight = self.navigationController.navigationBar.frame.size.height;
     FoodMoreInfoView *circleAlertView = [[FoodMoreInfoView alloc]init];
     circleAlertView.model = [self CheckFoodInfoWithName:message];
-    circleAlertView.frame = CGRectMake(screen_width/5 -screen_height/6+5,(self.count)*(screen_height/3)+navHeight,screen_height/3-5,screen_width*2/5);
+    NSLog(@">>>>>>>>>>>>>>>>>>>多个扫码模式宽度：%f,高度：%f",screen_width,screen_height);
+    circleAlertView.frame = CGRectMake(screen_width/5 -screen_height/6+5,(self.count)*(screen_height/3)+navHeight,screen_height/3-5,screen_width*3/10);
     circleAlertView.layer.masksToBounds = YES;
     
     circleAlertView.transform = CGAffineTransformMakeRotation(M_PI_2);

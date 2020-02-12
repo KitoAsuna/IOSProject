@@ -42,8 +42,10 @@
     [self addChildViewController:fosa];
     
     //修改字体颜色大小
-    fosa.tabBarController.tabBar.tintColor = FOSAgreen;
-    [[UITabBarItem appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName : FOSAgreen,NSFontAttributeName:[UIFont fontWithName:@"Helvetica-Bold" size:15.0]}            forState:UIControlStateNormal];
+    if (@available(iOS 13,*)) {
+         fosa.tabBarController.tabBar.tintColor = FOSAgreen;
+    }
+    [[UITabBarItem appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName : FOSAgreen,NSFontAttributeName:[UIFont fontWithName:@"Helvetica-Bold" size:15.0]}            forState:UIControlStateSelected];
 
     //3.创建导航控制器
     UINavigationController *nvc = [[UINavigationController alloc]initWithRootViewController:fosa];

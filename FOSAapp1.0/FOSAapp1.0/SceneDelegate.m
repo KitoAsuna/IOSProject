@@ -32,6 +32,7 @@
             [self.window makeKeyAndVisible];
         }
     [NSThread sleepForTimeInterval:1.5];
+    NSLog(@"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 }
 - (void)sceneDidDisconnect:(UIScene *)scene  API_AVAILABLE(ios(13.0)){
     // Called as the scene is being released by the system.

@@ -311,7 +311,7 @@ if (isButtonOn) {
     NSLog(@"%@",selSql);
         FMResultSet *set = [db executeQuery:selSql];
         if (![set next]) {
-            [self SystemAlert:@"用户名不存在，请前往注册"];
+            [self SystemAlert:@"the user does not exist.Please sign up"];
         }else{
             NSString *sql_userName = [set stringForColumn:@"userName"];
             NSString *sql_password = [set stringForColumn:@"password"];
@@ -331,7 +331,7 @@ if (isButtonOn) {
                     [defaults synchronize];
                     [self.navigationController popViewControllerAnimated:YES];
                 }else{
-                    [self SystemAlert:@"用户名或密码错误"];
+                    [self SystemAlert:@"Incorrect user name or password"];
                 }
     }
 }
