@@ -47,7 +47,7 @@
 }
 - (UITableView *)userItemTable{
     if (_userItemTable == nil) {
-        _userItemTable = [[UITableView alloc]initWithFrame:CGRectMake(0, screen_height*15/48, screen_width, screen_height/2) style:UITableViewStylePlain];
+        _userItemTable = [[UITableView alloc]initWithFrame:CGRectMake(0, screen_height*15/48, screen_width, screen_height/3) style:UITableViewStylePlain];
         //_userItemTable = [[UITableView alloc]init];
     }
     return _userItemTable;
@@ -66,6 +66,7 @@
     [self CreatHeader];
     [self CreatUserItemTable];
 }
+
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden = YES;
@@ -74,8 +75,8 @@
 }
 
 - (void)InitData{
-    ItemArray = @[@"Tutorial",@"Language/Location",@"Setting",@"Notification",@"Help Center",@"About FOSA",@"About Apps"];
-    ItemLogoArray = @[@"icon_tutorial",@"icon_language",@"icon_setting",@"icon_notification",@"icon_helpBL",@"icon_fosalogo",@"icon_app"];
+    ItemArray = @[@"Tutorial",@"Language/Location",@"Setting",@"About FOSA",@"About Apps"];
+    ItemLogoArray = @[@"icon_tutorial",@"icon_language",@"icon_setting",@"icon_fosalogo",@"icon_app"];
 }
 
 - (void)CreatHeader{
@@ -96,7 +97,7 @@
     self.userIcon.image = [UIImage imageNamed:@"icon_User"];
     [self.header addSubview:self.userIcon];
     
-    self.userName.frame = CGRectMake(headerWidth/4+30, headerHeight/4, headerWidth/2, headerWidth/4);
+    self.userName.frame = CGRectMake(20, headerHeight/2, headerWidth/2, headerWidth/4);
     self.userName.userInteractionEnabled = YES;
     //self.userName.layer.borderWidth = 0.5;
     self.userName.layer.cornerRadius = 5;
@@ -130,6 +131,7 @@
         self.userName.text = @"Login/Sign Up";
     }
 }
+
 #pragma mark - UItableViewDelegate
 
 //行高度
@@ -179,7 +181,7 @@
     NSInteger index = indexPath.row;
     AboutAppsViewController *about = [[AboutAppsViewController alloc]init];
     switch (index) {
-        case 6:
+        case 4:
             about.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:about animated:YES];
             break;

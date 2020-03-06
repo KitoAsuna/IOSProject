@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) AVCaptureStillImageOutput *captureStillImageOutput;//照片输出流
 //@property (nonatomic,strong) AVCapturePhotoOutput *imageOutput; //图片输出流 （iOS10之后）
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;//相机拍摄预览图层
+@property (nonatomic,assign) Boolean isCapture;
 @end
 
 NS_ASSUME_NONNULL_END

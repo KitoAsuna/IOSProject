@@ -12,6 +12,7 @@
 #import "FMDB.h"
 #import "FoodModel.h"
 #import "FoodViewController.h"
+#import "AFNetworking.h"
 
 @interface QRCodeScanViewController ()<AVCaptureMetadataOutputObjectsDelegate,UINavigationControllerDelegate,AVCaptureVideoDataOutputSampleBufferDelegate,UIImagePickerControllerDelegate,UIScrollViewDelegate>{
     CGPoint scanLineVerticalCenter; //竖屏的扫描线的起始中心点
@@ -317,7 +318,7 @@
         
         //转换扫码模式按钮
         UIButton *mainAndSearchBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        [rightButtonView addSubview:mainAndSearchBtn];
+        //[rightButtonView addSubview:mainAndSearchBtn];
         [mainAndSearchBtn setImage:[UIImage imageNamed:@"icon_switchStyleW"] forState:UIControlStateNormal];
         [mainAndSearchBtn addTarget:self action:@selector(SwitchScanStyle) forControlEvents:UIControlEventTouchUpInside];
          
@@ -611,7 +612,7 @@ NSLog(@"************************************************************************
 }
 - (void)showOneMessage:(NSString *)result{
     NSLog(@"%@",result);
-    NSLog(@">>>>>>>>>>>>>>>>>>>多个扫码模式宽度：%f,高度：%f",screen_width,screen_height);
+    NSLog(@">>>>>>>>>>>>>>>>>>>多个扫码模式宽度：%d,高度：%d",screen_width,screen_height);
     isJump = true;
     FoodViewController *food = [[FoodViewController alloc]init];
     food.isAdding = false;
@@ -675,6 +676,7 @@ NSLog(@"************************************************************************
     result.resultLabel.textColor = [UIColor redColor];
     result.resultLabel.text = message;
     [self.navigationController pushViewController:result animated:YES];
+    //[self GetDataByCode:message];
 }
 #pragma mark -扫多个二维码的界面
 - (void)MoreFoodInfo{
@@ -705,10 +707,9 @@ NSLog(@"************************************************************************
     CGFloat navHeight = self.navigationController.navigationBar.frame.size.height;
     FoodMoreInfoView *circleAlertView = [[FoodMoreInfoView alloc]init];
     circleAlertView.model = [self CheckFoodInfoWithName:message];
-    NSLog(@">>>>>>>>>>>>>>>>>>>多个扫码模式宽度：%f,高度：%f",screen_width,screen_height);
-    circleAlertView.frame = CGRectMake(screen_width/5 -screen_height/6+5,(self.count)*(screen_height/3)+navHeight,screen_height/3-5,screen_width*3/10);
+    NSLog(@">>>>>>>>>>>>>>>>>>>多个扫码模式宽度：%d,高度：%d",screen_width,screen_height);
+    circleAlertView.frame = CGRectMake(screen_width/5 -screen_height/6+5,(self.count)*(screen_height/3)+2*navHeight,screen_height/3-20,screen_width*2/5);
     circleAlertView.layer.masksToBounds = YES;
-    
     circleAlertView.transform = CGAffineTransformMakeRotation(M_PI_2);
     //添加点击事件
 //    UITapGestureRecognizer *OpentapgestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
@@ -1016,6 +1017,76 @@ NSLog(@"************************************************************************
         }
     //}
     return model;
+}
+
+//运用AFNetworking post请求 得到产品信息（关于AFNetworking网上很多例子）
+
+-(void)GetDataByCode:(NSString *)code{
+
+    //方法一
+
+    /*中国商品信息服务平台
+
+     http://search.anccnet.com/searchResult2.aspx
+
+     */
+    /*
+
+     //方法一：中国商品信息服务平台
+     http://search.anccnet.com/searchResult2.aspx
+     //方法二：第三方接口
+    http://www.mxnzp.com/api/barcode/goods/details
+     本例子采用方法二
+     */
+    //请求路径
+
+    NSString * URLString = @"http://www.mxnzp.com/api/barcode/goods/detail?";
+
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+
+    //设置返回类型
+
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", nil];
+    // 请求参数设置
+    NSDictionary *dict = @{
+                           @"barcode":code,
+                           };
+    //2、发送请求
+
+    [manager POST:URLString parameters:dict progress:^(NSProgress * _Nonnull downloadProgress) {
+
+        
+
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+
+        NSDictionary* json = [NSJSONSerialization
+
+                              JSONObjectWithData:responseObject
+
+                              options:kNilOptions
+
+                              error:nil];
+
+        NSLog(@"----------%@----%@",responseObject,json);
+
+//        if ([[json objectForKey:@"error_code"] integerValue] == 0) {
+//
+//            self.goods_name.text = [json objectForKey:@"data"][@"goodsName"];
+//
+//            self.goods_code.text = [json objectForKey:@"data"][@"code"];
+//
+//            self.manuName.text = [json objectForKey:@"data"][@"manuName"];
+//
+//            reader.hidden = YES;
+//
+//        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+
+         NSLog(@"%@",error);
+
+    }];
 }
 
 /**隐藏底部横条，点击屏幕可显示*/

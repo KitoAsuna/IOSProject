@@ -13,13 +13,28 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.kind = [[UILabel alloc]initWithFrame:self.bounds];
+        
+        self.kind = [[UILabel alloc]init];
         self.kind.textAlignment = NSTextAlignmentCenter;
-        self.kind.textColor = [UIColor blackColor];
-        self.kind.layer.cornerRadius = 10;
+        self.kind.textColor = [UIColor grayColor];
         [self addSubview:self.kind];
+        self.categoryPhoto = [[UIImageView alloc]init];
+        [self addSubview:self.categoryPhoto];
+        
     }
     return self;
+}
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    int width = self.bounds.size.width;
+    int height = self.bounds.size.height;
+    
+    
+    self.kind.frame = CGRectMake(0, 0, width, height-width);
+    self.kind.adjustsFontSizeToFitWidth = YES;
+    self.categoryPhoto.frame = CGRectMake(0, height-width, width, width);
+     self.categoryPhoto.layer.cornerRadius = width/2;
+    
 }
 //
 //- (void)setSelected:(BOOL)selected{

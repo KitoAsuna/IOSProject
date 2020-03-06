@@ -23,6 +23,7 @@
 @property (nonatomic,strong) UIScrollView *backGround;
 @property (nonatomic,strong) UIImageView *bigImage;
 @property (nonatomic,assign) CGFloat totalScale;
+
 @end
 
 @implementation PhotoViewController1
@@ -83,7 +84,7 @@
     [_shutter setImage:[UIImage imageNamed:@"icon_takePhoto"] forState:UIControlStateNormal];
     [_shutter addTarget:self action:@selector(btnOnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_shutter];
-    
+
     //聚焦图片
     UIImageView *focusCursor = [[UIImageView alloc] initWithFrame:CGRectMake(50, 50, 75, 75)];
     focusCursor.alpha = 0;
@@ -92,8 +93,8 @@
     _focusCursor = focusCursor;
     
     //拍摄照片容器
-    _pictureView1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, screen_width, screen_height-30)];
-    _pictureView1.contentMode = UIViewContentModeScaleAspectFill;
+    _pictureView1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, screen_width, screen_height)];
+    _pictureView1.contentMode = UIViewContentModeScaleAspectFit;
     _pictureView1.clipsToBounds = YES;
     _pictureView1.userInteractionEnabled = YES;
     //[self.view addSubview:_pictureView1];
@@ -101,7 +102,6 @@
     [self.cancel1 setBackgroundImage:[UIImage imageNamed:@"icon_cancel"] forState:UIControlStateNormal];
     [self.cancel1 addTarget:self action:@selector(takePictureAgain) forControlEvents:UIControlEventTouchUpInside];
     [_pictureView1 addSubview:self.cancel1];
-
 }
 
 - (void)initPhotoInfo
@@ -141,7 +141,7 @@
 //    AVCaptureSessionPreset1920x1080
 //    AVCaptureSessionPreset3840x2160
     
- // self.captureSession.sessionPreset = AVCaptureSessionPreset640x480;
+  self.captureSession.sessionPreset = AVCaptureSessionPreset3840x2160;
     //将设备输入添加到会话中
     if ([_captureSession canAddInput:_captureDeviceInput]) {
         [_captureSession addInput:_captureDeviceInput];
@@ -161,6 +161,7 @@
     layer.masksToBounds = YES;
     
     _captureVideoPreviewLayer.frame = layer.bounds;
+     ///_captureVideoPreviewLayer.frame = CGRectMake(0,screen_height/5, screen_width, screen_height*3/5);
     //填充模式
     _captureVideoPreviewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     //将视频预览层添加到界面中
@@ -173,7 +174,7 @@
        
        self.view.clipsToBounds = YES;
        self.view.layer.masksToBounds = YES;
-       [captureDevice setVideoZoomFactor:1.0];
+       //[captureDevice setVideoZoomFactor:1.0];
        //自动白平衡
        if([captureDevice isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeAutoWhiteBalance]){
            [_captureDeviceInput.device setWhiteBalanceMode:AVCaptureWhiteBalanceModeAutoWhiteBalance];
@@ -209,11 +210,12 @@
         if (imageDataSampleBuffer) {
             NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
             
-            self.image = [UIImage imageWithData:imageData];
+            UIImage *image = [self fixOrientation:[UIImage imageWithData:imageData]];
+            
+            self.image = image;
             NSLog(@"拍摄到图片:%@",self.image);
-
            //UIImageWriteToSavedPhotosAlbum(self.image, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
-            self.pictureView1.image = self.image;
+            self.pictureView1.image = [self getPartOfImage:self.image inRect:CGRectMake(0,screen_height/5, screen_width, screen_height*3/5)];
             [self.imageArray1 replaceObjectAtIndex:1 withObject:self.image];
             NSLog(@"图片数组:%@",self.imageArray1[1]);
             [self.view insertSubview:self.pictureView1 atIndex:10];
@@ -223,11 +225,90 @@
             NSLog(@"NO Image");
         }
     }];
-    
 }
-- (void)takePictureAgain{
+
+- (UIImage *)getPartOfImage:(UIImage *)img inRect:(CGRect)rect
+{
+    //把像 素rect 转化为 点rect（如无转化则按原图像素取部分图片）
+    CGFloat scale = [UIScreen mainScreen].scale;
+    CGFloat x= rect.origin.x*scale,y=rect.origin.y*scale,w=rect.size.width*scale,h=rect.size.height*scale;
+    CGRect dianRect = CGRectMake(x, y, w, h);
+    
+    CGImageRef cgRef = img.CGImage;
+    NSLog(@"cgRef:  %@",cgRef);
+    CGImageRef imageRef = CGImageCreateWithImageInRect(cgRef, dianRect);
+    //UIImage *thumbScale = [UIImage imageWithCGImage:imageRef];
+    UIImage *newImage = [UIImage imageWithCGImage:imageRef scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
+    CGImageRelease(imageRef);
+     //UIImageWriteToSavedPhotosAlbum(newImage, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
+    return newImage;
+}
+//纠正图片的方向
+- (UIImage *)fixOrientation:(UIImage *)aImage {
+// No-op if the orientation is already correct
+    if (aImage.imageOrientation == UIImageOrientationUp)
+        return aImage;
+    // We need to calculate the proper transformation to make the image upright.
+    // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
+    CGAffineTransform transform = CGAffineTransformIdentity;
+     switch (aImage.imageOrientation) {
+         case UIImageOrientationDown:
+         case UIImageOrientationDownMirrored:
+             transform = CGAffineTransformTranslate(transform, aImage.size.width, aImage.size.height);
+             transform = CGAffineTransformRotate(transform, M_PI);
+             break;
+         case UIImageOrientationLeft:
+         case UIImageOrientationLeftMirrored:
+             transform = CGAffineTransformTranslate(transform, aImage.size.width, 0);
+             transform = CGAffineTransformRotate(transform, M_PI_2);
+             break;
+         case UIImageOrientationRight:
+         case UIImageOrientationRightMirrored:
+             transform = CGAffineTransformTranslate(transform, 0, aImage.size.height);
+             transform = CGAffineTransformRotate(transform, -M_PI_2);
+             break;
+         default:
+             break;
+     }
+    switch (aImage.imageOrientation) {
+        case UIImageOrientationUpMirrored:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, aImage.size.width, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, aImage.size.height, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+        default:
+            break;
+    }
+    // Now we draw the underlying CGImage into a new context, applying the transform
+    // calculated above.
+     CGContextRef ctx = CGBitmapContextCreate(NULL, aImage.size.width, aImage.size.height,CGImageGetBitsPerComponent(aImage.CGImage), 0,CGImageGetColorSpace(aImage.CGImage),CGImageGetBitmapInfo(aImage.CGImage));
+    CGContextConcatCTM(ctx, transform);
+    switch (aImage.imageOrientation) {
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            CGContextDrawImage(ctx, CGRectMake(0,0,aImage.size.height,aImage.size.width), aImage.CGImage);
+            break;
+            default:
+            CGContextDrawImage(ctx, CGRectMake(0,0,aImage.size.width,aImage.size.height), aImage.CGImage);
+            break;
+    }
+// And now we just create a new UIImage from the drawing context
+    CGImageRef cgimg = CGBitmapContextCreateImage(ctx);
+    UIImage *img = [UIImage imageWithCGImage:cgimg];
+    CGContextRelease(ctx);
+    CGImageRelease(cgimg);
+    return img;
+}- (void)takePictureAgain{
     [self.pictureView1 removeFromSuperview];
     [self.captureSession startRunning];
+    [self.imageArray1 removeObjectAtIndex:1];
     self.shutter.hidden = NO;
 }
 //
@@ -263,7 +344,6 @@
 //        }
 //    }
 //}
-
 #pragma mark - 私有方法
 //取得指定位置的摄像头
 - (AVCaptureDevice *)getCameraDeviceWithPosition:(AVCaptureDevicePosition )position

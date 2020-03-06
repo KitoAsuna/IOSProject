@@ -83,7 +83,7 @@
     [containerView addSubview:focusCursor];
     _focusCursor = focusCursor;
     
-    _pictureView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, screen_width, screen_height-30)];
+    _pictureView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, screen_width, screen_height)];
     _pictureView.contentMode = UIViewContentModeScaleAspectFill;
     _pictureView.clipsToBounds = YES;
     _pictureView.userInteractionEnabled = YES;
@@ -117,11 +117,19 @@
         return;
     }
     //初始化设备输出对象，用于获得输出数据
+    
     _captureStillImageOutput = [[AVCaptureStillImageOutput alloc] init];
     NSDictionary *outputSettings = @{AVVideoCodecKey:AVVideoCodecTypeJPEG};
     //输出设置
     [_captureStillImageOutput setOutputSettings:outputSettings];
-    
+    //    AVCaptureSessionPreset320x240
+    //    AVCaptureSessionPreset352x288
+    //    AVCaptureSessionPreset640x480
+    //    AVCaptureSessionPreset960x540
+    //    AVCaptureSessionPreset1280x720
+    //    AVCaptureSessionPreset1920x1080
+    //    AVCaptureSessionPreset3840x2160
+    self.captureSession.sessionPreset = AVCaptureSessionPreset3840x2160;
     //初始化AvcapturePhotoOutput
 //    self.imageOutput = [[AVCapturePhotoOutput alloc] init];
 //    NSDictionary *setDic = @{AVVideoCodecKey:AVVideoCodecTypeJPEG};
@@ -163,7 +171,7 @@
        
        self.view.clipsToBounds = YES;
        self.view.layer.masksToBounds = YES;
-       [captureDevice setVideoZoomFactor:1.0];
+       //[captureDevice setVideoZoomFactor: 1];
        //自动白平衡
        if([captureDevice isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeAutoWhiteBalance]){
            [_captureDeviceInput.device setWhiteBalanceMode:AVCaptureWhiteBalanceModeAutoWhiteBalance];
@@ -200,7 +208,7 @@
             
             self.image = [UIImage imageWithData:imageData];
             NSLog(@"拍摄到图片:%@",self.image);
-
+            self.isCapture = true;
            //UIImageWriteToSavedPhotosAlbum(self.image, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
             self.pictureView.image = self.image;
             [self.imageArray replaceObjectAtIndex:0 withObject:self.image];
@@ -217,6 +225,7 @@
     [self.pictureView removeFromSuperview];
     self.shutter.hidden = NO;
     [self.captureSession startRunning];
+    [self.imageArray removeObjectAtIndex:0];
 }
 ////保存照片到本地
 //-(void)Savephoto:(UIImage *)image{

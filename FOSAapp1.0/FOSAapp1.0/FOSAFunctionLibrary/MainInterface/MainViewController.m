@@ -20,7 +20,9 @@
     NSString *docPath;
     //刷新标识
     Boolean isUpdate;
+    Boolean *anim;
 }
+
 @property (nonatomic,strong) NSMutableArray<UIImage *> *imageArray;
 @property (nonatomic,strong) UILongPressGestureRecognizer *longPress;//长按手势
 @property (nonatomic,strong) FMDatabase *db;
@@ -29,10 +31,15 @@
 @property (nonatomic,strong) NSMutableArray *categoryArray;
 @property (nonatomic,strong) UIImageView *index;
 
+
+//提示蒙版
+@property (nonatomic,strong) UIView *mask;
+
+
+
 @end
 
 @implementation MainViewController
-
 /**懒加载属性*/
 
 - (UITableView *)CategoryMenuTable{
@@ -95,13 +102,25 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = FOSAWhite;
+    anim = true;
     NSLog(@"Main------------------------------------------");
     [self CreatMainView];
     [self CreateCategoryMenu];
+    
+    
+    //tips
+    [self showUsingTips];
 }
 - (void)viewWillAppear:(BOOL)animated{
     NSLog(@"viewWillappear>>>>>>>>>>>>>>>");
     [super viewWillAppear:animated];
+//    //添加按钮
+//    self.addContentBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, self.tabBarController.tabBar.frame.size.height, self.tabBarController.tabBar.frame.size.height)];
+//    self.addContentBtn.center = CGPointMake(self.tabBarController.tabBar.frame.size.width* 0.5, self.tabBarController.tabBar.frame.size.height * 0.2);
+//    [_addContentBtn setBackgroundImage:[UIImage imageNamed:@"icon_Addbtn"] forState:UIControlStateNormal];
+//    [self.tabBarController.tabBar addSubview:self.addContentBtn];
+//    [_addContentBtn addTarget:self action:@selector(addFunction) forControlEvents:UIControlEventTouchUpInside];
+//
     if (isUpdate) {
         NSLog(@"异步刷新界面");
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -251,11 +270,7 @@
     self.foodItemCollection.backgroundColor = [UIColor whiteColor];
     //self.foodItemCollection.bounces = NO;
     [self.view addSubview:self.foodItemCollection];
-    //添加按钮
-    self.addContentBtn = [[UIButton alloc]initWithFrame:CGRectMake(screen_width*3/4, screen_height/6, screen_width/6, screen_width/6)];
-    [_addContentBtn setBackgroundImage:[UIImage imageNamed:@"icon_AddBtnShadow"] forState:UIControlStateNormal];
-    [self.view insertSubview:_addContentBtn atIndex:10];
-    [_addContentBtn addTarget:self action:@selector(addFunction) forControlEvents:UIControlEventTouchUpInside];
+    
 
     //添加模糊层
     UIBlurEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
@@ -551,16 +566,16 @@
             UIMenuItem *item2 = [[UIMenuItem alloc]initWithTitle:@"取消"action:@selector(CancelEdit:)];
              UIMenuController *menu = [UIMenuController sharedMenuController];
             [menu setMenuItems:@[item1,item2]];
-//        if (@available(iOS 13,*)) {
-//            menu.accessibilityElements = @[cell.model.foodName,cell.model.device];
-//            [menu showMenuFromView:self.foodItemCollection rect:cell.frame];
-//        }else{
-//            [menu setTargetRect:cell.frame inView:self.foodItemCollection];
-//            menu.accessibilityElements = @[cell.model.foodName,cell.model.device];
-//            [menu setMenuVisible:YES animated:YES];
-//        }
-         menu.accessibilityElements = @[cell.model.foodName,cell.model.device];
-         [menu showMenuFromView:self.foodItemCollection rect:cell.frame];
+        if (@available(iOS 13,*)) {
+            menu.accessibilityElements = @[cell.model.foodName,cell.model.device];
+            [menu showMenuFromView:self.foodItemCollection rect:cell.frame];
+        }else{
+            [menu setTargetRect:cell.frame inView:self.foodItemCollection];
+            menu.accessibilityElements = @[cell.model.foodName,cell.model.device];
+            [menu setMenuVisible:YES animated:YES];
+        }
+//         menu.accessibilityElements = @[cell.model.foodName,cell.model.device];
+//         [menu showMenuFromView:self.foodItemCollection rect:cell.frame];
     }
 }
 - (void)refresh:(UIRefreshControl *)sender
@@ -760,6 +775,47 @@
     maskLayer.frame = view.bounds;
     maskLayer.path = maskPath.CGPath;
     view.layer.mask = maskLayer;
+}
+#pragma mark -- 教学提示
+- (void)showUsingTips{
+    
+    self.mask = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    self.mask.backgroundColor = [UIColor blackColor];
+    self.mask.alpha = 0.5;
+    [[UIApplication sharedApplication].keyWindow addSubview:self.mask];
+    UIImageView *index = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 30, 120)];
+    index.image = [UIImage imageNamed:@"icon_downindex"];
+    index.center = CGPointMake(self.view.center.x, screen_height-2*TabbarHeight);
+    [self.mask addSubview:index];
+    UILabel *tips = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width, 30)];
+    tips.text = @"Add Food";
+    tips.textColor = [UIColor whiteColor];
+    tips.textAlignment = NSTextAlignmentCenter;
+    tips.center = CGPointMake(self.view.center.x, screen_height-2*TabbarHeight-60);
+    [self.mask addSubview:tips];
+    [self indexAnimation:index];
+
+    self.mask.userInteractionEnabled = YES;
+    UITapGestureRecognizer *clickToClose = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(clickToClose)];
+    [self.mask addGestureRecognizer:clickToClose];
+}
+- (void)indexAnimation:(UIImageView *)index{
+
+    [UIView animateWithDuration:0.5 animations:^{
+        if (self->anim) {
+            index.center = CGPointMake(self.view.center.x, screen_height-1.7*TabbarHeight);
+            self->anim = false;
+        }else{
+            self->anim = true;
+            index.center = CGPointMake(self.view.center.x, screen_height-2*TabbarHeight);
+        }
+    } completion:^(BOOL finished) {
+        [self indexAnimation:index];
+    }];
+}
+- (void)clickToClose{
+    [self.mask removeFromSuperview];
+    //[[UIApplication sharedApplication].keyWindow addSubview:self.mask];
 }
 /**隐藏底部横条，点击屏幕可显示*/
 - (BOOL)prefersHomeIndicatorAutoHidden{

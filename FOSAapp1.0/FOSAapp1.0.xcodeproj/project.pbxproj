@@ -49,6 +49,8 @@
 		4513DD5223BF31410005A1E2 /* FoodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4513DD5123BF31410005A1E2 /* FoodViewController.m */; };
 		4513DD5923BF38D20005A1E2 /* ScanInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4513DD5823BF38D20005A1E2 /* ScanInfoView.m */; };
 		4513DD5E23BF3BC00005A1E2 /* FosaNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 4513DD5D23BF3BC00005A1E2 /* FosaNotification.m */; };
+		45172FE8240F5EAB00408A75 /* takePictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45172FE7240F5EAB00408A75 /* takePictureViewController.m */; };
+		45172FEB240F74F300408A75 /* foodAddingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45172FEA240F74F300408A75 /* foodAddingViewController.m */; };
 		45184AB523CDBEAE005E987B /* FosaDatePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45184AB423CDBEAE005E987B /* FosaDatePickerView.m */; };
 		4528AAEF23BD7DF100957279 /* scanLine_Horizontal.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAEE23BD7DF100957279 /* scanLine_Horizontal.png */; };
 		4528AAF123BD7DF800957279 /* scanLine_Vertical.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAF023BD7DF800957279 /* scanLine_Vertical.png */; };
@@ -62,6 +64,7 @@
 		45514BEB23F2E285000E321E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
 		45514BEC23F2E287000E321E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
 		455F4AC723D157FE00BE3822 /* saoyisao@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 455F4AC623D157FE00BE3822 /* saoyisao@3x.png */; };
+		458EA2D5241233C700F1FCC7 /* fosaMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 458EA2D4241233C700F1FCC7 /* fosaMainViewController.m */; };
 		4590C81C23B9A58700691461 /* FoodModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C81B23B9A58700691461 /* FoodModel.m */; };
 		4590C83723B9C5F500691461 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C82C23B9C5F500691461 /* FMDatabaseQueue.m */; };
 		4590C83823B9C5F500691461 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C82F23B9C5F500691461 /* FMDatabaseAdditions.m */; };
@@ -76,6 +79,7 @@
 		4590C85C23B9EFBA00691461 /* MenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C85B23B9EFBA00691461 /* MenuTableViewCell.m */; };
 		4597BD6323C2BCE30031DC4C /* DeviceCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4597BD6223C2BCE30031DC4C /* DeviceCollectionViewCell.m */; };
 		4597BD6B23C3104C0031DC4C /* img_fosa.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4597BD6A23C3104B0031DC4C /* img_fosa.jpg */; };
+		459C5EA2240605050014E8C3 /* FOSATabbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 459C5EA1240605050014E8C3 /* FOSATabbar.m */; };
 		45A506CB23B8402C0046FC09 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A506CA23B8402C0046FC09 /* AppDelegate.m */; };
 		45A506CE23B8402C0046FC09 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A506CD23B8402C0046FC09 /* SceneDelegate.m */; };
 		45A506D423B8402C0046FC09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D223B8402C0046FC09 /* Main.storyboard */; };
@@ -200,6 +204,10 @@
 		4513DD5823BF38D20005A1E2 /* ScanInfoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScanInfoView.m; sourceTree = "<group>"; };
 		4513DD5C23BF3BC00005A1E2 /* FosaNotification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FosaNotification.h; sourceTree = "<group>"; };
 		4513DD5D23BF3BC00005A1E2 /* FosaNotification.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FosaNotification.m; sourceTree = "<group>"; };
+		45172FE6240F5EAB00408A75 /* takePictureViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = takePictureViewController.h; sourceTree = "<group>"; };
+		45172FE7240F5EAB00408A75 /* takePictureViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = takePictureViewController.m; sourceTree = "<group>"; };
+		45172FE9240F74F300408A75 /* foodAddingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foodAddingViewController.h; sourceTree = "<group>"; };
+		45172FEA240F74F300408A75 /* foodAddingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = foodAddingViewController.m; sourceTree = "<group>"; };
 		45184AB323CDBEAE005E987B /* FosaDatePickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FosaDatePickerView.h; sourceTree = "<group>"; };
 		45184AB423CDBEAE005E987B /* FosaDatePickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FosaDatePickerView.m; sourceTree = "<group>"; };
 		4528AAEE23BD7DF100957279 /* scanLine_Horizontal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scanLine_Horizontal.png; sourceTree = "<group>"; };
@@ -217,6 +225,8 @@
 		4544298423CF05B500662F18 /* CategoryTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryTableViewCell.h; sourceTree = "<group>"; };
 		4544298523CF05B500662F18 /* CategoryTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CategoryTableViewCell.m; sourceTree = "<group>"; };
 		455F4AC623D157FE00BE3822 /* saoyisao@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saoyisao@3x.png"; sourceTree = "<group>"; };
+		458EA2D3241233C700F1FCC7 /* fosaMainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fosaMainViewController.h; sourceTree = "<group>"; };
+		458EA2D4241233C700F1FCC7 /* fosaMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fosaMainViewController.m; sourceTree = "<group>"; };
 		4590C81A23B9A58700691461 /* FoodModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FoodModel.h; sourceTree = "<group>"; };
 		4590C81B23B9A58700691461 /* FoodModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FoodModel.m; sourceTree = "<group>"; };
 		4590C82B23B9C5F500691461 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
@@ -248,6 +258,8 @@
 		4597BD6123C2BCE30031DC4C /* DeviceCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceCollectionViewCell.h; sourceTree = "<group>"; };
 		4597BD6223C2BCE30031DC4C /* DeviceCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceCollectionViewCell.m; sourceTree = "<group>"; };
 		4597BD6A23C3104B0031DC4C /* img_fosa.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img_fosa.jpg; sourceTree = "<group>"; };
+		459C5EA0240605050014E8C3 /* FOSATabbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FOSATabbar.h; sourceTree = "<group>"; };
+		459C5EA1240605050014E8C3 /* FOSATabbar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FOSATabbar.m; sourceTree = "<group>"; };
 		45A506C623B8402C0046FC09 /* FOSAapp1.0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FOSAapp1.0.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45A506C923B8402C0046FC09 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		45A506CA23B8402C0046FC09 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -458,8 +470,19 @@
 				4513DD5123BF31410005A1E2 /* FoodViewController.m */,
 				45F653E923C75307008F08C2 /* foodKindCollectionViewCell.h */,
 				45F653EA23C75307008F08C2 /* foodKindCollectionViewCell.m */,
+				45172FE9240F74F300408A75 /* foodAddingViewController.h */,
+				45172FEA240F74F300408A75 /* foodAddingViewController.m */,
 			);
 			path = Food;
+			sourceTree = "<group>";
+		};
+		45172FE5240F5E1400408A75 /* NewPhotoFunction */ = {
+			isa = PBXGroup;
+			children = (
+				45172FE6240F5EAB00408A75 /* takePictureViewController.h */,
+				45172FE7240F5EAB00408A75 /* takePictureViewController.m */,
+			);
+			path = NewPhotoFunction;
 			sourceTree = "<group>";
 		};
 		45184AAF23CDBD65005E987B /* FosaDatePicker */ = {
@@ -512,6 +535,8 @@
 			children = (
 				4590C85623B9D58F00691461 /* RootTabBarViewController.h */,
 				4590C85723B9D58F00691461 /* RootTabBarViewController.m */,
+				459C5EA0240605050014E8C3 /* FOSATabbar.h */,
+				459C5EA1240605050014E8C3 /* FOSATabbar.m */,
 			);
 			path = RootTabBar;
 			sourceTree = "<group>";
@@ -522,6 +547,8 @@
 				4590C85923B9EF8A00691461 /* cell */,
 				4590C84023B9C6B200691461 /* MainViewController.h */,
 				4590C84123B9C6B200691461 /* MainViewController.m */,
+				458EA2D3241233C700F1FCC7 /* fosaMainViewController.h */,
+				458EA2D4241233C700F1FCC7 /* fosaMainViewController.m */,
 			);
 			path = MainInterface;
 			sourceTree = "<group>";
@@ -590,6 +617,7 @@
 		4590C83F23B9C64E00691461 /* GeneralFunction */ = {
 			isa = PBXGroup;
 			children = (
+				45172FE5240F5E1400408A75 /* NewPhotoFunction */,
 				45184AAF23CDBD65005E987B /* FosaDatePicker */,
 				4513DD4C23BF2C1A0005A1E2 /* Food */,
 				4513DD3523BED4B00005A1E2 /* Product */,
@@ -925,6 +953,7 @@
 				454421EB23CBF5A0002FADFE /* FoodInfoView.m in Sources */,
 				4513DD4823BED82E0005A1E2 /* LoginViewController.m in Sources */,
 				4500E12D23BB1DCE002EB9FE /* QRCodeScanViewController.m in Sources */,
+				45172FEB240F74F300408A75 /* foodAddingViewController.m in Sources */,
 				4500E11D23BAEB14002EB9FE /* NSString+AvoidCrash.m in Sources */,
 				45D3747E23C075BA00192014 /* AFImageDownloader.m in Sources */,
 				4500E14223BB2594002EB9FE /* PortraitScanView.m in Sources */,
@@ -948,6 +977,7 @@
 				45A506DC23B8402E0046FC09 /* main.m in Sources */,
 				45A506CE23B8402C0046FC09 /* SceneDelegate.m in Sources */,
 				4513DD5923BF38D20005A1E2 /* ScanInfoView.m in Sources */,
+				458EA2D5241233C700F1FCC7 /* fosaMainViewController.m in Sources */,
 				4590C84523B9C72800691461 /* SealerAndPoundViewController.m in Sources */,
 				4500E13F23BB248A002EB9FE /* Fosa_NSString_Queue.m in Sources */,
 				4590C83B23B9C5F500691461 /* FMResultSet.m in Sources */,
@@ -970,6 +1000,7 @@
 				4544298623CF05B500662F18 /* CategoryTableViewCell.m in Sources */,
 				45D3747823C075BA00192014 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				45F0C7F423F036DA002F323B /* fosaPhotoViewController.m in Sources */,
+				459C5EA2240605050014E8C3 /* FOSATabbar.m in Sources */,
 				4500E14623BB25B9002EB9FE /* LandscapeScanView.m in Sources */,
 				45D3747D23C075BA00192014 /* AFAutoPurgingImageCache.m in Sources */,
 				4500E12523BAEB14002EB9FE /* AvoidCrash.m in Sources */,
@@ -984,6 +1015,7 @@
 				4590C85823B9D58F00691461 /* RootTabBarViewController.m in Sources */,
 				4513DD4223BED4B00005A1E2 /* OtherViewController.m in Sources */,
 				45D3745B23C075B200192014 /* AFURLResponseSerialization.m in Sources */,
+				45172FE8240F5EAB00408A75 /* takePictureViewController.m in Sources */,
 				4500E12023BAEB14002EB9FE /* NSMutableString+AvoidCrash.m in Sources */,
 				4513DD4B23BED83E0005A1E2 /* RegisterViewController.m in Sources */,
 				4513DD4123BED4B00005A1E2 /* productView.m in Sources */,

@@ -173,11 +173,12 @@
     NSString *hour = self.hour.length == 3 ? [NSString stringWithFormat:@"%ld", self.hour.integerValue] : [NSString stringWithFormat:@"0%ld", self.hour.integerValue];
     NSString *minute = self.minute.length == 3 ? [NSString stringWithFormat:@"%ld", self.minute.integerValue] : [NSString stringWithFormat:@"0%ld", self.minute.integerValue];
     
-    self.selectStr = [NSString stringWithFormat:@"%@/%@/%ld  %@:%@", month, day, [self.year integerValue], hour, minute];
+    self.selectStr = [NSString stringWithFormat:@"%@/%@/%ld/%@:%@", month, day, [self.year integerValue], hour, minute];
     if ([self.delegate respondsToSelector:@selector(datePickerViewSaveBtnClickDelegate:)]) {
         [self.delegate datePickerViewSaveBtnClickDelegate:self.selectStr];
     }
 }
+
 /// 取消按钮点击方法
 - (void)cancelBtnClick {
     NSLog(@"点击了取消");
@@ -185,6 +186,7 @@
         [self.delegate datePickerViewCancelBtnClickDelegate];
     }
 }
+
 #pragma mark - UIPickerViewDelegate and UIPickerViewDataSource
 /// UIPickerView返回多少组
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{

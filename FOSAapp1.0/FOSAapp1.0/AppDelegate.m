@@ -49,6 +49,7 @@
                    [self CreatCategoryTable];
                    [userDefault setObject:currentVersion forKey:@"localVersion"];
                }
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     //根据系统版本选择视图生成方式
     if (@available(iOS 13,*)) {
         //[self GetJSONFromServerByAFN];

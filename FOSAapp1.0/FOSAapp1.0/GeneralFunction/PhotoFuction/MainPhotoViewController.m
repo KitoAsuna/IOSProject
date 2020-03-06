@@ -87,18 +87,20 @@
     //[self.navigationController.navigationBar bringSubviewToFront:_pageControl];
     //self.navigationController.navigationBart
 }
+
 - (void)stopRunning{
     [_mphoto0.captureSession stopRunning];
     [_mphoto1.captureSession stopRunning];
     [_mphoto2.captureSession stopRunning];
 }
+
 #pragma mark - 进入扫码界面
 -(void)ScanEvent{
+
 //    NSLog(@"***************%@",_imageArray);
 //    FoodViewController *food = [[FoodViewController alloc]init];
 //    food.food_image = self.imageArray;
 //    food.hidesBottomBarWhenPushed = YES;
-    
     QRCodeScanViewController *scan = [[QRCodeScanViewController alloc]init];
     scan.food_photo = [[NSMutableArray alloc]init];
     scan.food_photo = self.imageArray;
@@ -106,7 +108,6 @@
     scan.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:scan animated:YES];
     [self.navigationController popoverPresentationController];
-    
 }
 
 /**隐藏底部横条，点击屏幕可显示*/

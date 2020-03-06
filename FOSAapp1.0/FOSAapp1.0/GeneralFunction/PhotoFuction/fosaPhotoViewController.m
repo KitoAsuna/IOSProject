@@ -81,7 +81,7 @@
     [self PageControlInit];
 }
 - (void)InitArray{
-    UIImage *image = [UIImage imageNamed:@"icon_logoHL"];
+    UIImage *image  = [UIImage imageNamed:@"icon_logoHL"];
     UIImage *image1 = [UIImage imageNamed:@"icon_logoHL"];
     UIImage *image2 = [UIImage imageNamed:@"icon_logoHL"];
     _imageArray = [[NSMutableArray alloc]init];
@@ -111,8 +111,10 @@
 #pragma mark 返回上一个ViewController对象
 - (nullable UIViewController *)pageViewController:(UIPageViewController *)pageViewController
                viewControllerBeforeViewController:(UIViewController *)viewController{
+    
     NSInteger index = [self.controllersArray indexOfObject:viewController];
     self.pageControl.currentPage = index;
+
     index --;
     if (index < 0 || index == NSNotFound) {
         return nil;

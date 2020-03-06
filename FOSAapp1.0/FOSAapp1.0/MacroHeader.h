@@ -104,9 +104,9 @@
 #define BundleName [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"] //工程名
 
 /** 屏幕高度 */
-#define screen_height [UIScreen mainScreen].bounds.size.height
+#define screen_height (int)[UIScreen mainScreen].bounds.size.height
 /** 屏幕宽度 */
-#define screen_width [UIScreen mainScreen].bounds.size.width
+#define screen_width (int)[UIScreen mainScreen].bounds.size.width
 //判断是否是iPad
 #define ISIPAD [[UIDevice currentDevice] userInterfaceIdiom] ==UIUserInterfaceIdiomPad
 //判断手机型号为X
@@ -117,6 +117,7 @@
 #define NavigationBarHeight self.navigationController.navigationBar.frame.size.height
 //屏幕底部 tabBar高度49pt + 安全视图高度34pt(iPhone X)
 #define TabbarHeight self.tabBarController.tabBar.frame.size.height
+//#define TabbarHeight  ([[UIApplication sharedApplication] statusBarFrame].size.height > 20?83:49)  //根据状态栏的高度判断tabBar的高度
 //屏幕顶部 导航栏高度（包含状态栏高度）
 #define NavigationHeight (StatusBarHeight + NavigationBarHeight)
 //屏幕底部安全视图高度 - 适配iPhone X底部

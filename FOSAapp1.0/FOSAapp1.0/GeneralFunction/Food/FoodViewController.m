@@ -354,7 +354,7 @@
 - (void)creatPicturePlayer{
     //头部视图
     self.headerView.frame = CGRectMake(0, 0, screen_width, screen_height/3);
-    int headerWidth = self.headerView.frame.size.width;
+    int headerWidth  = self.headerView.frame.size.width;
     int headerHeight = self.headerView.frame.size.height;
     NSLog(@"headerWidth:%d-------headerheight:%d",headerWidth,headerHeight);
     [self.rootScrollerView addSubview:self.headerView];
@@ -393,6 +393,7 @@
         [image addGestureRecognizer:clickRecognizer];
         [self.pictureScrollerView addSubview:image];
     }
+
     [self.headerView addSubview:self.pictureScrollerView];
     //轮播页面指示器
     self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth/3, headerHeight-30, headerWidth/3, 20)];
@@ -401,6 +402,7 @@
     self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
     self.pageControl.currentPageIndicatorTintColor = FOSAgreen;
     [self.headerView addSubview:self.pageControl];
+
 }
 - (void)EnlargePhoto:(UITapGestureRecognizer *)sender{
     self.navigationController.navigationBar.hidden = YES;   //隐藏导航栏

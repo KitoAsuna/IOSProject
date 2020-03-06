@@ -20,16 +20,12 @@
         
         //文字添加阴影
         NSShadow *shadow = [[NSShadow alloc] init];
-
         shadow.shadowBlurRadius = 5;//阴影半径，默认值3
-
         shadow.shadowColor = [UIColor blackColor];//阴影颜色
-
         shadow.shadowOffset = CGSizeMake(1, 5);//阴影偏移量，x向右偏移，y向下偏移，默认是（0，-3）
-
         NSAttributedString * attributedText = [[NSAttributedString alloc] initWithString:@"" attributes:@{NSShadowAttributeName:shadow}];
         
-        self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, cellHeight*5/6-5, cellWidth*7/8, cellHeight/6)];
+        self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, cellHeight*2/3-5, cellWidth*7/8, cellHeight/6)];
         self.nameLabel.textColor = [UIColor colorWithWhite:30 alpha:1.0];
         [self.nameLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18*(screen_width/414.0)]];
         self.nameLabel.userInteractionEnabled = NO;
@@ -44,7 +40,7 @@
         self.dateLabel.attributedText = attributedText;
         [self insertSubview:_dateLabel atIndex:20];
         
-        self.foodImageview = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, cellWidth, cellHeight)];
+        self.foodImageview = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, cellWidth, cellHeight*2/3)];
         self.foodImageview.contentMode = UIViewContentModeScaleAspectFill;
         self.foodImageview.clipsToBounds = YES;
         [self.contentView addSubview:self.foodImageview];
@@ -74,5 +70,18 @@
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
     NSLog(@"===%@", img);
     return img;
+}
+- (void)drawRect:(CGRect)rect {
+    [[UIColor clearColor] setFill];
+    UIRectFill(rect);
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextMoveToPoint(context, self.bounds.size.width, self.bounds.size.height*5/6);
+    CGContextAddLineToPoint(context, self.bounds.size.width*5/6, self.bounds.size.height);
+    CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
+    CGContextClosePath(context);
+    [[UIColor blackColor] setStroke];
+    [[UIColor redColor] setFill];
+    CGContextDrawPath(context, kCGPathFillStroke);
 }
 @end

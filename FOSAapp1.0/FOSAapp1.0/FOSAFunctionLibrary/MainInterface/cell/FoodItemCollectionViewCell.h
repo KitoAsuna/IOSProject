@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong)  FoodModel *model;
 
-@property (nonatomic,strong) UILabel *nameLabel,*dateLabel;
+@property (nonatomic,strong) UILabel *nameLabel,*dateLabel,*expireLabel;
 @property (nonatomic,strong) UIImageView *foodImageview;
 
 @end

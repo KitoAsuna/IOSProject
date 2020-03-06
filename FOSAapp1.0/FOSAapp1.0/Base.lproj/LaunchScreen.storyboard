@@ -15,12 +15,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="fosaLauch.png" translatesAutoresizingMaskIntoConstraints="NO" id="vEj-2a-xgi">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fosaLauch.png" translatesAutoresizingMaskIntoConstraints="NO" id="vEj-2a-xgi">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="vEj-2a-xgi" secondAttribute="trailing" id="ArC-r4-mn6"/>
+                            <constraint firstAttribute="bottom" secondItem="vEj-2a-xgi" secondAttribute="bottom" id="J7J-jd-9ex"/>
+                            <constraint firstItem="vEj-2a-xgi" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="ZRe-Gg-tQf"/>
+                            <constraint firstItem="vEj-2a-xgi" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="ecu-6f-T2o"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
