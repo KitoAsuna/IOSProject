@@ -297,10 +297,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [self OpenSqlDatabase:@"FOSA"]; //打开数据库
-    if (self.foodNameInput.text != NULL && self.device != NULL) {
-        tempModel = [FoodModel modelWithName:self.foodNameInput.text DeviceID:self.device Description:self.aboutFoodInput.text RemindDate:self.remindDateLable.text ExpireDate:self.expireDateLable.text foodIcon:self.foodNameInput.text category:self.categoryLable.text];
-        selectedKind = tempModel.category;
-    }
+//    if (self.foodNameInput.text != NULL && self.device != NULL) {
+//        tempModel = [FoodModel modelWithName:self.foodNameInput.text DeviceID:self.device Description:self.aboutFoodInput.text RemindDate:self.remindDateLable.text ExpireDate:self.expireDateLable.text foodIcon:self.foodNameInput.text category:self.categoryLable.text];
+//        selectedKind = tempModel.category;
+//    }
     
 }
 

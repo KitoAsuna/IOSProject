@@ -499,7 +499,8 @@ NSLog(@"************************************************************************
 - (void)ScanResultOperationOnLandScape:(NSString *)result code:(AVMetadataMachineReadableCodeObject *)mobject{
     if([[mobject type] isEqualToString:AVMetadataObjectTypeQRCode]){//如果是一个可读二维码对象
         //self.isGetResult = true;                                    //修改标志，不再自动放大镜头
-            if (self.food_photo.count == 0){//食物图片数组对象为空说明并不是在添加食物的过程进行扫码
+            if ([self.scanStyle isEqualToString:@""]){
+                //scanStyle  为 block，在sg获得结果后判断，如果是FOSA系列产品的码，则返回添加界面及产品设备号
                     [self performSelectorOnMainThread:@selector(setFocusCursorWithPoint:) withObject:(AVMetadataMachineReadableCodeObject *) mobject waitUntilDone:NO];     //在主线程中标记二维码的位置（还不够准确）
                     if([result hasPrefix:@"http://"]||[result hasPrefix:@"https://"]){//若是一个网站，就打开这个链接
                         if (!isJump) {
@@ -525,7 +526,7 @@ NSLog(@"************************************************************************
                             isJump = true;  //不再处理其他跳转
                         }
                     }
-            }else{  //UIImage不为空则说明现在正处于添加功能中拍照完成后的扫码阶段
+            }else if([self.scanStyle isEqualToString:@"block"]){  //添加功能中的扫码阶段
                 if([result hasPrefix:@"FOSASealer"]||[result hasPrefix:@"FS9"]){//判断所扫描的二维码属于fosa产品
                     [self.captureSession stopRunning];
                     [self performSelectorOnMainThread:@selector(setFocusCursorWithPoint:) withObject:(AVMetadataMachineReadableCodeObject *) mobject waitUntilDone:NO];
@@ -611,25 +612,25 @@ NSLog(@"************************************************************************
         AudioServicesPlaySystemSound(soundID);//播放音效
 }
 - (void)showOneMessage:(NSString *)result{
-    NSLog(@"%@",result);
-    NSLog(@">>>>>>>>>>>>>>>>>>>多个扫码模式宽度：%d,高度：%d",screen_width,screen_height);
-    isJump = true;
-    FoodViewController *food = [[FoodViewController alloc]init];
-    food.isAdding = false;
-    FoodModel *model = [self CheckFoodInfoWithName:result];
-    if ([model.foodName isEqualToString:@"NO Record"]) {
-        NSString *message = [NSString stringWithFormat:@"device %@    NO Record,Please adding",result];
-        [self SystemAlert:message];
-    }else{
-        food.foodNameInput.text = model.foodName;
-        food.remindDateLable.text = model.remindDate;
-        food.food_image = [self getCellImageArray:model.foodName];
-        food.aboutFoodInput.text = model.aboutFood;
-        food.expireDateLable.text = model.expireDate;
-        food.categoryLable.text = model.category;
-        food.isAdding = false;
-        [self.navigationController pushViewController:food animated:YES];
-    }
+//    NSLog(@"%@",result);
+//    NSLog(@">>>>>>>>>>>>>>>>>>>多个扫码模式宽度：%d,高度：%d",screen_width,screen_height);
+//    isJump = true;
+//    FoodViewController *food = [[FoodViewController alloc]init];
+//    food.isAdding = false;
+//    //FoodModel *model = [self CheckFoodInfoWithName:result];
+//    if ([model.foodName isEqualToString:@"NO Record"]) {
+//        NSString *message = [NSString stringWithFormat:@"device %@    NO Record,Please adding",result];
+//        [self SystemAlert:message];
+//    }else{
+//        food.foodNameInput.text = model.foodName;
+//        food.remindDateLable.text = model.remindDate;
+//        food.food_image = [self getCellImageArray:model.foodName];
+//        food.aboutFoodInput.text = model.aboutFood;
+//        food.expireDateLable.text = model.expireDate;
+//        food.categoryLable.text = model.category;
+//        food.isAdding = false;
+//        [self.navigationController pushViewController:food animated:YES];
+//    }
 }
 //打开扫描到的网页
 - (void)OpenURL:(NSString *)url{
@@ -659,12 +660,13 @@ NSLog(@"************************************************************************
     NSLog(@"扫码结果：%@",message);
     [NSThread sleepForTimeInterval: 2.0];
     //初始化食物添加视图控制器
-    FoodViewController *food = [[FoodViewController alloc]init];
-    food.isAdding = true;
-    food.food_image = [[NSMutableArray alloc]init];
-    food.food_image = self.food_photo;
-    food.device = message;
-    [self.navigationController pushViewController:food animated:YES];
+//    FoodViewController *food = [[FoodViewController alloc]init];
+//    food.isAdding = true;
+//    food.food_image = [[NSMutableArray alloc]init];
+//    food.food_image = self.food_photo;
+//    food.device = message;
+    self.resultBlock(message);
+    [self.navigationController popViewControllerAnimated:YES];
 }
 //跳转到结果界面
 - (void)JumpToResult:(NSString *)message{
@@ -706,7 +708,7 @@ NSLog(@"************************************************************************
     NSString *message = [code stringValue];
     CGFloat navHeight = self.navigationController.navigationBar.frame.size.height;
     FoodMoreInfoView *circleAlertView = [[FoodMoreInfoView alloc]init];
-    circleAlertView.model = [self CheckFoodInfoWithName:message];
+   // circleAlertView.model = [self CheckFoodInfoWithName:message];
     NSLog(@">>>>>>>>>>>>>>>>>>>多个扫码模式宽度：%d,高度：%d",screen_width,screen_height);
     circleAlertView.frame = CGRectMake(screen_width/5 -screen_height/6+5,(self.count)*(screen_height/3)+2*navHeight,screen_height/3-20,screen_width*2/5);
     circleAlertView.layer.masksToBounds = YES;
@@ -986,38 +988,38 @@ NSLog(@"************************************************************************
         NSLog(@"打开数据库失败");
     }
 }
-
-- (FoodModel *)CheckFoodInfoWithName:(NSString *)device{
-    [self OpenSqlDatabase:@"FOSA"];
-    NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where device = '%@';",device];
-    NSLog(@"%@",sql);
-    //FoodModel *model = [FoodModel modelWithName:@"NO Record" DeviceID:device RemindDate:@"" ExpireDate:@""];
-    FoodModel *model = [FoodModel modelWithName:@"NO Record" DeviceID:device Description:@"" RemindDate:@""  ExpireDate:@"" foodIcon:@"" category:@""];
-    FMResultSet *set = [db executeQuery:sql];
-//    if (set.columnCount == 0) {
-//        model = [FoodModel modelWithName:@"NO Record" DeviceID:device RemindDate:@"" ExpireDate:@""];
-//    }else{
-        if([set next]) {
-            NSString *foodName = [set stringForColumn:@"foodName"];
-            NSString *fdevice   = [set stringForColumn:@"device"];
-            NSString *aboutFood = [set stringForColumn:@"aboutFood"];
-            NSString *remindDate = [set stringForColumn:@"remindDate"];
-            NSString *expireDate = [set stringForColumn:@"expireDate"];
-            NSString *foodImg = [set stringForColumn:@"foodImg"];
-            NSString *category = [set stringForColumn:@"category"];
-            
-            NSLog(@"%@----%@----%@----%@",foodName,fdevice,remindDate,expireDate);
-            model.foodName = foodName;
-            model.remindDate = remindDate;
-            model.expireDate = expireDate;
-            model.aboutFood = aboutFood;
-            model.category = category;
-            model.foodPhoto = foodImg;
-            model.device = fdevice;
-        }
-    //}
-    return model;
-}
+//
+//- (FoodModel *)CheckFoodInfoWithName:(NSString *)device{
+//    [self OpenSqlDatabase:@"FOSA"];
+//    NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where device = '%@';",device];
+//    NSLog(@"%@",sql);
+//    //FoodModel *model = [FoodModel modelWithName:@"NO Record" DeviceID:device RemindDate:@"" ExpireDate:@""];
+////    FoodModel *model = [FoodModel modelWithName:@"NO Record" DeviceID:device Description:@"" RemindDate:@""  ExpireDate:@"" foodIcon:@"" category:@""];
+//    FMResultSet *set = [db executeQuery:sql];
+////    if (set.columnCount == 0) {
+////        model = [FoodModel modelWithName:@"NO Record" DeviceID:device RemindDate:@"" ExpireDate:@""];
+////    }else{
+//        if([set next]) {
+//            NSString *foodName = [set stringForColumn:@"foodName"];
+//            NSString *fdevice   = [set stringForColumn:@"device"];
+//            NSString *aboutFood = [set stringForColumn:@"aboutFood"];
+//            NSString *remindDate = [set stringForColumn:@"remindDate"];
+//            NSString *expireDate = [set stringForColumn:@"expireDate"];
+//            NSString *foodImg = [set stringForColumn:@"foodImg"];
+//            NSString *category = [set stringForColumn:@"category"];
+//
+//            NSLog(@"%@----%@----%@----%@",foodName,fdevice,remindDate,expireDate);
+////            model.foodName = foodName;
+////            model.remindDate = remindDate;
+////            model.expireDate = expireDate;
+////            model.aboutFood = aboutFood;
+////            model.category = category;
+//            //            modfl.foodPhoto = foodImg;
+////            model.device = fdevice;
+//        }
+//    //}
+//    return model;
+//}
 
 //运用AFNetworking post请求 得到产品信息（关于AFNetworking网上很多例子）
 

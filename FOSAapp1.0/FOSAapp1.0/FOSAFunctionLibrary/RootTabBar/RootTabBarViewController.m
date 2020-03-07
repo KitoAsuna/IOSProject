@@ -7,7 +7,6 @@
 //
 
 #import "RootTabBarViewController.h"
-#import "MainViewController.h"
 #import "SealerAndPoundViewController.h"
 #import "ProductViewController.h"
 #import "UserViewController.h"

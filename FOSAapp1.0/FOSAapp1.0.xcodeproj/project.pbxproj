@@ -49,6 +49,9 @@
 		4513DD5223BF31410005A1E2 /* FoodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4513DD5123BF31410005A1E2 /* FoodViewController.m */; };
 		4513DD5923BF38D20005A1E2 /* ScanInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4513DD5823BF38D20005A1E2 /* ScanInfoView.m */; };
 		4513DD5E23BF3BC00005A1E2 /* FosaNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 4513DD5D23BF3BC00005A1E2 /* FosaNotification.m */; };
+		451567E124133F51000F33C2 /* foodInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 451567E024133F51000F33C2 /* foodInfoViewController.m */; };
+		451567E524134082000F33C2 /* categoryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 451567E424134082000F33C2 /* categoryCollectionViewCell.m */; };
+		451567E824135831000F33C2 /* foodItemCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 451567E724135831000F33C2 /* foodItemCollectionViewCell.m */; };
 		45172FE8240F5EAB00408A75 /* takePictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45172FE7240F5EAB00408A75 /* takePictureViewController.m */; };
 		45172FEB240F74F300408A75 /* foodAddingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45172FEA240F74F300408A75 /* foodAddingViewController.m */; };
 		45184AB523CDBEAE005E987B /* FosaDatePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45184AB423CDBEAE005E987B /* FosaDatePickerView.m */; };
@@ -57,6 +60,7 @@
 		4528AAF423BDE12800957279 /* icon_flashOff.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAF223BDE12700957279 /* icon_flashOff.png */; };
 		4528AAF523BDE12800957279 /* icon_flashON.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAF323BDE12700957279 /* icon_flashON.png */; };
 		453938D123C00F7B0006474E /* CategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453938D023C00F7B0006474E /* CategoryViewController.m */; };
+		453C88342413DA37006B52A8 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453C88332413DA37006B52A8 /* MainViewController.m */; };
 		454421EB23CBF5A0002FADFE /* FoodInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421EA23CBF5A0002FADFE /* FoodInfoView.m */; };
 		454421EE23CC1680002FADFE /* FoodMoreInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421EC23CC1680002FADFE /* FoodMoreInfoView.m */; };
 		454421F223CC6B70002FADFE /* AboutAppsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421F123CC6B70002FADFE /* AboutAppsViewController.m */; };
@@ -71,7 +75,6 @@
 		4590C83923B9C5F500691461 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C83023B9C5F500691461 /* FMDatabase.m */; };
 		4590C83A23B9C5F500691461 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C83423B9C5F500691461 /* FMDatabasePool.m */; };
 		4590C83B23B9C5F500691461 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C83523B9C5F500691461 /* FMResultSet.m */; };
-		4590C84223B9C6B200691461 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C84123B9C6B200691461 /* MainViewController.m */; };
 		4590C84523B9C72800691461 /* SealerAndPoundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C84423B9C72800691461 /* SealerAndPoundViewController.m */; };
 		4590C84823B9C73E00691461 /* ProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C84723B9C73E00691461 /* ProductViewController.m */; };
 		4590C84B23B9C74D00691461 /* UserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C84A23B9C74D00691461 /* UserViewController.m */; };
@@ -204,6 +207,12 @@
 		4513DD5823BF38D20005A1E2 /* ScanInfoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScanInfoView.m; sourceTree = "<group>"; };
 		4513DD5C23BF3BC00005A1E2 /* FosaNotification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FosaNotification.h; sourceTree = "<group>"; };
 		4513DD5D23BF3BC00005A1E2 /* FosaNotification.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FosaNotification.m; sourceTree = "<group>"; };
+		451567DF24133F51000F33C2 /* foodInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foodInfoViewController.h; sourceTree = "<group>"; };
+		451567E024133F51000F33C2 /* foodInfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = foodInfoViewController.m; sourceTree = "<group>"; };
+		451567E324134082000F33C2 /* categoryCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = categoryCollectionViewCell.h; sourceTree = "<group>"; };
+		451567E424134082000F33C2 /* categoryCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = categoryCollectionViewCell.m; sourceTree = "<group>"; };
+		451567E624135831000F33C2 /* foodItemCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foodItemCollectionViewCell.h; sourceTree = "<group>"; };
+		451567E724135831000F33C2 /* foodItemCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = foodItemCollectionViewCell.m; sourceTree = "<group>"; };
 		45172FE6240F5EAB00408A75 /* takePictureViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = takePictureViewController.h; sourceTree = "<group>"; };
 		45172FE7240F5EAB00408A75 /* takePictureViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = takePictureViewController.m; sourceTree = "<group>"; };
 		45172FE9240F74F300408A75 /* foodAddingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foodAddingViewController.h; sourceTree = "<group>"; };
@@ -216,6 +225,8 @@
 		4528AAF323BDE12700957279 /* icon_flashON.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_flashON.png; sourceTree = "<group>"; };
 		453938CF23C00F7B0006474E /* CategoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryViewController.h; sourceTree = "<group>"; };
 		453938D023C00F7B0006474E /* CategoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CategoryViewController.m; sourceTree = "<group>"; };
+		453C88322413DA37006B52A8 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		453C88332413DA37006B52A8 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		454421E923CBF5A0002FADFE /* FoodInfoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FoodInfoView.h; sourceTree = "<group>"; };
 		454421EA23CBF5A0002FADFE /* FoodInfoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FoodInfoView.m; sourceTree = "<group>"; };
 		454421EC23CC1680002FADFE /* FoodMoreInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoodMoreInfoView.m; sourceTree = "<group>"; };
@@ -241,8 +252,6 @@
 		4590C83423B9C5F500691461 /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
 		4590C83523B9C5F500691461 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
 		4590C83E23B9C62400691461 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
-		4590C84023B9C6B200691461 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
-		4590C84123B9C6B200691461 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		4590C84323B9C72800691461 /* SealerAndPoundViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SealerAndPoundViewController.h; sourceTree = "<group>"; };
 		4590C84423B9C72800691461 /* SealerAndPoundViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SealerAndPoundViewController.m; sourceTree = "<group>"; };
 		4590C84623B9C73E00691461 /* ProductViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProductViewController.h; sourceTree = "<group>"; };
@@ -472,8 +481,21 @@
 				45F653EA23C75307008F08C2 /* foodKindCollectionViewCell.m */,
 				45172FE9240F74F300408A75 /* foodAddingViewController.h */,
 				45172FEA240F74F300408A75 /* foodAddingViewController.m */,
+				451567DF24133F51000F33C2 /* foodInfoViewController.h */,
+				451567E024133F51000F33C2 /* foodInfoViewController.m */,
 			);
 			path = Food;
+			sourceTree = "<group>";
+		};
+		451567E22413404E000F33C2 /* newCell */ = {
+			isa = PBXGroup;
+			children = (
+				451567E324134082000F33C2 /* categoryCollectionViewCell.h */,
+				451567E424134082000F33C2 /* categoryCollectionViewCell.m */,
+				451567E624135831000F33C2 /* foodItemCollectionViewCell.h */,
+				451567E724135831000F33C2 /* foodItemCollectionViewCell.m */,
+			);
+			path = newCell;
 			sourceTree = "<group>";
 		};
 		45172FE5240F5E1400408A75 /* NewPhotoFunction */ = {
@@ -544,11 +566,12 @@
 		4590C82623B9C55F00691461 /* MainInterface */ = {
 			isa = PBXGroup;
 			children = (
+				451567E22413404E000F33C2 /* newCell */,
 				4590C85923B9EF8A00691461 /* cell */,
-				4590C84023B9C6B200691461 /* MainViewController.h */,
-				4590C84123B9C6B200691461 /* MainViewController.m */,
 				458EA2D3241233C700F1FCC7 /* fosaMainViewController.h */,
 				458EA2D4241233C700F1FCC7 /* fosaMainViewController.m */,
+				453C88322413DA37006B52A8 /* MainViewController.h */,
+				453C88332413DA37006B52A8 /* MainViewController.m */,
 			);
 			path = MainInterface;
 			sourceTree = "<group>";
@@ -950,10 +973,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				451567E524134082000F33C2 /* categoryCollectionViewCell.m in Sources */,
 				454421EB23CBF5A0002FADFE /* FoodInfoView.m in Sources */,
 				4513DD4823BED82E0005A1E2 /* LoginViewController.m in Sources */,
+				453C88342413DA37006B52A8 /* MainViewController.m in Sources */,
 				4500E12D23BB1DCE002EB9FE /* QRCodeScanViewController.m in Sources */,
 				45172FEB240F74F300408A75 /* foodAddingViewController.m in Sources */,
+				451567E124133F51000F33C2 /* foodInfoViewController.m in Sources */,
 				4500E11D23BAEB14002EB9FE /* NSString+AvoidCrash.m in Sources */,
 				45D3747E23C075BA00192014 /* AFImageDownloader.m in Sources */,
 				4500E14223BB2594002EB9FE /* PortraitScanView.m in Sources */,
@@ -964,11 +990,11 @@
 				4513DD3223BED3550005A1E2 /* PhotoViewController2.m in Sources */,
 				4513DD5223BF31410005A1E2 /* FoodViewController.m in Sources */,
 				4500E12423BAEB14002EB9FE /* NSAttributedString+AvoidCrash.m in Sources */,
-				4590C84223B9C6B200691461 /* MainViewController.m in Sources */,
 				4500E11E23BAEB14002EB9FE /* NSDictionary+AvoidCrash.m in Sources */,
 				4513DD3323BED3550005A1E2 /* PhotoViewController.m in Sources */,
 				45D3745E23C075B200192014 /* AFURLRequestSerialization.m in Sources */,
 				45D3746023C075B200192014 /* AFSecurityPolicy.m in Sources */,
+				451567E824135831000F33C2 /* foodItemCollectionViewCell.m in Sources */,
 				4513DD4423BED4B00005A1E2 /* productCollectionViewCell.m in Sources */,
 				45A506CB23B8402C0046FC09 /* AppDelegate.m in Sources */,
 				4500E11F23BAEB14002EB9FE /* NSMutableDictionary+AvoidCrash.m in Sources */,

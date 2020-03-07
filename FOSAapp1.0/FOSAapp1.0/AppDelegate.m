@@ -12,7 +12,6 @@
 #import "AFNetworking.h"
 #import "FMDB.h"
 
-#import "MainViewController.h"
 #import "SealerAndPoundViewController.h"
 #import "ProductViewController.h"
 #import "UserViewController.h"

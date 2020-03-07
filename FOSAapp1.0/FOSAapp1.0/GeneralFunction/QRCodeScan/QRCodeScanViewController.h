@@ -16,6 +16,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QRCodeScanViewController : UIViewController
+
+//block 传值
+@property (nonatomic,copy)void(^resultBlock)(NSString *result);
+@property (nonatomic,strong) NSString *scanStyle;
 //扫码界面
 @property (nonatomic,strong)  UIImageView *scanFrame;       //扫描框
 @property (nonatomic,strong) UIImageView *scanLine;         //扫描线

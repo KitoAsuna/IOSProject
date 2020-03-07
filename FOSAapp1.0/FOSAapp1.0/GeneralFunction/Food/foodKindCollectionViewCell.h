@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong) UILabel *kind;
 @property (nonatomic,strong) UIImageView *categoryPhoto;
+@property (nonatomic,strong) UIView *rootView;
 
 @end
 

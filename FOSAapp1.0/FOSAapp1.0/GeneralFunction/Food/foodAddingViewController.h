@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UIView *headerView;//头部底层视图
 @property (nonatomic,strong) UIScrollView *picturePlayer;//图片轮播器
 @property (nonatomic,strong) UIPageControl *pageControl;    //轮播指示器
+@property (nonatomic,strong) NSMutableArray<UIImage *> *foodImgArray;
 //@property (nonatomic,strong) UILabel *foodNameLabel;//食物名称
 @property (nonatomic,strong) UIView *storageView,*expireView;
 @property (nonatomic,strong) UIButton *storageIcon,*expireIcon;
@@ -25,9 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UILabel *expireLabel,*expireDateLabel,*expireTimeLabel;
 
 //内容视图
-@property (nonatomic,strong) UIView *contentView;
+@property (nonatomic,strong) UIScrollView *contentView;
 @property (nonatomic,strong) UIView *foodNameView,*foodDescribedView,*locationView;
-@property (nonatomic,strong) UILabel *foodNameLabel,*foodDescribedLabel,*locationLabel;
+@property (nonatomic,strong) UILabel *foodNameLabel,*foodDescribedLabel,*locationLabel,*numberLabel;;
 @property (nonatomic,strong) UITextField *foodTextView,*locationTextView;
 @property (nonatomic,strong) UITextView *foodDescribedTextView;
 @property (nonatomic,strong) UIButton *scanBtn;
