@@ -11,7 +11,6 @@
 #import "FosaDatePickerView.h"
 #import "foodKindCollectionViewCell.h"
 #import "FMDB.h"
-#import "FoodModel.h"
 #import <UserNotifications/UserNotifications.h>
 #import "QRCodeScanViewController.h"
 
@@ -22,7 +21,6 @@
     NSInteger currentPictureIndex;//标识图片轮播器当前指向哪张图片
 }
 
-
 @property (nonatomic,weak)   FosaDatePickerView *fosaDatePicker;//日期选择器
 @property (nonatomic,strong) NSMutableArray<NSString *> *categoryArray;//种类
 @property (nonatomic,strong) FMDatabase *db;//数据库
@@ -32,6 +30,8 @@
 //图片轮播器
 @property (nonatomic,strong) UIImageView *imageview1,*imageview2,*imageview3;
 @property (nonatomic,strong) NSMutableArray<UIImageView *> *imageviewArray;
+//当前选中的种类cell
+@property (nonatomic,strong) foodKindCollectionViewCell *selectedCategory;
 @end
 
 @implementation foodAddingViewController
@@ -47,6 +47,24 @@
         _helpBtn = [[UIButton alloc]init];
     }
     return _helpBtn;
+}
+- (UIScrollView *)toturialPicturePlayer{
+    if (_toturialPicturePlayer == nil) {
+        _toturialPicturePlayer = [UIScrollView new];
+    }
+    return _toturialPicturePlayer;
+}
+- (UIPageControl *)toturialPageControl{
+    if (_toturialPageControl == nil) {
+        _toturialPageControl = [UIPageControl new];
+    }
+    return _toturialPageControl;
+}
+- (UIButton *)skipBtn{
+    if (_skipBtn == nil) {
+        _skipBtn = [UIButton new];
+    }
+    return _skipBtn;
 }
 //header
 - (UIView *)headerView{
@@ -159,6 +177,12 @@
     }
     return _scanBtn;
 }
+- (UIButton *)shareBtn{
+    if (_shareBtn == nil) {
+        _shareBtn = [UIButton new];
+    }
+    return _shareBtn;
+}
 - (UIView *)foodDescribedView{
     if (_foodDescribedView == nil) {
         _foodDescribedView = [UIView new];
@@ -226,6 +250,12 @@
     }
     return _doneBtn;
 }
+- (UIButton *)deleteBtn{
+    if (_deleteBtn == nil) {
+        _deleteBtn = [UIButton new];
+    }
+    return _deleteBtn;
+}
 - (UIImageView *)imageview1{
     if (_imageview1 == nil) {
         _imageview1 = [[UIImageView alloc]init];
@@ -250,6 +280,33 @@
     }
     return _foodImgArray;
 }
+- (NSMutableArray<NSString *> *)cellDic{
+    if (_cellDic == nil) {
+        _cellDic = [[NSMutableArray alloc]init];
+    }
+    return _cellDic;
+}
+- (NSMutableDictionary *)cellDictionary{
+    if (_cellDictionary == nil) {
+        _cellDictionary = [[NSMutableDictionary alloc]init];
+    }
+    return _cellDictionary;
+}
+//食物信息展示视图相关
+- (UIButton *)editBtn{
+    if (_editBtn == nil) {
+        _editBtn = [UIButton new];
+    }
+    return _editBtn;
+}
+- (UILabel *)showFoodNameLabel{
+    if (_showFoodNameLabel == nil) {
+        _showFoodNameLabel = [UILabel new];
+    }
+    return _showFoodNameLabel;
+}
+
+#pragma mark - 创建视图
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -258,29 +315,16 @@
     [self creatHeaderView];
     [self creatContentView];
     [self creatFooterView];
+    [self showFoodInfoInView];
     [self InitialDatePicker];
 }
 - (void)viewWillAppear:(BOOL)animated{
-//    //添加键盘弹出与收回的事件
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [self OpenSqlDatabase:@"FOSA"]; //打开数据库
     self.storageDevice = @"";
     self.likeBtn.hidden = NO;
 }
 //UI
 - (void)creatNavigation{
-/**显示图片和标题的自定义返回按钮*/
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    backButton.frame = CGRectMake(0, 0, 20, 20);
-    [backButton setTitle:@"Back" forState:UIControlStateNormal];
-    [backButton setImage:[[UIImage imageNamed:@"icon_backW"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
-    [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:backButton];//
-    //更改返回按钮填充颜色
-    self.navigationController.navigationBar.tintColor = [UIColor darkGrayColor];
-
 /**like*/
     self.likeBtn.frame = CGRectMake(screen_width/2-NavigationBarH/2, 0, NavigationBarH, NavigationBarH);
     [self.likeBtn setImage:[UIImage imageNamed:@"icon_likeW"] forState:UIControlStateNormal];
@@ -288,12 +332,34 @@
     [self.navigationController.navigationBar addSubview:self.likeBtn];
     [self.likeBtn addTarget:self action:@selector(selectToLike) forControlEvents:UIControlEventTouchUpInside];
 /**help*/
-    UIButton *helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    helpButton.frame = CGRectMake(0, 0, NavigationBarH, NavigationBarH);
-    //[helpButton setTitle:@"Back" forState:UIControlStateNormal];
-    [helpButton setBackgroundImage:[UIImage imageNamed:@"icon_helpW"]  forState:UIControlStateNormal];
-    [helpButton addTarget:self action:@selector(selectToHelp) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:helpButton];
+    if ([self.foodStyle isEqualToString:@"adding"]) {
+        /**显示图片和标题的自定义返回按钮*/
+        UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        backButton.frame = CGRectMake(0, 0, NavigationBarH, NavigationBarH);
+        [backButton setTitle:@"Back" forState:UIControlStateNormal];
+        [backButton setImage:[[UIImage imageNamed:@"icon_backW"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+        [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:backButton];//
+        //更改返回按钮填充颜色
+        self.navigationController.navigationBar.tintColor = [UIColor darkGrayColor];
+        
+        UIButton *helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        helpButton.frame = CGRectMake(0, 0, NavigationBarH, NavigationBarH);
+        //[helpButton setTitle:@"Back" forState:UIControlStateNormal];
+        [helpButton setBackgroundImage:[UIImage imageNamed:@"icon_helpW"]  forState:UIControlStateNormal];
+        [helpButton addTarget:self action:@selector(selectToHelp) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:helpButton];
+    }else if([self.foodStyle isEqualToString:@"Info"]){
+        self.editBtn.frame = CGRectMake(0, 0, NavigationBarH*2, NavigationBarH*2/3);
+        self.editBtn.layer.cornerRadius = NavigationBarH/2;
+        [self.editBtn setTitle:@"Edit" forState:UIControlStateNormal];
+        self.editBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
+        self.editBtn.titleLabel.font = [UIFont systemFontOfSize: 25*(414.0/screen_width)];
+        self.editBtn.backgroundColor = FOSAgreen;
+        [self.editBtn addTarget:self action:@selector(EditInfo) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.editBtn];
+    }
 }
 - (void)creatHeaderView{
     //点击
@@ -301,8 +367,6 @@
     tapGr.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tapGr];
     self.view.backgroundColor = [UIColor whiteColor];
-    
-    
     
     self.headerView.frame = CGRectMake(0, 0, screen_width, screen_height*2/5);
     //self.headerView.backgroundColor = [UIColor redColor];
@@ -313,6 +377,14 @@
     //self.automaticallyAdjustsScrollViewInsets = NO;
     //图片轮播器
     [self creatPicturePlayer];
+    //名称
+    if ([self.foodStyle isEqualToString:@"Info"]) {
+        self.showFoodNameLabel.frame = CGRectMake(headerWidth/20, headerHeight*7/10, headerWidth, headerHeight/10);
+        self.showFoodNameLabel.text  = @"SPECIAL SASAME";
+        self.showFoodNameLabel.font  = [UIFont systemFontOfSize:25*(414.0/screen_width)];
+        self.showFoodNameLabel.textColor = [UIColor whiteColor];
+        [self.headerView addSubview:self.showFoodNameLabel];
+    }
     //日期
     self.storageView.frame = CGRectMake(0, headerHeight*4/5, headerWidth*2/5, headerHeight/5);
     [self.headerView addSubview:self.storageView];
@@ -402,10 +474,18 @@
     self.foodTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     [self.foodNameView addSubview:self.foodTextView];
     
-    self.scanBtn.frame = CGRectMake(screen_width*4/5, contentHeight/8, contentHeight/8, contentHeight/8);
-    [self.scanBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
-    [self.scanBtn addTarget:self action:@selector(jumpToScan) forControlEvents:UIControlEventTouchUpInside];
-    [self.foodNameView addSubview:self.scanBtn];
+    if ([self.foodStyle isEqualToString:@"Info"]) {
+        self.shareBtn.frame = CGRectMake(screen_width*4/5, contentHeight/8, contentHeight/8, contentHeight/8);
+        [self.shareBtn setImage:[UIImage imageNamed:@"icon_share"] forState:UIControlStateNormal];
+        [self.shareBtn addTarget:self action:@selector(jumpToShare) forControlEvents:UIControlEventTouchUpInside];
+        [self.foodNameView addSubview:self.shareBtn];
+    }else{
+        self.scanBtn.frame = CGRectMake(screen_width*4/5, contentHeight/8, contentHeight/8, contentHeight/8);
+        [self.scanBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
+        [self.scanBtn addTarget:self action:@selector(jumpToScan) forControlEvents:UIControlEventTouchUpInside];
+        [self.foodNameView addSubview:self.scanBtn];
+    }
+   
     
     self.foodDescribedView.frame = CGRectMake(0, contentHeight/4, screen_width, contentHeight/2);
     [self.contentView addSubview:self.foodDescribedView];
@@ -472,7 +552,6 @@
     self.rightIndex.backgroundColor = [UIColor grayColor];
     [self.footerView addSubview:self.rightIndex];
     
-    
     //食物种类选择栏 可滚动
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -494,7 +573,61 @@
     self.doneBtn.backgroundColor = FOSAgreen;
     [self.footerView addSubview:self.doneBtn];
     [self.doneBtn addTarget:self action:@selector(saveInfoAndFinish) forControlEvents:UIControlEventTouchUpInside];
+    
+    if ([self.foodStyle isEqualToString:@"Info"]) {
+        self.leftIndex.hidden = YES;
+        self.rightIndex.hidden = YES;
+        self.categoryCollection.hidden = YES;
+        self.doneBtn.hidden = YES;
+        self.foodCell = [[foodKindView alloc]initWithFrame:CGRectMake(screen_width*3/7, 0, screen_width/7, footerHeight/2)];
+//        self.foodCell.kind.text = @"Bread";
+//        self.foodCell.categoryPhoto.image = [UIImage imageNamed:@"BreadW"];
+        [self.footerView addSubview:self.foodCell];
+        self.deleteBtn.frame = CGRectMake(screen_width/3, footerHeight*2/3, screen_width/3, footerHeight/6);
+        self.deleteBtn.backgroundColor = [UIColor colorWithRed:255/255.0 green:45/255.0 blue:45/255.0 alpha:1];
+        self.deleteBtn.layer.cornerRadius = self.deleteBtn.frame.size.height/2;
+        [self.deleteBtn setTitle:@"DELETE" forState:UIControlStateNormal];
+        [self.footerView addSubview:self.deleteBtn];
+    }
 }
+
+- (void)showFoodInfoInView{
+    if ([self.foodStyle isEqualToString:@"Info"]) {
+        //禁止界面互动
+        
+        self.likeBtn.userInteractionEnabled = NO;
+        self.foodTextView.userInteractionEnabled = NO;
+        self.foodDescribedTextView.userInteractionEnabled = NO;
+        self.storageView.userInteractionEnabled = NO;
+        self.expireView.userInteractionEnabled = NO;
+        self.locationView.userInteractionEnabled = NO;
+        
+        
+        NSArray<NSString *> *storageTimeArray;
+        storageTimeArray = [self.model.storageDate componentsSeparatedByString:@"/"];
+        NSArray<NSString *> *expireTimeArray;
+        expireTimeArray = [self.model.expireDate componentsSeparatedByString:@"/"];
+        NSLog(@"%@",storageTimeArray);
+        NSLog(@"%@",expireTimeArray);
+        
+        self.showFoodNameLabel.text = self.model.foodName;
+        if ([self.model.islike isEqualToString:@"1"]) {
+            [self.likeBtn setImage: [UIImage imageNamed:@"icon_likeHL"] forState:UIControlStateNormal];
+        }
+        self.storageDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",storageTimeArray[0],storageTimeArray[1],storageTimeArray[2]];
+        self.storageTimeLabel.text = storageTimeArray[3];
+        self.expireDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",expireTimeArray[0],expireTimeArray[1],expireTimeArray[2]];
+        self.expireTimeLabel.text = expireTimeArray[3];
+        
+        self.foodTextView.text = self.model.foodName;
+        self.foodDescribedTextView.text = self.model.aboutFood;
+        self.locationTextView.text = self.model.location;
+        self.foodCell.kind.text = self.model.category;
+        self.foodCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.model.category]];
+        
+    }
+}
+
 #pragma mark - 图片轮播器
 - (void)creatPicturePlayer{
     self.imageviewArray = [[NSMutableArray alloc]initWithObjects:self.imageview1,self.imageview2,self.imageview3, nil];
@@ -515,24 +648,29 @@
     for (NSInteger i = 0; i < 3; i++) {
             CGRect frame = CGRectMake(i*headerWidth, 0, headerWidth, self.headerView.frame.size.height);
         self.imageviewArray[i].frame = frame;
-            self.imageviewArray[i].userInteractionEnabled = YES;
-            self.imageviewArray[i].contentMode = UIViewContentModeScaleAspectFill;
-            self.imageviewArray[i].clipsToBounds = YES;
-        NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"picturePlayer",i+1];
+        self.imageviewArray[i].userInteractionEnabled = YES;
+        self.imageviewArray[i].contentMode = UIViewContentModeScaleAspectFill;
+        self.imageviewArray[i].clipsToBounds = YES;
+        if ([self.foodStyle isEqualToString:@"Info"]) {
+            NSString *img = [NSString stringWithFormat:@"%@%ld",self.model.foodPhoto,i+1];
+            self.imageviewArray[i].image = [self getImage:img];
+        }else{
+            NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"picturePlayer",i+1];
             self.imageviewArray[i].image = [UIImage imageNamed:imgName];
-            UITapGestureRecognizer *clickRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumptoPhoto)];
-               //clickRecognizer.view.tag = i;
-            [self.imageviewArray[i] addGestureRecognizer:clickRecognizer];
-            [self.picturePlayer addSubview:self.imageviewArray[i]];
         }
-           [self.headerView addSubview:self.picturePlayer];
+        UITapGestureRecognizer *clickRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumptoPhoto)];
+               //clickRecognizer.view.tag = i;
+        [self.imageviewArray[i] addGestureRecognizer:clickRecognizer];
+        [self.picturePlayer addSubview:self.imageviewArray[i]];
+    }
+        [self.headerView addSubview:self.picturePlayer];
             //轮播页面指示器
-           self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-30, headerWidth/5, 20)];
-           self.pageControl.currentPage = 0;
-           self.pageControl.numberOfPages = 3;
-           self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
-           self.pageControl.currentPageIndicatorTintColor = FOSAgreen;
-           [self.headerView addSubview:self.pageControl];
+        self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-30, headerWidth/5, 20)];
+        self.pageControl.currentPage = 0;
+        self.pageControl.numberOfPages = 3;
+        self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
+        self.pageControl.currentPageIndicatorTintColor = FOSAgreen;
+        [self.headerView addSubview:self.pageControl];
 }
 
 #pragma mark - 初始化日期选择器
@@ -573,10 +711,17 @@
 
 #pragma mark -- UIScrollerView
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    CGFloat offset = scrollView.contentOffset.x;
-    NSInteger index = offset/self.headerView.frame.size.width;
-    self.pageControl.currentPage = index;
-    currentPictureIndex = index;
+    if (scrollView == self.picturePlayer) {
+        CGFloat offset = scrollView.contentOffset.x;
+        NSInteger index = offset/self.headerView.frame.size.width;
+        self.pageControl.currentPage = index;
+        currentPictureIndex = index;
+    }else{
+        CGFloat offset = scrollView.contentOffset.x;
+        NSInteger index = offset/screen_width;
+        self.toturialPageControl.currentPage = index;
+    }
+    
 }
 #pragma mark - UICollectionViewDataSource
 //每个section有几个item
@@ -593,26 +738,47 @@
 }
 //每个cell的具体内容
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:( NSIndexPath *)indexPath {
-    foodKindCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:kindID forIndexPath:indexPath];
+    
+    // 每次先从字典中根据IndexPath取出唯一标识符
+    NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
+     // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+    if (identifier == nil) {
+        identifier = [NSString stringWithFormat:@"%@%@", kindID, [NSString stringWithFormat:@"%@", indexPath]];
+        [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
+    // 注册Cell
+        [self.categoryCollection registerClass:[foodKindCollectionViewCell class] forCellWithReuseIdentifier:identifier];
+        }
+    foodKindCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     cell.kind.text = self.categoryArray[indexPath.row];
-    //cell.categoryPhoto.backgroundColor = [UIColor clearColor];
     cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
     return cell;
 }
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     foodKindCollectionViewCell *cell = (foodKindCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
+//    if (![self.selectedCategory.kind.text isEqualToString:cell.kind.text]) {
+//        self.selectedCategory.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+//        self.selectedCategory.categoryPhoto.image = [UIImage imageNamed:selectCategory];
+//        self.selectedCategory.categoryPhoto.backgroundColor = [UIColor clearColor];
+//    }
     cell.rootView.backgroundColor = FOSAgreen;
     cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",cell.kind.text]];
     selectCategory = cell.kind.text;
+    self.selectedCategory = cell;
     NSLog(@"Selectd:%@",selectCategory);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
-    foodKindCollectionViewCell *cell = (foodKindCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
-    cell.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    cell.categoryPhoto.image = [UIImage imageNamed:selectCategory];
-    cell.categoryPhoto.backgroundColor = [UIColor clearColor];
+   // if (selectCategory != nil) {
+        self.selectedCategory.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+        self.selectedCategory.categoryPhoto.image = [UIImage imageNamed:selectCategory];
+        self.selectedCategory.categoryPhoto.backgroundColor = [UIColor clearColor];
+//    }else{
+//        foodKindCollectionViewCell *cell = (foodKindCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
+//        cell.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+//        cell.categoryPhoto.image = [UIImage imageNamed:selectCategory];
+//        cell.categoryPhoto.backgroundColor = [UIColor clearColor];
+//    }
 }
 
 #pragma mark - UITextViewDelegate,UITextFiledDelegate
@@ -671,6 +837,7 @@
 }
 
 #pragma mark - 响应事件
+
 - (void)selectToLike{
     if (self.likeBtn.tag == 0) {
         [self.likeBtn setImage:[UIImage imageNamed:@"icon_likeHL"] forState:UIControlStateNormal];
@@ -682,9 +849,56 @@
         self.likeBtn.accessibilityValue = @"0";
     }
 }
-- (void)selectToHelp{
+- (void)EditInfo{
     
 }
+- (void)selectToHelp{
+    //隐藏导航栏
+    self.navigationController.navigationBar.hidden = YES;
+    
+    self.skipBtn.frame = CGRectMake(0, NavigationHeight, screen_width/4, NavigationBarH);
+    [self.skipBtn setTitle:@"Skip" forState:UIControlStateNormal];
+    self.skipBtn.titleLabel.font = [UIFont systemFontOfSize:20];
+    [self.skipBtn addTarget:self action:@selector(skipTutorial) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.toturialPicturePlayer.frame = CGRectMake(0, 0, screen_width, screen_height);
+    self.toturialPicturePlayer.pagingEnabled = YES;
+    self.toturialPicturePlayer.delegate = self;
+    self.toturialPicturePlayer.showsHorizontalScrollIndicator = NO;
+    self.toturialPicturePlayer.showsVerticalScrollIndicator = NO;
+    self.toturialPicturePlayer.alwaysBounceVertical = NO;
+            // 解决UIscrollerView在导航栏透明的情况下往下偏移的问题
+    self.toturialPicturePlayer.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+            
+    self.toturialPicturePlayer.bounces = NO;
+    self.toturialPicturePlayer.contentSize = CGSizeMake(screen_width*7, 0);
+    for (NSInteger i = 0; i < 7; i++) {
+        CGRect frame = CGRectMake(i*screen_width, 0, screen_width,screen_height);
+        UIImageView *imageview = [[UIImageView alloc]initWithFrame:frame];
+        imageview.userInteractionEnabled = YES;
+        imageview.contentMode = UIViewContentModeScaleAspectFill;
+        imageview.clipsToBounds = YES;
+        NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"img_tutorial",i+1];
+        imageview.image = [UIImage imageNamed:imgName];
+        [self.toturialPicturePlayer addSubview:imageview];
+    }
+    [self.view addSubview:self.toturialPicturePlayer];
+        //轮播页面指示器
+    self.toturialPageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(screen_width*2/5, screen_height-30, screen_width/5, 20)];
+    self.toturialPageControl.currentPage = 0;
+    self.toturialPageControl.numberOfPages = 7;
+    self.toturialPageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
+    self.toturialPageControl.currentPageIndicatorTintColor = FOSAgreen;
+    [self.view addSubview:self.toturialPageControl];
+    [self.view addSubview:self.skipBtn];
+}
+- (void)skipTutorial{
+    [self.toturialPicturePlayer removeFromSuperview];
+    [self.toturialPageControl removeFromSuperview];
+    [self.skipBtn removeFromSuperview];
+    self.navigationController.navigationBar.hidden = NO;
+}
+
 - (void)selectExpireDate{
     self.fosaDatePicker.hidden = NO;
        [UIView animateWithDuration:0.3 animations:^{
@@ -692,6 +906,7 @@
            [self.fosaDatePicker show];
        }];
 }
+
 - (void)jumptoPhoto{
     takePictureViewController *photo = [[takePictureViewController alloc]init];
     photo.photoBlock = ^(UIImage *img){
@@ -701,9 +916,11 @@
     };
     [self.navigationController pushViewController:photo animated:NO];
 }
+
 - (void)back{
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
 - (void)jumpToScan{
     QRCodeScanViewController *scan = [QRCodeScanViewController new];
     scan.scanStyle = @"block";
@@ -713,12 +930,14 @@
     };
     [self.navigationController pushViewController:scan animated:NO];
 }
-
-
+- (void)jumpToShare{
+    
+}
 - (void)saveInfoAndFinish{
     [self SavephotosInSanBox:self.foodImgArray];
     [self CreatDataTable];
 }
+
 #pragma mark - 键盘事件
 
 //点击键盘以外的地方退出键盘
@@ -779,7 +998,7 @@
         }
     }
 }
-#pragma mark - 保存相片
+#pragma mark - 相片
 - (void)SavephotosInSanBox:(NSMutableArray *)images{
     if (images.count > 0) {
         NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
@@ -795,6 +1014,17 @@
         }
     }
 }
+//取出保存在本地的图片
+- (UIImage*)getImage:(NSString *)filepath{
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *photopath = [NSString stringWithFormat:@"%@.png",filepath];
+    NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
+    // 保存文件的名称
+    UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
+    NSLog(@"===%@", img);
+    return img;
+}
+
 ////删除记录
 //- (void)DeleteRecord{
 //
@@ -860,6 +1090,15 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.likeBtn.hidden = YES;
+}
+
+/**隐藏底部横条，点击屏幕可显示*/
+- (BOOL)prefersHomeIndicatorAutoHidden{
+    return YES;
+}
+//禁止应用屏幕自动旋转
+- (BOOL)shouldAutorotate{
+    return NO;
 }
 
 @end

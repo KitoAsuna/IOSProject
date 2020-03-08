@@ -111,6 +111,7 @@
 - (void)ButtonClick:(FOSATabbar *)tabBar {
     NSLog(@"*****************************");
     foodAddingViewController *addFood = [[foodAddingViewController alloc]init];
+    addFood.foodStyle = @"adding";
     addFood.hidesBottomBarWhenPushed = YES;
     //3.创建导航控制器
       UINavigationController *nvc = [[UINavigationController alloc]initWithRootViewController:addFood];

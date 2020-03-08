@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "foodKindView.h"
+#import "FoodModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface foodAddingViewController : UIViewController
@@ -36,10 +37,23 @@ NS_ASSUME_NONNULL_BEGIN
 //底部视图
 @property (nonatomic,strong) UIView *footerView;
 @property (nonatomic,strong) UICollectionView *categoryCollection;
+@property (nonatomic,strong) NSMutableArray<NSString *> *cellDic;
+@property (nonatomic, strong) NSMutableDictionary *cellDictionary;
 @property (nonatomic,strong) UIButton *leftIndex,*rightIndex;
 
 @property (nonatomic,strong) UIButton *doneBtn;
 
+/**展示食物信息部分*/
+@property (nonatomic,strong) FoodModel *model;
+@property (nonatomic,strong) NSString *foodStyle;//@"adding"表示添加模式，@"Info"表示展示模式
+@property (nonatomic,strong) UILabel *showFoodNameLabel;
+@property (nonatomic,strong) UIButton *editBtn,*shareBtn,*deleteBtn;
+@property (nonatomic,strong) foodKindView *foodCell;
+
+/**教学图片轮播*/
+@property (nonatomic,strong) UIScrollView *toturialPicturePlayer;
+@property (nonatomic,strong) UIPageControl *toturialPageControl;
+@property (nonatomic,strong) UIButton *skipBtn;
 @end
 
 NS_ASSUME_NONNULL_END

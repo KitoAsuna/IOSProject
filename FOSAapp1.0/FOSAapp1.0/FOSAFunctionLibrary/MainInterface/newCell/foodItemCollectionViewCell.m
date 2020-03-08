@@ -73,7 +73,8 @@
     timeArray = [model.storageDate componentsSeparatedByString:@"/"];
     self.dayLabel.text = timeArray[0];
     self.mouthLabel.text = timeArray[1];
-//    self.dateLabel.text = [NSString stringWithFormat:@"%@ %@",timeArray[1],[mouth valueForKey:timeArray[0]]];
+    NSLog(@"--------------%@",_model);
+    //    self.dateLabel.text = [NSString stringWithFormat:@"%@ %@",timeArray[1],[mouth valueForKey:timeArray[0]]];
     //NSDictionary *mouth = [NSDictionary dictionaryWithObjectsAndKeys:@"Jan",@"01",@"Feb",@"02",@"Mar",@"03",@"Apr",@"04",@"May",@"05",@"June",@"06",@"July",@"07",@"Aug",@"08",@"Sept",@"09",@"Oct",@"10",@"Nov",@"11",@"Dec",@"12",nil];
 }
 //取出保存在本地的图片

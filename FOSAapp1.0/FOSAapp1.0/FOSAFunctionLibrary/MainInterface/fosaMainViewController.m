@@ -10,16 +10,17 @@
 #import "QRCodeScanViewController.h"
 #import "categoryCollectionViewCell.h"
 #import "foodItemCollectionViewCell.h"
+#import "foodAddingViewController.h"
 #import "FMDB.h"
 
 
 @interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource>{
     NSString *categoryID;//种类cell
     NSString *foodItemID;//食物cell
-    NSString *selectCategory;//当前选择种类
     NSString *docPath;//数据库地址
     //刷新标识
     Boolean isUpdate;
+    
 }
 //种类数组
 @property (nonatomic,strong) NSMutableArray *categoryArray;
@@ -27,6 +28,10 @@
 @property (nonatomic,strong) UIView *mask;
 //数据库
 @property (nonatomic,strong) FMDatabase *db;
+//当前选中的种类cell
+@property (nonatomic,strong) categoryCollectionViewCell *selectedCategoryCell;
+//当前选中的食物Model
+@property (nonatomic,strong) FoodModel *currentModel;
 @end
 
 @implementation fosaMainViewController
@@ -138,6 +143,7 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    self.sortbtn.hidden = NO;
     if (isUpdate) {
            NSLog(@"异步刷新界面");
            dispatch_async(dispatch_get_main_queue(), ^{
@@ -238,7 +244,7 @@
     self.categoryCollection.dataSource = self;
     self.categoryCollection.showsHorizontalScrollIndicator = NO;
     self.categoryCollection.bounces = NO;
-    //[self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:categoryID];
+    [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:categoryID];
     [self.categoryView addSubview:self.categoryCollection];
 }
 - (void)creatFoodItemCategoryView{
@@ -281,7 +287,7 @@
      self.fooditemCollection.dataSource = self;
      self.fooditemCollection.showsVerticalScrollIndicator = NO;
      self.fooditemCollection.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
+    //[self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
      //self.foodItemCollection.bounces = NO;
      [self.foodItemView addSubview:self.fooditemCollection];
 }
@@ -292,7 +298,11 @@
     if (collectionView == self.categoryCollection) {
         return self.categoryArray.count;
     }else{
-        return 4;
+        if (self.collectionDataSource.count <= 4) {
+            return 4;
+        }else{
+            return self.collectionDataSource.count;
+        }
     }
 }
 //collectionView有几个section
@@ -306,23 +316,32 @@
 //每个cell的具体内容
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:( NSIndexPath *)indexPath {
     if (collectionView == self.categoryCollection) {
-        // 每次先从字典中根据IndexPath取出唯一标识符
-        NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
-         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
-        if (identifier == nil) {
-            identifier = [NSString stringWithFormat:@"%@%@", categoryID, [NSString stringWithFormat:@"%@", indexPath]];
-            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
-        // 注册Cell
-            [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:identifier];
-            }
-        categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+//        // 每次先从字典中根据IndexPath取出唯一标识符
+//        NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
+//         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+//        if (identifier == nil) {
+//            identifier = [NSString stringWithFormat:@"%@%@", categoryID, [NSString stringWithFormat:@"%@", indexPath]];
+//            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
+//        // 注册Cell
+//            [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:identifier];
+//            }
+        categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:categoryID forIndexPath:indexPath];
         cell.kind.text = self.categoryArray[indexPath.row];
         cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
         return cell;
     }else{
         long int index = indexPath.section*2+indexPath.row;
+        // 每次先从字典中根据IndexPath取出唯一标识符
+        NSString *identifier = [self.cellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
+         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+        if (identifier == nil) {
+            identifier = [NSString stringWithFormat:@"%@%ld", foodItemID,index];
+            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
+        // 注册Cell
+            [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
+            }
         NSLog(@"%ld",index);
-        foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:foodItemID forIndexPath:indexPath];
+        foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
         
         if (index < self.collectionDataSource.count) {
             [cell setModel:self.collectionDataSource[index]];
@@ -337,10 +356,17 @@
            categoryCollectionViewCell *cell = (categoryCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
            cell.rootView.backgroundColor = FOSAgreen;
            cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",cell.kind.text]];
-           selectCategory = cell.kind.text;
-           NSLog(@"Selectd:%@",selectCategory);
-       }else{
-           
+        self.selectedCategoryCell = cell;
+           NSLog(@"Selectd:%@",self.selectedCategoryCell.kind.text);
+    }else if(collectionView == self.fooditemCollection){
+           foodItemCollectionViewCell *cell = (foodItemCollectionViewCell *)[self.fooditemCollection cellForItemAtIndexPath:indexPath];
+           self.currentModel = cell.model;
+           if (cell.model.foodName != nil) {
+               [self ClickFoodItem:cell];
+//               UITapGestureRecognizer *clickToCheckInfo = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(JumpToInfo)];
+//               cell.userInteractionEnabled = YES;
+//               [cell addGestureRecognizer:clickToCheckInfo];
+           }
        }
     
 }
@@ -348,10 +374,10 @@
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
     
     if (collectionView == self.categoryCollection) {
-        categoryCollectionViewCell *cell = (categoryCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
-        NSLog(@"取消选中%@",cell.kind.text);
-        cell.rootView.backgroundColor = [UIColor whiteColor];
-        cell.categoryPhoto.image = [UIImage imageNamed:selectCategory];
+//        categoryCollectionViewCell *cell = (categoryCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
+        NSLog(@"取消选中%@",self.selectedCategoryCell.kind.text);
+        self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
+        self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:self.selectedCategoryCell.kind.text];
     }else{
         
     }
@@ -366,9 +392,6 @@
 }
 
 #pragma mark -- FMDB数据库操作
-- (void)initDataSource{
-    
-}
 
 - (void)OpenSqlDatabase:(NSString *)dataBaseName{
     //获取数据库地址
@@ -437,12 +460,30 @@
     [self.categoryCollection reloadData];
 }
 
+//食物Item点击事件
+- (void)ClickFoodItem:(foodItemCollectionViewCell *)cell{
+    foodAddingViewController *add = [foodAddingViewController new];
+    add.foodStyle = @"Info";
+    add.hidesBottomBarWhenPushed = YES;
+    add.model = cell.model;
+    [self.navigationController pushViewController:add animated:YES];
+}
+
 - (void)clickToScan{
     QRCodeScanViewController *scan = [QRCodeScanViewController new];
     scan.scanStyle = @"";
     scan.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:scan animated:YES];
 }
+
+- (void)JumpToInfo{
+    foodAddingViewController *add = [foodAddingViewController new];
+    add.foodStyle = @"Info";
+    add.hidesBottomBarWhenPushed = YES;
+    add.model = self.currentModel;
+    [self.navigationController pushViewController:add animated:YES];
+}
+
 - (void)refresh:(UIRefreshControl *)sender
 {
     [self.fooditemCollection reloadData];
@@ -495,6 +536,15 @@
 
 - (void)viewWillDisappear:(BOOL)animated{
     isUpdate = true;
+    self.sortbtn.hidden = YES;
 }
 
+/**隐藏底部横条，点击屏幕可显示*/
+- (BOOL)prefersHomeIndicatorAutoHidden{
+    return YES;
+}
+//禁止应用屏幕自动旋转
+- (BOOL)shouldAutorotate{
+    return NO;
+}
 @end
