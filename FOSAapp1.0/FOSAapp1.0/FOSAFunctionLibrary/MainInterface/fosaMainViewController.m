@@ -30,8 +30,6 @@
 @property (nonatomic,strong) FMDatabase *db;
 //当前选中的种类cell
 @property (nonatomic,strong) categoryCollectionViewCell *selectedCategoryCell;
-//当前选中的食物Model
-@property (nonatomic,strong) FoodModel *currentModel;
 @end
 
 @implementation fosaMainViewController
@@ -127,18 +125,25 @@
     }
     return _categoryDataSource;
 }
+- (NSMutableArray<FoodModel *> *)tempFoodDataSource{
+    if (_tempFoodDataSource == nil) {
+        _tempFoodDataSource = [[NSMutableArray alloc]init];
+    }
+    return _tempFoodDataSource;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     // Do any additional setup after loading the view.
+    [self OpenSqlDatabase:@"FOSA"];
+    [self SelectDataFromFoodTable];
     [self creatNavigationButton];
     [self creatMainBackgroundPlayer];
     [self creatCategoryView];
     [self creatFoodItemCategoryView];
     //[self showUsingTips];
-    [self OpenSqlDatabase:@"FOSA"];
-    [self SelectDataFromFoodTable];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -298,8 +303,10 @@
     if (collectionView == self.categoryCollection) {
         return self.categoryArray.count;
     }else{
-        if (self.collectionDataSource.count <= 4) {
+        if (self.collectionDataSource.count <= 4 && self.tempFoodDataSource.count == 0) {
             return 4;
+        }else if(self.tempFoodDataSource.count > 0){
+            return self.tempFoodDataSource.count;
         }else{
             return self.collectionDataSource.count;
         }
@@ -328,6 +335,10 @@
         categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:categoryID forIndexPath:indexPath];
         cell.kind.text = self.categoryArray[indexPath.row];
         cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
+        if ([self caculateCategoryNumber:cell.kind.text]>0) {
+            cell.badgeBtn.hidden = NO;
+            [cell.badgeBtn setTitle:[NSString stringWithFormat:@"%d",[self caculateCategoryNumber:cell.kind.text]] forState:UIControlStateNormal];
+        }
         return cell;
     }else{
         long int index = indexPath.section*2+indexPath.row;
@@ -342,13 +353,14 @@
             }
         NSLog(@"%ld",index);
         foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-        
-        if (index < self.collectionDataSource.count) {
-            [cell setModel:self.collectionDataSource[index]];
+        if (self.tempFoodDataSource.count > 0) {
+            [cell setModel:self.tempFoodDataSource[index]];
+        }else  if (index < self.collectionDataSource.count) {
+                [cell setModel:self.collectionDataSource[index]];
         }
+        
         return cell;
     }
-    
 }
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -358,9 +370,11 @@
            cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",cell.kind.text]];
         self.selectedCategoryCell = cell;
            NSLog(@"Selectd:%@",self.selectedCategoryCell.kind.text);
+        
+        [self selectFoodByCategory:self.selectedCategoryCell.kind.text];
+        
     }else if(collectionView == self.fooditemCollection){
            foodItemCollectionViewCell *cell = (foodItemCollectionViewCell *)[self.fooditemCollection cellForItemAtIndexPath:indexPath];
-           self.currentModel = cell.model;
            if (cell.model.foodName != nil) {
                [self ClickFoodItem:cell];
 //               UITapGestureRecognizer *clickToCheckInfo = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(JumpToInfo)];
@@ -368,7 +382,6 @@
 //               [cell addGestureRecognizer:clickToCheckInfo];
            }
        }
-    
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -424,6 +437,7 @@
         NSString *isLike   = [set stringForColumn:@"like"];
         FoodModel *model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category like:isLike];
         [self.collectionDataSource addObject:model];
+        NSLog(@"*********************************************");
         NSLog(@"foodName    = %@",foodName);
         NSLog(@"device      = %@",device);
         NSLog(@"aboutFood   = %@",aboutFood);
@@ -433,8 +447,8 @@
         NSLog(@"category    = %@",category);
         NSLog(@"islike    = %@",isLike);
     }
-//    [self.foodItemCollection reloadData];
 }
+
 - (NSMutableArray<NSString *> *)getCategoryArray{
     [self OpenSqlDatabase:@"FOSA"];
     NSMutableArray<NSString *> *category = [[NSMutableArray alloc]init];
@@ -449,7 +463,25 @@
     [category addObject:@"Add"];
     return category;
 }
+#pragma mark - 遍历食物数组
+- (int)caculateCategoryNumber:(NSString *)category{
+    int num = 0;
+    for (FoodModel *model in self.collectionDataSource) {
+        if ([category isEqualToString:model.category]) {
+            num++;
+        }
+    }
+    return num;
 
+}
+- (void)selectFoodByCategory:(NSString *)category{
+    [self.tempFoodDataSource removeAllObjects];
+    for (FoodModel *model in self.collectionDataSource) {
+        if ([category isEqualToString:model.category]) {
+            [self.tempFoodDataSource addObject:model];
+        }
+    }
+}
 #pragma mark - 响应事件
 - (void)CollectionReload{
     [self.collectionDataSource removeAllObjects];
@@ -476,13 +508,6 @@
     [self.navigationController pushViewController:scan animated:YES];
 }
 
-- (void)JumpToInfo{
-    foodAddingViewController *add = [foodAddingViewController new];
-    add.foodStyle = @"Info";
-    add.hidesBottomBarWhenPushed = YES;
-    add.model = self.currentModel;
-    [self.navigationController pushViewController:add animated:YES];
-}
 
 - (void)refresh:(UIRefreshControl *)sender
 {

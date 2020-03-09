@@ -15,7 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UILabel  *foodNamelabel,*mouthLabel,*dayLabel;
 @property (nonatomic,strong) UIButton *likebtn;
 @property (nonatomic,strong) UIView *line;
-@property (nonatomic,strong)  FoodModel *model;
+@property (nonatomic,strong) FoodModel *model;
+
 @end
 
 NS_ASSUME_NONNULL_END

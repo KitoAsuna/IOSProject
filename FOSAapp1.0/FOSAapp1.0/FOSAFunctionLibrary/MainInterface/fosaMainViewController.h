@@ -20,13 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UIButton *leftBtn,*rightBtn;
 @property (nonatomic,strong) UICollectionView *categoryCollection;
 @property (nonatomic,strong) NSMutableArray<NSString *> *cellDic;
-@property (nonatomic, strong) NSMutableDictionary *cellDictionary;
-
+@property (nonatomic,strong) NSMutableDictionary *cellDictionary;
 @property (nonatomic,strong) UIView *foodItemView;
 @property (nonatomic,strong) UICollectionView *fooditemCollection;
 
 @property (strong,nonatomic) NSMutableArray<NSString *> *categoryDataSource;
 @property (strong,nonatomic) NSMutableArray<FoodModel *> *collectionDataSource;
+@property (strong,nonatomic) NSMutableArray<FoodModel *> *tempFoodDataSource;
 
 
 @end

@@ -22,6 +22,9 @@
         self.rootView = [[UIView alloc]init];
         [self addSubview:self.rootView];
         self.categoryPhoto = [[UIImageView alloc]init];
+        self.badgeBtn = [UIButton new];
+        [self.rootView addSubview:self.badgeBtn];
+        self.badgeBtn.hidden = YES;
         [self.rootView addSubview:self.categoryPhoto];
         
     }
@@ -38,6 +41,11 @@
     self.rootView.layer.cornerRadius = width/2;
     self.rootView.backgroundColor = [UIColor whiteColor];
     self.categoryPhoto.frame = CGRectMake(self.rootView.frame.size.width/5, self.rootView.frame.size.width/5, self.rootView.frame.size.width*3/5, self.rootView.frame.size.width*3/5);
+    
+    self.badgeBtn.frame = CGRectMake(width*2/3, 0, width/3, width/3);
+    self.badgeBtn.layer.cornerRadius = width/6;
+    self.badgeBtn.backgroundColor = FOSAgreen;
+    
     self.categoryPhoto.backgroundColor = [UIColor clearColor];
     //self.categoryPhoto.layer.cornerRadius = width/2;
 

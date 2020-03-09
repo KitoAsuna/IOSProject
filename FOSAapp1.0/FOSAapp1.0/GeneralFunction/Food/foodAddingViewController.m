@@ -320,7 +320,7 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [self OpenSqlDatabase:@"FOSA"]; //打开数据库
-    self.storageDevice = @"";
+    self.storageDevice = self.model.device;
     self.likeBtn.hidden = NO;
 }
 //UI
@@ -585,6 +585,7 @@
         [self.footerView addSubview:self.foodCell];
         self.deleteBtn.frame = CGRectMake(screen_width/3, footerHeight*2/3, screen_width/3, footerHeight/6);
         self.deleteBtn.backgroundColor = [UIColor colorWithRed:255/255.0 green:45/255.0 blue:45/255.0 alpha:1];
+        [self.deleteBtn addTarget:self action:@selector(deleteFoodRecord) forControlEvents:UIControlEventTouchUpInside];
         self.deleteBtn.layer.cornerRadius = self.deleteBtn.frame.size.height/2;
         [self.deleteBtn setTitle:@"DELETE" forState:UIControlStateNormal];
         [self.footerView addSubview:self.deleteBtn];
@@ -601,7 +602,7 @@
         self.storageView.userInteractionEnabled = NO;
         self.expireView.userInteractionEnabled = NO;
         self.locationView.userInteractionEnabled = NO;
-        
+        self.picturePlayer.userInteractionEnabled = NO;
         
         NSArray<NSString *> *storageTimeArray;
         storageTimeArray = [self.model.storageDate componentsSeparatedByString:@"/"];
@@ -642,7 +643,6 @@
     self.picturePlayer.alwaysBounceVertical = NO;
         // 解决UIscrollerView在导航栏透明的情况下往下偏移的问题
     self.picturePlayer.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        
     self.picturePlayer.bounces = NO;
     self.picturePlayer.contentSize = CGSizeMake(headerWidth*3, 0);
     for (NSInteger i = 0; i < 3; i++) {
@@ -651,7 +651,7 @@
         self.imageviewArray[i].userInteractionEnabled = YES;
         self.imageviewArray[i].contentMode = UIViewContentModeScaleAspectFill;
         self.imageviewArray[i].clipsToBounds = YES;
-        if ([self.foodStyle isEqualToString:@"Info"]) {
+        if ([self.foodStyle isEqualToString:@"Info"] && [self getImage:[NSString stringWithFormat:@"%@%ld",self.model.foodPhoto,i+1]] != nil) {
             NSString *img = [NSString stringWithFormat:@"%@%ld",self.model.foodPhoto,i+1];
             self.imageviewArray[i].image = [self getImage:img];
         }else{
@@ -850,7 +850,22 @@
     }
 }
 - (void)EditInfo{
+    self.likeBtn.userInteractionEnabled = YES;
+    self.foodTextView.userInteractionEnabled = YES;
+    self.foodDescribedTextView.userInteractionEnabled = YES;
+    self.storageView.userInteractionEnabled = YES;
+    self.expireView.userInteractionEnabled = YES;
+    self.locationView.userInteractionEnabled = YES;
+    self.picturePlayer.userInteractionEnabled = YES;
     
+    [UIView animateWithDuration:0.5 animations:^{
+        self.leftIndex.hidden = NO;
+        self.rightIndex.hidden = NO;
+        self.categoryCollection.hidden = NO;
+        self.doneBtn.hidden = NO;
+        self.foodCell.hidden = YES;
+        self.deleteBtn.hidden = YES;
+    }];
 }
 - (void)selectToHelp{
     //隐藏导航栏
@@ -931,11 +946,22 @@
     [self.navigationController pushViewController:scan animated:NO];
 }
 - (void)jumpToShare{
-    
+    NSLog(@"点击了分享");
+    NSString *body = [NSString stringWithFormat:@"This is my food %@,you can scan the QRCode check it",self.foodTextView.text];
+    UIView *view = [self CreatNotificatonViewWithContent:body];
+    UIImage *sharephoto1 = [self SaveViewAsPicture:view];
+    NSArray *activityItems = @[sharephoto1];
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
+    [self presentViewController:activityVC animated:TRUE completion:nil];
 }
 - (void)saveInfoAndFinish{
+    [self DeleteRecord];
+    
     [self SavephotosInSanBox:self.foodImgArray];
     [self CreatDataTable];
+}
+- (void)deleteFoodRecord{
+    [self DeleteRecord];
 }
 
 #pragma mark - 键盘事件
@@ -963,7 +989,6 @@
         NSLog(@"打开数据库失败");
     }
 }
-//(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate  foodIcon:(NSString *)foodPhoto category:(NSString *)category like:(NSString *)islike
 - (void)CreatDataTable{
     NSString *Sql = @"CREATE TABLE IF NOT EXISTS FoodStorageInfo(id integer PRIMARY KEY AUTOINCREMENT, foodName text NOT NULL, device text, aboutFood text,storageDate text NOT NULL,expireDate text NOT NULL,location text,foodImg text NOT NULL,category text,like text);";
      
@@ -1025,38 +1050,137 @@
     return img;
 }
 
-////删除记录
-//- (void)DeleteRecord{
-//
-//}
-//- (void)deleteFile:(NSString *)photoName {
-//    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-//    NSString *photo = [NSString stringWithFormat:@"%@.png",photoName];
-//    NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent: photo];
-//    NSFileManager* fileManager=[NSFileManager defaultManager];
-//    BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
-//    if (!blHave) {
-//        NSLog(@"no  have");
-//    }else {
-//        NSLog(@" have");
-//        BOOL blDele= [fileManager removeItemAtPath:filePath error:nil];
-//        if (blDele) {
-//            NSLog(@"dele success");
-//        }else {
-//            NSLog(@"dele fail");
-//        }
-//    }
-//}
-//- (Boolean)CheckFoodInfoWithName:(NSString *)foodName fdevice:(NSString *)device{
-//    NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where foodName = '%@' and device = '%@';",foodName,device];
-//    FMResultSet *result = [self.db executeQuery:sql];
-//    NSLog(@"查询到数据项:%d",result.columnCount);
-//    if (result.columnCount == 0) {
-//        return true;
-//    }else{
-//        return false;
-//    }
-//}
+//删除记录
+- (void)DeleteRecord{
+    NSString *delSql = [NSString stringWithFormat:@"delete from FoodStorageInfo where foodName = '%@'",self.model.foodName];
+    if ([self.db open]) {
+         BOOL result = [self.db executeUpdate:delSql];
+        if (result) {
+            if (![self.foodTextView.text isEqualToString:self.model.foodName]) {
+                for (int i = 1; i <= 3; i++) {
+                    NSString *photoName = [NSString stringWithFormat:@"%@%d",self.model.foodName,i];
+                    [self deleteFile:photoName];
+                }
+            }
+            [self SystemAlert:@"delete data successfully"];
+        }else{
+            NSLog(@"Fail to delete");
+        }
+    }
+}
+- (void)deleteFile:(NSString *)photoName {
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *photo = [NSString stringWithFormat:@"%@.png",photoName];
+    NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent: photo];
+    NSFileManager* fileManager=[NSFileManager defaultManager];
+    BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
+    if (!blHave) {
+        NSLog(@"no  have");
+    }else {
+        NSLog(@" have");
+        BOOL blDele= [fileManager removeItemAtPath:filePath error:nil];
+        if (blDele) {
+            NSLog(@"dele success");
+        }else {
+            NSLog(@"dele fail");
+        }
+    }
+}
+- (Boolean)CheckFoodInfoWithName:(NSString *)foodName fdevice:(NSString *)device{
+    NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where foodName = '%@' and device = '%@';",foodName,device];
+    FMResultSet *result = [self.db executeQuery:sql];
+    NSLog(@"查询到数据项:%d",result.columnCount);
+    if (result.columnCount == 0) {
+        return true;
+    }else{
+        return false;
+    }
+}
+#pragma mark - 生成分享视图
+//分享视图与食物二维码
+//仿照系统通知绘制UIview
+- (UIView *)CreatNotificatonViewWithContent:(NSString *)body{
+    //分享二维码食物信息
+    NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@",self.foodTextView.text,self.storageDevice,self.foodDescribedTextView.text,self.expireDateLabel.text,self.storageDateLabel.text,selectCategory];
+    NSLog(@"begin creating");
+    int mainwidth = screen_width;
+    int mainHeight = screen_height;
+    
+    UIView *notification = [[UIView alloc]initWithFrame:CGRectMake(0, 0, mainwidth,mainHeight)];
+    notification.backgroundColor = [UIColor whiteColor];
+
+    //食物图片
+    UIImageView *image = [[UIImageView alloc]initWithFrame:CGRectMake(0,mainHeight/8, mainwidth, mainHeight/2)];
+    
+    //FOSA的logo
+    UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*2/5, mainHeight-mainwidth/5, mainwidth/10, mainwidth/10)];
+    
+    //FOSA
+    UILabel *brand = [[UILabel alloc]initWithFrame:CGRectMake(mainwidth/15, mainHeight*5/8, mainwidth/4, mainHeight/16)];
+    
+    //食物信息二维码
+    UIImageView *InfoCodeView = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*4/5-20, mainHeight*5/8+5, mainwidth/5, mainwidth/5)];
+
+    //提醒内容
+    UITextView *Nbody = [[UITextView alloc]initWithFrame:CGRectMake(mainwidth/15, mainHeight*11/16, mainwidth*3/5, mainwidth/5)];
+    Nbody.userInteractionEnabled = NO;
+
+    [notification addSubview:logo];
+    [notification addSubview:brand];
+    [notification addSubview:InfoCodeView];
+    [notification addSubview:image];
+    [notification addSubview:Nbody];
+
+    logo.image  = [UIImage imageNamed:@"icon_logoHL"];
+    if (self.foodImgArray.count > 0) {
+        image.image = self.foodImgArray[0];
+    }else{
+        image.image = [UIImage imageNamed:@"icon_defaultImg"];
+    }
+    
+    image.contentMode = UIViewContentModeScaleAspectFill;
+    image.clipsToBounds = YES;
+    InfoCodeView.image = [self GenerateQRCodeByMessage:message];
+    InfoCodeView.backgroundColor = [UIColor redColor];
+    InfoCodeView.contentMode = UIViewContentModeScaleAspectFill;
+    InfoCodeView.clipsToBounds = YES;
+    
+    brand.font  = [UIFont systemFontOfSize:15];
+    brand.textAlignment = NSTextAlignmentCenter;
+    brand.text  = @"FOSA";
+    
+    Nbody.font   = [UIFont systemFontOfSize:12];
+    Nbody.text = body;
+    
+    return notification;
+}
+
+//将UIView转化为图片并保存在相册
+- (UIImage *)SaveViewAsPicture:(UIView *)view{
+    NSLog(@"begin saving");
+    UIImage *imageRet = [[UIImage alloc]init];
+    //UIGraphicsBeginImageContextWithOptions(区域大小, 是否是非透明的, 屏幕密度);
+    UIGraphicsBeginImageContextWithOptions(view.frame.size, YES, [UIScreen mainScreen].scale);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    imageRet = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return imageRet;
+}
+
+- (UIImage *)GenerateQRCodeByMessage:(NSString *)message{
+    // 1. 创建一个二维码滤镜实例(CIFilter)
+    CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    // 滤镜恢复默认设置
+    [filter setDefaults];
+    // 2. 给滤镜添加数据
+    NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
+    [filter setValue:data forKeyPath:@"inputMessage"];
+    // 3. 生成二维码
+    CIImage *image = [filter outputImage];
+    //[self createNonInterpolatedUIImageFormCIImage:image withSize:];
+    return [UIImage imageWithCIImage:image];
+}
+
 //- (void)SaveShareinfo{
 //    [self OpenSqlDatabase:@"FOSA"];
 //
@@ -1081,11 +1205,17 @@
     }else{
         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             NSLog(@"保存成功");
-            [self dismissViewControllerAnimated:YES completion:nil];
+            if ([self.foodStyle isEqualToString:@"Info"]) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }else{
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }
+            
         }]];
         [self presentViewController:alert animated:true completion:nil];
     }
 }
+
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
@@ -1100,7 +1230,6 @@
 - (BOOL)shouldAutorotate{
     return NO;
 }
-
 @end
 
 //图片的显示模式；
