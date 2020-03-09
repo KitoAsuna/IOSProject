@@ -19,6 +19,7 @@
     NSString *selectCategory;
     NSString *docPath;
     NSInteger currentPictureIndex;//标识图片轮播器当前指向哪张图片
+    NSString *device;
 }
 
 @property (nonatomic,weak)   FosaDatePickerView *fosaDatePicker;//日期选择器
@@ -941,7 +942,8 @@
     scan.scanStyle = @"block";
     scan.resultBlock = ^(NSString * _Nonnull result) {
         self.storageDevice = result;
-        NSLog(@"%@",self.storageDevice);
+        device = result;
+        NSLog(@"我获得了设备号：%@",device);
     };
     [self.navigationController pushViewController:scan animated:NO];
 }
@@ -1013,7 +1015,8 @@
             NSString *storagedate = [NSString stringWithFormat:@"%@/%@",self.storageDateLabel.text,self.storageTimeLabel.text];
             NSString *expiredate  = [NSString stringWithFormat:@"%@/%@",self.expireDateLabel.text,self.expireTimeLabel.text];
             
-            BOOL insertResult = [self.db executeUpdate:insertSql, self.foodTextView.text,self.storageDevice,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory,self.likeBtn.accessibilityValue];
+            BOOL insertResult = [self.db executeUpdate:insertSql, self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory,self.likeBtn.accessibilityValue];
+            NSLog(@"~~~~~~~~~~~~~~~~~~~~设备号：%@",device);
             if (insertResult) {
                 [self SystemAlert:@"Saving Data succeffully"];
             }else{
@@ -1024,6 +1027,7 @@
 }
 #pragma mark - 相片
 - (void)SavephotosInSanBox:(NSMutableArray *)images{
+    NSLog(@"************%@",images);
     if (images.count > 0) {
         NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
         for (int i = 0; i < images.count; i++) {
