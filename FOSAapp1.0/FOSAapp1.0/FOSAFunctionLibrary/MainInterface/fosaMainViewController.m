@@ -323,15 +323,15 @@
 //每个cell的具体内容
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:( NSIndexPath *)indexPath {
     if (collectionView == self.categoryCollection) {
-//        // 每次先从字典中根据IndexPath取出唯一标识符
-//        NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
-//         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
-//        if (identifier == nil) {
-//            identifier = [NSString stringWithFormat:@"%@%@", categoryID, [NSString stringWithFormat:@"%@", indexPath]];
-//            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
-//        // 注册Cell
-//            [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:identifier];
-//            }
+        // 每次先从字典中根据IndexPath取出唯一标识符
+        NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
+         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+        if (identifier == nil) {
+            identifier = [NSString stringWithFormat:@"%@%@", categoryID, [NSString stringWithFormat:@"%@", indexPath]];
+            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
+        // 注册Cell
+            [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:identifier];
+            }
         categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:categoryID forIndexPath:indexPath];
         cell.kind.text = self.categoryArray[indexPath.row];
         cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
@@ -481,6 +481,8 @@
             [self.tempFoodDataSource addObject:model];
         }
     }
+    [self.fooditemCollection reloadData];
+    [self.categoryCollection reloadData];
 }
 #pragma mark - 响应事件
 - (void)CollectionReload{
