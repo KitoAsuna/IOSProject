@@ -12,6 +12,8 @@
 #import "foodItemCollectionViewCell.h"
 #import "foodAddingViewController.h"
 #import "FMDB.h"
+#import "FosaNotification.h"
+#import <UserNotifications/UserNotifications.h>
 
 
 @interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource>{
@@ -20,6 +22,7 @@
     NSString *docPath;//数据库地址
     //刷新标识
     Boolean isUpdate;
+    Boolean isSelectCategory;
     
 }
 //种类数组
@@ -30,6 +33,11 @@
 @property (nonatomic,strong) FMDatabase *db;
 //当前选中的种类cell
 @property (nonatomic,strong) categoryCollectionViewCell *selectedCategoryCell;
+//当前长按的种类cell
+@property (nonatomic,strong) categoryCollectionViewCell *longprogressCell;
+//缓冲图标
+@property (nonatomic,strong) UIActivityIndicatorView *FOSAloadingView;
+@property (nonatomic,strong) FosaNotification *notification;
 @end
 
 @implementation fosaMainViewController
@@ -131,7 +139,13 @@
     }
     return _tempFoodDataSource;
 }
-
+- (NSMutableDictionary *)categoryCellDictionary{
+    if (_categoryCellDictionary == nil) {
+        _categoryCellDictionary = [NSMutableDictionary new];
+    }
+    return _categoryCellDictionary;
+}
+#pragma mark - 创建视图
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
@@ -142,7 +156,7 @@
     [self creatMainBackgroundPlayer];
     [self creatCategoryView];
     [self creatFoodItemCategoryView];
-    //[self showUsingTips];
+    [self showUsingTips];
     
 }
 
@@ -158,13 +172,16 @@
 }
 
 - (void)creatNavigationButton{
+    self.notification = [[FosaNotification alloc]init];
     self.navigationRemindBtn.frame = CGRectMake(0, 0, NavigationBarH, NavigationBarH);
     [self.navigationRemindBtn setImage:[UIImage imageNamed:@"icon_sendNotification"] forState:UIControlStateNormal];
+    [self.navigationRemindBtn addTarget:self action:@selector(SendRemindNotification) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.navigationRemindBtn];
 
     self.sortbtn.frame = CGRectMake(screen_width*2/3, 0,NavigationBarH, NavigationBarH);
     [self.sortbtn setImage:[UIImage imageNamed:@"icon_pullDown"] forState:UIControlStateNormal];
     [self.navigationController.navigationBar addSubview:self.sortbtn];
+    [self.sortbtn addTarget:self action:@selector(selectToSort) forControlEvents:UIControlEventTouchUpInside];
     
     self.scanBtn.frame = CGRectMake(0, 0, NavigationBarH, NavigationBarH);
     [self.scanBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
@@ -214,7 +231,7 @@
         
 }
 - (void)creatCategoryView{
-    
+    isSelectCategory = false;
     self.categoryView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), screen_width, screen_height/9);
     //self.categoryView.backgroundColor = [UIColor yellowColor];
     [self.view addSubview:self.categoryView];
@@ -249,7 +266,7 @@
     self.categoryCollection.dataSource = self;
     self.categoryCollection.showsHorizontalScrollIndicator = NO;
     self.categoryCollection.bounces = NO;
-    [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:categoryID];
+    //[self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:categoryID];
     [self.categoryView addSubview:self.categoryCollection];
 }
 - (void)creatFoodItemCategoryView{
@@ -302,14 +319,12 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (collectionView == self.categoryCollection) {
         return self.categoryArray.count;
+    }else if(isSelectCategory){
+        return self.tempFoodDataSource.count;
+    }else if(self.categoryDataSource.count <= 4){
+        return 4;
     }else{
-        if (self.collectionDataSource.count <= 4 && self.tempFoodDataSource.count == 0) {
-            return 4;
-        }else if(self.tempFoodDataSource.count > 0){
-            return self.tempFoodDataSource.count;
-        }else{
-            return self.collectionDataSource.count;
-        }
+        return self.categoryDataSource.count;
     }
 }
 //collectionView有几个section
@@ -324,17 +339,24 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:( NSIndexPath *)indexPath {
     if (collectionView == self.categoryCollection) {
         // 每次先从字典中根据IndexPath取出唯一标识符
-        NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
+        NSString *identifier = [self.categoryCellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
          // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
         if (identifier == nil) {
             identifier = [NSString stringWithFormat:@"%@%@", categoryID, [NSString stringWithFormat:@"%@", indexPath]];
-            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
+            [self.categoryCellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
         // 注册Cell
             [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:identifier];
             }
-        categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:categoryID forIndexPath:indexPath];
+        categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
         cell.kind.text = self.categoryArray[indexPath.row];
         cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
+        //为每一个Item添加长按事件
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressCellToEdit:)];
+        longPress.minimumPressDuration = 0.75;
+        [cell addGestureRecognizer:longPress];
+        cell.userInteractionEnabled = YES;
+        [cell addGestureRecognizer:longPress];
+        
         if ([self caculateCategoryNumber:cell.kind.text]>0) {
             cell.badgeBtn.hidden = NO;
             [cell.badgeBtn setTitle:[NSString stringWithFormat:@"%d",[self caculateCategoryNumber:cell.kind.text]] forState:UIControlStateNormal];
@@ -353,20 +375,31 @@
             }
         NSLog(@"%ld",index);
         foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-        if (self.tempFoodDataSource.count > 0) {
-            [cell setModel:self.tempFoodDataSource[index]];
-        }else  if (index < self.collectionDataSource.count) {
+        if (isSelectCategory) {
+            if (self.tempFoodDataSource.count > 0) {
+                NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                [cell setModel:self.tempFoodDataSource[index]];
+            }
+        }else if (index < self.collectionDataSource.count ) {
                 [cell setModel:self.collectionDataSource[index]];
+            NSLog(@"=========================================")
+            NSLog(@"%@",self.collectionDataSource[index]);
         }
-        
         return cell;
     }
 }
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView == self.categoryCollection) {
+        isSelectCategory = true;
            categoryCollectionViewCell *cell = (categoryCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
-           cell.rootView.backgroundColor = FOSAgreen;
+        cell.editbtn.hidden = YES;
+        if (![cell.kind.text isEqualToString:self.selectedCategoryCell.kind.text]) {
+            NSLog(@"取消选中%@",self.selectedCategoryCell.kind.text);
+            self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
+            self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:self.selectedCategoryCell.kind.text];
+        }
+        cell.rootView.backgroundColor = [UIColor orangeColor];
            cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",cell.kind.text]];
         self.selectedCategoryCell = cell;
            NSLog(@"Selectd:%@",self.selectedCategoryCell.kind.text);
@@ -448,7 +481,6 @@
         NSLog(@"islike    = %@",isLike);
     }
 }
-
 - (NSMutableArray<NSString *> *)getCategoryArray{
     [self OpenSqlDatabase:@"FOSA"];
     NSMutableArray<NSString *> *category = [[NSMutableArray alloc]init];
@@ -485,15 +517,55 @@
     [self.categoryCollection reloadData];
 }
 #pragma mark - 响应事件
+
 - (void)CollectionReload{
     [self.collectionDataSource removeAllObjects];
     [self.cellDictionary removeAllObjects];
+    [self.categoryCellDictionary removeAllObjects];
+    
     [self OpenSqlDatabase:@"FOSA"];
     [self SelectDataFromFoodTable];
-    [self.fooditemCollection reloadData];
+    
     [self.categoryCollection reloadData];
+    [self.fooditemCollection reloadData];
 }
 
+- (void)selectToSort{
+    UIAlertController *alert  = [UIAlertController alertControllerWithTitle:@"排序方式" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *sortByExpireDateUp = [UIAlertAction actionWithTitle:@"Sort by expiration date from new to old" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+     
+        //[self openPhotoLibrary];
+    }];
+    UIAlertAction *sortByExpireDateDown = [UIAlertAction actionWithTitle:@"Sort by expiration date from old to new" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+  
+    }];
+    UIAlertAction *sortByStorageDateUp = [UIAlertAction actionWithTitle:@"Sort by storage date from new to old" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+   
+    }];
+    UIAlertAction *sortByStorageDateDown = [UIAlertAction actionWithTitle:@"Sort by storage date from old to new" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+      
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"取消");
+    }];
+    
+    [alert addAction:sortByExpireDateUp];
+    [alert addAction:sortByExpireDateDown];
+    [alert addAction:sortByStorageDateUp];
+    [alert addAction:sortByStorageDateDown];
+    [alert addAction:cancel];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+//种类按钮长按事件
+-  (void)longPressCellToEdit:(UILongPressGestureRecognizer *)longPress{
+    categoryCollectionViewCell *cell = (categoryCollectionViewCell *)longPress.view;
+    self.longprogressCell = cell;
+    self.longprogressCell.editbtn.hidden = NO;
+//    if (!cell.badgeBtn.isHighlighted) {
+//        cell.badgeBtn.hidden = YES;
+//    }
+    
+}
 //食物Item点击事件
 - (void)ClickFoodItem:(foodItemCollectionViewCell *)cell{
     foodAddingViewController *add = [foodAddingViewController new];
@@ -513,11 +585,107 @@
 
 - (void)refresh:(UIRefreshControl *)sender
 {
-    [self.fooditemCollection reloadData];
+    [self CollectionReload];
     // 停止刷新
     [sender endRefreshing];
 }
+#pragma mark - 发送提醒
+- (void)CreatLoadView{
+    //self.loadView
+    if (@available(iOS 13.0, *)) {
+        self.FOSAloadingView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleLarge)];
+    } else {
+        // Fallback on earlier versions
+    }
+    [self.view addSubview:self.FOSAloadingView];
+    //设置小菊花的frame
+    self.FOSAloadingView.frame= CGRectMake(screen_width/2-50, screen_height-TabbarHeight-150, 100, 100);
+    //设置小菊花颜色
+    self.FOSAloadingView.color = FOSAgreen;
+    //设置背景颜色
+    self.FOSAloadingView.backgroundColor = [UIColor clearColor];
+//刚进入这个界面会显示控件，并且停止旋转也会显示，只是没有在转动而已，没有设置或者设置为YES的时候，刚进入页面不会显示
+    self.FOSAloadingView.hidesWhenStopped = YES;
+    [self.FOSAloadingView startAnimating];
+}
+- (void)SendRemindNotification{
+    [self CreatLoadView];
+    [self.notification initNotification];
+    UIImage *image = [[UIImage alloc]init];
+    //标志
+    Boolean isSend = false;
+    //获取当前日期
+    NSDate *currentDate = [[NSDate alloc]init];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yy/MM/dd"];
 
+    NSDateFormatter *formatter2 = [[NSDateFormatter alloc]init];
+    [formatter2 setDateFormat:@"MM/dd/yyyy HH:mm"];
+
+    NSString *str = [formatter stringFromDate:currentDate];
+    currentDate = [formatter dateFromString:str];
+    NSLog(@"--------------%@",str);
+    NSDate *foodDate = [[NSDate alloc]init];
+    for(int i = 0;i < self.collectionDataSource.count; i++){
+  NSLog(@"%@的过期日期为%@",self.collectionDataSource[i].foodName,self.collectionDataSource[i].expireDate);
+        NSArray<NSString *> *dateArray = [self.collectionDataSource[i].expireDate componentsSeparatedByString:@"/"];
+        NSString *RDate = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray[1],dateArray[0],dateArray[2],dateArray[3]];
+        
+        foodDate = [formatter2 dateFromString:RDate];
+        NSLog(@"foodDate:%@",foodDate);
+        RDate = [formatter stringFromDate:foodDate];
+        foodDate = [formatter dateFromString:RDate];
+        NSLog(@"---------------RDate:%@",RDate);
+        //比较提醒日期与今天的日期
+        NSComparisonResult result = [currentDate compare:foodDate];
+        if (result == NSOrderedDescending) { //foodDate 在 currentDate 之前
+                isSend = true;
+                NSString *body = [NSString stringWithFormat:@"FOSA 提醒你%@已经在%@过期",self.collectionDataSource[i].foodName,self.collectionDataSource[i].expireDate];
+                //发送通知
+            //获取通知的图片
+            image = [self getImage:self.collectionDataSource[i].foodPhoto];
+            //另存通知图片
+            [self Savephoto:image name:self.collectionDataSource[i].foodPhoto];
+            [_notification sendNotification:self.collectionDataSource[i] body:body image:image];
+            }else if (result == NSOrderedAscending){//foodDate 在 currentDate 之后
+                NSLog(@"%@ 将在 %@ 过期了，请及时使用",self.collectionDataSource[i].foodName,self.collectionDataSource[i].expireDate);
+            }else{
+        NSLog(@"%@刚好在今天过期",self.collectionDataSource[i].foodName);
+                NSString *body = [NSString stringWithFormat:@"今天要记得吃 %@",self.collectionDataSource[i].foodName];
+                //获取通知的图片
+                image = [self getImage:self.collectionDataSource[i].foodPhoto];
+                //另存通知图片
+                [self Savephoto:image name:self.collectionDataSource[i].foodPhoto];
+                //发送通知
+                [_notification sendNotification:self.collectionDataSource[i] body:body image:image];
+            }
+        }
+    [self performSelector:@selector(stopLoading) withObject:nil afterDelay:2.0];
+}
+- (void)stopLoading{
+    [self.FOSAloadingView stopAnimating];
+}
+//取出保存在本地的图片
+- (UIImage*)getImage:(NSString *)filepath{
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *photopath = [NSString stringWithFormat:@"%@%d.png",filepath,1];
+    NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
+    // 保存文件的名称
+    UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
+    NSLog(@">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>%@", img);
+    return img;
+}
+//保存图片到沙盒
+-(void)Savephoto:(UIImage *)image name:(NSString *)foodname{
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *photoName = [NSString stringWithFormat:@"%@.png",foodname];
+    NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent: photoName];// 保存文件的路径
+    NSLog(@"这个是照片的保存地址:%@",filePath);
+    BOOL result =[UIImagePNGRepresentation(image) writeToFile:filePath  atomically:YES];// 保存成功会返回YES
+    if(result == YES) {
+        NSLog(@"通知界面图片保存成功");
+    }
+}
 #pragma mark -- 教学提示
 - (void)showUsingTips{
     

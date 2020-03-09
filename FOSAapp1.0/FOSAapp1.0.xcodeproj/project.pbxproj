@@ -109,6 +109,9 @@
 		45D3748023C075E200192014 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45D3747F23C075E200192014 /* CFNetwork.framework */; };
 		45D3748223C075F600192014 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45D3748123C075F600192014 /* Security.framework */; };
 		45E24A362414AB770089E111 /* foodKindView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E24A352414AB770089E111 /* foodKindView.m */; };
+		45EBE66D2415E8100072843C /* toturialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45EBE66C2415E8100072843C /* toturialViewController.m */; };
+		45EBE6702415ED380072843C /* settingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45EBE66F2415ED380072843C /* settingViewController.m */; };
+		45EBE6732415F4AA0072843C /* languageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45EBE6722415F4AA0072843C /* languageViewController.m */; };
 		45F0C7F423F036DA002F323B /* fosaPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F0C7F323F036DA002F323B /* fosaPhotoViewController.m */; };
 		45F653EB23C75307008F08C2 /* foodKindCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F653EA23C75307008F08C2 /* foodKindCollectionViewCell.m */; };
 /* End PBXBuildFile section */
@@ -324,6 +327,12 @@
 		45D3748123C075F600192014 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		45E24A342414AB770089E111 /* foodKindView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foodKindView.h; sourceTree = "<group>"; };
 		45E24A352414AB770089E111 /* foodKindView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = foodKindView.m; sourceTree = "<group>"; };
+		45EBE66B2415E8100072843C /* toturialViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = toturialViewController.h; sourceTree = "<group>"; };
+		45EBE66C2415E8100072843C /* toturialViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = toturialViewController.m; sourceTree = "<group>"; };
+		45EBE66E2415ED380072843C /* settingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = settingViewController.h; sourceTree = "<group>"; };
+		45EBE66F2415ED380072843C /* settingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = settingViewController.m; sourceTree = "<group>"; };
+		45EBE6712415F4AA0072843C /* languageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = languageViewController.h; sourceTree = "<group>"; };
+		45EBE6722415F4AA0072843C /* languageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = languageViewController.m; sourceTree = "<group>"; };
 		45F0C7F223F036DA002F323B /* fosaPhotoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fosaPhotoViewController.h; sourceTree = "<group>"; };
 		45F0C7F323F036DA002F323B /* fosaPhotoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fosaPhotoViewController.m; sourceTree = "<group>"; };
 		45F653E923C75307008F08C2 /* foodKindCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foodKindCollectionViewCell.h; sourceTree = "<group>"; };
@@ -526,6 +535,10 @@
 			children = (
 				454421F023CC6B70002FADFE /* AboutAppsViewController.h */,
 				454421F123CC6B70002FADFE /* AboutAppsViewController.m */,
+				45EBE66E2415ED380072843C /* settingViewController.h */,
+				45EBE66F2415ED380072843C /* settingViewController.m */,
+				45EBE6712415F4AA0072843C /* languageViewController.h */,
+				45EBE6722415F4AA0072843C /* languageViewController.m */,
 			);
 			path = UserItemView;
 			sourceTree = "<group>";
@@ -608,6 +621,8 @@
 				4513DD4523BED7EC0005A1E2 /* LoginAndRegister */,
 				4590C84923B9C74D00691461 /* UserViewController.h */,
 				4590C84A23B9C74D00691461 /* UserViewController.m */,
+				45EBE66B2415E8100072843C /* toturialViewController.h */,
+				45EBE66C2415E8100072843C /* toturialViewController.m */,
 			);
 			path = UserInterface;
 			sourceTree = "<group>";
@@ -1010,12 +1025,14 @@
 				4513DD5923BF38D20005A1E2 /* ScanInfoView.m in Sources */,
 				458EA2D5241233C700F1FCC7 /* fosaMainViewController.m in Sources */,
 				4590C84523B9C72800691461 /* SealerAndPoundViewController.m in Sources */,
+				45EBE66D2415E8100072843C /* toturialViewController.m in Sources */,
 				4500E13F23BB248A002EB9FE /* Fosa_NSString_Queue.m in Sources */,
 				4590C83B23B9C5F500691461 /* FMResultSet.m in Sources */,
 				4513DD3423BED3550005A1E2 /* MainPhotoViewController.m in Sources */,
 				454421F223CC6B70002FADFE /* AboutAppsViewController.m in Sources */,
 				4500E11C23BAEB14002EB9FE /* NSArray+AvoidCrash.m in Sources */,
 				4590C84B23B9C74D00691461 /* UserViewController.m in Sources */,
+				45EBE6702415ED380072843C /* settingViewController.m in Sources */,
 				45D3745C23C075B200192014 /* AFHTTPSessionManager.m in Sources */,
 				4513DD4023BED4B00005A1E2 /* FosaScrollview.m in Sources */,
 				4500E12623BAEB14002EB9FE /* AvoidCrashStubProxy.m in Sources */,
@@ -1042,6 +1059,7 @@
 				4500E12323BAEB14002EB9FE /* NSMutableAttributedString+AvoidCrash.m in Sources */,
 				4500E12123BAEB14002EB9FE /* NSObject+AvoidCrash.m in Sources */,
 				45D3747B23C075BA00192014 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
+				45EBE6732415F4AA0072843C /* languageViewController.m in Sources */,
 				4590C83823B9C5F500691461 /* FMDatabaseAdditions.m in Sources */,
 				4590C85823B9D58F00691461 /* RootTabBarViewController.m in Sources */,
 				4513DD4223BED4B00005A1E2 /* OtherViewController.m in Sources */,

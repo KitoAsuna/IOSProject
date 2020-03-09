@@ -25,6 +25,9 @@
         self.badgeBtn = [UIButton new];
         [self.rootView addSubview:self.badgeBtn];
         self.badgeBtn.hidden = YES;
+        self.editbtn = [UIButton new];
+        [self.rootView addSubview:self.editbtn];
+        self.editbtn.hidden = YES;
         [self.rootView addSubview:self.categoryPhoto];
         
     }
@@ -45,6 +48,10 @@
     self.badgeBtn.frame = CGRectMake(width*2/3, 0, width/3, width/3);
     self.badgeBtn.layer.cornerRadius = width/6;
     self.badgeBtn.backgroundColor = FOSAgreen;
+    self.editbtn.frame = CGRectMake(width*2/3, 0, width/3, width/3);
+    self.editbtn.layer.cornerRadius = width/6;
+    self.editbtn.backgroundColor = FOSAWhite;
+    [self.editbtn setImage:[UIImage imageNamed:@"icon_edit"] forState:UIControlStateNormal];
     
     self.categoryPhoto.backgroundColor = [UIColor clearColor];
     //self.categoryPhoto.layer.cornerRadius = width/2;

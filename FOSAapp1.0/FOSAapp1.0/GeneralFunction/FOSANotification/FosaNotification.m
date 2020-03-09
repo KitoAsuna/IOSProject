@@ -22,7 +22,7 @@
 
 
 -(void)initNotification{
-    
+    NSLog(@"获取权限");
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
             // 必须写代理，不然无法监听通知的接收与点击
     center.delegate = self;

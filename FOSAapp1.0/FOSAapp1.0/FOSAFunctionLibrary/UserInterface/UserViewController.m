@@ -8,6 +8,9 @@
 
 #import "UserViewController.h"
 #import "AboutAppsViewController.h"
+#import "toturialViewController.h"
+#import "settingViewController.h"
+#import "languageViewController.h"
 
 @interface UserViewController ()<UITableViewDelegate,UITableViewDataSource>{
     NSArray *ItemLogoArray,*ItemArray;
@@ -179,8 +182,23 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSInteger index = indexPath.row;
-    AboutAppsViewController *about = [[AboutAppsViewController alloc]init];
+    AboutAppsViewController *about = [AboutAppsViewController new];
+    toturialViewController *tutorial = [toturialViewController new];
+    languageViewController *language = [languageViewController new];
+    settingViewController *setting = [settingViewController new];
     switch (index) {
+        case 0:
+            tutorial.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:tutorial animated:YES];
+            break;
+        case 1:
+            language.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:language animated:YES];
+            break;
+        case 2:
+            setting.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:setting animated:YES];
+            break;
         case 4:
             about.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:about animated:YES];

@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UICollectionView *categoryCollection;
 @property (nonatomic,strong) NSMutableArray<NSString *> *cellDic;
 @property (nonatomic,strong) NSMutableDictionary *cellDictionary;
+@property (nonatomic,strong) NSMutableDictionary *categoryCellDictionary;
 @property (nonatomic,strong) UIView *foodItemView;
 @property (nonatomic,strong) UICollectionView *fooditemCollection;
 

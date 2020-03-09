@@ -351,7 +351,7 @@
         [helpButton addTarget:self action:@selector(selectToHelp) forControlEvents:UIControlEventTouchUpInside];
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:helpButton];
     }else if([self.foodStyle isEqualToString:@"Info"]){
-        self.editBtn.frame = CGRectMake(0, 0, NavigationBarH*2, NavigationBarH*2/3);
+        self.editBtn.frame = CGRectMake(0, 0, NavigationBarH*2, NavigationBarH/2);
         self.editBtn.layer.cornerRadius = NavigationBarH/2;
         [self.editBtn setTitle:@"Edit" forState:UIControlStateNormal];
         self.editBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
@@ -691,7 +691,7 @@
     NSLog(@"保存点击");
     //处理日期字符串
     NSArray *array = [timer componentsSeparatedByString:@"/"];
-    NSString *dateStr = [NSString stringWithFormat:@"%@/%@/%@",array[0],[mouth valueForKey:array[1]],array[2]];
+    NSString *dateStr = [NSString stringWithFormat:@"%@/%@/%@",array[1],[mouth valueForKey:array[0]],array[2]];
     self.expireDateLabel.text = dateStr;
     self.expireTimeLabel.text= array[3];
     NSLog(@"%@",dateStr);
@@ -956,7 +956,6 @@
 }
 - (void)saveInfoAndFinish{
     [self DeleteRecord];
-    
     [self SavephotosInSanBox:self.foodImgArray];
     [self CreatDataTable];
 }
@@ -1046,6 +1045,9 @@
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     // 保存文件的名称
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
+    if (img == NULL) {
+        img = [UIImage imageNamed:@"icon_defaultImg"];
+    }
     NSLog(@"===%@", img);
     return img;
 }
@@ -1053,9 +1055,11 @@
 //删除记录
 - (void)DeleteRecord{
     NSString *delSql = [NSString stringWithFormat:@"delete from FoodStorageInfo where foodName = '%@'",self.model.foodName];
+    NSLog(@"删除%@",self.model.foodName);
     if ([self.db open]) {
          BOOL result = [self.db executeUpdate:delSql];
         if (result) {
+            NSLog(@"delete data successfully");
             if (![self.foodTextView.text isEqualToString:self.model.foodName]) {
                 for (int i = 1; i <= 3; i++) {
                     NSString *photoName = [NSString stringWithFormat:@"%@%d",self.model.foodName,i];
@@ -1117,7 +1121,7 @@
     
     //FOSA
     UILabel *brand = [[UILabel alloc]initWithFrame:CGRectMake(mainwidth/15, mainHeight*5/8, mainwidth/4, mainHeight/16)];
-    
+
     //食物信息二维码
     UIImageView *InfoCodeView = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*4/5-20, mainHeight*5/8+5, mainwidth/5, mainwidth/5)];
 
@@ -1131,9 +1135,9 @@
     [notification addSubview:image];
     [notification addSubview:Nbody];
 
-    logo.image  = [UIImage imageNamed:@"icon_logoHL"];
-    if (self.foodImgArray.count > 0) {
-        image.image = self.foodImgArray[0];
+    logo.image  = [UIImage imageNamed:@"icon_ntificationBrand"];
+    if (self.imageviewArray.count > 0) {
+        image.image = self.imageviewArray[0].image;
     }else{
         image.image = [UIImage imageNamed:@"icon_defaultImg"];
     }

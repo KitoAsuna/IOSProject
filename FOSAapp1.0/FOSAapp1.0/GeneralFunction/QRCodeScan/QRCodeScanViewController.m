@@ -12,6 +12,7 @@
 #import "FMDB.h"
 #import "FoodModel.h"
 #import "FoodViewController.h"
+#import "foodAddingViewController.h"
 #import "AFNetworking.h"
 
 @interface QRCodeScanViewController ()<AVCaptureMetadataOutputObjectsDelegate,UINavigationControllerDelegate,AVCaptureVideoDataOutputSampleBufferDelegate,UIImagePickerControllerDelegate,UIScrollViewDelegate>{
@@ -612,6 +613,17 @@ NSLog(@"************************************************************************
         AudioServicesPlaySystemSound(soundID);//播放音效
 }
 - (void)showOneMessage:(NSString *)result{
+    //判断这个码的信息是否存储过
+    FoodModel *model = [self CheckFoodInfoWithName:result];
+    if (model == nil) {
+        [self SystemAlert:@"NO Record"];
+    }else{
+        foodAddingViewController *add = [foodAddingViewController new];
+        add.foodStyle = @"Info";
+        add.hidesBottomBarWhenPushed = YES;
+        add.model = model;
+        [self.navigationController pushViewController:add animated:YES];
+    }
 //    NSLog(@"%@",result);
 //    NSLog(@">>>>>>>>>>>>>>>>>>>多个扫码模式宽度：%d,高度：%d",screen_width,screen_height);
 //    isJump = true;
@@ -988,109 +1000,30 @@ NSLog(@"************************************************************************
         NSLog(@"打开数据库失败");
     }
 }
-//
-//- (FoodModel *)CheckFoodInfoWithName:(NSString *)device{
-//    [self OpenSqlDatabase:@"FOSA"];
-//    NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where device = '%@';",device];
-//    NSLog(@"%@",sql);
-//    //FoodModel *model = [FoodModel modelWithName:@"NO Record" DeviceID:device RemindDate:@"" ExpireDate:@""];
-////    FoodModel *model = [FoodModel modelWithName:@"NO Record" DeviceID:device Description:@"" RemindDate:@""  ExpireDate:@"" foodIcon:@"" category:@""];
-//    FMResultSet *set = [db executeQuery:sql];
-////    if (set.columnCount == 0) {
-////        model = [FoodModel modelWithName:@"NO Record" DeviceID:device RemindDate:@"" ExpireDate:@""];
-////    }else{
-//        if([set next]) {
-//            NSString *foodName = [set stringForColumn:@"foodName"];
-//            NSString *fdevice   = [set stringForColumn:@"device"];
-//            NSString *aboutFood = [set stringForColumn:@"aboutFood"];
-//            NSString *remindDate = [set stringForColumn:@"remindDate"];
-//            NSString *expireDate = [set stringForColumn:@"expireDate"];
-//            NSString *foodImg = [set stringForColumn:@"foodImg"];
-//            NSString *category = [set stringForColumn:@"category"];
-//
-//            NSLog(@"%@----%@----%@----%@",foodName,fdevice,remindDate,expireDate);
-////            model.foodName = foodName;
-////            model.remindDate = remindDate;
-////            model.expireDate = expireDate;
-////            model.aboutFood = aboutFood;
-////            model.category = category;
-//            //            modfl.foodPhoto = foodImg;
-////            model.device = fdevice;
-//        }
-//    //}
-//    return model;
-//}
 
-//运用AFNetworking post请求 得到产品信息（关于AFNetworking网上很多例子）
-
--(void)GetDataByCode:(NSString *)code{
-
-    //方法一
-
-    /*中国商品信息服务平台
-
-     http://search.anccnet.com/searchResult2.aspx
-
-     */
-    /*
-
-     //方法一：中国商品信息服务平台
-     http://search.anccnet.com/searchResult2.aspx
-     //方法二：第三方接口
-    http://www.mxnzp.com/api/barcode/goods/details
-     本例子采用方法二
-     */
-    //请求路径
-
-    NSString * URLString = @"http://www.mxnzp.com/api/barcode/goods/detail?";
-
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-
-    //设置返回类型
-
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", nil];
-    // 请求参数设置
-    NSDictionary *dict = @{
-                           @"barcode":code,
-                           };
-    //2、发送请求
-
-    [manager POST:URLString parameters:dict progress:^(NSProgress * _Nonnull downloadProgress) {
-
-        
-
-    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-
-        NSDictionary* json = [NSJSONSerialization
-
-                              JSONObjectWithData:responseObject
-
-                              options:kNilOptions
-
-                              error:nil];
-
-        NSLog(@"----------%@----%@",responseObject,json);
-
-//        if ([[json objectForKey:@"error_code"] integerValue] == 0) {
-//
-//            self.goods_name.text = [json objectForKey:@"data"][@"goodsName"];
-//
-//            self.goods_code.text = [json objectForKey:@"data"][@"code"];
-//
-//            self.manuName.text = [json objectForKey:@"data"][@"manuName"];
-//
-//            reader.hidden = YES;
-//
-//        }
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-
-         NSLog(@"%@",error);
-
-    }];
+- (FoodModel *)CheckFoodInfoWithName:(NSString *)device{
+    [self OpenSqlDatabase:@"FOSA"];
+    NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where device = '%@';",device];
+    NSLog(@"%@",sql);
+    FMResultSet *set = [db executeQuery:sql];
+    FoodModel *model;
+    if (set.columnCount == 0) {
+        return nil;
+    }else{
+        if([set next]) {
+           NSString *foodName = [set stringForColumn:@"foodName"];
+            NSString *device   = [set stringForColumn:@"device"];
+            NSString *aboutFood = [set stringForColumn:@"aboutFood"];
+            NSString *storageDate = [set stringForColumn:@"storageDate"];
+            NSString *expireDate = [set stringForColumn:@"expireDate"];
+            NSString *foodImg = [set stringForColumn:@"foodImg"];
+            NSString *category = [set stringForColumn:@"category"];
+            NSString *isLike   = [set stringForColumn:@"like"];
+            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category like:isLike];
+        }
+    }
+    return model;
 }
-
 /**隐藏底部横条，点击屏幕可显示*/
 - (BOOL)prefersHomeIndicatorAutoHidden{
     return YES;
