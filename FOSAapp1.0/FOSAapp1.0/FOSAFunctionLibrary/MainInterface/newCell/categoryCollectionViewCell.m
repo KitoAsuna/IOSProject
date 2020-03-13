@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.kind = [[UILabel alloc]init];
+        self.kind = [[UITextField alloc]init];
         self.kind.textAlignment = NSTextAlignmentCenter;
         self.kind.textColor = [UIColor grayColor];
         [self addSubview:self.kind];
@@ -40,6 +40,7 @@
     self.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     self.kind.frame = CGRectMake(0, width, width, height-width);
     self.kind.adjustsFontSizeToFitWidth = YES;
+    self.kind.userInteractionEnabled = NO;
     self.rootView.frame = CGRectMake(0, 0, width, width);
     self.rootView.layer.cornerRadius = width/2;
     self.rootView.backgroundColor = [UIColor whiteColor];
@@ -48,9 +49,9 @@
     self.badgeBtn.frame = CGRectMake(width*2/3, 0, width/3, width/3);
     self.badgeBtn.layer.cornerRadius = width/6;
     self.badgeBtn.backgroundColor = FOSAgreen;
-    self.editbtn.frame = CGRectMake(width*2/3, 0, width/3, width/3);
-    self.editbtn.layer.cornerRadius = width/6;
-    self.editbtn.backgroundColor = FOSAWhite;
+    self.editbtn.frame = CGRectMake(width*3/5, 0, width*4/10, width*4/10);
+    self.editbtn.layer.cornerRadius = width/5;
+    self.editbtn.backgroundColor = FOSARed;
     [self.editbtn setImage:[UIImage imageNamed:@"icon_edit"] forState:UIControlStateNormal];
     
     self.categoryPhoto.backgroundColor = [UIColor clearColor];

@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface categoryCollectionViewCell : UICollectionViewCell
-@property (nonatomic,strong) UILabel *kind;
+@property (nonatomic,strong) UITextField *kind;
 @property (nonatomic,strong) UIImageView *categoryPhoto;
 @property (nonatomic,strong) UIView *rootView;
 @property (nonatomic,strong) UIButton *badgeBtn,*editbtn;

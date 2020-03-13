@@ -82,4 +82,10 @@
     self.navigationController.navigationBar.hidden = NO;
     [self.navigationController popViewControllerAnimated:YES];
 }
+#pragma mark -- UIScrollerView
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    CGFloat offset = scrollView.contentOffset.x;
+    NSInteger index = offset/screen_width;
+    self.toturialPageControl.currentPage = index;
+}
 @end

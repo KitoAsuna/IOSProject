@@ -169,6 +169,8 @@
     
     
     self.remember.frame = CGRectMake(0, 0, 51, 30);
+    self.remember.onTintColor = [UIColor colorWithRed:90/255.0 green:172/255.0 blue:51/255.0 alpha:1];
+    //self.remember.thumbTintColor = FOSAAlertBlue;
     [self.remember addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
     [self.rememberContainer addSubview:self.remember];
     self.rememberLabel.frame = CGRectMake(60, 0, self.rememberContainer.frame.size.width/2, 40);

@@ -762,7 +762,7 @@
 //        self.selectedCategory.categoryPhoto.image = [UIImage imageNamed:selectCategory];
 //        self.selectedCategory.categoryPhoto.backgroundColor = [UIColor clearColor];
 //    }
-    cell.rootView.backgroundColor = FOSAgreen;
+    cell.rootView.backgroundColor = [UIColor orangeColor];
     cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",cell.kind.text]];
     selectCategory = cell.kind.text;
     self.selectedCategory = cell;
@@ -957,7 +957,9 @@
     [self presentViewController:activityVC animated:TRUE completion:nil];
 }
 - (void)saveInfoAndFinish{
-    [self DeleteRecord];
+    if ([self.foodStyle isEqualToString:@"Info"]) {
+        [self DeleteRecord];
+    }
     [self SavephotosInSanBox:self.foodImgArray];
     [self CreatDataTable];
 }
@@ -1008,8 +1010,10 @@
     NSString *insertSql = @"insert into FoodStorageInfo(foodName,device,aboutFood,storageDate,expireDate,location,foodImg,category,like) values(?,?,?,?,?,?,?,?,?)";
     if ([self.foodTextView.text isEqualToString:@""]) {
         [self SystemAlert:@"Please input the name of your food!"];
-    }else if([self.expireDateLabel.text isEqualToString:@""]){
-        [self SystemAlert:@"Expire Date can‘t be null"];
+    }else if([self.storageDateLabel.text isEqualToString:self.expireDateLabel.text]){
+        [self SystemAlert:@"please select an expiration date"];
+    }else if(self.selectedCategory == nil){
+        [self SystemAlert:@"Please select a category for your food"];
     }else{
         if ([self.db open]) {
             NSString *storagedate = [NSString stringWithFormat:@"%@/%@",self.storageDateLabel.text,self.storageTimeLabel.text];
@@ -1196,7 +1200,7 @@
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:message preferredStyle:UIAlertControllerStyleAlert];
-    if ([message isEqualToString:@"Please input the name of your food!"] || [message isEqualToString:@"Expire Date can‘t be null"]) {
+    if ([message isEqualToString:@"Please input the name of your food!"] || [message isEqualToString:@"Expire Date can‘t be null"]||[message isEqualToString:@"Please select a category for your food"]) {
          [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
         [self presentViewController:alert animated:true completion:nil];
     }else if([message isEqualToString:@"Error"]){

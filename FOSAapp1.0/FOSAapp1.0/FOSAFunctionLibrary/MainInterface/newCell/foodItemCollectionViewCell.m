@@ -21,7 +21,7 @@
         [self addSubview:self.foodImgView];
        
         self.likebtn = [UIButton new];
-        [self.likebtn setImage:[UIImage imageNamed:@"icon_like"] forState:UIControlStateNormal];
+        [self.likebtn setImage:[UIImage imageNamed:@"icon_likeW"] forState:UIControlStateNormal];
         [self.foodImgView addSubview:self.likebtn];
         self.foodNamelabel = [UILabel new];
         //self.foodNamelabel.text = @"Apple";

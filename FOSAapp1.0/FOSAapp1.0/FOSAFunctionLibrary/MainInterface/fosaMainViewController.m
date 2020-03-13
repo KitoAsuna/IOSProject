@@ -320,7 +320,11 @@
     if (collectionView == self.categoryCollection) {
         return self.categoryArray.count;
     }else if(isSelectCategory){
-        return self.tempFoodDataSource.count;
+        if (self.tempFoodDataSource.count <= 4) {
+            return 4;
+        }else{
+             return self.tempFoodDataSource.count;
+        }
     }else if(self.categoryDataSource.count <= 4){
         return 4;
     }else{
@@ -400,19 +404,18 @@
             self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:self.selectedCategoryCell.kind.text];
         }
         cell.rootView.backgroundColor = [UIColor orangeColor];
-           cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",cell.kind.text]];
-        self.selectedCategoryCell = cell;
-           NSLog(@"Selectd:%@",self.selectedCategoryCell.kind.text);
+        NSString *imgName = [NSString stringWithFormat:@"%@W",cell.kind.text];
+        cell.categoryPhoto.image = [UIImage imageNamed:imgName];
         
+        self.selectedCategoryCell = cell;
+           NSLog(@"Selectd:%@",[NSString stringWithFormat:@"%@W",cell.kind.text]);
+
         [self selectFoodByCategory:self.selectedCategoryCell.kind.text];
         
     }else if(collectionView == self.fooditemCollection){
            foodItemCollectionViewCell *cell = (foodItemCollectionViewCell *)[self.fooditemCollection cellForItemAtIndexPath:indexPath];
            if (cell.model.foodName != nil) {
                [self ClickFoodItem:cell];
-//               UITapGestureRecognizer *clickToCheckInfo = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(JumpToInfo)];
-//               cell.userInteractionEnabled = YES;
-//               [cell addGestureRecognizer:clickToCheckInfo];
            }
        }
 }
@@ -532,17 +535,17 @@
 
 - (void)selectToSort{
     UIAlertController *alert  = [UIAlertController alertControllerWithTitle:@"排序方式" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction *sortByExpireDateUp = [UIAlertAction actionWithTitle:@"Sort by expiration date from new to old" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-     
+    UIAlertAction *sortByExpireDateUp = [UIAlertAction actionWithTitle:@"MOST RECENT" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+
         //[self openPhotoLibrary];
     }];
-    UIAlertAction *sortByExpireDateDown = [UIAlertAction actionWithTitle:@"Sort by expiration date from old to new" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *sortByExpireDateDown = [UIAlertAction actionWithTitle:@"LEAST RECENT" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
   
     }];
-    UIAlertAction *sortByStorageDateUp = [UIAlertAction actionWithTitle:@"Sort by storage date from new to old" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *sortByStorageDateUp = [UIAlertAction actionWithTitle:@"RECENT ADD" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
    
     }];
-    UIAlertAction *sortByStorageDateDown = [UIAlertAction actionWithTitle:@"Sort by storage date from old to new" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *sortByStorageDateDown = [UIAlertAction actionWithTitle:@"LEAST ADD" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
       
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
@@ -561,10 +564,7 @@
     categoryCollectionViewCell *cell = (categoryCollectionViewCell *)longPress.view;
     self.longprogressCell = cell;
     self.longprogressCell.editbtn.hidden = NO;
-//    if (!cell.badgeBtn.isHighlighted) {
-//        cell.badgeBtn.hidden = YES;
-//    }
-    
+    cell.kind.userInteractionEnabled = YES;
 }
 //食物Item点击事件
 - (void)ClickFoodItem:(foodItemCollectionViewCell *)cell{
@@ -726,7 +726,6 @@
 }
 - (void)clickToClose{
     [self.mask removeFromSuperview];
-    //[[UIApplication sharedApplication].keyWindow addSubview:self.mask];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
