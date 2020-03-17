@@ -151,6 +151,7 @@
 - (UIScrollView *)contentView{
     if (_contentView == nil) {
         _contentView = [UIScrollView new];
+        //_contentView.backgroundColor = [UIColor blueColor];
     }
     return _contentView;
 }
@@ -326,6 +327,7 @@
 }
 //UI
 - (void)creatNavigation{
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
 /**like*/
     self.likeBtn.frame = CGRectMake(screen_width/2-NavigationBarH/2, 0, NavigationBarH, NavigationBarH);
     [self.likeBtn setImage:[UIImage imageNamed:@"icon_likeW"] forState:UIControlStateNormal];
@@ -337,7 +339,10 @@
         /**显示图片和标题的自定义返回按钮*/
         UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
         backButton.frame = CGRectMake(0, 0, NavigationBarH, NavigationBarH);
+        //[backButton.widthAnchor constraintEqualToConstant:NavigationBarH*2].active = YES;
+        //[backButton.heightAnchor constraintEqualToConstant:NavigationBarH].active = YES;
         [backButton setTitle:@"Back" forState:UIControlStateNormal];
+        [backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [backButton setImage:[[UIImage imageNamed:@"icon_backW"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
         [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
 
@@ -346,14 +351,17 @@
         self.navigationController.navigationBar.tintColor = [UIColor darkGrayColor];
         
         UIButton *helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        helpButton.frame = CGRectMake(0, 0, NavigationBarH, NavigationBarH);
+        helpButton.frame = CGRectMake(0, 0, NavigationBarH/2, NavigationBarH/2);
         //[helpButton setTitle:@"Back" forState:UIControlStateNormal];
         [helpButton setBackgroundImage:[UIImage imageNamed:@"icon_helpW"]  forState:UIControlStateNormal];
         [helpButton addTarget:self action:@selector(selectToHelp) forControlEvents:UIControlEventTouchUpInside];
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:helpButton];
     }else if([self.foodStyle isEqualToString:@"Info"]){
-        self.editBtn.frame = CGRectMake(0, 0, NavigationBarH*2, NavigationBarH/2);
-        self.editBtn.layer.cornerRadius = NavigationBarH/2;
+        //self.editBtn.frame = CGRectMake(0, 0, NavigationBarH*2, NavigationBarH/2);
+        //添加约束
+        [[self.editBtn.widthAnchor constraintEqualToConstant:NavigationBarH*5/3] setActive:YES];
+        [[self.editBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3] setActive:YES];
+        self.editBtn.layer.cornerRadius = NavigationBarH/3;
         [self.editBtn setTitle:@"Edit" forState:UIControlStateNormal];
         self.editBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
         self.editBtn.titleLabel.font = [UIFont systemFontOfSize: 25*(414.0/screen_width)];
@@ -369,7 +377,7 @@
     [self.view addGestureRecognizer:tapGr];
     self.view.backgroundColor = [UIColor whiteColor];
     
-    self.headerView.frame = CGRectMake(0, 0, screen_width, screen_height*2/5);
+    self.headerView.frame = CGRectMake(0, 0, screen_width, screen_height*63/143);
     //self.headerView.backgroundColor = [UIColor redColor];
     [self.view addSubview:self.headerView];
 
@@ -382,20 +390,21 @@
     if ([self.foodStyle isEqualToString:@"Info"]) {
         self.showFoodNameLabel.frame = CGRectMake(headerWidth/20, headerHeight*7/10, headerWidth, headerHeight/10);
         self.showFoodNameLabel.text  = @"SPECIAL SASAME";
+        //self.showFoodNameLabel.font = [UIFont systemFontOfSize:15 weight:50];
         self.showFoodNameLabel.font  = [UIFont systemFontOfSize:25*(414.0/screen_width)];
         self.showFoodNameLabel.textColor = [UIColor whiteColor];
         [self.headerView addSubview:self.showFoodNameLabel];
     }
     //日期
-    self.storageView.frame = CGRectMake(0, headerHeight*4/5, headerWidth*2/5, headerHeight/5);
+    self.storageView.frame = CGRectMake(0, headerHeight*4/5, headerWidth*2/5, headerHeight/6);
     [self.headerView addSubview:self.storageView];
     
-    self.expireView.frame = CGRectMake(headerWidth*3/5, headerHeight*4/5, headerWidth*2/5, headerHeight/5);
+    self.expireView.frame = CGRectMake(headerWidth*3/5, headerHeight*4/5, headerWidth*2/5, headerHeight/6);
     self.expireView.userInteractionEnabled = YES;
     UITapGestureRecognizer *dateRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectExpireDate)];
     [self.expireView addGestureRecognizer:dateRecognizer];
     [self.headerView addSubview:self.expireView];
-    
+
     int storageWidth = self.storageView.frame.size.width;
     int storageHeight = self.storageView.frame.size.height;
     
@@ -455,19 +464,20 @@
 }
 
 - (void)creatContentView{
-    self.contentView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), screen_width, screen_height/3);
+    self.contentView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), screen_width, screen_height*42/143);
     //self.contentView.
     int contentHeight = self.contentView.frame.size.height;
     [self.view addSubview:self.contentView];
     
-    self.foodNameView.frame = CGRectMake(0, 0, screen_width, contentHeight/4);
+    self.foodNameView.frame = CGRectMake(0, 0, screen_width, contentHeight*11/42);
     [self.contentView addSubview:self.foodNameView];
-    
-    self.foodNameLabel.frame = CGRectMake(screen_width/12, contentHeight/16, screen_width/3, contentHeight/16);
+
+    self.foodNameLabel.frame = CGRectMake(screen_width*5/66, contentHeight/16, screen_width/3, contentHeight/16);
     self.foodNameLabel.text = @"Name";
+    self.foodNameLabel.font = [UIFont systemFontOfSize:13];
     self.foodNameLabel.textColor = [UIColor grayColor];
     [self.foodNameView addSubview:self.foodNameLabel];
-    self.foodTextView.frame = CGRectMake(screen_width/20, contentHeight/8, screen_width*7/10, contentHeight/8);
+    self.foodTextView.frame = CGRectMake(screen_width/22, contentHeight/8, screen_width*51/66, contentHeight/8);
     self.foodTextView.layer.cornerRadius = 5;
     [self.foodTextView setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.foodTextView.delegate = self;
@@ -476,32 +486,33 @@
     [self.foodNameView addSubview:self.foodTextView];
     
     if ([self.foodStyle isEqualToString:@"Info"]) {
-        self.shareBtn.frame = CGRectMake(screen_width*4/5, contentHeight/8, contentHeight/8, contentHeight/8);
+        self.shareBtn.frame = CGRectMake(screen_width*28/33, contentHeight/8, contentHeight/8, contentHeight/8);
         [self.shareBtn setImage:[UIImage imageNamed:@"icon_share"] forState:UIControlStateNormal];
         [self.shareBtn addTarget:self action:@selector(jumpToShare) forControlEvents:UIControlEventTouchUpInside];
         [self.foodNameView addSubview:self.shareBtn];
     }else{
-        self.scanBtn.frame = CGRectMake(screen_width*4/5, contentHeight/8, contentHeight/8, contentHeight/8);
+        self.scanBtn.frame = CGRectMake(screen_width*28/33, contentHeight/8, contentHeight/8, contentHeight/8);
         [self.scanBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
         [self.scanBtn addTarget:self action:@selector(jumpToScan) forControlEvents:UIControlEventTouchUpInside];
         [self.foodNameView addSubview:self.scanBtn];
     }
    
-    
+    //描述
     self.foodDescribedView.frame = CGRectMake(0, contentHeight/4, screen_width, contentHeight/2);
     [self.contentView addSubview:self.foodDescribedView];
-    self.foodDescribedLabel.frame = CGRectMake(screen_width/12, contentHeight/16, screen_width/3, contentHeight/16);
+    self.foodDescribedLabel.frame = CGRectMake(screen_width*5/66, contentHeight/16, screen_width/3, contentHeight/16);
     self.foodDescribedLabel.text = @"Description";
+    self.foodDescribedLabel.font = [UIFont systemFontOfSize:13];
     self.foodDescribedLabel.textColor = [UIColor grayColor];
     [self.foodDescribedView addSubview:self.foodDescribedLabel];
-    self.foodDescribedTextView.frame = CGRectMake(screen_width/20, contentHeight/8, screen_width*9/10, contentHeight*3/8);
+    self.foodDescribedTextView.frame = CGRectMake(screen_width/22, contentHeight/8, screen_width*9/10, contentHeight*3/8);
     self.foodDescribedTextView.layer.cornerRadius = 5;
     self.foodDescribedTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    self.foodDescribedTextView.textColor = [UIColor lightGrayColor];
+    self.foodDescribedTextView.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     self.foodDescribedTextView.font = [UIFont systemFontOfSize:20*(screen_width/414.0)];
     self.foodDescribedTextView.delegate = self;
     self.foodDescribedTextView.returnKeyType = UIReturnKeyNext;
-    self.foodDescribedTextView.textContainerInset = UIEdgeInsetsMake(10, 5, 0, 0);//上、左、下、右
+    self.foodDescribedTextView.textContainerInset = UIEdgeInsetsMake(0, 5, 0, 0);//上、左、下、右
     [self.foodDescribedView addSubview:self.foodDescribedTextView];
     //输入字数提示
     int aboutFoodInputWidth = self.foodDescribedTextView.frame.size.width;
@@ -521,6 +532,7 @@
     [self.contentView addSubview:self.locationView];
     self.locationLabel.frame = CGRectMake(screen_width/12, contentHeight/16, screen_width/3, contentHeight/16);
     self.locationLabel.text = @"Location";
+    self.locationLabel.font = [UIFont systemFontOfSize:13];
     self.locationLabel.textColor = [UIColor grayColor];
     [self.locationView addSubview:self.locationLabel];
     self.locationTextView.frame = CGRectMake(screen_width/20, contentHeight/8, screen_width*9/10, contentHeight/8);
@@ -537,28 +549,26 @@
     self.categoryArray = [[NSMutableArray alloc]initWithArray:array];
     kindID = @"categoryCell";
     
-    self.footerView.frame = CGRectMake(0, CGRectGetMaxY(self.contentView.frame), screen_width, screen_height/4);
+    self.footerView.frame = CGRectMake(0, CGRectGetMaxY(self.contentView.frame), screen_width, screen_height*14/143);
     //self.footerView.backgroundColor = [UIColor yellowColor];
     [self.view addSubview:self.footerView];
     int footerHeight = self.footerView.frame.size.height;
-    self.leftIndex.frame = CGRectMake(screen_width/60, footerHeight*5/12, screen_width/15, screen_width/15);
+    self.leftIndex.frame = CGRectMake(screen_width/66, footerHeight*8/14, screen_width/18, screen_width/18);
     self.leftIndex.layer.cornerRadius = self.leftIndex.frame.size.width/2;
-    self.leftIndex.backgroundColor = [UIColor grayColor];
     [self.leftIndex setBackgroundImage:[UIImage imageNamed:@"icon_leftindex"] forState:UIControlStateNormal];
     [self.footerView addSubview:self.leftIndex];
-    
-    self.rightIndex.frame = CGRectMake(screen_width*11/12, footerHeight*5/12, screen_width/15, screen_width/15);//
+    self.rightIndex.frame = CGRectMake(screen_width*31/33, footerHeight*8/14, screen_width/18, screen_width/18);//
     self.rightIndex.layer.cornerRadius = self.rightIndex.frame.size.width/2;
     [self.rightIndex setBackgroundImage:[UIImage imageNamed:@"icon_rightindex"] forState:UIControlStateNormal];
-    self.rightIndex.backgroundColor = [UIColor grayColor];
     [self.footerView addSubview:self.rightIndex];
     
     //食物种类选择栏 可滚动
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    flowLayout.itemSize = CGSizeMake((screen_width)/7, footerHeight/2);
+    flowLayout.itemSize = CGSizeMake((screen_width*48/66)/5, footerHeight);
+    //flowLayout.sectionInset = UIEdgeInsetsMake(0, 0, 0, screen_width/22);
 
-    self.categoryCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(screen_width/12, footerHeight/12, screen_width*5/6, footerHeight/2) collectionViewLayout:flowLayout];
+    self.categoryCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(screen_width/12, footerHeight/14, screen_width*55/66, footerHeight) collectionViewLayout:flowLayout];
     
     self.categoryCollection.backgroundColor = [UIColor whiteColor];
     self.categoryCollection.delegate = self;
@@ -568,11 +578,11 @@
     [self.categoryCollection registerClass:[foodKindCollectionViewCell class] forCellWithReuseIdentifier:kindID];
     [self.footerView addSubview:self.categoryCollection];
     
-    self.doneBtn.frame = CGRectMake(screen_width/3, footerHeight*2/3, screen_width/3, footerHeight/6);
+    self.doneBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.footerView.frame)+screen_height*6/143, screen_width/3, screen_height*6/143);
     self.doneBtn.layer.cornerRadius = self.doneBtn.frame.size.height/2;
     [self.doneBtn setTitle:@"DONE" forState:UIControlStateNormal];
     self.doneBtn.backgroundColor = FOSAgreen;
-    [self.footerView addSubview:self.doneBtn];
+    [self.view addSubview:self.doneBtn];
     [self.doneBtn addTarget:self action:@selector(saveInfoAndFinish) forControlEvents:UIControlEventTouchUpInside];
     
     if ([self.foodStyle isEqualToString:@"Info"]) {
@@ -580,16 +590,17 @@
         self.rightIndex.hidden = YES;
         self.categoryCollection.hidden = YES;
         self.doneBtn.hidden = YES;
-        self.foodCell = [[foodKindView alloc]initWithFrame:CGRectMake(screen_width*3/7, 0, screen_width/7, footerHeight/2)];
+        self.foodCell = [[foodKindView alloc]initWithFrame:CGRectMake(0, 0, (screen_width*48/66)/5, footerHeight)];
+        self.foodCell.center = self.categoryCollection.center;
 //        self.foodCell.kind.text = @"Bread";
 //        self.foodCell.categoryPhoto.image = [UIImage imageNamed:@"BreadW"];
         [self.footerView addSubview:self.foodCell];
-        self.deleteBtn.frame = CGRectMake(screen_width/3, footerHeight*2/3, screen_width/3, footerHeight/6);
+        self.deleteBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.footerView.frame)+screen_height*3/143, screen_width/3, screen_height*6/143);
         self.deleteBtn.backgroundColor = [UIColor colorWithRed:255/255.0 green:45/255.0 blue:45/255.0 alpha:1];
         [self.deleteBtn addTarget:self action:@selector(deleteFoodRecord) forControlEvents:UIControlEventTouchUpInside];
         self.deleteBtn.layer.cornerRadius = self.deleteBtn.frame.size.height/2;
         [self.deleteBtn setTitle:@"DELETE" forState:UIControlStateNormal];
-        [self.footerView addSubview:self.deleteBtn];
+        [self.view addSubview:self.deleteBtn];
     }
 }
 
@@ -613,6 +624,8 @@
         NSLog(@"%@",expireTimeArray);
         
         self.showFoodNameLabel.text = self.model.foodName;
+        //self.showFoodNameLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:20];//[UIFont systemFontOfSize:15 weight:50];
+        self.showFoodNameLabel.font = [UIFont systemFontOfSize:22 weight:20];
         if ([self.model.islike isEqualToString:@"1"]) {
             [self.likeBtn setImage: [UIImage imageNamed:@"icon_likeHL"] forState:UIControlStateNormal];
         }

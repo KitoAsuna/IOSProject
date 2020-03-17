@@ -39,6 +39,7 @@
     int height = self.bounds.size.height;
     self.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     self.kind.frame = CGRectMake(0, width, width, height-width);
+    self.kind.font  = [UIFont systemFontOfSize:12];
     self.kind.adjustsFontSizeToFitWidth = YES;
     self.kind.userInteractionEnabled = NO;
     self.rootView.frame = CGRectMake(0, 0, width, width);

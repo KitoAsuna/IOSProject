@@ -86,6 +86,8 @@
 #define FOSAAlertYellow     [UIColor colorWithRed:252/255.0 green:175/255.0 blue:0/255.0 alpha:1.0]
 //阴影
 #define FOSAshadowColor  [UIColor colorWithRed:238/255.0 green:238/255.0 blue:238/255.0 alpha:1.0]
+
+#define FOSAGray  [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0]
 //可以添加其他常用颜色，方便修改
 
 // 8.解决日志打印不全的问题

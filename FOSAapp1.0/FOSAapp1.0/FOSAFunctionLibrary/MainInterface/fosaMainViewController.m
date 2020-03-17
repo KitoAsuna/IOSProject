@@ -23,6 +23,7 @@
     //刷新标识
     Boolean isUpdate;
     Boolean isSelectCategory;
+    Boolean categoryEdit;
     
 }
 //种类数组
@@ -60,6 +61,12 @@
         _scanBtn = [UIButton new];
     }
     return _scanBtn;
+}
+- (UIButton *)cancelBtn{
+    if (_cancelBtn == nil) {
+        _cancelBtn = [UIButton new];
+    }
+    return _cancelBtn;
 }
 
 - (UIView *)headerView{
@@ -173,8 +180,9 @@
 
 - (void)creatNavigationButton{
     self.notification = [[FosaNotification alloc]init];
-    self.navigationRemindBtn.frame = CGRectMake(0, 0, NavigationBarH, NavigationBarH);
     [self.navigationRemindBtn setImage:[UIImage imageNamed:@"icon_sendNotification"] forState:UIControlStateNormal];
+    [self.navigationRemindBtn.widthAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
+    [self.navigationRemindBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
     [self.navigationRemindBtn addTarget:self action:@selector(SendRemindNotification) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.navigationRemindBtn];
 
@@ -183,7 +191,8 @@
     [self.navigationController.navigationBar addSubview:self.sortbtn];
     [self.sortbtn addTarget:self action:@selector(selectToSort) forControlEvents:UIControlEventTouchUpInside];
     
-    self.scanBtn.frame = CGRectMake(0, 0, NavigationBarH, NavigationBarH);
+    [self.scanBtn.widthAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
+    [self.scanBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
     [self.scanBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.scanBtn];
     [self.scanBtn addTarget:self action:@selector(clickToScan) forControlEvents:UIControlEventTouchUpInside];
@@ -228,7 +237,6 @@
            self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
            self.pageControl.currentPageIndicatorTintColor = FOSAgreen;
            [self.headerView addSubview:self.pageControl];
-        
 }
 - (void)creatCategoryView{
     isSelectCategory = false;
@@ -240,25 +248,25 @@
     
     self.leftBtn.frame = CGRectMake(0, 0, screen_width/20, screen_width/20);
     self.leftBtn.center = CGPointMake(categoryViewWidth/20, categoeyViewHeight/2);
-    [self.leftBtn setImage:[UIImage imageNamed:@"icon_leftindex"] forState:UIControlStateNormal];
+    [self.leftBtn setImage:[UIImage imageNamed:@"icon_leftindexW"] forState:UIControlStateNormal];
     [self.categoryView addSubview:self.leftBtn];
     
     self.rightBtn.frame = CGRectMake(0, 0, screen_width/20, screen_width/20);
     self.rightBtn.center = CGPointMake(categoryViewWidth*19/20, categoeyViewHeight/2);
-    [self.rightBtn setImage:[UIImage imageNamed:@"icon_rightindex"] forState:UIControlStateNormal];
+    [self.rightBtn setImage:[UIImage imageNamed:@"icon_rightindexW"] forState:UIControlStateNormal];
     [self.categoryView addSubview:self.rightBtn];
     
     //初始化种类数据
     NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie"];
     self.categoryArray = [[NSMutableArray alloc]initWithArray:array];
     categoryID = @"categoryCell";
-    
+
     //食物种类选择栏 可滚动
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    flowLayout.itemSize = CGSizeMake((screen_width)/7, categoeyViewHeight);
+    flowLayout.itemSize = CGSizeMake((screen_width*48/66)/5,categoeyViewHeight*5/6);
 
-    self.categoryCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, categoryViewWidth*5/6, categoeyViewHeight) collectionViewLayout:flowLayout];
+    self.categoryCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, categoryViewWidth*5/6, categoeyViewHeight*5/6) collectionViewLayout:flowLayout];
     self.categoryCollection.center = CGPointMake(categoryViewWidth/2, categoeyViewHeight*7/12);
        
     self.categoryCollection.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];;
@@ -279,10 +287,8 @@
     int collectionHeight = self.foodItemView.frame.size.height;
     
     UICollectionViewFlowLayout *fosaFlowLayout = [[UICollectionViewFlowLayout alloc] init];
-    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(10, 10, 0, 10);//上、左、下、右
-    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-30)/2,(collectionHeight-40)/2);
-    fosaFlowLayout.minimumLineSpacing = 5;  //行间距
-    fosaFlowLayout.minimumInteritemSpacing = 5; //列间距
+    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(5, 10, 5, 10);//上、左、下、右
+    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-30)/2,(collectionHeight-50)/2);
     //固定的itemsize
     fosaFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;//滑动的方向 垂直
     
@@ -309,7 +315,7 @@
      self.fooditemCollection.dataSource = self;
      self.fooditemCollection.showsVerticalScrollIndicator = NO;
      self.fooditemCollection.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    //[self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
+    [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
      //self.foodItemCollection.bounces = NO;
      [self.foodItemView addSubview:self.fooditemCollection];
 }
@@ -321,14 +327,15 @@
         return self.categoryArray.count;
     }else if(isSelectCategory){
         if (self.tempFoodDataSource.count <= 4) {
+            NSLog(@"**********************************");
             return 4;
         }else{
              return self.tempFoodDataSource.count;
         }
-    }else if(self.categoryDataSource.count <= 4){
+    }else if(self.collectionDataSource.count <= 4){
         return 4;
     }else{
-        return self.categoryDataSource.count;
+        return self.collectionDataSource.count;
     }
 }
 //collectionView有几个section
@@ -354,6 +361,7 @@
         categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
         cell.kind.text = self.categoryArray[indexPath.row];
         cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
+        
         //为每一个Item添加长按事件
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressCellToEdit:)];
         longPress.minimumPressDuration = 0.75;
@@ -365,29 +373,38 @@
             cell.badgeBtn.hidden = NO;
             [cell.badgeBtn setTitle:[NSString stringWithFormat:@"%d",[self caculateCategoryNumber:cell.kind.text]] forState:UIControlStateNormal];
         }
+        if (categoryEdit){
+            cell.editbtn.hidden = NO;
+            cell.kind.userInteractionEnabled = YES;
+        }else{
+            cell.editbtn.hidden = YES;
+            cell.kind.userInteractionEnabled = NO;
+        }
         return cell;
     }else{
         long int index = indexPath.section*2+indexPath.row;
-        // 每次先从字典中根据IndexPath取出唯一标识符
-        NSString *identifier = [self.cellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
-         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
-        if (identifier == nil) {
-            identifier = [NSString stringWithFormat:@"%@%ld", foodItemID,index];
-            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
-        // 注册Cell
-            [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
-            }
-        NSLog(@"%ld",index);
-        foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+//        // 每次先从字典中根据IndexPath取出唯一标识符
+//        NSString *identifier = [self.cellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
+//         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+//        if (identifier == nil) {
+//            identifier = [NSString stringWithFormat:@"%@%ld", foodItemID,index];
+//            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
+//        // 注册Cell
+//            [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
+//            }
+//        NSLog(@"%ld",index);
+        foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:foodItemID forIndexPath:indexPath];
         if (isSelectCategory) {
-            if (self.tempFoodDataSource.count > 0) {
+            //选中种类的情况
+            if (index < self.tempFoodDataSource.count) {
                 NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                 [cell setModel:self.tempFoodDataSource[index]];
+            }else{
+                return cell;
             }
         }else if (index < self.collectionDataSource.count ) {
                 [cell setModel:self.collectionDataSource[index]];
-            NSLog(@"=========================================")
-            NSLog(@"%@",self.collectionDataSource[index]);
+            NSLog(@"=========================================");
         }
         return cell;
     }
@@ -396,19 +413,20 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView == self.categoryCollection) {
         isSelectCategory = true;
-           categoryCollectionViewCell *cell = (categoryCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
-        cell.editbtn.hidden = YES;
+        categoryCollectionViewCell *cell = (categoryCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
+        //cell.editbtn.hidden = YES;
+        //categoryEdit = false;
         if (![cell.kind.text isEqualToString:self.selectedCategoryCell.kind.text]) {
             NSLog(@"取消选中%@",self.selectedCategoryCell.kind.text);
             self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
-            self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:self.selectedCategoryCell.kind.text];
+            self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",cell.kind.text]];
         }
         cell.rootView.backgroundColor = [UIColor orangeColor];
         NSString *imgName = [NSString stringWithFormat:@"%@W",cell.kind.text];
-        cell.categoryPhoto.image = [UIImage imageNamed:imgName];
+        [cell.categoryPhoto setImage:[UIImage imageNamed:imgName]];
         
         self.selectedCategoryCell = cell;
-           NSLog(@"Selectd:%@",[NSString stringWithFormat:@"%@W",cell.kind.text]);
+           NSLog(@"Selectd:%@",imgName);
 
         [self selectFoodByCategory:self.selectedCategoryCell.kind.text];
         
@@ -430,7 +448,6 @@
     }else{
         
     }
-    
 }
 
 #pragma mark -- UIScrollerView
@@ -514,13 +531,18 @@
     for (FoodModel *model in self.collectionDataSource) {
         if ([category isEqualToString:model.category]) {
             [self.tempFoodDataSource addObject:model];
+            NSLog(@"%@",model);
         }
     }
-    [self.fooditemCollection reloadData];
-    [self.categoryCollection reloadData];
+    NSLog(@"---------------------%lu",(unsigned long)self.tempFoodDataSource.count);
+    [self CollectionReload];
 }
 #pragma mark - 响应事件
-
+- (void)cancelEdit{
+    categoryEdit = false;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.scanBtn];
+    [self.categoryCollection reloadData];
+}
 - (void)CollectionReload{
     [self.collectionDataSource removeAllObjects];
     [self.cellDictionary removeAllObjects];
@@ -563,8 +585,17 @@
 -  (void)longPressCellToEdit:(UILongPressGestureRecognizer *)longPress{
     categoryCollectionViewCell *cell = (categoryCollectionViewCell *)longPress.view;
     self.longprogressCell = cell;
-    self.longprogressCell.editbtn.hidden = NO;
-    cell.kind.userInteractionEnabled = YES;
+    categoryEdit = true;
+    [self.categoryCollection reloadData];
+    [cell.kind becomeFirstResponder];
+    //为退出按钮添加约束
+    [self.cancelBtn.widthAnchor constraintEqualToConstant:NavigationBarH*2].active = YES;
+    [self.cancelBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
+    [self.cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
+    [self.cancelBtn setTitleColor:FOSARed forState:UIControlStateNormal];
+    [self.cancelBtn addTarget:self action:@selector(cancelEdit) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.cancelBtn];
+    
 }
 //食物Item点击事件
 - (void)ClickFoodItem:(foodItemCollectionViewCell *)cell{
@@ -636,7 +667,7 @@
         RDate = [formatter stringFromDate:foodDate];
         foodDate = [formatter dateFromString:RDate];
         NSLog(@"---------------RDate:%@",RDate);
-        //比较提醒日期与今天的日期
+        //比较过期日期与今天的日期
         NSComparisonResult result = [currentDate compare:foodDate];
         if (result == NSOrderedDescending) { //foodDate 在 currentDate 之前
                 isSend = true;

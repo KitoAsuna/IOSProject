@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface foodItemCollectionViewCell : UICollectionViewCell
 @property (nonatomic,strong) UIImageView *foodImgView;
-@property (nonatomic,strong) UILabel  *foodNamelabel,*mouthLabel,*dayLabel;
+@property (nonatomic,strong) UILabel  *foodNamelabel,*mouthLabel,*dayLabel,*timelabel;
 @property (nonatomic,strong) UIButton *likebtn;
 @property (nonatomic,strong) UIView *line;
 @property (nonatomic,strong) FoodModel *model;

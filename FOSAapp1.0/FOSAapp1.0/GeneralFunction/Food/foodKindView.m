@@ -17,6 +17,7 @@
         self.kind = [[UILabel alloc]init];
         self.kind.textAlignment = NSTextAlignmentCenter;
         self.kind.textColor = [UIColor orangeColor];
+        self.kind.font = [UIFont systemFontOfSize:13];
         [self addSubview:self.kind];
         self.rootView = [[UIView alloc]init];
         [self addSubview:self.rootView];
@@ -30,7 +31,6 @@
     [super layoutSubviews];
     int width = self.bounds.size.width;
     int height = self.bounds.size.height;
-    
     
     self.kind.frame = CGRectMake(0, 0, width, height-width);
     self.kind.adjustsFontSizeToFitWidth = YES;

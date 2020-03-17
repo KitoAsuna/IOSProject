@@ -31,7 +31,7 @@
 @property (nonatomic, strong) UIButton *shutter;
 @property (nonatomic, strong) UIImageView *pictureView;
 @property (nonatomic, strong) UIButton *finishBtn;
-
+@property (nonatomic, strong) UIButton *flashBtn;
 //图片放大视图
 @property (nonatomic,strong) UIScrollView *backGround;
 @property (nonatomic,strong) UIImageView  *bigImage;
@@ -76,6 +76,12 @@
         maxZoomFactor = 20.0;
     }
     return maxZoomFactor;
+}
+- (UIButton *)flashBtn{
+    if (_flashBtn == nil) {
+        _flashBtn = [UIButton new];
+    }
+    return _flashBtn;
 }
 
 - (void)viewDidLoad {
@@ -137,6 +143,10 @@
 }
 - (void)initControlView{
     [self.view addSubview:self.controlerView];
+    self.flashBtn.frame = CGRectMake(screen_width/2-NavigationBarH/3, NavigationBarH/6, NavigationBarH*2/3, NavigationBarH*2/3);
+    [self.flashBtn setImage:[UIImage imageNamed:@"icon_flashG"] forState:UIControlStateNormal];
+    [self.flashBtn addTarget:self action:@selector(clickToFlash) forControlEvents:UIControlEventTouchUpInside];
+    [self.navigationController.navigationBar addSubview:self.flashBtn];
     //快门
     self.shutter = [[UIButton alloc]initWithFrame:CGRectMake(screen_width/2-screen_width*9/100, self.controlerView.frame.size.height/3-screen_width/10, screen_width/5, screen_width/5)];
     [self.controlerView addSubview:_shutter];
@@ -170,6 +180,19 @@
 - (void)clickToFinish{
     self.photoBlock(self.pictureView.image);
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+//打开闪光灯
+- (void)clickToFlash{
+    [self.device lockForConfiguration:nil];
+    if (self.device.torchMode == AVCaptureTorchModeOff) {
+        [self.device setTorchMode:AVCaptureTorchModeOn];
+        [self.flashBtn setImage:[UIImage imageNamed:@"icon_flashW"] forState:UIControlStateNormal];
+    }else{
+        [self.device setTorchMode:AVCaptureTorchModeOff];
+        [self.flashBtn setImage:[UIImage imageNamed:@"icon_flashG"] forState:UIControlStateNormal];
+    }
+    [self.device unlockForConfiguration];
 }
 
 //双指手势缩放
@@ -268,6 +291,7 @@
        //UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
 }
 
+
 - (void)image: (UIImage *) image didFinishSavingWithError: (NSError *) error contextInfo: (void *) contextInfo {
     NSString *msg = nil ;
     if(error != NULL){
@@ -345,6 +369,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated{
     [self.session stopRunning];
+    self.session = nil;
+    [self.flashBtn removeFromSuperview];
 }
 
 @end

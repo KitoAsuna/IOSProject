@@ -11,6 +11,7 @@
 #import "toturialViewController.h"
 #import "settingViewController.h"
 #import "languageViewController.h"
+#import "qrCodeWebViewController.h"
 
 @interface UserViewController ()<UITableViewDelegate,UITableViewDataSource>{
     NSArray *ItemLogoArray,*ItemArray;
@@ -54,6 +55,12 @@
         //_userItemTable = [[UITableView alloc]init];
     }
     return _userItemTable;
+}
+- (UIImageView *)qrCodeGenerateView{
+    if (_qrCodeGenerateView == nil) {
+        _qrCodeGenerateView = [UIImageView new];
+    }
+    return _qrCodeGenerateView;
 }
 
 - (void)viewDidLoad {
@@ -121,7 +128,16 @@
     self.userItemTable.layer.cornerRadius = 15;
     self.userItemTable.showsVerticalScrollIndicator = NO;
     [self.userItemTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
-    self.userItemTable.backgroundColor = [UIColor whiteColor];
+    self.userItemTable.backgroundColor = [UIColor redColor];
+    
+    self.qrCodeGenerateView.frame = CGRectMake(screen_width*5/66, CGRectGetMaxY(self.userItemTable.frame)+screen_height*3/143, screen_width*28/33, screen_width*14/33);
+    self.qrCodeGenerateView.image = [UIImage imageNamed:@"img_qrcodegenerator"];
+    
+    //UIGestureRecognizer 不适用
+    UITapGestureRecognizer *qrrecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumpToQrCodeGenerator:)];
+    self.qrCodeGenerateView.userInteractionEnabled = YES;
+    [self.qrCodeGenerateView addGestureRecognizer:qrrecognizer];
+    [self.view addSubview:self.qrCodeGenerateView];
 }
 
 //取出用户名和密码
@@ -177,6 +193,7 @@
     cell.imageView.image = [UIImage imageNamed:ItemLogoArray[row]];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.textLabel.text = ItemArray[row];
+    cell.textLabel.textColor = FOSAGray;
     //返回cell
     return cell;
 }
@@ -216,6 +233,12 @@
     [self.navigationController pushViewController:login animated:YES];
 }
 
+- (void)jumpToQrCodeGenerator:(UIGestureRecognizer *)sender{
+    NSLog(@"Click************");
+    qrCodeWebViewController *qrCodeGenerator = [qrCodeWebViewController new];
+    qrCodeGenerator.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:qrCodeGenerator animated:YES];
+}
 /**隐藏底部横条，点击屏幕可显示*/
 - (BOOL)prefersHomeIndicatorAutoHidden{
     return YES;

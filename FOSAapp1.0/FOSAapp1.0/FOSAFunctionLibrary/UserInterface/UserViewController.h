@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UIImageView *userIcon,*headerBackgroundImgView;
 @property (nonatomic,strong) UILabel *userName;
 @property (nonatomic,strong) UITableView *userItemTable;
+@property (nonatomic,strong) UIImageView *qrCodeGenerateView;
 
 @end
 
