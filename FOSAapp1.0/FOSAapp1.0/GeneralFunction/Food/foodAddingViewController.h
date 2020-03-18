@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UIView *footerView;
 @property (nonatomic,strong) UICollectionView *categoryCollection;
 @property (nonatomic,strong) NSMutableArray<NSString *> *cellDic;
+@property(nonatomic,strong) NSMutableArray<NSString *> *categoryNameArray;
 @property (nonatomic, strong) NSMutableDictionary *cellDictionary;
 @property (nonatomic,strong) UIButton *leftIndex,*rightIndex;
 
@@ -49,6 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UILabel *showFoodNameLabel;
 @property (nonatomic,strong) UIButton *editBtn,*shareBtn,*deleteBtn;
 @property (nonatomic,strong) foodKindView *foodCell;
+@property (nonatomic,strong) NSString *foodCategoryIconname;
 
 /**教学图片轮播*/
 @property (nonatomic,strong) UIScrollView *toturialPicturePlayer;

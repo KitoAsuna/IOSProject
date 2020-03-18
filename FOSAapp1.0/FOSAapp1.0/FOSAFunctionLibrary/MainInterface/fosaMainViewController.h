@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UIView *categoryView;
 @property (nonatomic,strong) UIButton *leftBtn,*rightBtn;
 @property (nonatomic,strong) UICollectionView *categoryCollection;
+@property (nonatomic,strong) NSMutableArray<NSString *> *categoryNameArray;
 @property (nonatomic,strong) NSMutableArray<NSString *> *cellDic;
 @property (nonatomic,strong) NSMutableDictionary *cellDictionary;
 @property (nonatomic,strong) NSMutableDictionary *categoryCellDictionary;
@@ -27,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong,nonatomic) NSMutableArray<NSString *> *categoryDataSource;
 @property (strong,nonatomic) NSMutableArray<FoodModel *> *collectionDataSource;
-@property (strong,nonatomic) NSMutableArray<FoodModel *> *tempFoodDataSource;
 
 
 @end

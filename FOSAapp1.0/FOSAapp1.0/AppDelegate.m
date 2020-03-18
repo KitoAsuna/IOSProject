@@ -132,7 +132,7 @@
     }
 }
 - (void)InsertCategory{
-     NSArray *array = @[@"Cereal",@"Fruit",@"Meat",@"Vegetable",@"Spice"];
+     NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie"];
     NSString *insertSql = @"insert into category(categoryName) values(?)";
     if ([db open]) {
         for (int i = 0; i < array.count; i++) {

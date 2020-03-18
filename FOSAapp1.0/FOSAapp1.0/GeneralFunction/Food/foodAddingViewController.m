@@ -294,6 +294,12 @@
     }
     return _cellDictionary;
 }
+- (NSMutableArray<NSString *> *)categoryNameArray{
+    if (_categoryNameArray == nil) {
+        _categoryNameArray = [NSMutableArray new];
+    }
+    return _categoryNameArray;
+}
 //食物信息展示视图相关
 - (UIButton *)editBtn{
     if (_editBtn == nil) {
@@ -544,6 +550,7 @@
 }
 
 - (void)creatFooterView{
+    [self getCategoryArray];
     //初始化种类数据
     NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie"];
     self.categoryArray = [[NSMutableArray alloc]initWithArray:array];
@@ -556,10 +563,13 @@
     self.leftIndex.frame = CGRectMake(screen_width/66, footerHeight*8/14, screen_width/18, screen_width/18);
     self.leftIndex.layer.cornerRadius = self.leftIndex.frame.size.width/2;
     [self.leftIndex setBackgroundImage:[UIImage imageNamed:@"icon_leftindex"] forState:UIControlStateNormal];
+    [self.leftIndex addTarget:self action:@selector(offsetToLeft) forControlEvents:UIControlEventTouchUpInside];
     [self.footerView addSubview:self.leftIndex];
+    
     self.rightIndex.frame = CGRectMake(screen_width*31/33, footerHeight*8/14, screen_width/18, screen_width/18);//
     self.rightIndex.layer.cornerRadius = self.rightIndex.frame.size.width/2;
     [self.rightIndex setBackgroundImage:[UIImage imageNamed:@"icon_rightindex"] forState:UIControlStateNormal];
+    [self.rightIndex addTarget:self action:@selector(offsetToRight) forControlEvents:UIControlEventTouchUpInside];
     [self.footerView addSubview:self.rightIndex];
     
     //食物种类选择栏 可滚动
@@ -607,7 +617,6 @@
 - (void)showFoodInfoInView{
     if ([self.foodStyle isEqualToString:@"Info"]) {
         //禁止界面互动
-        
         self.likeBtn.userInteractionEnabled = NO;
         self.foodTextView.userInteractionEnabled = NO;
         self.foodDescribedTextView.userInteractionEnabled = NO;
@@ -638,7 +647,7 @@
         self.foodDescribedTextView.text = self.model.aboutFood;
         self.locationTextView.text = self.model.location;
         self.foodCell.kind.text = self.model.category;
-        self.foodCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.model.category]];
+        self.foodCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.foodCategoryIconname]];
         
     }
 }
@@ -763,7 +772,7 @@
         [self.categoryCollection registerClass:[foodKindCollectionViewCell class] forCellWithReuseIdentifier:identifier];
         }
     foodKindCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-    cell.kind.text = self.categoryArray[indexPath.row];
+    cell.kind.text = self.categoryNameArray[indexPath.row];
     cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
     return cell;
 }
@@ -776,8 +785,8 @@
 //        self.selectedCategory.categoryPhoto.backgroundColor = [UIColor clearColor];
 //    }
     cell.rootView.backgroundColor = [UIColor orangeColor];
-    cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",cell.kind.text]];
-    selectCategory = cell.kind.text;
+    cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]]];
+    selectCategory = self.categoryArray[indexPath.row];
     self.selectedCategory = cell;
     NSLog(@"Selectd:%@",selectCategory);
 }
@@ -851,6 +860,13 @@
 }
 
 #pragma mark - 响应事件
+
+- (void)offsetToLeft{
+    [self.categoryCollection setContentOffset:CGPointMake(0, 0)];
+}
+- (void)offsetToRight{
+    [self.categoryCollection setContentOffset:CGPointMake(self.categoryCollection.frame.size.width, 0)];
+}
 
 - (void)selectToLike{
     if (self.likeBtn.tag == 0) {
@@ -1042,6 +1058,20 @@
         }
     }
 }
+//获取食品种类
+- (void)getCategoryArray{
+    [self OpenSqlDatabase:@"FOSA"];
+    NSString *selSql = @"select * from category";
+    FMResultSet *set = [self.db executeQuery:selSql];
+    [self.categoryNameArray removeAllObjects];
+    while ([set next]) {
+        NSString *kind = [set stringForColumn:@"categoryName"];
+        NSLog(@"%@",kind);
+        [self.categoryNameArray addObject:kind];
+    }
+    NSLog(@"所有种类:%@",self.categoryNameArray);
+}
+
 #pragma mark - 相片
 - (void)SavephotosInSanBox:(NSMutableArray *)images{
     NSLog(@"************%@",images);
@@ -1240,8 +1270,6 @@
         [self presentViewController:alert animated:true completion:nil];
     }
 }
-
-
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [self.db close];

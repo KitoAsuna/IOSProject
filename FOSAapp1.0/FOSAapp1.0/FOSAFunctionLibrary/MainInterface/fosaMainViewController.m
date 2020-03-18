@@ -16,7 +16,7 @@
 #import <UserNotifications/UserNotifications.h>
 
 
-@interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource>{
+@interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate>{
     NSString *categoryID;//种类cell
     NSString *foodItemID;//食物cell
     NSString *docPath;//数据库地址
@@ -140,11 +140,11 @@
     }
     return _categoryDataSource;
 }
-- (NSMutableArray<FoodModel *> *)tempFoodDataSource{
-    if (_tempFoodDataSource == nil) {
-        _tempFoodDataSource = [[NSMutableArray alloc]init];
+- (NSMutableArray<NSString *> *)categoryNameArray{
+    if (_categoryNameArray == nil) {
+        _categoryNameArray = [NSMutableArray new];
     }
-    return _tempFoodDataSource;
+    return _categoryNameArray;
 }
 - (NSMutableDictionary *)categoryCellDictionary{
     if (_categoryCellDictionary == nil) {
@@ -240,6 +240,9 @@
            [self.headerView addSubview:self.pageControl];
 }
 - (void)creatCategoryView{
+    //获取系统数据库中的食物种类
+    [self getCategoryArray];
+    
     isSelectCategory = false;
     self.categoryView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), screen_width, screen_height/9);
     //self.categoryView.backgroundColor = [UIColor yellowColor];
@@ -250,11 +253,13 @@
     self.leftBtn.frame = CGRectMake(0, 0, screen_width/20, screen_width/20);
     self.leftBtn.center = CGPointMake(categoryViewWidth/20, categoeyViewHeight/2);
     [self.leftBtn setImage:[UIImage imageNamed:@"icon_leftindexW"] forState:UIControlStateNormal];
+    [self.leftBtn addTarget:self action:@selector(offsetToLeft) forControlEvents:UIControlEventTouchUpInside];
     [self.categoryView addSubview:self.leftBtn];
     
     self.rightBtn.frame = CGRectMake(0, 0, screen_width/20, screen_width/20);
     self.rightBtn.center = CGPointMake(categoryViewWidth*19/20, categoeyViewHeight/2);
     [self.rightBtn setImage:[UIImage imageNamed:@"icon_rightindexW"] forState:UIControlStateNormal];
+    [self.rightBtn addTarget:self action:@selector(offsetToRight) forControlEvents:UIControlEventTouchUpInside];
     [self.categoryView addSubview:self.rightBtn];
     
     //初始化种类数据
@@ -355,7 +360,7 @@
             [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:identifier];
             }
         categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-        cell.kind.text = self.categoryArray[indexPath.row];
+        cell.kind.text = self.categoryNameArray[indexPath.row];
         cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
         
         //为每一个Item添加长按事件
@@ -371,6 +376,9 @@
         if (categoryEdit){
             cell.editbtn.hidden = NO;
             cell.kind.userInteractionEnabled = YES;
+            cell.kind.returnKeyType = UIReturnKeyDone;
+            cell.kind.tag = indexPath.row;
+            cell.kind.delegate = self;
         }else{
             cell.editbtn.hidden = YES;
             cell.kind.userInteractionEnabled = NO;
@@ -446,6 +454,14 @@
     self.pageControl.currentPage = index;
 }
 
+#pragma mark -- UItextFiledView
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    NSLog(@"%ld",(long)textField.tag);
+    [textField resignFirstResponder];
+    [self updateCategoryWithName:textField.text number:textField.tag];
+    return YES;
+}
+
 #pragma mark -- FMDB数据库操作
 
 - (void)OpenSqlDatabase:(NSString *)dataBaseName{
@@ -499,19 +515,31 @@
     [self.fooditemCollection reloadData];
     [self.db close];
 }
-- (NSMutableArray<NSString *> *)getCategoryArray{
+- (void)getCategoryArray{
     [self OpenSqlDatabase:@"FOSA"];
-    NSMutableArray<NSString *> *category = [[NSMutableArray alloc]init];
     NSString *selSql = @"select * from category";
     FMResultSet *set = [self.db executeQuery:selSql];
+    [self.categoryNameArray removeAllObjects];
     while ([set next]) {
         NSString *kind = [set stringForColumn:@"categoryName"];
         NSLog(@"%@",kind);
-        [category addObject:kind];
+        [self.categoryNameArray addObject:kind];
     }
-    NSLog(@"所有种类:%@",category);
-    [category addObject:@"Add"];
-    return category;
+    NSLog(@"所有种类:%@",self.categoryNameArray);
+}
+- (void)updateCategoryWithName:(NSString *)newCategory number:(NSInteger)num{
+    if ([self.db open]) {
+        NSString *updateSql = [NSString stringWithFormat:@"update category set categoryName = '%@' where categoryName = '%@'",newCategory,self.categoryNameArray[num]];
+        BOOL result = [self.db executeUpdate:updateSql];
+        if (result) {
+            NSLog(@"修改种类成功");
+        }
+        NSString *updateFoodSql = [NSString stringWithFormat:@"update FoodStorageInfo set category = '%@' where category = '%@'",newCategory,self.categoryNameArray[num]];
+        result = [self.db executeUpdate:updateFoodSql];
+        if (result) {
+            NSLog(@"修改食物项种类完成");
+        }
+    }
 }
 #pragma mark - 遍历食物数组
 - (int)caculateCategoryNumber:(NSString *)category{
@@ -528,9 +556,11 @@
 #pragma mark - 响应事件
 - (void)cancelEdit{
     categoryEdit = false;
+    [self getCategoryArray];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.scanBtn];
     [self.categoryCollection reloadData];
 }
+
 - (void)CollectionReload{
     [self.collectionDataSource removeAllObjects];
     [self.cellDictionary removeAllObjects];
@@ -586,12 +616,21 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.cancelBtn];
     
 }
+- (void)offsetToLeft{
+    [self.categoryCollection setContentOffset:CGPointMake(0, 0)];
+}
+- (void)offsetToRight{
+    [self.categoryCollection setContentOffset:CGPointMake(self.categoryCollection.frame.size.width, 0)];
+}
+
 //食物Item点击事件
 - (void)ClickFoodItem:(foodItemCollectionViewCell *)cell{
     foodAddingViewController *add = [foodAddingViewController new];
     add.foodStyle = @"Info";
     add.hidesBottomBarWhenPushed = YES;
     add.model = cell.model;
+    add.foodCategoryIconname = self.categoryArray[[self.categoryNameArray indexOfObject:cell.model.category]];
+    NSLog(@"<<<<<<<<<<<<<<<<<%@",add.foodCategoryIconname);
     [self.navigationController pushViewController:add animated:YES];
 }
 
