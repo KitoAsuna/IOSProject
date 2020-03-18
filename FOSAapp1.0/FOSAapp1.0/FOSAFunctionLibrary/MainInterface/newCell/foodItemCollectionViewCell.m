@@ -56,8 +56,8 @@
     self.foodNamelabel.frame = CGRectMake(width/30, height*5/6, width*3/5, height/10);
     
     self.dayLabel.frame = CGRectMake(width*2/3, height*4/5, width/6, height/5);
-    //self.dayLabel.adjustsFontSizeToFitWidth = YES;
-    self.dayLabel.font = [UIFont systemFontOfSize:30];
+    self.dayLabel.adjustsFontSizeToFitWidth = YES;
+    self.dayLabel.font = [UIFont systemFontOfSize:27];
     self.dayLabel.textColor = FOSAGray;
     
     self.timelabel.frame = CGRectMake(width*5/6, height*5/6, width/6, height/15);

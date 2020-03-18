@@ -159,6 +159,7 @@
     // Do any additional setup after loading the view.
     [self OpenSqlDatabase:@"FOSA"];
     [self SelectDataFromFoodTable];
+    
     [self creatNavigationButton];
     [self creatMainBackgroundPlayer];
     [self creatCategoryView];
@@ -315,7 +316,7 @@
      self.fooditemCollection.dataSource = self;
      self.fooditemCollection.showsVerticalScrollIndicator = NO;
      self.fooditemCollection.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
+    //[self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
      //self.foodItemCollection.bounces = NO;
      [self.foodItemView addSubview:self.fooditemCollection];
 }
@@ -325,17 +326,12 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (collectionView == self.categoryCollection) {
         return self.categoryArray.count;
-    }else if(isSelectCategory){
-        if (self.tempFoodDataSource.count <= 4) {
-            NSLog(@"**********************************");
+    }else{
+        if (self.collectionDataSource.count <= 4) {
             return 4;
         }else{
-             return self.tempFoodDataSource.count;
+            return self.collectionDataSource.count;
         }
-    }else if(self.collectionDataSource.count <= 4){
-        return 4;
-    }else{
-        return self.collectionDataSource.count;
     }
 }
 //collectionView有几个section
@@ -368,7 +364,6 @@
         [cell addGestureRecognizer:longPress];
         cell.userInteractionEnabled = YES;
         [cell addGestureRecognizer:longPress];
-        
         if ([self caculateCategoryNumber:cell.kind.text]>0) {
             cell.badgeBtn.hidden = NO;
             [cell.badgeBtn setTitle:[NSString stringWithFormat:@"%d",[self caculateCategoryNumber:cell.kind.text]] forState:UIControlStateNormal];
@@ -384,28 +379,23 @@
     }else{
         long int index = indexPath.section*2+indexPath.row;
 //        // 每次先从字典中根据IndexPath取出唯一标识符
-//        NSString *identifier = [self.cellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
-//         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
-//        if (identifier == nil) {
-//            identifier = [NSString stringWithFormat:@"%@%ld", foodItemID,index];
-//            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
-//        // 注册Cell
-//            [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
-//            }
-//        NSLog(@"%ld",index);
-        foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:foodItemID forIndexPath:indexPath];
-        if (isSelectCategory) {
-            //选中种类的情况
-            if (index < self.tempFoodDataSource.count) {
-                NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-                [cell setModel:self.tempFoodDataSource[index]];
-            }else{
-                return cell;
+        NSString *identifier = [self.cellDictionary objectForKey:[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
+         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+        if (identifier == nil) {
+            identifier = [NSString stringWithFormat:@"%@%@", foodItemID,[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
+            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
+        // 注册Cell
+            [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
             }
-        }else if (index < self.collectionDataSource.count ) {
+//        NSLog(@"%ld",index);
+        foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+        if (index < self.collectionDataSource.count ) {
                 [cell setModel:self.collectionDataSource[index]];
-            NSLog(@"=========================================");
+            NSLog(@"====================================%ld",index);
+        }else{
+            cell.likebtn.hidden = YES;
         }
+        NSLog(@">>>>>>>>>>>>>>>>>>食品名称：%@",cell.foodNamelabel.text);
         return cell;
     }
 }
@@ -428,8 +418,7 @@
         self.selectedCategoryCell = cell;
            NSLog(@"Selectd:%@",imgName);
 
-        [self selectFoodByCategory:self.selectedCategoryCell.kind.text];
-        
+        [self CollectionReload];
     }else if(collectionView == self.fooditemCollection){
            foodItemCollectionViewCell *cell = (foodItemCollectionViewCell *)[self.fooditemCollection cellForItemAtIndexPath:indexPath];
            if (cell.model.foodName != nil) {
@@ -475,11 +464,18 @@
     //[self.db close];
 }
 - (void)SelectDataFromFoodTable{
-
-    NSString *sql = @"select * from FoodStorageInfo";
+    [self.collectionDataSource removeAllObjects];
+    [self.cellDictionary removeAllObjects];
+    
+    NSString *sql ;//= @"select * from FoodStorageInfo where ";
+    if (isSelectCategory) {
+        sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where category = '%@'",self.selectedCategoryCell.kind.text];
+    }else{
+        sql = @"select * from FoodStorageInfo";
+    }
+    NSLog(@"#######################%@",sql);
     FMResultSet *set = [self.db executeQuery:sql];
     while ([set next]) {
-        //NSLog(@"===============================================================");
         NSString *foodName = [set stringForColumn:@"foodName"];
         NSString *device   = [set stringForColumn:@"device"];
         NSString *aboutFood = [set stringForColumn:@"aboutFood"];
@@ -490,16 +486,18 @@
         NSString *isLike   = [set stringForColumn:@"like"];
         FoodModel *model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category like:isLike];
         [self.collectionDataSource addObject:model];
-        NSLog(@"*********************************************");
-        NSLog(@"foodName    = %@",foodName);
-        NSLog(@"device      = %@",device);
-        NSLog(@"aboutFood   = %@",aboutFood);
-        NSLog(@"remindDate  = %@",storageDate);
-        NSLog(@"expireDate  = %@",expireDate);
-        NSLog(@"foodImg     = %@",foodImg);
-        NSLog(@"category    = %@",category);
-        NSLog(@"islike    = %@",isLike);
+        NSLog(@"*********************************************foodName    = %@",foodName);
+//        NSLog(@"device      = %@",device);
+//        NSLog(@"aboutFood   = %@",aboutFood);
+//        NSLog(@"remindDate  = %@",storageDate);
+//        NSLog(@"expireDate  = %@",expireDate);
+//        NSLog(@"foodImg     = %@",foodImg);
+//        NSLog(@"category    = %@",category);
+//        NSLog(@"islike    = %@",isLike);
     }
+    NSLog(@"数量：%lu",(unsigned long)self.collectionDataSource.count);
+    [self.fooditemCollection reloadData];
+    [self.db close];
 }
 - (NSMutableArray<NSString *> *)getCategoryArray{
     [self OpenSqlDatabase:@"FOSA"];
@@ -526,17 +524,7 @@
     return num;
 
 }
-- (void)selectFoodByCategory:(NSString *)category{
-    [self.tempFoodDataSource removeAllObjects];
-    for (FoodModel *model in self.collectionDataSource) {
-        if ([category isEqualToString:model.category]) {
-            [self.tempFoodDataSource addObject:model];
-            NSLog(@"%@",model);
-        }
-    }
-    NSLog(@"---------------------%lu",(unsigned long)self.tempFoodDataSource.count);
-    [self CollectionReload];
-}
+
 #pragma mark - 响应事件
 - (void)cancelEdit{
     categoryEdit = false;
@@ -547,12 +535,13 @@
     [self.collectionDataSource removeAllObjects];
     [self.cellDictionary removeAllObjects];
     [self.categoryCellDictionary removeAllObjects];
+    NSLog(@"------------------------------%lu",(unsigned long)self.collectionDataSource.count);
     
     [self OpenSqlDatabase:@"FOSA"];
     [self SelectDataFromFoodTable];
     
     [self.categoryCollection reloadData];
-    [self.fooditemCollection reloadData];
+    //[self.fooditemCollection reloadData];
 }
 
 - (void)selectToSort{
@@ -761,6 +750,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated{
     isUpdate = true;
+    isSelectCategory = false;
+    [self.db close];
     self.sortbtn.hidden = YES;
 }
 

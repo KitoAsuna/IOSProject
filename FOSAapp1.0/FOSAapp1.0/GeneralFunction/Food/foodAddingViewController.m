@@ -1006,7 +1006,7 @@
     }
 }
 - (void)CreatDataTable{
-    NSString *Sql = @"CREATE TABLE IF NOT EXISTS FoodStorageInfo(id integer PRIMARY KEY AUTOINCREMENT, foodName text NOT NULL, device text, aboutFood text,storageDate text NOT NULL,expireDate text NOT NULL,location text,foodImg text NOT NULL,category text,like text);";
+    NSString *Sql = @"CREATE TABLE IF NOT EXISTS FoodStorageInfo(id integer PRIMARY KEY AUTOINCREMENT, foodName text NOT NULL, device text, aboutFood text,storageDate text NOT NULL,expireDate text NOT NULL,location text,foodImg text NOT NULL,category text NOT NULL,like text);";
      
     BOOL categoryResult = [self.db executeUpdate:Sql];
     if(categoryResult)
@@ -1244,6 +1244,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    [self.db close];
     self.likeBtn.hidden = YES;
 }
 

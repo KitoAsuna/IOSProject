@@ -174,7 +174,6 @@
      cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;//cell的右边有一个小箭头，距离右边有十几像素；
      cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;//cell右边有一个蓝色的圆形button；
      cell.accessoryType = UITableViewCellAccessoryCheckmark;//cell右边的形状是对号;
-     
      cell.selectionStyle = UITableViewCellSelectionStyleNone;//无色
      cell.selectionStyle = UITableViewCellSelectionStyleBlue;//蓝色
      cell.selectionStyle = UITableViewCellSelectionStyleGray;//灰色
