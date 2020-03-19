@@ -916,14 +916,14 @@
     self.toturialPicturePlayer.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
             
     self.toturialPicturePlayer.bounces = NO;
-    self.toturialPicturePlayer.contentSize = CGSizeMake(screen_width*7, 0);
-    for (NSInteger i = 0; i < 7; i++) {
+    self.toturialPicturePlayer.contentSize = CGSizeMake(screen_width*15, 0);
+    for (NSInteger i = 0; i < 15; i++) {
         CGRect frame = CGRectMake(i*screen_width, 0, screen_width,screen_height);
         UIImageView *imageview = [[UIImageView alloc]initWithFrame:frame];
         imageview.userInteractionEnabled = YES;
         imageview.contentMode = UIViewContentModeScaleAspectFill;
         imageview.clipsToBounds = YES;
-        NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"img_tutorial",i+1];
+        NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"img_tutorial",i+2];
         imageview.image = [UIImage imageNamed:imgName];
         [self.toturialPicturePlayer addSubview:imageview];
     }
@@ -931,7 +931,7 @@
         //轮播页面指示器
     self.toturialPageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(screen_width*2/5, screen_height-30, screen_width/5, 20)];
     self.toturialPageControl.currentPage = 0;
-    self.toturialPageControl.numberOfPages = 7;
+    self.toturialPageControl.numberOfPages = 15;
     self.toturialPageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
     self.toturialPageControl.currentPageIndicatorTintColor = FOSAgreen;
     [self.view addSubview:self.toturialPageControl];
@@ -971,8 +971,8 @@
     scan.scanStyle = @"block";
     scan.resultBlock = ^(NSString * _Nonnull result) {
         self.storageDevice = result;
-        device = result;
-        NSLog(@"我获得了设备号：%@",device);
+        self->device = result;
+        NSLog(@"我获得了设备号：%@",self->device);
     };
     [self.navigationController pushViewController:scan animated:NO];
 }

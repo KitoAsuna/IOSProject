@@ -48,10 +48,10 @@
     self.toturialPicturePlayer.alwaysBounceVertical = NO;
             // 解决UIscrollerView在导航栏透明的情况下往下偏移的问题
     self.toturialPicturePlayer.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-            
+
     self.toturialPicturePlayer.bounces = NO;
-    self.toturialPicturePlayer.contentSize = CGSizeMake(screen_width*10, 0);
-    for (NSInteger i = 0; i < 10; i++) {
+    self.toturialPicturePlayer.contentSize = CGSizeMake(screen_width*18, 0);
+    for (NSInteger i = 0; i < 18; i++) {
         CGRect frame = CGRectMake(i*screen_width, 0, screen_width,screen_height);
         UIImageView *imageview = [[UIImageView alloc]initWithFrame:frame];
         imageview.userInteractionEnabled = YES;
@@ -62,10 +62,10 @@
         [self.toturialPicturePlayer addSubview:imageview];
     }
     [self.view addSubview:self.toturialPicturePlayer];
-        //轮播页面指示器
+    //轮播页面指示器
     self.toturialPageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(screen_width*2/5, screen_height-30, screen_width/5, 20)];
     self.toturialPageControl.currentPage = 0;
-    self.toturialPageControl.numberOfPages = 10;
+    self.toturialPageControl.numberOfPages = 18;
     self.toturialPageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
     self.toturialPageControl.currentPageIndicatorTintColor = FOSAgreen;
     [self.view addSubview:self.toturialPageControl];

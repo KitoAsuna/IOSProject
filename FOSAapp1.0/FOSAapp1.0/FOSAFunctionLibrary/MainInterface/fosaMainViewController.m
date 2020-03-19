@@ -616,9 +616,11 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.cancelBtn];
     
 }
+
 - (void)offsetToLeft{
     [self.categoryCollection setContentOffset:CGPointMake(0, 0)];
 }
+
 - (void)offsetToRight{
     [self.categoryCollection setContentOffset:CGPointMake(self.categoryCollection.frame.size.width, 0)];
 }
@@ -640,7 +642,6 @@
     scan.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:scan animated:YES];
 }
-
 
 - (void)refresh:(UIRefreshControl *)sender
 {

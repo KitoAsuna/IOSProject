@@ -98,8 +98,11 @@
     self.session = [AVCaptureSession new];
     [self.session setSessionPreset:AVCaptureSessionPresetHigh];
     
-    NSArray *devices = [NSArray new];
-    devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+//    NSArray *devices = [NSArray new];
+//    devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];过期方法
+    AVCaptureDeviceDiscoverySession *deviceSession = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:@[AVCaptureDeviceTypeBuiltInWideAngleCamera] mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
+    
+    NSArray *devices = deviceSession.devices;
     for (AVCaptureDevice *device in devices) {
         if (isBack) {
             if ([device position] == AVCaptureDevicePositionBack) {
