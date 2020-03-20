@@ -406,7 +406,7 @@
 }
 - (void)EnlargePhoto:(UITapGestureRecognizer *)sender{
     self.navigationController.navigationBar.hidden = YES;   //隐藏导航栏
-    [UIApplication sharedApplication].statusBarHidden = YES;             //隐藏状态栏
+    //[UIApplication sharedApplication].statusBarHidden = YES;             //隐藏状态栏
     [self.view endEditing:YES];
     //底层视图
     self.backGround = [[UIScrollView alloc]init];
@@ -1170,7 +1170,7 @@
 - (void)shirnkPhoto{
     [self.backGround removeFromSuperview];
     self.navigationController.navigationBar.hidden = NO;
-    [UIApplication sharedApplication].statusBarHidden = NO;
+    //[UIApplication sharedApplication].statusBarHidden = NO;
 }
 
 

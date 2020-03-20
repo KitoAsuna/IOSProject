@@ -57,7 +57,7 @@
 
 // 4.导航栏/工具栏/状态栏高度
 #define NavigationBarH 44
-#define StatusBarH [[UIApplication sharedApplication] statusBarFrame].size.height//顶部状态栏高度
+#define StatusBarH [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager.statusBarFrame.size.height//顶部状态栏高度
 #define ToolBarH (IS_IPHONE_X ? 83 : 49)//底部工具栏高度
 #define NoToolBarX (IS_IPHONE_X ? 34 : 0)//底部iPhoneX的适配高度
 #define NavgationH (IS_IPHONE_X ? 88 : 64)//顶部导航栏高度
@@ -114,7 +114,7 @@
 //判断手机型号为X
 #define is_IPHONEX [[UIScreen mainScreen] bounds].size.width == 375.0f &&([[UIScreen mainScreen] bounds].size.height == 812.0f)
 //获取状态栏的高度 iPhone X - 44pt 其他20pt
-#define StatusBarHeight [[UIApplication sharedApplication] statusBarFrame].size.height
+#define StatusBarHeight [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager.statusBarFrame.size.height
 //获取导航栏的高度 - （不包含状态栏高度） 44pt
 #define NavigationBarHeight self.navigationController.navigationBar.frame.size.height
 //屏幕底部 tabBar高度49pt + 安全视图高度34pt(iPhone X)
