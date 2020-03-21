@@ -22,12 +22,13 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    self.navigationController.title = @"Setting";
+    self.navigationItem.title = @"Setting";
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:128/255.0 green:128/255.0 blue:128/255.0 alpha:1.0],NSForegroundColorAttributeName, nil]];
 }
 - (void)creatTable{
     self.dataSource = [NSMutableArray new];
     [self.dataSource addObjectsFromArray:@[@"当天提醒",@"提前一天",@"提前两天"]];
-    self.settingTable = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, screen_width, screen_height/2) style:UITableViewStylePlain];
+    self.settingTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationHeight*1.5, screen_width, screen_height/2) style:UITableViewStylePlain];
     self.settingTable.delegate = self;
     self.settingTable.dataSource = self;
     self.settingTable.bounces = NO;

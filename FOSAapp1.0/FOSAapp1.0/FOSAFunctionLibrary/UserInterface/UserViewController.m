@@ -103,15 +103,15 @@
     self.headerBackgroundImgView.clipsToBounds = YES;
     [self.header addSubview:self.headerBackgroundImgView];
     
-    self.userIcon.frame = CGRectMake(20, headerHeight/4, headerWidth/4, headerWidth/4);
+    self.userIcon.frame = CGRectMake(headerWidth/15, headerHeight/4, headerWidth/5, headerWidth/5);
     self.userIcon.image = [UIImage imageNamed:@"icon_User"];
     [self.header addSubview:self.userIcon];
     
-    self.userName.frame = CGRectMake(20, headerHeight/2, headerWidth/2, headerWidth/4);
+    self.userName.frame = CGRectMake(0, headerHeight/2, headerWidth/3, headerWidth/4);
     self.userName.userInteractionEnabled = YES;
     //self.userName.layer.borderWidth = 0.5;
     self.userName.layer.cornerRadius = 5;
-    //self.userName.textAlignment = NSTextAlignmentCenter;
+    self.userName.textAlignment = NSTextAlignmentCenter;
     self.userName.font = [UIFont systemFontOfSize:20*(screen_width/414.0)];
     self.userName.textColor = [UIColor whiteColor];
     UITapGestureRecognizer *login = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(JUMP)];
@@ -128,7 +128,6 @@
     self.userItemTable.layer.cornerRadius = 15;
     self.userItemTable.showsVerticalScrollIndicator = NO;
     [self.userItemTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
-    self.userItemTable.backgroundColor = [UIColor redColor];
     
     self.qrCodeGenerateView.frame = CGRectMake(screen_width*5/66, CGRectGetMaxY(self.userItemTable.frame)+screen_height*3/143, screen_width*28/33, screen_width*14/33);
     self.qrCodeGenerateView.image = [UIImage imageNamed:@"img_qrcodegenerator"];
@@ -186,18 +185,20 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
      NSInteger row = indexPath.row;
-    //取消点击cell时显示的背景色
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    //取消点击cell时显示的背景
     cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
     cell.imageView.image = [UIImage imageNamed:ItemLogoArray[row]];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.textLabel.text = ItemArray[row];
     cell.textLabel.textColor = FOSAGray;
+    //添加选中效果
     //返回cell
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSInteger index = indexPath.row;
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     AboutAppsViewController *about = [AboutAppsViewController new];
     toturialViewController *tutorial = [toturialViewController new];
     languageViewController *language = [languageViewController new];
@@ -223,6 +224,11 @@
         default:
             break;
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.backgroundColor = [UIColor whiteColor];
 }
 - (void)JUMP{
     LoginViewController *login = [[LoginViewController alloc]init];

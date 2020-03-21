@@ -20,6 +20,7 @@
     NSString *docPath;
     NSInteger currentPictureIndex;//标识图片轮播器当前指向哪张图片
     NSString *device;
+    Boolean isEdit;
 }
 
 @property (nonatomic,weak)   FosaDatePickerView *fosaDatePicker;//日期选择器
@@ -415,7 +416,7 @@
     int storageHeight = self.storageView.frame.size.height;
     
     self.storageIcon.frame = CGRectMake(storageWidth/10, storageHeight/5, storageHeight*3/5, storageHeight*3/5);
-    [self.storageIcon setImage:[UIImage imageNamed:@"icon_remindW"] forState:UIControlStateNormal];//Background
+    [self.storageIcon setImage:[UIImage imageNamed:@"icon_expireW"] forState:UIControlStateNormal];//Background
     self.storageIcon.userInteractionEnabled = NO;
     [self.storageView addSubview:self.storageIcon];
     self.storageLabel.frame = CGRectMake(storageWidth/10+storageHeight*3/5, 0, storageWidth*9/10-storageHeight*3/5, storageHeight/3);
@@ -435,7 +436,7 @@
     
     NSLog(@"==========%@",currentDateStr);
     self.storageDateLabel.text = storageDate;
-    self.storageDateLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:20.0*(414.0/screen_width)];
+    self.storageDateLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18.0*(414.0/screen_width)];
     self.storageDateLabel.textColor = [UIColor whiteColor];
     [self.storageView addSubview:self.storageDateLabel];
     
@@ -448,7 +449,7 @@
     int expireHeight = self.expireView.frame.size.height;
     
     self.expireIcon.frame = CGRectMake(0, expireHeight/5, expireHeight*3/5, expireHeight*3/5);
-    [self.expireIcon setImage:[UIImage imageNamed:@"icon_expireW"] forState:UIControlStateNormal];
+    [self.expireIcon setImage:[UIImage imageNamed:@"icon_remindW"] forState:UIControlStateNormal];
     self.expireIcon.userInteractionEnabled = NO;
     [self.expireView addSubview:self.expireIcon];
     self.expireLabel.frame = CGRectMake(expireHeight*3/5, 0, expireWidth-expireHeight*3/5, expireHeight/3);
@@ -485,6 +486,7 @@
     [self.foodNameView addSubview:self.foodNameLabel];
     self.foodTextView.frame = CGRectMake(screen_width/22, contentHeight/8, screen_width*51/66, contentHeight/8);
     self.foodTextView.layer.cornerRadius = 5;
+    //self.foodTextView.
     [self.foodTextView setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.foodTextView.delegate = self;
     self.foodTextView.returnKeyType = UIReturnKeyDone;
@@ -502,7 +504,7 @@
         [self.scanBtn addTarget:self action:@selector(jumpToScan) forControlEvents:UIControlEventTouchUpInside];
         [self.foodNameView addSubview:self.scanBtn];
     }
-   
+
     //描述
     self.foodDescribedView.frame = CGRectMake(0, contentHeight/4, screen_width, contentHeight/2);
     [self.contentView addSubview:self.foodDescribedView];
@@ -518,18 +520,19 @@
     self.foodDescribedTextView.font = [UIFont systemFontOfSize:20*(screen_width/414.0)];
     self.foodDescribedTextView.delegate = self;
     self.foodDescribedTextView.returnKeyType = UIReturnKeyNext;
-    self.foodDescribedTextView.textContainerInset = UIEdgeInsetsMake(0, 5, 0, 0);//上、左、下、右
+    self.foodDescribedTextView.textContainerInset = UIEdgeInsetsMake(5, 5, 0, 0);//上、左、下、右
     [self.foodDescribedView addSubview:self.foodDescribedTextView];
     //输入字数提示
     int aboutFoodInputWidth = self.foodDescribedTextView.frame.size.width;
     int aboutFoodInputHeight = self.foodDescribedTextView.frame.size.height;
-    self.numberLabel.frame = CGRectMake(aboutFoodInputWidth*4/5, aboutFoodInputHeight*3/4, aboutFoodInputWidth/5, aboutFoodInputHeight/4);
-    self.numberLabel.font = [UIFont systemFontOfSize:20*(screen_width/414.0)];
+    self.numberLabel.frame = CGRectMake(aboutFoodInputWidth*5/6, aboutFoodInputHeight*5/6, aboutFoodInputWidth/6, aboutFoodInputHeight/6);
+    self.numberLabel.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
     if ((unsigned long)self.foodDescribedTextView.text.length > 80) {
         self.numberLabel.text = [NSString stringWithFormat:@"%d/80",80];
     }else{
         self.numberLabel.text = [NSString stringWithFormat:@"%lu/80",(unsigned long)self.foodDescribedTextView.text.length];
     }
+    NSLog(@"描述文字字数：%lu",(unsigned long)self.foodDescribedTextView.text.length);
     self.numberLabel.textColor = [UIColor grayColor];
     self.numberLabel.textAlignment = 2;
     [self.foodDescribedTextView addSubview:self.numberLabel];
@@ -602,8 +605,6 @@
         self.doneBtn.hidden = YES;
         self.foodCell = [[foodKindView alloc]initWithFrame:CGRectMake(0, 0, (screen_width*48/66)/5, footerHeight)];
         self.foodCell.center = self.categoryCollection.center;
-//        self.foodCell.kind.text = @"Bread";
-//        self.foodCell.categoryPhoto.image = [UIImage imageNamed:@"BreadW"];
         [self.footerView addSubview:self.foodCell];
         self.deleteBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.footerView.frame)+screen_height*3/143, screen_width/3, screen_height*6/143);
         self.deleteBtn.backgroundColor = [UIColor colorWithRed:255/255.0 green:45/255.0 blue:45/255.0 alpha:1];
@@ -649,6 +650,12 @@
         self.foodCell.kind.text = self.model.category;
         self.foodCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.foodCategoryIconname]];
         
+        //字数指示器
+        if ((unsigned long)self.foodDescribedTextView.text.length > 80) {
+            self.numberLabel.text = [NSString stringWithFormat:@"%d/80",80];
+        }else{
+            self.numberLabel.text = [NSString stringWithFormat:@"%lu/80",(unsigned long)self.foodDescribedTextView.text.length];
+        }
     }
 }
 
@@ -688,7 +695,7 @@
     }
         [self.headerView addSubview:self.picturePlayer];
             //轮播页面指示器
-        self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-30, headerWidth/5, 20)];
+        self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-10, headerWidth/5, 10)];
         self.pageControl.currentPage = 0;
         self.pageControl.numberOfPages = 3;
         self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
@@ -779,11 +786,7 @@
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     foodKindCollectionViewCell *cell = (foodKindCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
-//    if (![self.selectedCategory.kind.text isEqualToString:cell.kind.text]) {
-//        self.selectedCategory.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-//        self.selectedCategory.categoryPhoto.image = [UIImage imageNamed:selectCategory];
-//        self.selectedCategory.categoryPhoto.backgroundColor = [UIColor clearColor];
-//    }
+
     cell.rootView.backgroundColor = [UIColor orangeColor];
     cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]]];
     selectCategory = self.categoryArray[indexPath.row];
@@ -792,16 +795,9 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
-   // if (selectCategory != nil) {
         self.selectedCategory.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
         self.selectedCategory.categoryPhoto.image = [UIImage imageNamed:selectCategory];
         self.selectedCategory.categoryPhoto.backgroundColor = [UIColor clearColor];
-//    }else{
-//        foodKindCollectionViewCell *cell = (foodKindCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
-//        cell.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-//        cell.categoryPhoto.image = [UIImage imageNamed:selectCategory];
-//        cell.categoryPhoto.backgroundColor = [UIColor clearColor];
-//    }
 }
 
 #pragma mark - UITextViewDelegate,UITextFiledDelegate
@@ -880,6 +876,7 @@
     }
 }
 - (void)EditInfo{
+    isEdit = true;
     self.likeBtn.userInteractionEnabled = YES;
     self.foodTextView.userInteractionEnabled = YES;
     self.foodDescribedTextView.userInteractionEnabled = YES;
@@ -993,6 +990,8 @@
     [self CreatDataTable];
 }
 - (void)deleteFoodRecord{
+    //功能有待完善，添加点击放大图片的功能
+    
     [self DeleteRecord];
 }
 
@@ -1023,7 +1022,6 @@
 }
 - (void)CreatDataTable{
     NSString *Sql = @"CREATE TABLE IF NOT EXISTS FoodStorageInfo(id integer PRIMARY KEY AUTOINCREMENT, foodName text NOT NULL, device text, aboutFood text,storageDate text NOT NULL,expireDate text NOT NULL,location text,foodImg text NOT NULL,category text NOT NULL,like text);";
-     
     BOOL categoryResult = [self.db executeUpdate:Sql];
     if(categoryResult)
     {
@@ -1035,7 +1033,6 @@
 }
 
 - (void)InsertDataIntoFoodTable{
-    
     NSString *insertSql = @"insert into FoodStorageInfo(foodName,device,aboutFood,storageDate,expireDate,location,foodImg,category,like) values(?,?,?,?,?,?,?,?,?)";
     if ([self.foodTextView.text isEqualToString:@""]) {
         [self SystemAlert:@"Please input the name of your food!"];
@@ -1117,7 +1114,9 @@
                     [self deleteFile:photoName];
                 }
             }
-            [self SystemAlert:@"delete data successfully"];
+            if (!isEdit) {
+                [self SystemAlert:@"delete data successfully"];
+            }
         }else{
             NSLog(@"Fail to delete");
         }
@@ -1236,28 +1235,10 @@
     return [UIImage imageWithCIImage:image];
 }
 
-//- (void)SaveShareinfo{
-//    [self OpenSqlDatabase:@"FOSA"];
-//
-//}
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:message preferredStyle:UIAlertControllerStyleAlert];
-    if ([message isEqualToString:@"Please input the name of your food!"] || [message isEqualToString:@"Expire Date can‘t be null"]||[message isEqualToString:@"Please select a category for your food"]) {
-         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
-        [self presentViewController:alert animated:true completion:nil];
-    }else if([message isEqualToString:@"Error"]){
-         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
-        [self presentViewController:alert animated:true completion:nil];
-    }else if([message isEqualToString:@"Food record missing,added or not"]){
-        [alert addAction:[UIAlertAction actionWithTitle:@"YES" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            //[self SaveShareinfo];
-        }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            //不添加
-        }]];
-        [self presentViewController:alert animated:true completion:nil];
-    }else{
+    if ([message isEqualToString:@"Saving Data succeffully"] || [message isEqualToString:@"delete data successfully"]) {
         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             NSLog(@"保存成功");
             if ([self.foodStyle isEqualToString:@"Info"]) {
@@ -1267,6 +1248,9 @@
             }
             
         }]];
+        [self presentViewController:alert animated:true completion:nil];
+    }else{
+        [alert addAction:[UIAlertAction actionWithTitle:@"Get It" style:UIAlertActionStyleDefault handler:nil]];
         [self presentViewController:alert animated:true completion:nil];
     }
 }

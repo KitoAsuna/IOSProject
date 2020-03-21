@@ -14,7 +14,6 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
         self.kind = [[UITextField alloc]init];
         self.kind.textAlignment = NSTextAlignmentCenter;
         self.kind.textColor = [UIColor grayColor];

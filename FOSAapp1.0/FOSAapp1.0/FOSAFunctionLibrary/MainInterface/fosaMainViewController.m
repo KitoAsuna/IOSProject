@@ -167,14 +167,16 @@
     [self showUsingTips];
     
 }
-
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.sortbtn.hidden = NO;
+    isSelectCategory = NO;
+    self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
     if (isUpdate) {
            NSLog(@"异步刷新界面");
            dispatch_async(dispatch_get_main_queue(), ^{
                [self CollectionReload];
+               [self categoryReLoad];
            });
        }
 }
@@ -197,15 +199,12 @@
     [self.scanBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.scanBtn];
     [self.scanBtn addTarget:self action:@selector(clickToScan) forControlEvents:UIControlEventTouchUpInside];
-
 }
 
 - (void)creatMainBackgroundPlayer{
     isUpdate = false;
     self.headerView.frame = CGRectMake(0, NavigationHeight, screen_width, screen_width/3);
     [self.view addSubview:self.headerView];
-    self.headerView.backgroundColor = FOSAgreen;
-
     //背景轮播
     int headerWidth  = self.headerView.frame.size.width;
     int headerHeight = self.headerView.frame.size.height;
@@ -232,7 +231,7 @@
         }
            [self.headerView addSubview:self.mainBackgroundImgPlayer];
             //轮播页面指示器
-           self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-30, headerWidth/5, 20)];
+           self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-10, headerWidth/5, 10)];
            self.pageControl.currentPage = 0;
            self.pageControl.numberOfPages = 3;
            self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
@@ -252,13 +251,13 @@
     
     self.leftBtn.frame = CGRectMake(0, 0, screen_width/20, screen_width/20);
     self.leftBtn.center = CGPointMake(categoryViewWidth/20, categoeyViewHeight/2);
-    [self.leftBtn setImage:[UIImage imageNamed:@"icon_leftindexW"] forState:UIControlStateNormal];
+    [self.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon_leftindexW"] forState:UIControlStateNormal];
     [self.leftBtn addTarget:self action:@selector(offsetToLeft) forControlEvents:UIControlEventTouchUpInside];
     [self.categoryView addSubview:self.leftBtn];
     
     self.rightBtn.frame = CGRectMake(0, 0, screen_width/20, screen_width/20);
     self.rightBtn.center = CGPointMake(categoryViewWidth*19/20, categoeyViewHeight/2);
-    [self.rightBtn setImage:[UIImage imageNamed:@"icon_rightindexW"] forState:UIControlStateNormal];
+    [self.rightBtn setBackgroundImage:[UIImage imageNamed:@"icon_rightindexW"] forState:UIControlStateNormal];
     [self.rightBtn addTarget:self action:@selector(offsetToRight) forControlEvents:UIControlEventTouchUpInside];
     [self.categoryView addSubview:self.rightBtn];
     
@@ -288,13 +287,13 @@
     
     self.foodItemView.frame = CGRectMake(0, CGRectGetMaxY(self.categoryView.frame), screen_width, screen_height-CGRectGetMaxY(self.categoryView.frame)-TabbarHeight);
     [self.view addSubview:self.foodItemView];
-    self.foodItemView.backgroundColor = [UIColor yellowColor];
+    //self.foodItemView.backgroundColor = [UIColor yellowColor];
     int collectionWidth = self.foodItemView.frame.size.width;
     int collectionHeight = self.foodItemView.frame.size.height;
     
     UICollectionViewFlowLayout *fosaFlowLayout = [[UICollectionViewFlowLayout alloc] init];
-    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(5, 10, 5, 10);//上、左、下、右
-    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-30)/2,(collectionHeight-50)/2);
+    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(5, 5, 5, 5);//上、左、下、右
+    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-20)/2,(collectionHeight-40)/2);
     //固定的itemsize
     fosaFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;//滑动的方向 垂直
     
@@ -372,6 +371,8 @@
         if ([self caculateCategoryNumber:cell.kind.text]>0) {
             cell.badgeBtn.hidden = NO;
             [cell.badgeBtn setTitle:[NSString stringWithFormat:@"%d",[self caculateCategoryNumber:cell.kind.text]] forState:UIControlStateNormal];
+        }else{
+            cell.badgeBtn.hidden = YES;
         }
         if (categoryEdit){
             cell.editbtn.hidden = NO;
@@ -386,7 +387,7 @@
         return cell;
     }else{
         long int index = indexPath.section*2+indexPath.row;
-//        // 每次先从字典中根据IndexPath取出唯一标识符
+        // 每次先从字典中根据IndexPath取出唯一标识符
         NSString *identifier = [self.cellDictionary objectForKey:[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
          // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
         if (identifier == nil) {
@@ -412,18 +413,18 @@
     if (collectionView == self.categoryCollection) {
         isSelectCategory = true;
         categoryCollectionViewCell *cell = (categoryCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
-        //cell.editbtn.hidden = YES;
-        //categoryEdit = false;
+
         if (![cell.kind.text isEqualToString:self.selectedCategoryCell.kind.text]) {
             NSLog(@"取消选中%@",self.selectedCategoryCell.kind.text);
             self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
-            self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",cell.kind.text]];
+            self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",self.selectedCategoryCell.accessibilityValue]];
         }
         cell.rootView.backgroundColor = [UIColor orangeColor];
-        NSString *imgName = [NSString stringWithFormat:@"%@W",cell.kind.text];
-        [cell.categoryPhoto setImage:[UIImage imageNamed:imgName]];
+        NSString *imgName = [NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]];
+        cell.categoryPhoto.image = [UIImage imageNamed:imgName];
         
         self.selectedCategoryCell = cell;
+        self.selectedCategoryCell.accessibilityValue = self.categoryArray[indexPath.row];
            NSLog(@"Selectd:%@",imgName);
 
         [self CollectionReload];
@@ -441,7 +442,7 @@
 //        categoryCollectionViewCell *cell = (categoryCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
         NSLog(@"取消选中%@",self.selectedCategoryCell.kind.text);
         self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
-        self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:self.selectedCategoryCell.kind.text];
+        self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:self.selectedCategoryCell.accessibilityValue];
     }else{
         
     }
@@ -564,14 +565,14 @@
 - (void)CollectionReload{
     [self.collectionDataSource removeAllObjects];
     [self.cellDictionary removeAllObjects];
-    [self.categoryCellDictionary removeAllObjects];
     NSLog(@"------------------------------%lu",(unsigned long)self.collectionDataSource.count);
-    
     [self OpenSqlDatabase:@"FOSA"];
     [self SelectDataFromFoodTable];
-    
+    [self.fooditemCollection reloadData];
+}
+- (void)categoryReLoad{
+    [self.categoryCellDictionary removeAllObjects];
     [self.categoryCollection reloadData];
-    //[self.fooditemCollection reloadData];
 }
 
 - (void)selectToSort{
@@ -614,7 +615,6 @@
     [self.cancelBtn setTitleColor:FOSARed forState:UIControlStateNormal];
     [self.cancelBtn addTarget:self action:@selector(cancelEdit) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.cancelBtn];
-    
 }
 
 - (void)offsetToLeft{

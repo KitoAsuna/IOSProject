@@ -48,14 +48,16 @@
     self.versionTitleLable.frame = CGRectMake(screen_width/3, screen_height/6+screen_width/5, screen_width/3, 40);
     self.versionTitleLable.text = @"Version";
     self.versionTitleLable.font = [UIFont systemFontOfSize:25*(screen_width/414)];
-    self.versionTitleLable.backgroundColor = [UIColor whiteColor];
+    self.versionTitleLable.textColor = [UIColor blackColor];
+    //self.versionTitleLable.backgroundColor = [UIColor whiteColor];
     self.versionTitleLable.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.versionTitleLable];
     
     self.versionLable.frame = CGRectMake(screen_width/3, screen_height/6+screen_width/5+40, screen_width/3, 40);
     self.versionLable.text  = @"Version 1.0.0";
     self.versionLable.font  = [UIFont systemFontOfSize:20*(screen_width/414)];
-    self.versionLable.backgroundColor = [UIColor whiteColor];
+    self.versionLable.textColor = [UIColor redColor];
+    //self.versionLable.backgroundColor = [UIColor whiteColor];
     self.versionLable.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.versionLable];
 }
