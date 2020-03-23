@@ -45,19 +45,18 @@
     }
     return self;
 }
+
 - (void)layoutSubviews{
     [super layoutSubviews];
     int width = self.bounds.size.width;
     int height = self.bounds.size.height;
-   
     self.foodImgView.frame = CGRectMake(0, 0, width, width*9/10);
-    self.foodImgView.backgroundColor = FOSAgreen;
     self.likebtn.frame = CGRectMake(width/30, width*3/4, width/8, width/8);
     self.foodNamelabel.frame = CGRectMake(width/30, height*5/6, width*3/5, height/10);
     
     self.dayLabel.frame = CGRectMake(width*2/3, height*4/5, width/6, height/5);
     self.dayLabel.adjustsFontSizeToFitWidth = YES;
-    self.dayLabel.font = [UIFont systemFontOfSize:27];
+    self.dayLabel.font = [UIFont systemFontOfSize:30];
     self.dayLabel.textColor = FOSAGray;
     
     self.timelabel.frame = CGRectMake(width*5/6, height*5/6, width/6, height/15);
@@ -84,7 +83,7 @@
         [self.likebtn setImage:[UIImage imageNamed:@"icon_likeHL"] forState:UIControlStateNormal];
     }
     self.foodNamelabel.text = model.foodName;
-    timeArray = [model.storageDate componentsSeparatedByString:@"/"];
+    timeArray = [model.expireDate componentsSeparatedByString:@"/"];
     self.dayLabel.text = timeArray[0];
     self.mouthLabel.text = timeArray[1];
     self.timelabel.text = timeArray[3];

@@ -63,7 +63,7 @@
         self.window.rootViewController = self.root;
         //显示window
         [self.window makeKeyAndVisible];
-        [NSThread sleepForTimeInterval:1.5];
+        [NSThread sleepForTimeInterval:1];
     }
     NSLog(@"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
     return YES;

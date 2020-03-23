@@ -41,22 +41,16 @@
 
 - (void)CreatView{
     self.view.backgroundColor = [UIColor whiteColor];
-    self.logo.frame = CGRectMake(screen_width*2/5, screen_height/6, screen_width/5, screen_width/5);
+    self.logo.frame = CGRectMake(screen_width*3/8, screen_height/6, screen_width/3, screen_width/3);
+    self.logo.center = CGPointMake(self.view.center.x, self.view.center.y-screen_width/4);
     self.logo.image = [UIImage imageNamed:@"icon_FOSAlogoHL"];
     [self.view addSubview:self.logo];
     
-    self.versionTitleLable.frame = CGRectMake(screen_width/3, screen_height/6+screen_width/5, screen_width/3, 40);
-    self.versionTitleLable.text = @"Version";
-    self.versionTitleLable.font = [UIFont systemFontOfSize:25*(screen_width/414)];
-    self.versionTitleLable.textColor = [UIColor blackColor];
-    //self.versionTitleLable.backgroundColor = [UIColor whiteColor];
-    self.versionTitleLable.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:self.versionTitleLable];
     
-    self.versionLable.frame = CGRectMake(screen_width/3, screen_height/6+screen_width/5+40, screen_width/3, 40);
-    self.versionLable.text  = @"Version 1.0.0";
+    self.versionLable.frame = CGRectMake(0, CGRectGetMaxY(self.logo.frame)+10, screen_width, 40);
+    self.versionLable.text  = @"Current Version 1.0.0";
     self.versionLable.font  = [UIFont systemFontOfSize:20*(screen_width/414)];
-    self.versionLable.textColor = [UIColor redColor];
+    self.versionLable.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0];
     //self.versionLable.backgroundColor = [UIColor whiteColor];
     self.versionLable.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.versionLable];

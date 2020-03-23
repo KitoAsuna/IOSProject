@@ -17,25 +17,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     self.navigationItem.title = @"Language";
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:128/255.0 green:128/255.0 blue:128/255.0 alpha:1.0],NSForegroundColorAttributeName, nil]];
+    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0],NSForegroundColorAttributeName, nil]];
     [self creatLanguageTable];
 }
 - (void)viewWillAppear:(BOOL)animated{
+    //UIStatusBarManager *statusBarManager = [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager;
     [super viewWillAppear:animated];
 }
 - (void)creatLanguageTable{
     self.dataSource = [NSMutableArray new];
     [self.dataSource addObjectsFromArray:@[@"简体中文",@"繁体中文",@"English"]];
-    self.languageTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationHeight*1.5, screen_width, screen_height/2) style:UITableViewStylePlain];
+    self.languageTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationHeight*1.5, screen_width, screen_height/5) style:UITableViewStylePlain];
     self.languageTable.delegate = self;
     self.languageTable.dataSource = self;
     self.languageTable.bounces = NO;
     self.languageTable.layer.cornerRadius = 15;
     self.languageTable.showsVerticalScrollIndicator = NO;
     [self.languageTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
-    self.languageTable.backgroundColor = [UIColor whiteColor];
+    self.languageTable.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     [self.view addSubview:self.languageTable];
     
     [self.languageTable reloadData];
@@ -78,6 +80,8 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
     cell.textLabel.text = self.dataSource[row];
+    cell.textLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
+    cell.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     //返回cell
     return cell;
 }

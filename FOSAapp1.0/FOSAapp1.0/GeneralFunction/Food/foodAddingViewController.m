@@ -479,13 +479,14 @@
     self.foodNameView.frame = CGRectMake(0, 0, screen_width, contentHeight*11/42);
     [self.contentView addSubview:self.foodNameView];
 
-    self.foodNameLabel.frame = CGRectMake(screen_width*5/66, contentHeight/16, screen_width/3, contentHeight/16);
+    self.foodNameLabel.frame = CGRectMake(screen_width*5/66, contentHeight/18, screen_width/3, contentHeight/16);
     self.foodNameLabel.text = @"Name";
-    self.foodNameLabel.font = [UIFont systemFontOfSize:13];
+    self.foodNameLabel.font = [UIFont systemFontOfSize:15];
     self.foodNameLabel.textColor = [UIColor grayColor];
     [self.foodNameView addSubview:self.foodNameLabel];
     self.foodTextView.frame = CGRectMake(screen_width/22, contentHeight/8, screen_width*51/66, contentHeight/8);
     self.foodTextView.layer.cornerRadius = 5;
+    self.foodTextView.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
     //self.foodTextView.
     [self.foodTextView setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.foodTextView.delegate = self;
@@ -505,19 +506,22 @@
         [self.foodNameView addSubview:self.scanBtn];
     }
 
+    /**
+                提示与文字上下一致
+     */
     //描述
     self.foodDescribedView.frame = CGRectMake(0, contentHeight/4, screen_width, contentHeight/2);
     [self.contentView addSubview:self.foodDescribedView];
-    self.foodDescribedLabel.frame = CGRectMake(screen_width*5/66, contentHeight/16, screen_width/3, contentHeight/16);
+    self.foodDescribedLabel.frame = CGRectMake(screen_width*5/66, contentHeight/18, screen_width/3, contentHeight/16);
     self.foodDescribedLabel.text = @"Description";
-    self.foodDescribedLabel.font = [UIFont systemFontOfSize:13];
+    self.foodDescribedLabel.font = [UIFont systemFontOfSize:15];
     self.foodDescribedLabel.textColor = [UIColor grayColor];
     [self.foodDescribedView addSubview:self.foodDescribedLabel];
     self.foodDescribedTextView.frame = CGRectMake(screen_width/22, contentHeight/8, screen_width*9/10, contentHeight*3/8);
     self.foodDescribedTextView.layer.cornerRadius = 5;
     self.foodDescribedTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    self.foodDescribedTextView.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
-    self.foodDescribedTextView.font = [UIFont systemFontOfSize:20*(screen_width/414.0)];
+    self.foodDescribedTextView.textColor = [UIColor blackColor];
+    self.foodDescribedTextView.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
     self.foodDescribedTextView.delegate = self;
     self.foodDescribedTextView.returnKeyType = UIReturnKeyNext;
     self.foodDescribedTextView.textContainerInset = UIEdgeInsetsMake(5, 5, 0, 0);//上、左、下、右
@@ -525,8 +529,8 @@
     //输入字数提示
     int aboutFoodInputWidth = self.foodDescribedTextView.frame.size.width;
     int aboutFoodInputHeight = self.foodDescribedTextView.frame.size.height;
-    self.numberLabel.frame = CGRectMake(aboutFoodInputWidth*5/6, aboutFoodInputHeight*5/6, aboutFoodInputWidth/6, aboutFoodInputHeight/6);
-    self.numberLabel.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
+    self.numberLabel.frame = CGRectMake(aboutFoodInputWidth*5/6-10, aboutFoodInputHeight*5/6-5, aboutFoodInputWidth/6, aboutFoodInputHeight/6);
+    self.numberLabel.font = [UIFont systemFontOfSize:13*(screen_width/414.0)];
     if ((unsigned long)self.foodDescribedTextView.text.length > 80) {
         self.numberLabel.text = [NSString stringWithFormat:@"%d/80",80];
     }else{
@@ -539,9 +543,9 @@
     
     self.locationView.frame = CGRectMake(0, contentHeight*3/4, screen_width, contentHeight/4);
     [self.contentView addSubview:self.locationView];
-    self.locationLabel.frame = CGRectMake(screen_width/12, contentHeight/16, screen_width/3, contentHeight/16);
+    self.locationLabel.frame = CGRectMake(screen_width/12, contentHeight/18, screen_width/3, contentHeight/16);
     self.locationLabel.text = @"Location";
-    self.locationLabel.font = [UIFont systemFontOfSize:13];
+    self.locationLabel.font = [UIFont systemFontOfSize:15];
     self.locationLabel.textColor = [UIColor grayColor];
     [self.locationView addSubview:self.locationLabel];
     self.locationTextView.frame = CGRectMake(screen_width/20, contentHeight/8, screen_width*9/10, contentHeight/8);
@@ -695,7 +699,7 @@
     }
         [self.headerView addSubview:self.picturePlayer];
             //轮播页面指示器
-        self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-10, headerWidth/5, 10)];
+        self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-15, headerWidth/5, 10)];
         self.pageControl.currentPage = 0;
         self.pageControl.numberOfPages = 3;
         self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;

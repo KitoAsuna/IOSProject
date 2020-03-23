@@ -17,25 +17,26 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];;
     [self creatTable];
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationItem.title = @"Setting";
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:128/255.0 green:128/255.0 blue:128/255.0 alpha:1.0],NSForegroundColorAttributeName, nil]];
+    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0],NSForegroundColorAttributeName, nil]];
 }
 - (void)creatTable{
     self.dataSource = [NSMutableArray new];
     [self.dataSource addObjectsFromArray:@[@"当天提醒",@"提前一天",@"提前两天"]];
-    self.settingTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationHeight*1.5, screen_width, screen_height/2) style:UITableViewStylePlain];
+    self.settingTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationHeight*1.5, screen_width, screen_height/5) style:UITableViewStylePlain];
     self.settingTable.delegate = self;
     self.settingTable.dataSource = self;
     self.settingTable.bounces = NO;
     self.settingTable.layer.cornerRadius = 15;
     self.settingTable.showsVerticalScrollIndicator = NO;
     [self.settingTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
-    self.settingTable.backgroundColor = [UIColor whiteColor];
+    self.settingTable.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];;
     [self.view addSubview:self.settingTable];
     
     [self.settingTable reloadData];
@@ -53,7 +54,6 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 1;
 }
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     /**
      cell.accessoryType = UITableViewCellAccessoryNone;//cell没有任何的样式
@@ -76,7 +76,9 @@
     //取消点击cell时显示的背景色
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
+    cell.textLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     //cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    cell.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
 
     cell.textLabel.text = self.dataSource[row];
     //返回cell

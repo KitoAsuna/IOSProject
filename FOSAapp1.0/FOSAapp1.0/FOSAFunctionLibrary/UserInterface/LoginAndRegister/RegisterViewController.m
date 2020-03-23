@@ -105,6 +105,14 @@
     }
     return _signUp;
 }
+
+- (UILabel *)failTips{
+    if (_failTips == nil) {
+        _failTips = [UILabel new];
+    }
+    return _failTips;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -138,7 +146,7 @@
     self.userNameInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
     self.userNameInput.placeholder = @"    Phone Number/email";
     self.userNameInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
-    [self.userNameInput setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
+    [self.userNameInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.userNameInput.returnKeyType = UIReturnKeyDone;
     self.userNameInput.delegate = self;
     self.userNameInput.layer.cornerRadius = self.userNameInput.frame.size.height/3;
@@ -160,33 +168,35 @@
     NSMutableAttributedString * underAttr = [[NSMutableAttributedString alloc] initWithString:@"Get SMS code" attributes:underAttribtDic];
     
     self.verificationLabel.attributedText = underAttr;
+    self.verificationLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     [self.verificationView addSubview:self.verificationLabel];
     
     self.passwordInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
     self.passwordInput.placeholder = @"    Password";
-    [self.passwordInput setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
+    [self.passwordInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.passwordInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     self.passwordInput.returnKeyType = UIReturnKeyDone;
     self.passwordInput.delegate = self;
     self.passwordInput.layer.cornerRadius = self.passwordInput.frame.size.height/3;
     [self.passwordContainer addSubview:self.passwordInput];
-    
+
     self.remember.frame = CGRectMake(screen_width/12, screen_width+screen_height/5, 51.0, 40);
     [self.remember addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.remember];
     self.rememberLabel.frame = CGRectMake(screen_width/12+60, screen_width+screen_height/4, screen_width/2, 40);
     [self.view addSubview:self.rememberLabel];
-    
+
     self.signUp.frame = CGRectMake(self.LoginContainer.frame.size.width*5/18, 0, self.LoginContainer.bounds.size.width*4/9, self.LoginContainer.frame.size.height);
     [self.signUp setTitle:@"Sign Up" forState:UIControlStateNormal];
     [self.signUp setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.signUp.backgroundColor = FOSAgreen;
+
     self.signUp.layer.cornerRadius = self.signUp.frame.size.height/2;
     self.signUp.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.signUp.titleLabel.font = [UIFont systemFontOfSize:25];
     [self.signUp addTarget:self action:@selector(SignUpEvent) forControlEvents:UIControlEventTouchUpInside];
     [self.LoginContainer addSubview:self.signUp];
-    
+
 }
 //注册按钮事件
 - (void)SignUpEvent{
@@ -196,6 +206,7 @@
         [self CreatSqlDatabase:@"FOSA"];
     }
 }
+
 //记住用户名和密码
 -(void)switchAction:(id)sender
 {
@@ -221,11 +232,7 @@ if (isButtonOn) {
         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
         [self presentViewController:alert animated:true completion:nil];
     }else{
-        [alert addAction:[UIAlertAction actionWithTitle:@"返回登录" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
-            //点击回调
-            [self.navigationController popViewControllerAnimated:YES];
-        }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
         [self presentViewController:alert animated:true completion:nil];
     }
 }

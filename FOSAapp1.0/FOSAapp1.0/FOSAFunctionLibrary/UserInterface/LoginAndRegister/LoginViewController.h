@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong,nonatomic) UISwitch *remember;
 @property (strong,nonatomic) UILabel *rememberLabel,*forgetPassword;
 @property (strong,nonatomic) UIButton *login,*signUp,*checkPassword;
+
+@property (strong,nonatomic) UILabel *failTips;
+
 @end
 
 NS_ASSUME_NONNULL_END

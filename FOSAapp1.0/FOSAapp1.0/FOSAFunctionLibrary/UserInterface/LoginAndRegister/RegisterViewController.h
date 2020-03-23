@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong,nonatomic) UISwitch *remember;
 @property (strong,nonatomic) UILabel *rememberLabel,*verificationLabel;
 @property (strong,nonatomic) UIButton *signUp;
+@property (strong,nonatomic) UILabel *failTips;
 
 @end
 

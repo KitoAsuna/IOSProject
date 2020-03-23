@@ -35,9 +35,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.skipBtn.frame = CGRectMake(0, NavigationHeight, screen_width/4, NavigationBarH);
+    self.skipBtn.frame = CGRectMake(0, StatusBarH, screen_width/4, NavigationBarH);
     [self.skipBtn setTitle:@"Skip" forState:UIControlStateNormal];
-    self.skipBtn.titleLabel.font = [UIFont systemFontOfSize:20];
+    self.skipBtn.titleLabel.font = [UIFont systemFontOfSize:25];
     [self.skipBtn addTarget:self action:@selector(skipTutorial) forControlEvents:UIControlEventTouchUpInside];
     
     self.toturialPicturePlayer.frame = CGRectMake(0, 0, screen_width, screen_height);
@@ -50,8 +50,8 @@
     self.toturialPicturePlayer.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
 
     self.toturialPicturePlayer.bounces = NO;
-    self.toturialPicturePlayer.contentSize = CGSizeMake(screen_width*18, 0);
-    for (NSInteger i = 0; i < 18; i++) {
+    self.toturialPicturePlayer.contentSize = CGSizeMake(screen_width*17, 0);
+    for (NSInteger i = 0; i < 17; i++) {
         CGRect frame = CGRectMake(i*screen_width, 0, screen_width,screen_height);
         UIImageView *imageview = [[UIImageView alloc]initWithFrame:frame];
         imageview.userInteractionEnabled = YES;
@@ -65,7 +65,7 @@
     //轮播页面指示器
     self.toturialPageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(screen_width*2/5, screen_height-30, screen_width/5, 20)];
     self.toturialPageControl.currentPage = 0;
-    self.toturialPageControl.numberOfPages = 18;
+    self.toturialPageControl.numberOfPages = 17;
     self.toturialPageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
     self.toturialPageControl.currentPageIndicatorTintColor = FOSAgreen;
     [self.view addSubview:self.toturialPageControl];
@@ -86,6 +86,13 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     CGFloat offset = scrollView.contentOffset.x;
     NSInteger index = offset/screen_width;
+    NSLog(@"%ld",(long)index);
     self.toturialPageControl.currentPage = index;
+    if (index == 16) {
+        self.skipBtn.hidden = YES;
+        //添加close按钮，功能同skip
+    }else{
+        self.skipBtn.hidden = NO;
+    }
 }
 @end

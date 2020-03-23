@@ -103,11 +103,11 @@
     self.headerBackgroundImgView.clipsToBounds = YES;
     [self.header addSubview:self.headerBackgroundImgView];
     
-    self.userIcon.frame = CGRectMake(headerWidth/15, headerHeight/4, headerWidth/5, headerWidth/5);
+    self.userIcon.frame = CGRectMake(headerWidth/10, headerHeight*2/5, headerWidth/5, headerWidth/5);
     self.userIcon.image = [UIImage imageNamed:@"icon_User"];
     [self.header addSubview:self.userIcon];
     
-    self.userName.frame = CGRectMake(0, headerHeight/2, headerWidth/3, headerWidth/4);
+    self.userName.frame = CGRectMake(headerWidth/30, headerHeight*3/5, headerWidth/3, headerWidth/5);
     self.userName.userInteractionEnabled = YES;
     //self.userName.layer.borderWidth = 0.5;
     self.userName.layer.cornerRadius = 5;

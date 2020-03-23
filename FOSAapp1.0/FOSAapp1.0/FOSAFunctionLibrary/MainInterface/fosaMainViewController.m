@@ -24,6 +24,8 @@
     Boolean isUpdate;
     Boolean isSelectCategory;
     Boolean categoryEdit;
+    //用于计算每种对应的数量
+    NSMutableArray *tempArray;
     
 }
 //种类数组
@@ -39,6 +41,8 @@
 //缓冲图标
 @property (nonatomic,strong) UIActivityIndicatorView *FOSAloadingView;
 @property (nonatomic,strong) FosaNotification *notification;
+//排序标志记录
+@property (nonatomic,strong) NSUserDefaults *userdefault;
 @end
 
 @implementation fosaMainViewController
@@ -93,7 +97,6 @@
     }
     return _categoryView;
 }
-
 
 - (NSMutableArray<NSString *> *)cellDic{
     if (_cellDic == nil) {
@@ -151,6 +154,12 @@
         _categoryCellDictionary = [NSMutableDictionary new];
     }
     return _categoryCellDictionary;
+}
+- (NSUserDefaults *)userdefault{
+    if (_userdefault == nil) {
+        _userdefault = [NSUserDefaults standardUserDefaults];
+    }
+    return _userdefault;
 }
 #pragma mark - 创建视图
 - (void)viewDidLoad {
@@ -231,7 +240,7 @@
         }
            [self.headerView addSubview:self.mainBackgroundImgPlayer];
             //轮播页面指示器
-           self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-10, headerWidth/5, 10)];
+           self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-15, headerWidth/5, 10)];
            self.pageControl.currentPage = 0;
            self.pageControl.numberOfPages = 3;
            self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
@@ -285,15 +294,15 @@
 - (void)creatFoodItemCategoryView{
     foodItemID = @"foodItemCell";
     
-    self.foodItemView.frame = CGRectMake(0, CGRectGetMaxY(self.categoryView.frame), screen_width, screen_height-CGRectGetMaxY(self.categoryView.frame)-TabbarHeight);
+    self.foodItemView.frame = CGRectMake(0, CGRectGetMaxY(self.categoryView.frame), screen_width, screen_height-CGRectGetMaxY(self.categoryView.frame)-TabbarHeight*11/8);
     [self.view addSubview:self.foodItemView];
     //self.foodItemView.backgroundColor = [UIColor yellowColor];
     int collectionWidth = self.foodItemView.frame.size.width;
     int collectionHeight = self.foodItemView.frame.size.height;
     
     UICollectionViewFlowLayout *fosaFlowLayout = [[UICollectionViewFlowLayout alloc] init];
-    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(5, 5, 5, 5);//上、左、下、右
-    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-20)/2,(collectionHeight-40)/2);
+    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(5, 5, 0, 5);//上、左、下、右
+    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-20)/2,(collectionHeight-10)/2);
     //固定的itemsize
     fosaFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;//滑动的方向 垂直
     
@@ -313,14 +322,15 @@
          // 3.2 添加响应事件
          [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
          // 4 把创建的refreshControl赋值给scrollView的refreshControl属性
-         self.fooditemCollection.refreshControl = refreshControl;
+         
+         //self.fooditemCollection.refreshControl = refreshControl;
      }
      //self.foodItemCollection.alwaysBounceVertical = YES;
      self.fooditemCollection.delegate   = self;
      self.fooditemCollection.dataSource = self;
      self.fooditemCollection.showsVerticalScrollIndicator = NO;
      self.fooditemCollection.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    //[self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
+    [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
      //self.foodItemCollection.bounces = NO;
      [self.foodItemView addSubview:self.fooditemCollection];
 }
@@ -388,21 +398,23 @@
     }else{
         long int index = indexPath.section*2+indexPath.row;
         // 每次先从字典中根据IndexPath取出唯一标识符
-        NSString *identifier = [self.cellDictionary objectForKey:[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
-         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
-        if (identifier == nil) {
-            identifier = [NSString stringWithFormat:@"%@%@", foodItemID,[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
-            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
-        // 注册Cell
-            [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
-            }
+//        NSString *identifier = [self.cellDictionary objectForKey:[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
+//         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+//        if (identifier == nil) {
+//            identifier = [NSString stringWithFormat:@"%@%@", foodItemID,[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
+//            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
+//        // 注册Cell
+//            [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
+//            }
 //        NSLog(@"%ld",index);
-        foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+        foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:foodItemID forIndexPath:indexPath];
         if (index < self.collectionDataSource.count ) {
                 [cell setModel:self.collectionDataSource[index]];
             NSLog(@"====================================%ld",index);
         }else{
             cell.likebtn.hidden = YES;
+            FoodModel *model = [FoodModel new];
+            [cell setModel:model];
         }
         NSLog(@">>>>>>>>>>>>>>>>>>食品名称：%@",cell.foodNamelabel.text);
         return cell;
@@ -489,6 +501,7 @@
         sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where category = '%@'",self.selectedCategoryCell.kind.text];
     }else{
         sql = @"select * from FoodStorageInfo";
+        tempArray = self.collectionDataSource;
     }
     NSLog(@"#######################%@",sql);
     FMResultSet *set = [self.db executeQuery:sql];
@@ -513,6 +526,17 @@
 //        NSLog(@"islike    = %@",isLike);
     }
     NSLog(@"数量：%lu",(unsigned long)self.collectionDataSource.count);
+    NSString *currentSortType = [self.userdefault valueForKey:@"sort"];
+    NSLog(@"当前排序方式:%@",currentSortType);
+    if ([currentSortType isEqualToString:@"MOSTRECENT"]) {
+        [self sortByMostRecent];
+    }else if([currentSortType isEqualToString:@"LEASTRECENT"]){
+        
+    }else if([currentSortType isEqualToString:@"RECENTADD"]){
+        
+    }else if([currentSortType isEqualToString:@"LEASTADD"]){
+        
+    }
     [self.fooditemCollection reloadData];
     [self.db close];
 }
@@ -545,7 +569,7 @@
 #pragma mark - 遍历食物数组
 - (int)caculateCategoryNumber:(NSString *)category{
     int num = 0;
-    for (FoodModel *model in self.collectionDataSource) {
+    for (FoodModel *model in tempArray) {
         if ([category isEqualToString:model.category]) {
             num++;
         }
@@ -568,7 +592,6 @@
     NSLog(@"------------------------------%lu",(unsigned long)self.collectionDataSource.count);
     [self OpenSqlDatabase:@"FOSA"];
     [self SelectDataFromFoodTable];
-    [self.fooditemCollection reloadData];
 }
 - (void)categoryReLoad{
     [self.categoryCellDictionary removeAllObjects];
@@ -578,17 +601,36 @@
 - (void)selectToSort{
     UIAlertController *alert  = [UIAlertController alertControllerWithTitle:@"排序方式" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     UIAlertAction *sortByExpireDateUp = [UIAlertAction actionWithTitle:@"MOST RECENT" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-
-        //[self openPhotoLibrary];
+        //删除原来的排序方式
+        [self.userdefault removeObjectForKey:@"sort"];
+        NSString *sortType = @"MOSTRECENT";
+        [self.userdefault setObject:sortType forKey:@"sort"];
+        [self.userdefault synchronize];
+        [self CollectionReload];
     }];
     UIAlertAction *sortByExpireDateDown = [UIAlertAction actionWithTitle:@"LEAST RECENT" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-  
+        //删除原来的排序方式
+        [self.userdefault removeObjectForKey:@"sort"];
+        NSString *sortType = @"LEASTRECENT";
+        [self.userdefault setObject:sortType forKey:@"sort"];
+        [self.userdefault synchronize];
+        [self CollectionReload];
     }];
     UIAlertAction *sortByStorageDateUp = [UIAlertAction actionWithTitle:@"RECENT ADD" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-   
+        //删除原来的排序方式
+        [self.userdefault removeObjectForKey:@"sort"];
+        NSString *sortType = @"RECENTADD";
+        [self.userdefault setObject:sortType forKey:@"sort"];
+        [self.userdefault synchronize];
+        [self CollectionReload];
     }];
     UIAlertAction *sortByStorageDateDown = [UIAlertAction actionWithTitle:@"LEAST ADD" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-      
+       //删除原来的排序方式
+        [self.userdefault removeObjectForKey:@"sort"];
+        NSString *sortType = @"LEASTADD";
+        [self.userdefault setObject:sortType forKey:@"sort"];
+        [self.userdefault synchronize];
+        [self CollectionReload];
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         NSLog(@"取消");
@@ -601,6 +643,39 @@
     [alert addAction:cancel];
     [self presentViewController:alert animated:YES completion:nil];
 }
+- (void)sortByMostRecent{
+    NSComparator compare = ^(FoodModel* obj1,FoodModel* obj2){
+        NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+        [formatter setDateFormat:@"MM/dd/yyyy HH:mm"];
+        
+        NSArray<NSString *> *dateArray1 = [obj1.expireDate componentsSeparatedByString:@"/"];
+        NSString *RDate1 = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray1[1],dateArray1[0],dateArray1[2],dateArray1[3]];
+        NSDate *foodDate1 = [NSDate new];
+        foodDate1 = [formatter dateFromString:RDate1];
+        
+        NSArray<NSString *> *dateArray2 = [obj2.expireDate componentsSeparatedByString:@"/"];
+        NSString *RDate2 = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray2[1],dateArray2[0],dateArray2[2],dateArray2[3]];
+        NSDate *foodDate2 = [NSDate new];
+        foodDate2 = [formatter dateFromString:RDate2];
+        
+        NSComparisonResult result = [foodDate1 compare:foodDate2];
+        
+        if (result == NSOrderedDescending) {//foodDate1 在 foodDate2 之后
+            return (NSComparisonResult)NSOrderedDescending;
+        }else if(result == NSOrderedAscending){//foodDate1 在 foodDate2 之前
+            return (NSComparisonResult)NSOrderedAscending;
+        }
+        return (NSComparisonResult)NSOrderedSame;
+    };
+    
+    NSArray *sortArray = [self.collectionDataSource copy];
+    
+    NSArray *resultArray = [sortArray sortedArrayUsingComparator:compare];
+    
+    self.collectionDataSource = [resultArray mutableCopy];
+    [self.fooditemCollection reloadData];
+}
+
 //种类按钮长按事件
 -  (void)longPressCellToEdit:(UILongPressGestureRecognizer *)longPress{
     categoryCollectionViewCell *cell = (categoryCollectionViewCell *)longPress.view;
@@ -609,10 +684,14 @@
     [self.categoryCollection reloadData];
     [cell.kind becomeFirstResponder];
     //为退出按钮添加约束
-    [self.cancelBtn.widthAnchor constraintEqualToConstant:NavigationBarH*2].active = YES;
+    [self.cancelBtn.widthAnchor constraintEqualToConstant:NavigationBarH*5/3].active = YES;
     [self.cancelBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
-    [self.cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
-    [self.cancelBtn setTitleColor:FOSARed forState:UIControlStateNormal];
+    [self.cancelBtn setTitle:@"CANCEL" forState:UIControlStateNormal];
+    //self.cancelBtn.layer.borderWidth = 1;
+    self.cancelBtn.layer.cornerRadius = NavigationBarH/3;
+    self.cancelBtn.backgroundColor = FOSARed;
+    [self.cancelBtn setTitleColor:FOSAWhite forState:UIControlStateNormal];
+    self.cancelBtn.titleLabel.font = [UIFont systemFontOfSize:15 weight:15];
     [self.cancelBtn addTarget:self action:@selector(cancelEdit) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.cancelBtn];
 }

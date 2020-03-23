@@ -82,7 +82,6 @@
     [self addChildViewController:nvc];
 }
 
-
 - (UIButton *)AddButton{
     if (_AddButton == nil) {
         _AddButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, self.tabBar.frame.size.height, self.tabBar.frame.size.height)];

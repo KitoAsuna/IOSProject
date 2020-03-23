@@ -108,6 +108,13 @@
     }
     return _signUp;
 }
+- (UILabel *)failTips{
+    if (_failTips == nil) {
+        _failTips = [UILabel new];
+    }
+    return _failTips;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -148,7 +155,7 @@
     self.userNameInput.returnKeyType = UIReturnKeyDone;
     self.userNameInput.delegate = self;
     self.userNameInput.layer.cornerRadius = self.userNameInput.frame.size.height/3;
-    [self.userNameInput setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
+    [self.userNameInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];//设置输入文本的起始位置
     [self.userContainer addSubview:self.userNameInput];
     
     self.passwordInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
@@ -158,9 +165,9 @@
     self.passwordInput.delegate = self;
     self.passwordInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     self.passwordInput.layer.cornerRadius = self.passwordInput.frame.size.height/3;
-    [self.passwordInput setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
+    [self.passwordInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];//设置输入文本的起始位置
     [self.passwordContainer addSubview:self.passwordInput];
-    
+
     self.checkPassword.frame = CGRectMake(screen_width*5/6-screen_height/12, screen_height/48, screen_height/12-10, screen_height/24);
     [self.checkPassword setImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
     [self.passwordContainer addSubview:self.checkPassword];
@@ -176,6 +183,7 @@
     self.rememberLabel.frame = CGRectMake(60, 0, self.rememberContainer.frame.size.width/2, 40);
     self.rememberLabel.text = @"Remember Account";
     self.rememberLabel.font = [UIFont systemFontOfSize:13*(screen_width/414.0)];
+    self.rememberLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     [self.rememberContainer addSubview:self.rememberLabel];
     
     self.forgetPassword.frame = CGRectMake(self.rememberContainer.frame.size.width*2/3, 0, self.rememberContainer.frame.size.width/3, 40);
@@ -185,6 +193,7 @@
     NSDictionary * underAttribtDic  = @{NSUnderlineStyleAttributeName:[NSNumber numberWithInteger:NSUnderlineStyleSingle],NSForegroundColorAttributeName:[UIColor blackColor]};
     NSMutableAttributedString * underAttr = [[NSMutableAttributedString alloc] initWithString:@"forget password" attributes:underAttribtDic];
     self.forgetPassword.attributedText = underAttr;
+    self.forgetPassword.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     [self.rememberContainer addSubview:self.forgetPassword];
     
     self.login.frame = CGRectMake(0, 0, self.LoginContainer.frame.size.width*4/9, self.LoginContainer.frame.size.height);
@@ -210,7 +219,7 @@
     [self.signUp addTarget:self action:@selector(JumpToRegister) forControlEvents:UIControlEventTouchUpInside];
     [self.LoginContainer addSubview:self.login];
     [self.LoginContainer addSubview:self.signUp];
-    
+
 }
 
 //记住用户名和密码
@@ -279,7 +288,6 @@ if (isButtonOn) {
     self.currentResponderTextField = textField;
     return YES;
 }
-
 #pragma mark - 数据库操作
 - (void)CreatSqlDatabase:(NSString *)dataBaseName{
     //获取数据库地址
@@ -313,7 +321,11 @@ if (isButtonOn) {
     NSLog(@"%@",selSql);
         FMResultSet *set = [db executeQuery:selSql];
         if (![set next]) {
-            [self SystemAlert:@"the user does not exist.Please sign up"];
+            //[self SystemAlert:@"the user does not exist.Please sign up"];
+            self.failTips.frame = CGRectMake(0, CGRectGetMaxY(self.login.frame), screen_width/2, 40);
+            self.failTips.text = @"Authentication Failed";
+            self.failTips.textColor = [UIColor redColor];
+            [self.LoginContainer addSubview:self.failTips];
         }else{
             NSString *sql_userName = [set stringForColumn:@"userName"];
             NSString *sql_password = [set stringForColumn:@"password"];

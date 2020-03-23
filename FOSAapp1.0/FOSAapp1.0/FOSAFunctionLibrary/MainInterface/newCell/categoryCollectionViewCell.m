@@ -52,7 +52,7 @@
     self.editbtn.frame = CGRectMake(width*3/5, 0, width*4/10, width*4/10);
     self.editbtn.layer.cornerRadius = width/5;
     self.editbtn.backgroundColor = FOSARed;
-    [self.editbtn setImage:[UIImage imageNamed:@"icon_edit"] forState:UIControlStateNormal];
+    [self.editbtn setImage:[UIImage imageNamed:@"icon_editW"] forState:UIControlStateNormal];
     
     self.categoryPhoto.backgroundColor = [UIColor clearColor];
     //self.categoryPhoto.layer.cornerRadius = width/2;

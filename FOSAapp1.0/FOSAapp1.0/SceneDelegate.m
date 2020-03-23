@@ -31,7 +31,7 @@
             }
             [self.window makeKeyAndVisible];
         }
-    [NSThread sleepForTimeInterval:1.5];
+    [NSThread sleepForTimeInterval:1];
     NSLog(@"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 }
 - (void)sceneDidDisconnect:(UIScene *)scene  API_AVAILABLE(ios(13.0)){
