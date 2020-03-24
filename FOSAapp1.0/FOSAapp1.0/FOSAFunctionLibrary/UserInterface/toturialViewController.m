@@ -32,6 +32,13 @@
     }
     return _skipBtn;
 }
+- (UIButton *)closeBtn{
+    if (_closeBtn == nil) {
+        _closeBtn = [UIButton new];
+    }
+    return _closeBtn;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -60,6 +67,19 @@
         NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"img_tutorial",i+1];
         imageview.image = [UIImage imageNamed:imgName];
         [self.toturialPicturePlayer addSubview:imageview];
+        
+        if (i == 16) {
+            self.closeBtn.frame = CGRectMake(screen_width*12/33, screen_height*116/143, screen_width*3/11, screen_height*7/143);
+            self.closeBtn.layer.borderWidth = 1;
+            self.closeBtn.layer.cornerRadius = self.closeBtn.frame.size.height/2;
+            [self.closeBtn setTitle:@"close" forState:UIControlStateNormal];
+            [self.closeBtn setTitleColor:FOSAWhite forState:UIControlStateNormal];
+            self.closeBtn.titleLabel.font = [UIFont systemFontOfSize:25];
+            self.closeBtn.layer.borderColor = FOSAWhite.CGColor;
+            [self.closeBtn addTarget:self action:@selector(skipTutorial) forControlEvents:UIControlEventTouchUpInside];
+            [imageview addSubview:self.closeBtn];
+            
+        }
     }
     [self.view addSubview:self.toturialPicturePlayer];
     //轮播页面指示器

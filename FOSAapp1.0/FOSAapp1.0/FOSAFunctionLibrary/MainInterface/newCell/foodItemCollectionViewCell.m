@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.foodImgView = [UIImageView new];
-        //self.foodImgView.image = 
+        self.foodImgView.image = [UIImage imageNamed:@"icon_defaultImg"];
         self.foodImgView.contentMode = UIViewContentModeScaleAspectFill;
         self.foodImgView.clipsToBounds = YES;
         [self addSubview:self.foodImgView];
@@ -60,6 +60,7 @@
     self.mouthLabel.font = [UIFont systemFontOfSize:10];
     self.mouthLabel.textColor = FOSAGray;
     self.mouthLabel.textAlignment = NSTextAlignmentLeft;
+    
 }
 - (void)setModel:(FoodModel *)model
 {

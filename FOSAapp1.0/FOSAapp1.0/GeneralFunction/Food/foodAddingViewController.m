@@ -510,7 +510,6 @@
         [self.scanBtn addTarget:self action:@selector(jumpToScan) forControlEvents:UIControlEventTouchUpInside];
         [self.foodNameView addSubview:self.scanBtn];
     }
-
     /**
                 提示与文字上下一致
      */
@@ -870,13 +869,11 @@
         [self.contentView setContentOffset:CGPointMake(0, 0)];
     }];
     return YES;
-    
 }
-
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     if (textField == self.foodTextView) {
         [UIView animateWithDuration:0.5 animations:^{
-               [self.contentView setContentOffset:CGPointMake(0, CGRectGetMinY(self.foodTextView.frame))];
+               [self.contentView setContentOffset:CGPointMake(0, CGRectGetMinY(self.foodNameView.frame))];
            }];
         NSLog(@"food");
     }else if(textField == self.locationTextView){
@@ -1037,11 +1034,19 @@
     }
     [self SavephotosInSanBox:self.foodImgArray];
     [self CreatDataTable];
+    
 }
 - (void)deleteFoodRecord{
     //功能有待完善，添加点击放大图片的功能
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"You will delete this food record" preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self DeleteRecord];
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+    }]];
+    [self presentViewController:alert animated:true completion:nil];
     
-    [self DeleteRecord];
 }
 
 #pragma mark - 键盘事件

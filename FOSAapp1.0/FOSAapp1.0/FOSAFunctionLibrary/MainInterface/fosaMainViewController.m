@@ -424,12 +424,14 @@
             [cell setModel:model];
             cell.foodImgView.image = [UIImage imageNamed:@"icon_defaultImg"];
         }
+
         return cell;
     }
 }
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView == self.categoryCollection) {
+        NSLog(@"###########################################");
         categoryCollectionViewCell *cell = (categoryCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
 
         if ([cell.kind.text isEqualToString:self.selectedCategoryCell.kind.text]) {
@@ -593,6 +595,12 @@
     categoryEdit = false;
     [self getCategoryArray];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.scanBtn];
+    //取消选中状态
+    isSelectCategory = NO;
+    self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
+    self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",self.selectedCategoryCell.accessibilityValue]];
+    self.selectedCategoryCell = nil;
+    [self CollectionReload];
     [self.categoryCollection reloadData];
 }
 
@@ -773,9 +781,19 @@
 -  (void)longPressCellToEdit:(UILongPressGestureRecognizer *)longPress{
     categoryCollectionViewCell *cell = (categoryCollectionViewCell *)longPress.view;
     self.longprogressCell = cell;
+    NSLog(@"长按：%@",cell.kind.text);
     categoryEdit = true;
     [self.categoryCollection reloadData];
     [cell.kind becomeFirstResponder];
+    
+    //取消选中状态
+    isSelectCategory = NO;
+    self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
+    self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",self.selectedCategoryCell.accessibilityValue]];
+    self.selectedCategoryCell = nil;
+    [self CollectionReload];
+
+    
     //为退出按钮添加约束
     [self.cancelBtn.widthAnchor constraintEqualToConstant:NavigationBarH*5/3].active = YES;
     [self.cancelBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
