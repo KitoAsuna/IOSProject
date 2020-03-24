@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.foodImgView = [UIImageView new];
-        self.foodImgView.image = [UIImage imageNamed:@"icon_defaultImg"];
+        //self.foodImgView.image = 
         self.foodImgView.contentMode = UIViewContentModeScaleAspectFill;
         self.foodImgView.clipsToBounds = YES;
         [self addSubview:self.foodImgView];
@@ -24,23 +24,15 @@
         [self.likebtn setImage:[UIImage imageNamed:@"icon_likeW"] forState:UIControlStateNormal];
         [self.foodImgView addSubview:self.likebtn];
         self.foodNamelabel = [UILabel new];
-        //self.foodNamelabel.text = @"Apple";
         [self addSubview:self.foodNamelabel];
-        //self.foodNamelabel.backgroundColor = [UIColor yellowColor];
         self.dayLabel = [UILabel new];
-        //self.dayLabel.text = @"26";
         self.dayLabel.font = [UIFont systemFontOfSize:25*(414.0/screen_width)];
         self.dayLabel.textAlignment = NSTextAlignmentCenter;
-       // self.dayLabel.backgroundColor = [UIColor redColor];
         [self addSubview:self.dayLabel];
         self.timelabel = [UILabel new];
         [self addSubview:self.timelabel];
-        self.line = [UIView new];
-        //[self addSubview:self.line];
         self.mouthLabel = [UILabel new];
-        //self.mouthLabel.text = @"MAR";
         self.mouthLabel.textAlignment = NSTextAlignmentCenter;
-        //self.mouthLabel.backgroundColor = [UIColor blueColor];
         [self addSubview:self.mouthLabel];
     }
     return self;
@@ -68,9 +60,6 @@
     self.mouthLabel.font = [UIFont systemFontOfSize:10];
     self.mouthLabel.textColor = FOSAGray;
     self.mouthLabel.textAlignment = NSTextAlignmentLeft;
-    self.line.frame = CGRectMake(width*3/4, CGRectGetMaxY(self.dayLabel.frame)-1, width/6, 1);
-    self.line.backgroundColor = [UIColor grayColor];
-    
 }
 - (void)setModel:(FoodModel *)model
 {
@@ -122,7 +111,7 @@
     NSString *str = [formatter stringFromDate:currentDate];
     currentDate = [formatter dateFromString:str];
     NSLog(@"--------------%@",str);
-    NSDate *foodDate = [[NSDate alloc]init];
+    NSDate *foodDate;
     
     NSArray<NSString *> *dateArray = [self.model.expireDate componentsSeparatedByString:@"/"];
     NSString *RDate = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray[1],dateArray[0],dateArray[2],dateArray[3]];

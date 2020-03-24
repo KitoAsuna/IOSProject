@@ -72,13 +72,16 @@
     btn.backgroundColor = [UIColor redColor];
     [btn addTarget:self action:@selector(JUMP) forControlEvents:UIControlEventTouchUpInside];
     //[self.view addSubview:btn];
-    
+    [self setNeedsStatusBarAppearanceUpdate];
     [self CreatHeader];
     [self CreatUserItemTable];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    //UIStatusBarManager *statusBarManager = [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager;
+    
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     self.navigationController.navigationBar.hidden = YES;
     [self SetCurrentUser];
     [self InitData];
@@ -244,12 +247,14 @@
     qrCodeGenerator.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:qrCodeGenerator animated:YES];
 }
+
 /**隐藏底部横条，点击屏幕可显示*/
 - (BOOL)prefersHomeIndicatorAutoHidden{
     return YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     self.navigationController.navigationBar.hidden = NO;
 }
 

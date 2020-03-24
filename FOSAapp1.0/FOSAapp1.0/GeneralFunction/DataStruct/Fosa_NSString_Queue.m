@@ -34,9 +34,8 @@
     [_array addObject:obj];
 }
 
-- (id)dequeue {
+- (void)dequeue {
     [_array removeObjectAtIndex:0];
-    return nil;
 }
 
 - (id)firstObject {

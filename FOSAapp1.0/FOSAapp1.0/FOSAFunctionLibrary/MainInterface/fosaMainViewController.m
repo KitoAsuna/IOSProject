@@ -173,11 +173,20 @@
     [self creatMainBackgroundPlayer];
     [self creatCategoryView];
     [self creatFoodItemCategoryView];
-    [self showUsingTips];
     
+    NSUserDefaults *userDefault = NSUserDefaults.standardUserDefaults;
+    NSString *currentVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"];
+    NSString *localVersion = [userDefault valueForKey:@"localVersion"];
+    if (![currentVersion isEqualToString:localVersion]) {
+        [userDefault setObject:currentVersion forKey:@"localVersion"];
+        [self showUsingTips];
+    }
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    //
+    //[UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDarkContent;
+    
     self.sortbtn.hidden = NO;
     isSelectCategory = NO;
     self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
@@ -253,7 +262,6 @@
     
     isSelectCategory = false;
     self.categoryView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), screen_width, screen_height/9);
-    //self.categoryView.backgroundColor = [UIColor yellowColor];
     [self.view addSubview:self.categoryView];
     int categoryViewWidth  = self.categoryView.frame.size.width;
     int categoeyViewHeight = self.categoryView.frame.size.height;
@@ -278,17 +286,17 @@
     //食物种类选择栏 可滚动
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    flowLayout.itemSize = CGSizeMake((screen_width*48/66)/5,categoeyViewHeight*5/6);
+    flowLayout.itemSize = CGSizeMake((screen_width*97/132)/5,categoeyViewHeight*5/6);
 
     self.categoryCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, categoryViewWidth*5/6, categoeyViewHeight*5/6) collectionViewLayout:flowLayout];
     self.categoryCollection.center = CGPointMake(categoryViewWidth/2, categoeyViewHeight*7/12);
        
-    self.categoryCollection.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];;
+    self.categoryCollection.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     self.categoryCollection.delegate = self;
     self.categoryCollection.dataSource = self;
     self.categoryCollection.showsHorizontalScrollIndicator = NO;
     self.categoryCollection.bounces = NO;
-    //[self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:categoryID];
+    [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:categoryID];
     [self.categoryView addSubview:self.categoryCollection];
 }
 - (void)creatFoodItemCategoryView{
@@ -359,16 +367,16 @@
 //每个cell的具体内容
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:( NSIndexPath *)indexPath {
     if (collectionView == self.categoryCollection) {
-        // 每次先从字典中根据IndexPath取出唯一标识符
-        NSString *identifier = [self.categoryCellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
-         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
-        if (identifier == nil) {
-            identifier = [NSString stringWithFormat:@"%@%@", categoryID, [NSString stringWithFormat:@"%@", indexPath]];
-            [self.categoryCellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
-        // 注册Cell
-            [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:identifier];
-            }
-        categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+//        // 每次先从字典中根据IndexPath取出唯一标识符
+//        NSString *identifier = [self.categoryCellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
+//         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+//        if (identifier == nil) {
+//            identifier = [NSString stringWithFormat:@"%@%@", categoryID, [NSString stringWithFormat:@"%@", indexPath]];
+//            [self.categoryCellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
+//        // 注册Cell
+//            [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:identifier];
+//            }
+        categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:categoryID forIndexPath:indexPath];
         cell.kind.text = self.categoryNameArray[indexPath.row];
         cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
         
@@ -410,36 +418,39 @@
         foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:foodItemID forIndexPath:indexPath];
         if (index < self.collectionDataSource.count ) {
                 [cell setModel:self.collectionDataSource[index]];
-            NSLog(@"====================================%ld",index);
         }else{
             cell.likebtn.hidden = YES;
             FoodModel *model = [FoodModel new];
             [cell setModel:model];
+            cell.foodImgView.image = [UIImage imageNamed:@"icon_defaultImg"];
         }
-        NSLog(@">>>>>>>>>>>>>>>>>>食品名称：%@",cell.foodNamelabel.text);
         return cell;
     }
 }
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView == self.categoryCollection) {
-        isSelectCategory = true;
         categoryCollectionViewCell *cell = (categoryCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
 
-        if (![cell.kind.text isEqualToString:self.selectedCategoryCell.kind.text]) {
+        if ([cell.kind.text isEqualToString:self.selectedCategoryCell.kind.text]) {
             NSLog(@"取消选中%@",self.selectedCategoryCell.kind.text);
+            isSelectCategory = NO;
             self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
             self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",self.selectedCategoryCell.accessibilityValue]];
+            self.selectedCategoryCell = nil;
+            [self CollectionReload];
+            [self categoryReLoad];
+            
+        }else{
+            isSelectCategory = true;
+            cell.rootView.backgroundColor = [UIColor orangeColor];
+            NSString *imgName = [NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]];
+            cell.categoryPhoto.image = [UIImage imageNamed:imgName];
+            self.selectedCategoryCell = cell;
+            self.selectedCategoryCell.accessibilityValue = self.categoryArray[indexPath.row];
+            [self CollectionReload];
         }
-        cell.rootView.backgroundColor = [UIColor orangeColor];
-        NSString *imgName = [NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]];
-        cell.categoryPhoto.image = [UIImage imageNamed:imgName];
-        
-        self.selectedCategoryCell = cell;
-        self.selectedCategoryCell.accessibilityValue = self.categoryArray[indexPath.row];
-           NSLog(@"Selectd:%@",imgName);
 
-        [self CollectionReload];
     }else if(collectionView == self.fooditemCollection){
            foodItemCollectionViewCell *cell = (foodItemCollectionViewCell *)[self.fooditemCollection cellForItemAtIndexPath:indexPath];
            if (cell.model.foodName != nil) {
@@ -531,11 +542,11 @@
     if ([currentSortType isEqualToString:@"MOSTRECENT"]) {
         [self sortByMostRecent];
     }else if([currentSortType isEqualToString:@"LEASTRECENT"]){
-        
+        [self sortByLeastRecent];
     }else if([currentSortType isEqualToString:@"RECENTADD"]){
-        
+        [self sortByRecentAdd];
     }else if([currentSortType isEqualToString:@"LEASTADD"]){
-        
+        [self sortByLeastAdd];
     }
     [self.fooditemCollection reloadData];
     [self.db close];
@@ -577,7 +588,6 @@
     return num;
 
 }
-
 #pragma mark - 响应事件
 - (void)cancelEdit{
     categoryEdit = false;
@@ -650,14 +660,11 @@
         
         NSArray<NSString *> *dateArray1 = [obj1.expireDate componentsSeparatedByString:@"/"];
         NSString *RDate1 = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray1[1],dateArray1[0],dateArray1[2],dateArray1[3]];
-        NSDate *foodDate1 = [NSDate new];
-        foodDate1 = [formatter dateFromString:RDate1];
+        NSDate *foodDate1 = [formatter dateFromString:RDate1];
         
         NSArray<NSString *> *dateArray2 = [obj2.expireDate componentsSeparatedByString:@"/"];
         NSString *RDate2 = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray2[1],dateArray2[0],dateArray2[2],dateArray2[3]];
-        NSDate *foodDate2 = [NSDate new];
-        foodDate2 = [formatter dateFromString:RDate2];
-        
+        NSDate *foodDate2 = [formatter dateFromString:RDate2];
         NSComparisonResult result = [foodDate1 compare:foodDate2];
         
         if (result == NSOrderedDescending) {//foodDate1 在 foodDate2 之后
@@ -667,15 +674,101 @@
         }
         return (NSComparisonResult)NSOrderedSame;
     };
-    
     NSArray *sortArray = [self.collectionDataSource copy];
-    
+
     NSArray *resultArray = [sortArray sortedArrayUsingComparator:compare];
     
     self.collectionDataSource = [resultArray mutableCopy];
     [self.fooditemCollection reloadData];
 }
 
+- (void)sortByLeastRecent{
+    NSComparator compare = ^(FoodModel* obj1,FoodModel* obj2){
+        NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+        [formatter setDateFormat:@"MM/dd/yyyy HH:mm"];
+        
+        NSArray<NSString *> *dateArray1 = [obj1.expireDate componentsSeparatedByString:@"/"];
+        NSString *RDate1 = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray1[1],dateArray1[0],dateArray1[2],dateArray1[3]];
+        NSDate *foodDate1 = [formatter dateFromString:RDate1];
+        
+        NSArray<NSString *> *dateArray2 = [obj2.expireDate componentsSeparatedByString:@"/"];
+        NSString *RDate2 = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray2[1],dateArray2[0],dateArray2[2],dateArray2[3]];
+        NSDate *foodDate2 = [formatter dateFromString:RDate2];
+        NSComparisonResult result = [foodDate1 compare:foodDate2];
+        
+        if (result == NSOrderedDescending) {//foodDate1 在 foodDate2 之后
+            return (NSComparisonResult)NSOrderedAscending;
+        }else if(result == NSOrderedAscending){//foodDate1 在 foodDate2 之前
+            return (NSComparisonResult)NSOrderedDescending;
+
+        }
+        return (NSComparisonResult)NSOrderedSame;
+    };
+    NSArray *sortArray = [self.collectionDataSource copy];
+
+    NSArray *resultArray = [sortArray sortedArrayUsingComparator:compare];
+    
+    self.collectionDataSource = [resultArray mutableCopy];
+    [self.fooditemCollection reloadData];
+}
+- (void)sortByRecentAdd{
+    NSComparator compare = ^(FoodModel* obj1,FoodModel* obj2){
+        NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+        [formatter setDateFormat:@"MM/dd/yyyy HH:mm"];
+        
+        NSArray<NSString *> *dateArray1 = [obj1.storageDate componentsSeparatedByString:@"/"];
+        NSString *RDate1 = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray1[1],dateArray1[0],dateArray1[2],dateArray1[3]];
+        NSDate *foodDate1 = [formatter dateFromString:RDate1];
+        
+        NSArray<NSString *> *dateArray2 = [obj2.storageDate componentsSeparatedByString:@"/"];
+        NSString *RDate2 = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray2[1],dateArray2[0],dateArray2[2],dateArray2[3]];
+        NSDate *foodDate2 = [formatter dateFromString:RDate2];
+        NSComparisonResult result = [foodDate1 compare:foodDate2];
+        
+        if (result == NSOrderedDescending) {//foodDate1 在 foodDate2 之后
+            return (NSComparisonResult)NSOrderedAscending;
+        }else if(result == NSOrderedAscending){//foodDate1 在 foodDate2 之前
+            return (NSComparisonResult)NSOrderedDescending;
+
+        }
+        return (NSComparisonResult)NSOrderedSame;
+    };
+    NSArray *sortArray = [self.collectionDataSource copy];
+
+    NSArray *resultArray = [sortArray sortedArrayUsingComparator:compare];
+    
+    self.collectionDataSource = [resultArray mutableCopy];
+    [self.fooditemCollection reloadData];
+}
+- (void)sortByLeastAdd{
+    NSComparator compare = ^(FoodModel* obj1,FoodModel* obj2){
+        NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+        [formatter setDateFormat:@"MM/dd/yyyy HH:mm"];
+        
+        NSArray<NSString *> *dateArray1 = [obj1.storageDate componentsSeparatedByString:@"/"];
+        NSString *RDate1 = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray1[1],dateArray1[0],dateArray1[2],dateArray1[3]];
+        NSDate *foodDate1 = [formatter dateFromString:RDate1];
+        
+        NSArray<NSString *> *dateArray2 = [obj2.storageDate componentsSeparatedByString:@"/"];
+        NSString *RDate2 = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray2[1],dateArray2[0],dateArray2[2],dateArray2[3]];
+        NSDate *foodDate2 = [formatter dateFromString:RDate2];
+        NSComparisonResult result = [foodDate1 compare:foodDate2];
+        
+        if (result == NSOrderedDescending) {//foodDate1 在 foodDate2 之后
+            return (NSComparisonResult)NSOrderedDescending;
+        }else if(result == NSOrderedAscending){//foodDate1 在 foodDate2 之前
+            return (NSComparisonResult)NSOrderedAscending;
+
+        }
+        return (NSComparisonResult)NSOrderedSame;
+    };
+    NSArray *sortArray = [self.collectionDataSource copy];
+
+    NSArray *resultArray = [sortArray sortedArrayUsingComparator:compare];
+    
+    self.collectionDataSource = [resultArray mutableCopy];
+    [self.fooditemCollection reloadData];
+}
 //种类按钮长按事件
 -  (void)longPressCellToEdit:(UILongPressGestureRecognizer *)longPress{
     categoryCollectionViewCell *cell = (categoryCollectionViewCell *)longPress.view;
@@ -750,26 +843,26 @@
 - (void)SendRemindNotification{
     [self CreatLoadView];
     [self.notification initNotification];
-    UIImage *image = [[UIImage alloc]init];
+    UIImage *image;
     //标志
-    Boolean isSend = false;
+    //Boolean isSend = false;
     //获取当前日期
     NSDate *currentDate = [[NSDate alloc]init];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yy/MM/dd"];
 
     NSDateFormatter *formatter2 = [[NSDateFormatter alloc]init];
-    [formatter2 setDateFormat:@"MM/dd/yyyy HH:mm"];
+    [formatter2 setDateFormat:@"MM/dd/yy HH:mm"];
 
     NSString *str = [formatter stringFromDate:currentDate];
     currentDate = [formatter dateFromString:str];
     NSLog(@"--------------%@",str);
-    NSDate *foodDate = [[NSDate alloc]init];
+    NSDate *foodDate;
     for(int i = 0;i < self.collectionDataSource.count; i++){
   NSLog(@"%@的过期日期为%@",self.collectionDataSource[i].foodName,self.collectionDataSource[i].expireDate);
         NSArray<NSString *> *dateArray = [self.collectionDataSource[i].expireDate componentsSeparatedByString:@"/"];
         NSString *RDate = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray[1],dateArray[0],dateArray[2],dateArray[3]];
-        
+
         foodDate = [formatter2 dateFromString:RDate];
         NSLog(@"foodDate:%@",foodDate);
         RDate = [formatter stringFromDate:foodDate];
@@ -778,7 +871,7 @@
         //比较过期日期与今天的日期
         NSComparisonResult result = [currentDate compare:foodDate];
         if (result == NSOrderedDescending) { //foodDate 在 currentDate 之前
-                isSend = true;
+                //isSend = true;
                 NSString *body = [NSString stringWithFormat:@"FOSA 提醒你%@已经在%@过期",self.collectionDataSource[i].foodName,self.collectionDataSource[i].expireDate];
                 //发送通知
             //获取通知的图片
@@ -867,13 +960,6 @@
     [self.mask removeFromSuperview];
 }
 
-- (void)viewWillDisappear:(BOOL)animated{
-    isUpdate = true;
-    isSelectCategory = false;
-    [self.db close];
-    self.sortbtn.hidden = YES;
-}
-
 /**隐藏底部横条，点击屏幕可显示*/
 - (BOOL)prefersHomeIndicatorAutoHidden{
     return YES;
@@ -882,4 +968,13 @@
 - (BOOL)shouldAutorotate{
     return NO;
 }
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    isUpdate = true;
+    isSelectCategory = false;
+    [self.db close];
+    self.sortbtn.hidden = YES;
+}
+
 @end

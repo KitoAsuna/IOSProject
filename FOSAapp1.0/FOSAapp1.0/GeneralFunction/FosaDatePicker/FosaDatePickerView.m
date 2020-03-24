@@ -173,7 +173,7 @@
     NSString *hour = self.hour.length == 3 ? [NSString stringWithFormat:@"%ld", self.hour.integerValue] : [NSString stringWithFormat:@"0%ld", self.hour.integerValue];
     NSString *minute = self.minute.length == 3 ? [NSString stringWithFormat:@"%ld", self.minute.integerValue] : [NSString stringWithFormat:@"0%ld", self.minute.integerValue];
     
-    self.selectStr = [NSString stringWithFormat:@"%@/%@/%ld/%@:%@", month, day, [self.year integerValue], hour, minute];
+    self.selectStr = [NSString stringWithFormat:@"%@/%@/%ld/%@:%@", month, day, [self.year integerValue]%100, hour, minute];
     if ([self.delegate respondsToSelector:@selector(datePickerViewSaveBtnClickDelegate:)]) {
         [self.delegate datePickerViewSaveBtnClickDelegate:self.selectStr];
     }
@@ -497,10 +497,8 @@
     int ci;
     NSDateFormatter *df = [[NSDateFormatter alloc]init];
     [df setDateFormat:@"yyyy年,MM月,dd日,HH时,mm分"];
-    NSDate *dt1 = [[NSDate alloc] init];
-    NSDate *dt2 = [[NSDate alloc] init];
-    dt1 = [df dateFromString:date01];
-    dt2 = [df dateFromString:date02];
+    NSDate *dt1 = [df dateFromString:date01];
+    NSDate *dt2 = [df dateFromString:date02];
     NSComparisonResult result = [dt1 compare:dt2];
     switch (result) {
             //date02比date01大

@@ -9,6 +9,7 @@
 #import "LoginViewController.h"
 #import "RegisterViewController.h"
 #import "FMDB.h"
+#import "resetAccountViewController.h"
 
 @interface LoginViewController ()<UITextFieldDelegate>{
     FMDatabase *db;
@@ -194,6 +195,9 @@
     NSMutableAttributedString * underAttr = [[NSMutableAttributedString alloc] initWithString:@"forget password" attributes:underAttribtDic];
     self.forgetPassword.attributedText = underAttr;
     self.forgetPassword.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
+    UITapGestureRecognizer *forgetrecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(JumpToReset)];
+    self.forgetPassword.userInteractionEnabled = YES;
+    [self.forgetPassword addGestureRecognizer:forgetrecognizer];
     [self.rememberContainer addSubview:self.forgetPassword];
     
     self.login.frame = CGRectMake(0, 0, self.LoginContainer.frame.size.width*4/9, self.LoginContainer.frame.size.height);
@@ -273,6 +277,11 @@ if (isButtonOn) {
 - (void)JumpToRegister{
     RegisterViewController *regist = [[RegisterViewController alloc]init];
     [self.navigationController pushViewController:regist animated:YES];
+}
+//跳转到重置密码界面
+- (void)JumpToReset{
+    resetAccountViewController *reset = [resetAccountViewController new];
+    [self.navigationController pushViewController:reset animated:YES];
 }
 //验证用户信息
 - (void)vertifyUser{

@@ -96,6 +96,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     self.userDefaults = [NSUserDefaults standardUserDefaults];// 初始化
     [self.userDefaults setObject:selectedSetting forKey:@"notificationSetting"];
 }

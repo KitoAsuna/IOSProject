@@ -30,7 +30,8 @@
     return [[self alloc]initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate  foodIcon:(NSString *)foodPhoto category:(NSString *)category like:(NSString *)islike];
 }
 - (instancetype)initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate  foodIcon:(NSString *)foodPhoto category:(NSString *)category like:(NSString *)islike{
-    if(self == [super init]){
+    self = [super init];
+    if(self){
         self.foodName = food_name;
         self.aboutFood = aboutFood;
         self.expireDate = expireDate;
@@ -39,8 +40,11 @@
         self.foodPhoto = foodPhoto;
         self.category = category;
         self.islike = islike;
+        return self;
+    }else{
+        return nil;
     }
-    return self;
+    
 }
 
 ////show info

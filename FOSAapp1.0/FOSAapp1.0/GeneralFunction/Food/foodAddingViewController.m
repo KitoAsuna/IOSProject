@@ -34,6 +34,10 @@
 @property (nonatomic,strong) NSMutableArray<UIImageView *> *imageviewArray;
 //当前选中的种类cell
 @property (nonatomic,strong) foodKindCollectionViewCell *selectedCategory;
+
+//图片放大视图
+@property (nonatomic,strong) UIScrollView *backGround;
+@property (nonatomic,strong) UIImageView  *bigImage;
 @end
 
 @implementation foodAddingViewController
@@ -328,6 +332,7 @@
     [self InitialDatePicker];
 }
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     [self OpenSqlDatabase:@"FOSA"]; //打开数据库
     self.storageDevice = self.model.device;
     self.likeBtn.hidden = NO;
@@ -348,9 +353,9 @@
         backButton.frame = CGRectMake(0, 0, NavigationBarH, NavigationBarH);
         //[backButton.widthAnchor constraintEqualToConstant:NavigationBarH*2].active = YES;
         //[backButton.heightAnchor constraintEqualToConstant:NavigationBarH].active = YES;
-        [backButton setTitle:@"Back" forState:UIControlStateNormal];
-        [backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [backButton setImage:[[UIImage imageNamed:@"icon_backW"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
+        //[backButton setTitle:@"Back" forState:UIControlStateNormal];
+        //[backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [backButton setBackgroundImage:[UIImage imageNamed:@"icon_backW"] forState:UIControlStateNormal];
         [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
 
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:backButton];//
@@ -628,7 +633,7 @@
         self.storageView.userInteractionEnabled = NO;
         self.expireView.userInteractionEnabled = NO;
         self.locationView.userInteractionEnabled = NO;
-        self.picturePlayer.userInteractionEnabled = NO;
+        //self.picturePlayer.userInteractionEnabled = NO;
         
         NSArray<NSString *> *storageTimeArray;
         storageTimeArray = [self.model.storageDate componentsSeparatedByString:@"/"];
@@ -688,6 +693,7 @@
         if ([self.foodStyle isEqualToString:@"Info"] && [self getImage:[NSString stringWithFormat:@"%@%ld",self.model.foodPhoto,i+1]] != nil) {
             NSString *img = [NSString stringWithFormat:@"%@%ld",self.model.foodPhoto,i+1];
             self.imageviewArray[i].image = [self getImage:img];
+            self.foodImgArray[i] = self.imageviewArray[i].image;
         }else{
             NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"picturePlayer",i+1];
             self.imageviewArray[i].image = [UIImage imageNamed:imgName];
@@ -754,9 +760,42 @@
         CGFloat offset = scrollView.contentOffset.x;
         NSInteger index = offset/screen_width;
         self.toturialPageControl.currentPage = index;
+        
     }
     
 }
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
+    return self.bigImage;
+}
+//- (void)scrollViewDidZoom:(UIScrollView *)scrollView{
+//    self.bigImage.center = self.view.center;
+//}
+
+/**双击定点放大*/
+- (void)handleDoubleTap:(UIGestureRecognizer *)gesture
+{
+    CGFloat zoomScale = self.backGround.zoomScale;
+    NSLog(@"%f",self.backGround.zoomScale);
+    zoomScale = (zoomScale == 1.0) ? 3.0 : 1.0;
+    CGRect zoomRect = [self zoomRectForScale:zoomScale withCenter:[gesture locationInView:gesture.view]];
+    [self.backGround zoomToRect:zoomRect animated:YES];
+}
+- (CGRect)zoomRectForScale:(float)scale withCenter:(CGPoint)center
+{
+    CGRect zoomRect;
+    zoomRect.size.height =self.view.frame.size.height / scale;
+    zoomRect.size.width  =self.view.frame.size.width  / scale;
+    zoomRect.origin.x = center.x - (zoomRect.size.width  /2.0);
+    zoomRect.origin.y = center.y - (zoomRect.size.height /2.0);
+    return zoomRect;
+}
+//点击缩小视图
+- (void)shirnkPhoto{
+    [self.backGround removeFromSuperview];
+    self.navigationController.navigationBar.hidden = NO;
+    //[UIApplication sharedApplication].statusBarHidden = NO;
+}
+
 #pragma mark - UICollectionViewDataSource
 //每个section有几个item
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -881,6 +920,7 @@
 }
 - (void)EditInfo{
     isEdit = true;
+    self.foodStyle = @"edit";
     self.likeBtn.userInteractionEnabled = YES;
     self.foodTextView.userInteractionEnabled = YES;
     self.foodDescribedTextView.userInteractionEnabled = YES;
@@ -954,13 +994,18 @@
 }
 
 - (void)jumptoPhoto{
-    takePictureViewController *photo = [[takePictureViewController alloc]init];
-    photo.photoBlock = ^(UIImage *img){
-        //通过block将相机拍摄的图片放置在对应的位置
-        self.imageviewArray[self->currentPictureIndex].image = img;
-        [self.foodImgArray addObject:img];
-    };
-    [self.navigationController pushViewController:photo animated:NO];
+    if ([self.foodStyle isEqualToString:@"Info"]) {
+        NSLog(@"放大图片");
+        [self EnlargePhoto];
+    }else{
+        takePictureViewController *photo = [[takePictureViewController alloc]init];
+        photo.photoBlock = ^(UIImage *img){
+            //通过block将相机拍摄的图片放置在对应的位置
+            self.imageviewArray[self->currentPictureIndex].image = img;
+            self.foodImgArray[self->currentPictureIndex] = img;
+        };
+        [self.navigationController pushViewController:photo animated:NO];
+    }
 }
 
 - (void)back{
@@ -987,7 +1032,7 @@
     [self presentViewController:activityVC animated:TRUE completion:nil];
 }
 - (void)saveInfoAndFinish{
-    if ([self.foodStyle isEqualToString:@"Info"]) {
+    if ([self.foodStyle isEqualToString:@"edit"]) {
         [self DeleteRecord];
     }
     [self SavephotosInSanBox:self.foodImgArray];
@@ -1073,7 +1118,45 @@
     NSLog(@"所有种类:%@",self.categoryNameArray);
 }
 
-#pragma mark - 相片
+#pragma mark - 图片
+//放大查看全图
+- (void)EnlargePhoto{
+    self.navigationController.navigationBar.hidden = YES;   //隐藏导航栏
+    //[UIApplication sharedApplication].statusBarHidden = YES;             //隐藏状态栏
+    [self.view endEditing:YES];
+    //底层视图
+    self.backGround = [[UIScrollView alloc]init];
+    _backGround.backgroundColor = [UIColor blackColor];
+    _backGround.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
+    _backGround.frame = self.view.frame;
+    _backGround.showsHorizontalScrollIndicator = NO;
+    _backGround.showsVerticalScrollIndicator = NO;
+    _backGround.multipleTouchEnabled = YES;
+    _backGround.maximumZoomScale = 5;
+    _backGround.minimumZoomScale = 1;
+    _backGround.delegate = self;
+
+    self.bigImage = [[UIImageView alloc]init];
+    _bigImage.frame = self.view.frame;
+    _bigImage.image = self.imageviewArray[currentPictureIndex].image;
+    _bigImage.userInteractionEnabled = YES;
+    _bigImage.contentMode = UIViewContentModeScaleAspectFit;
+    _bigImage.clipsToBounds = YES;
+    UITapGestureRecognizer *shrinkRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(shirnkPhoto)];
+    [shrinkRecognizer setNumberOfTapsRequired:1];
+    [_bigImage addGestureRecognizer:shrinkRecognizer];
+    //添加双击事件
+    UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+    [doubleTapGesture setNumberOfTapsRequired:2];
+    [_bigImage addGestureRecognizer:doubleTapGesture];
+    
+    [shrinkRecognizer requireGestureRecognizerToFail:doubleTapGesture];
+    
+    [_backGround addSubview:self.bigImage];
+    [self.view addSubview:self.backGround];
+}
+
+
 - (void)SavephotosInSanBox:(NSMutableArray *)images{
     NSLog(@"************%@",images);
     if (images.count > 0) {
@@ -1216,11 +1299,10 @@
 //将UIView转化为图片并保存在相册
 - (UIImage *)SaveViewAsPicture:(UIView *)view{
     NSLog(@"begin saving");
-    UIImage *imageRet = [[UIImage alloc]init];
     //UIGraphicsBeginImageContextWithOptions(区域大小, 是否是非透明的, 屏幕密度);
     UIGraphicsBeginImageContextWithOptions(view.frame.size, YES, [UIScreen mainScreen].scale);
     [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    imageRet = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage *imageRet = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return imageRet;
 }
@@ -1238,7 +1320,6 @@
     //[self createNonInterpolatedUIImageFormCIImage:image withSize:];
     return [UIImage imageWithCIImage:image];
 }
-
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:message preferredStyle:UIAlertControllerStyleAlert];

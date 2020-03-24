@@ -371,6 +371,7 @@
     return img;
 }
 - (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     [self.session stopRunning];
     self.session = nil;
     [self.flashBtn removeFromSuperview];

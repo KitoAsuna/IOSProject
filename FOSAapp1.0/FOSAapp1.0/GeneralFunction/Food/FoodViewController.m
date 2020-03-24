@@ -293,6 +293,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     //添加键盘弹出与收回的事件
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -851,11 +852,10 @@
 //将UIView转化为图片并保存在相册
 - (UIImage *)SaveViewAsPicture:(UIView *)view{
     NSLog(@"begin saving");
-    UIImage *imageRet = [[UIImage alloc]init];
     //UIGraphicsBeginImageContextWithOptions(区域大小, 是否是非透明的, 屏幕密度);
     UIGraphicsBeginImageContextWithOptions(view.frame.size, YES, [UIScreen mainScreen].scale);
     [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    imageRet = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage *imageRet = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return imageRet;
 }
@@ -1322,6 +1322,7 @@
                                                   object:nil];
 }
 - (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     [self.db close];
 }
 @end

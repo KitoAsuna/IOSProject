@@ -240,11 +240,10 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
 //将UIView转化为图片并保存在相册
 - (UIImage *)SaveViewAsPicture:(UIView *)view{
     NSLog(@"begin saving");
-    UIImage *imageRet = [[UIImage alloc]init];
     //UIGraphicsBeginImageContextWithOptions(区域大小, 是否是非透明的, 屏幕密度);
     UIGraphicsBeginImageContextWithOptions(view.frame.size, YES, [UIScreen mainScreen].scale);
     [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    imageRet = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage *imageRet = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return imageRet;
 }
@@ -281,7 +280,10 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     CGImageRef scaledImage = CGBitmapContextCreateImage(bitmapRef);
     CGContextRelease(bitmapRef);
     CGImageRelease(bitmapImage);
-    return [UIImage imageWithCGImage:scaledImage];
+    UIImage *returnimage = [UIImage imageWithCGImage:scaledImage];
+    CGImageRelease(scaledImage);//手动释放
+    CGColorSpaceRelease(cs);//手动释放
+    return returnimage;
 }
 #pragma mark - <保存到相册>
 -(void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {

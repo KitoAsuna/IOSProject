@@ -717,7 +717,7 @@ NSLog(@"************************************************************************
 - (void)showMoreMessage:(AVMetadataMachineReadableCodeObject *)code{
     NSLog(@"%d",AlertCount);
     AlertCount++;
-    NSString *message = [code stringValue];
+   // NSString *message = [code stringValue];
     CGFloat navHeight = self.navigationController.navigationBar.frame.size.height;
     FoodMoreInfoView *circleAlertView = [[FoodMoreInfoView alloc]init];
    // circleAlertView.model = [self CheckFoodInfoWithName:message];
@@ -892,12 +892,12 @@ NSLog(@"************************************************************************
 
 #pragma mark - <保存到相册>
 -(void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
-    NSString *msg = nil ;
-    if(error){
-        msg = @"保存图片失败" ;
-    }else{
-        msg = @"保存图片成功" ;
-    }
+    //NSString *msg = nil ;
+//    if(error){
+//        //msg = @"保存图片失败" ;
+//    }else{
+//        //msg = @"保存图片成功" ;
+//    }
 }
 //获取食物图片数组
 - (NSMutableArray<UIImage *> *)getCellImageArray:(NSString *)imgName{

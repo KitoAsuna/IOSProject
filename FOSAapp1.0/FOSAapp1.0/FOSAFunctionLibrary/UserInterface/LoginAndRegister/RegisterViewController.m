@@ -160,7 +160,6 @@
     self.verificatonInput.returnKeyType = UIReturnKeyDone;;
     [self.verificationView addSubview:self.verificatonInput];
     self.verificationLabel.frame = CGRectMake(self.verificationView.frame.size.width*3/5, 0, self.verificationView.frame.size.width*2/5, screen_height/15);
-    self.verificationLabel.userInteractionEnabled = YES;
     self.verificationLabel.textAlignment = NSTextAlignmentRight;
     self.verificationLabel.font = [UIFont systemFontOfSize:14*(screen_width/414)];
     //文字添加下划线
