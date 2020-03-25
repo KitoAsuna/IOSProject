@@ -80,7 +80,6 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     //UIStatusBarManager *statusBarManager = [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager;
-    
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     self.navigationController.navigationBar.hidden = YES;
     [self SetCurrentUser];
@@ -194,6 +193,7 @@
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.textLabel.text = ItemArray[row];
     cell.textLabel.textColor = FOSAGray;
+    cell.backgroundColor = FOSAWhite;
     //添加选中效果
     //返回cell
     return cell;
@@ -201,7 +201,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSInteger index = indexPath.row;
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    cell.backgroundColor = [UIColor grayColor];
     AboutAppsViewController *about = [AboutAppsViewController new];
     toturialViewController *tutorial = [toturialViewController new];
     languageViewController *language = [languageViewController new];
@@ -214,6 +214,7 @@
         case 1:
             language.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:language animated:YES];
+            
             break;
         case 2:
             setting.hidesBottomBarWhenPushed = YES;
@@ -227,11 +228,12 @@
         default:
             break;
     }
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    //cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    [self.userItemTable reloadData];
+    
 }
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.backgroundColor = [UIColor whiteColor];
+    
 }
 - (void)JUMP{
     LoginViewController *login = [[LoginViewController alloc]init];

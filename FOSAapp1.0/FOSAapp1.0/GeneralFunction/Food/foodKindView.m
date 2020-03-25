@@ -16,7 +16,7 @@
         
         self.kind = [[UILabel alloc]init];
         self.kind.textAlignment = NSTextAlignmentCenter;
-        self.kind.textColor = [UIColor orangeColor];
+        self.kind.textColor = FOSAYellow;
         self.kind.font = [UIFont systemFontOfSize:13];
         [self addSubview:self.kind];
         self.rootView = [[UIView alloc]init];
@@ -36,7 +36,7 @@
     self.kind.adjustsFontSizeToFitWidth = YES;
     self.rootView.frame = CGRectMake(0, height-width, width, width);
     self.rootView.layer.cornerRadius = width/2;
-    self.rootView.backgroundColor = [UIColor orangeColor];
+    self.rootView.backgroundColor = FOSAYellow;
     self.categoryPhoto.frame = CGRectMake(self.rootView.frame.size.width/5, self.rootView.frame.size.width/5, self.rootView.frame.size.width*3/5, self.rootView.frame.size.width*3/5);
     self.categoryPhoto.backgroundColor = [UIColor clearColor];
     //self.categoryPhoto.layer.cornerRadius = width/2;

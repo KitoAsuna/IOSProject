@@ -40,6 +40,7 @@
     self.languageTable.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     [self.view addSubview:self.languageTable];
     
+    
     [self.languageTable reloadData];
     NSInteger selectedIndex = 0;
     NSIndexPath *selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndex inSection:0];
@@ -94,5 +95,6 @@
     UITableViewCell * cell = (UITableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
     cell.accessoryType = UITableViewCellAccessoryNone;
 }
+
 
 @end

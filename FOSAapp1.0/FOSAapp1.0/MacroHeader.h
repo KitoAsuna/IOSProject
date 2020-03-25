@@ -57,7 +57,7 @@
 
 // 4.导航栏/工具栏/状态栏高度
 #define NavigationBarH 44
-#define StatusBarH [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager.statusBarFrame.size.height//顶部状态栏高度
+#define StatusBarH   (iOS13 ? [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager.statusBarFrame.size.height : [UIApplication sharedApplication].statusBarFrame.size.height)//顶部状态栏高度
 #define ToolBarH (IS_IPHONE_X ? 83 : 49)//底部工具栏高度
 #define NoToolBarX (IS_IPHONE_X ? 34 : 0)//底部iPhoneX的适配高度
 #define NavgationH (IS_IPHONE_X ? 88 : 64)//顶部导航栏高度
@@ -72,8 +72,9 @@
 // 7.全局颜色
 #define XYRMainColor YTHColor(254,48,131)//主色调
 #define FOSAgreen [UIColor colorWithRed:90/255.0 green:172/255.0 blue:51/255.0 alpha:1.0]
-#define FOSAgreengrad [UIColor colorWithRed:80/255.0 green:200/255.0 blue:80/255.0 alpha:1.0]
-#define FOSARed  [UIColor redColor]
+#define FOSAgreengrad [UIColor colorWithRed:80/255.0 green:200/255.0 blue:84/255.0 alpha:1.0]
+#define FOSARed  [UIColor colorWithRed:252/255.0 green:84/255.0 blue:116/255.0 alpha:1.0]
+#define FOSAYellow [UIColor colorWithRed:248/255.0 green:181/255.0 blue:81/255.0 alpha:1.0]
 #define RandomColor ([UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1.0])//随机颜色
 #define FOSAFoodBackgroundColor [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1.0]
 #define FOSAWhite [UIColor whiteColor]
@@ -128,14 +129,5 @@
 #define ToolbarHeight self.navigationController.toolbar.frame.size.height
 
 #define mouth [NSDictionary dictionaryWithObjectsAndKeys:@"JAN",@"01",@"FEB",@"02",@"MAR",@"03",@"APR",@"04",@"MAY",@"05",@"JUNE",@"06",@"JULY",@"07",@"AUG",@"08",@"SEPT",@"09",@"OCT",@"10",@"NOV",@"11",@"DEC",@"12",nil]
-
-//#define arrayData @[@"MADRID",@"BARCELONA",@"MALAGA",@"O2Go",@"O2Go WINE",@"New Product",@"All"];
-//#define array1 @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04"];
-//#define array2 @[@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07"];
-//#define array3 @[@"S Size0.9L",@"M Size2L",@"L Size3.8L",@"V-ADAPTER"];
-//#define array4 @[@"0.97L(33oz)",@"1.32L(45oz)"];
-//#define array5 @[@"WINE_Pouchbag",@"WINE0.97L(33oz)"];
-//#define array6 @[@"FOSA003",@"FOSA001",@"IMG_Pound"];
-//#define array7 @[@"MAD(20oz)",@"MAD850ml(28oz)",@"MAD1250ml(45oz)",@"MAD2850ml(96oz)",@"MAR3450ml(116oz)",@"Round01",@"Round02",@"Round03",@"Round04",@"BAR1450ml(49oz)",@"BAR2300ml(77oz)",@"Square01",@"Square03",@"Square04",@"Square05",@"Square06",@"Square07",@"S Size0.9L",@"M Size2L",@"L Size3.8L",@"V-ADAPTER",@"0.97L(33oz)",@"1.32L(45oz)",@"WINE_Pouchbag",@"WINE0.97L(33oz)",@"FOSA003",@"FOSA001",@"IMG_Pound"];
 
 #endif /* MacroHeader_h */

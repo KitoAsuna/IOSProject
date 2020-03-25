@@ -350,18 +350,20 @@
     if ([self.foodStyle isEqualToString:@"adding"]) {
         /**显示图片和标题的自定义返回按钮*/
         UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        backButton.frame = CGRectMake(0, 0, NavigationBarH, NavigationBarH);
-        //[backButton.widthAnchor constraintEqualToConstant:NavigationBarH*2].active = YES;
-        //[backButton.heightAnchor constraintEqualToConstant:NavigationBarH].active = YES;
-        //[backButton setTitle:@"Back" forState:UIControlStateNormal];
-        //[backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        backButton.frame = CGRectMake(10, 0, NavigationBarH*5/3, NavigationBarH*5/9);
+        backButton.center = CGPointMake(NavigationBarH*5/6+10, NavigationBarH/2);
+
         [backButton setBackgroundImage:[UIImage imageNamed:@"icon_backW"] forState:UIControlStateNormal];
         [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+        [self.navigationController.navigationBar addSubview:backButton];
 
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:backButton];//
+//        UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc]initWithCustomView:backButton];
+//        UIBarButtonItem *negativeSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+//        negativeSpacer.width = 10.0f;
+//        self.navigationItem.leftBarButtonItems = @[backButtonItem,negativeSpacer];
         //更改返回按钮填充颜色
-        self.navigationController.navigationBar.tintColor = [UIColor darkGrayColor];
-        
+        //self.navigationController.navigationBar.tintColor = [UIColor darkGrayColor];
+
         UIButton *helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
         helpButton.frame = CGRectMake(0, 0, NavigationBarH/2, NavigationBarH/2);
         //[helpButton setTitle:@"Back" forState:UIControlStateNormal];
@@ -615,7 +617,7 @@
         self.foodCell.center = self.categoryCollection.center;
         [self.footerView addSubview:self.foodCell];
         self.deleteBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.footerView.frame)+screen_height*3/143, screen_width/3, screen_height*6/143);
-        self.deleteBtn.backgroundColor = [UIColor colorWithRed:255/255.0 green:45/255.0 blue:45/255.0 alpha:1];
+        self.deleteBtn.backgroundColor = FOSARed;
         [self.deleteBtn addTarget:self action:@selector(deleteFoodRecord) forControlEvents:UIControlEventTouchUpInside];
         self.deleteBtn.layer.cornerRadius = self.deleteBtn.frame.size.height/2;
         [self.deleteBtn setTitle:@"DELETE" forState:UIControlStateNormal];
@@ -829,7 +831,7 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     foodKindCollectionViewCell *cell = (foodKindCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
 
-    cell.rootView.backgroundColor = [UIColor orangeColor];
+    cell.rootView.backgroundColor = FOSAYellow;
     cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]]];
     selectCategory = self.categoryArray[indexPath.row];
     self.selectedCategory = cell;
@@ -1349,7 +1351,9 @@
     [self.db close];
     self.likeBtn.hidden = YES;
 }
-
+- (UIStatusBarStyle)preferredStatusBarStyle{
+     return UIStatusBarStyleLightContent;
+}
 /**隐藏底部横条，点击屏幕可显示*/
 - (BOOL)prefersHomeIndicatorAutoHidden{
     return YES;

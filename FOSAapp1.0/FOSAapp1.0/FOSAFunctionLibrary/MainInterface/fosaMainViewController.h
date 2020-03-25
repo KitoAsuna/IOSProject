@@ -29,6 +29,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong,nonatomic) NSMutableArray<NSString *> *categoryDataSource;
 @property (strong,nonatomic) NSMutableArray<FoodModel *> *collectionDataSource;
 
+//排序列表
+@property (nonatomic,strong) UIView *sortListView;
+@property (nonatomic,strong) UITableView *sortListTable;
+@property (nonatomic,strong) UIButton *cancelSortBtn;
 
 @end
 

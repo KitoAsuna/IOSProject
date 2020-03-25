@@ -64,6 +64,7 @@
 }
 - (void)setModel:(FoodModel *)model
 {
+    
     NSArray<NSString *> *timeArray;
     _model = model;
     if ([self getImage:model.foodPhoto] != nil) {
