@@ -318,7 +318,6 @@
     }
     return _showFoodNameLabel;
 }
-
 #pragma mark - 创建视图
 
 - (void)viewDidLoad {
@@ -529,7 +528,7 @@
     self.foodDescribedTextView.textColor = [UIColor blackColor];
     self.foodDescribedTextView.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
     self.foodDescribedTextView.delegate = self;
-    self.foodDescribedTextView.returnKeyType = UIReturnKeyNext;
+    self.foodDescribedTextView.returnKeyType = UIReturnKeyDone;
     self.foodDescribedTextView.textContainerInset = UIEdgeInsetsMake(5, 5, 0, 0);//上、左、下、右
     [self.foodDescribedView addSubview:self.foodDescribedTextView];
     //输入字数提示
@@ -865,6 +864,7 @@
         self.numberLabel.text = @"80/80";
     }
 }
+
 //已经结束/退出编辑模式
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView{
     [UIView animateWithDuration:0.5 animations:^{
@@ -872,6 +872,7 @@
     }];
     return YES;
 }
+
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     if (textField == self.foodTextView) {
         [UIView animateWithDuration:0.5 animations:^{
@@ -884,9 +885,9 @@
         }];
         NSLog(@"location");
     }
-   
     return YES;
 }
+
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     [UIView animateWithDuration:0.5 animations:^{
         [self.contentView setContentOffset:CGPointMake(0, 0)];

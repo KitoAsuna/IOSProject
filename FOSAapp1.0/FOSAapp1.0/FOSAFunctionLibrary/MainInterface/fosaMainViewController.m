@@ -32,7 +32,7 @@
 //种类数组
 @property (nonatomic,strong) NSMutableArray *categoryArray;
 //教学提示相关
-@property (nonatomic,strong) UIView *mask;
+@property (nonatomic,strong) UIView *mask,*smask;
 //数据库
 @property (nonatomic,strong) FMDatabase *db;
 //当前选中的种类cell
@@ -369,10 +369,11 @@
 - (void)creatSortListView{
     sortArray = @[@"MOST RECENT",@"LEAST RECENT",@"RECENT ADD",@"LEAST ADD"];
     
-    UIView *smask = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];
-    smask.backgroundColor = [UIColor blackColor];
-    smask.alpha = 0.5;
-    //[self.tabBarController.view addSubview:smask];
+    self.smask = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    self.smask.backgroundColor = [UIColor blackColor];
+    self.smask.alpha = 0.5;
+    [self.tabBarController.view addSubview:self.smask];
+    self.smask.hidden = YES;
     
     self.sortListView = [[UIView alloc]initWithFrame:CGRectMake(0, screen_height, screen_width, screen_height*2/5)];
     self.sortListView.backgroundColor = [UIColor whiteColor];
@@ -389,7 +390,7 @@
     UIView *line  = [[UIView alloc]initWithFrame:CGRectMake(0, sortHeight/10-1, screen_width, 0.5)];
     line.backgroundColor = FOSAGray;
     [self.sortListView addSubview:line];
-    
+
     self.sortListTable = [[UITableView alloc]initWithFrame:CGRectMake(0, sortHeight/10, screen_width, sortHeight*7/10) style:UITableViewStylePlain];
     self.sortListTable.delegate = self;
     self.sortListTable.dataSource = self;
@@ -398,18 +399,19 @@
     self.sortListTable.showsHorizontalScrollIndicator = NO;
     self.sortListTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     [self.sortListView addSubview:self.sortListTable];
-    
+
     self.cancelBtn.frame = CGRectMake(screen_width/3, sortHeight*17/20, screen_width/3, sortHeight/10);
     [self.cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
     [self.cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.cancelBtn setTitleColor:FOSAgreen forState:UIControlStateHighlighted];
     [self.sortListView addSubview:self.cancelBtn];
-    
+
     [self.cancelBtn addTarget:self action:@selector(cancelSort) forControlEvents:UIControlEventTouchUpInside];
 }
 - (void)cancelSort{
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.2 animations:^{
         self.sortListView.center = CGPointMake(screen_width/2, screen_height*6/5);
+        self.smask.hidden = YES;
     }];
 }
 #pragma mark - UItableViewDelegate
@@ -442,6 +444,14 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    cell.backgroundColor = FOSAGray;
+}
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell * cell = (UITableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    //cell.backgroundColor = fosaw
     
 }
 
@@ -723,11 +733,8 @@
 
 - (void)selectToSort{
     [UIView animateWithDuration:0.5 animations:^{
-//        UIView *smask = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];
-//        smask.backgroundColor = [UIColor blackColor];
-//        smask.alpha = 0.5;
-//        [self.tabBarController.view addSubview:smask];
         self.sortListView.center = CGPointMake(screen_width/2, screen_height*4/5);
+        self.smask.hidden = NO;
     }];
 //    UIAlertController *alert  = [UIAlertController alertControllerWithTitle:@"排序方式" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 //    UIAlertAction *sortByExpireDateUp = [UIAlertAction actionWithTitle:@"MOST RECENT" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
