@@ -1016,7 +1016,7 @@
                 NSLog(@"%@ 将在 %@ 过期了，请及时使用",self.collectionDataSource[i].foodName,self.collectionDataSource[i].expireDate);
             }else{
         NSLog(@"%@刚好在今天过期",self.collectionDataSource[i].foodName);
-                NSString *body = [NSString stringWithFormat:@"今天要记得吃 %@",self.collectionDataSource[i].foodName];
+                NSString *body = [NSString stringWithFormat:@"%@ 在今天过期了",self.collectionDataSource[i].foodName];
                 //获取通知的图片
                 image = [self getImage:self.collectionDataSource[i].foodPhoto];
                 //另存通知图片
