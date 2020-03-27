@@ -373,7 +373,7 @@
 
 //创建排序列表视图
 - (void)creatSortListView{
-    sortArray = @[@"Most Recent",@"Least Reast",@"Recent Add",@"Least Add"];
+    sortArray = @[@"Most Recent",@"Least Recent",@"Recent Add",@"Least Add"];
     
     self.smask.frame = [UIScreen mainScreen].bounds;
     self.smask.backgroundColor = [UIColor blackColor];
@@ -472,9 +472,6 @@
     //cell.backgroundColor = fosaw
     
 }
-
-
-
 
 #pragma mark - UICollectionViewDataSource
 //每个section有几个item
