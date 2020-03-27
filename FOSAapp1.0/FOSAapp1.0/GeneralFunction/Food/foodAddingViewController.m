@@ -519,17 +519,18 @@
     self.foodTextView.returnKeyType = UIReturnKeyDone;
     self.foodTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     [self.foodNameView addSubview:self.foodTextView];
-    
+    self.shareBtn.frame = CGRectMake(screen_width*28/33, contentHeight/8, contentHeight/8, contentHeight/8);
+    [self.shareBtn setImage:[UIImage imageNamed:@"icon_share"] forState:UIControlStateNormal];
+    [self.shareBtn addTarget:self action:@selector(jumpToShare) forControlEvents:UIControlEventTouchUpInside];
+    [self.foodNameView addSubview:self.shareBtn];
+    self.scanBtn.frame = CGRectMake(screen_width*28/33, contentHeight/8, contentHeight/8, contentHeight/8);
+    [self.scanBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
+    [self.scanBtn addTarget:self action:@selector(jumpToScan) forControlEvents:UIControlEventTouchUpInside];
+    [self.foodNameView addSubview:self.scanBtn];
     if ([self.foodStyle isEqualToString:@"Info"]) {
-        self.shareBtn.frame = CGRectMake(screen_width*28/33, contentHeight/8, contentHeight/8, contentHeight/8);
-        [self.shareBtn setImage:[UIImage imageNamed:@"icon_share"] forState:UIControlStateNormal];
-        [self.shareBtn addTarget:self action:@selector(jumpToShare) forControlEvents:UIControlEventTouchUpInside];
-        [self.foodNameView addSubview:self.shareBtn];
+        self.scanBtn.hidden = YES;
     }else{
-        self.scanBtn.frame = CGRectMake(screen_width*28/33, contentHeight/8, contentHeight/8, contentHeight/8);
-        [self.scanBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
-        [self.scanBtn addTarget:self action:@selector(jumpToScan) forControlEvents:UIControlEventTouchUpInside];
-        [self.foodNameView addSubview:self.scanBtn];
+        self.shareBtn.hidden = YES;
     }
     /**
                 提示与文字上下一致
@@ -1001,6 +1002,8 @@
         self.categoryCollection.hidden = NO;
         self.doneBtn.hidden = NO;
         self.refreshBtn.hidden = NO;
+        self.scanBtn.hidden = NO;
+        self.shareBtn.hidden = YES;
         self.foodCell.hidden = YES;
         self.deleteBtn.hidden = YES;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.helpBtn];
