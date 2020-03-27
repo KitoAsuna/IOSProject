@@ -1024,7 +1024,7 @@
     //隐藏导航栏
     self.navigationController.navigationBar.hidden = YES;
     
-    self.skipBtn.frame = CGRectMake(0, NavigationHeight, screen_width/4, NavigationBarH);
+    self.skipBtn.frame = CGRectMake(0, NavigationBarH, screen_width/4, NavigationBarH);
     [self.skipBtn setTitle:@"Skip" forState:UIControlStateNormal];
     self.skipBtn.titleLabel.font = [UIFont systemFontOfSize:20];
     [self.skipBtn addTarget:self action:@selector(skipTutorial) forControlEvents:UIControlEventTouchUpInside];
