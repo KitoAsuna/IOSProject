@@ -1,11 +1,11 @@
 {
   "images" : [
     {
+      "filename" : "icon_sortHL.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "icon_picturePlayer2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

@@ -42,7 +42,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.skipBtn.frame = CGRectMake(0, StatusBarH, screen_width/4, NavigationBarH);
+    if (@available(iOS 13.0, *)) {
+        self.skipBtn.frame = CGRectMake(0, NavigationBarH, screen_width/4, NavigationBarH);
+    } else {
+        self.skipBtn.frame = CGRectMake(0, NavigationBarH, screen_width/4, NavigationBarH);
+    }
     [self.skipBtn setTitle:@"Skip" forState:UIControlStateNormal];
     self.skipBtn.titleLabel.font = [UIFont systemFontOfSize:25];
     [self.skipBtn addTarget:self action:@selector(skipTutorial) forControlEvents:UIControlEventTouchUpInside];

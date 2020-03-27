@@ -12,6 +12,7 @@
 #import "foodKindCollectionViewCell.h"
 #import "FMDB.h"
 #import <UserNotifications/UserNotifications.h>
+#import "FosaNotification.h"
 #import "QRCodeScanViewController.h"
 
 @interface foodAddingViewController ()<UIScrollViewDelegate,UITextViewDelegate,UITextFieldDelegate, UICollectionViewDelegate,FosaDatePickerViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UNUserNotificationCenterDelegate>{
@@ -21,6 +22,7 @@
     NSInteger currentPictureIndex;//标识图片轮播器当前指向哪张图片
     NSString *device;
     Boolean isEdit;
+    NSString *expireStr,*storageStr;
 }
 
 @property (nonatomic,weak)   FosaDatePickerView *fosaDatePicker;//日期选择器
@@ -38,6 +40,10 @@
 //图片放大视图
 @property (nonatomic,strong) UIScrollView *backGround;
 @property (nonatomic,strong) UIImageView  *bigImage;
+//FOSA通知对象
+@property (nonatomic,strong) FosaNotification *fosaNotification;
+
+@property (nonatomic,strong) UIButton *refreshBtn;
 @end
 
 @implementation foodAddingViewController
@@ -257,6 +263,12 @@
     }
     return _doneBtn;
 }
+- (UIButton *)backbtn{
+    if (_backbtn == nil) {
+        _backbtn = [UIButton new];
+    }
+    return _backbtn;
+}
 - (UIButton *)deleteBtn{
     if (_deleteBtn == nil) {
         _deleteBtn = [UIButton new];
@@ -318,6 +330,13 @@
     }
     return _showFoodNameLabel;
 }
+- (UIButton *)refreshBtn{
+    if (_refreshBtn == nil) {
+        _refreshBtn = [UIButton new];
+    }
+    return _refreshBtn;;
+}
+
 #pragma mark - 创建视图
 
 - (void)viewDidLoad {
@@ -335,6 +354,13 @@
     [self OpenSqlDatabase:@"FOSA"]; //打开数据库
     self.storageDevice = self.model.device;
     self.likeBtn.hidden = NO;
+    if (![self.foodStyle isEqualToString:@"Info"]) {
+        self.backbtn.hidden = NO;
+    }
+    if (device != nil) {
+        [self SystemAlert:@"Binding device successfully"];
+        [self.storageIcon setImage:[UIImage imageNamed:@"img_foodCode"] forState:UIControlStateNormal];
+    }
 }
 //UI
 - (void)creatNavigation{
@@ -346,41 +372,34 @@
     [self.navigationController.navigationBar addSubview:self.likeBtn];
     [self.likeBtn addTarget:self action:@selector(selectToLike) forControlEvents:UIControlEventTouchUpInside];
 /**help*/
+    self.helpBtn.frame = CGRectMake(0, 0, NavigationBarH/2, NavigationBarH/2);
+    //[helpButton setTitle:@"Back" forState:UIControlStateNormal];
+    [self.helpBtn setBackgroundImage:[UIImage imageNamed:@"icon_helpW"]  forState:UIControlStateNormal];
+    [self.helpBtn addTarget:self action:@selector(selectToHelp) forControlEvents:UIControlEventTouchUpInside];
+    
     if ([self.foodStyle isEqualToString:@"adding"]) {
         /**显示图片和标题的自定义返回按钮*/
-        UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        backButton.frame = CGRectMake(10, 0, NavigationBarH*5/3, NavigationBarH*5/9);
-        backButton.center = CGPointMake(NavigationBarH*5/6+10, NavigationBarH/2);
 
-        [backButton setBackgroundImage:[UIImage imageNamed:@"icon_backW"] forState:UIControlStateNormal];
-        [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-        [self.navigationController.navigationBar addSubview:backButton];
+        self.backbtn.frame = CGRectMake(10, 0, NavigationBarH*5/3, NavigationBarH*5/9);
+        self.backbtn.center = CGPointMake(NavigationBarH*5/6+10, NavigationBarH/2);
 
-//        UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc]initWithCustomView:backButton];
-//        UIBarButtonItem *negativeSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-//        negativeSpacer.width = 10.0f;
-//        self.navigationItem.leftBarButtonItems = @[backButtonItem,negativeSpacer];
-        //更改返回按钮填充颜色
-        //self.navigationController.navigationBar.tintColor = [UIColor darkGrayColor];
+        [self.backbtn setBackgroundImage:[UIImage imageNamed:@"icon_backW"] forState:UIControlStateNormal];
+        [self.backbtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+        [self.navigationController.navigationBar addSubview:self.backbtn];
 
-        UIButton *helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        helpButton.frame = CGRectMake(0, 0, NavigationBarH/2, NavigationBarH/2);
-        //[helpButton setTitle:@"Back" forState:UIControlStateNormal];
-        [helpButton setBackgroundImage:[UIImage imageNamed:@"icon_helpW"]  forState:UIControlStateNormal];
-        [helpButton addTarget:self action:@selector(selectToHelp) forControlEvents:UIControlEventTouchUpInside];
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:helpButton];
+        
+        //self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.helpBtn];
     }else if([self.foodStyle isEqualToString:@"Info"]){
         //self.editBtn.frame = CGRectMake(0, 0, NavigationBarH*2, NavigationBarH/2);
         //添加约束
         [[self.editBtn.widthAnchor constraintEqualToConstant:NavigationBarH*5/3] setActive:YES];
-        [[self.editBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3] setActive:YES];
-        self.editBtn.layer.cornerRadius = NavigationBarH/3;
+        [[self.editBtn.heightAnchor constraintEqualToConstant:NavigationBarH*3/5] setActive:YES];
+        self.editBtn.layer.cornerRadius = NavigationBarH*3/10;
         [self.editBtn setTitle:@"Edit" forState:UIControlStateNormal];
         self.editBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
-        self.editBtn.titleLabel.font = [UIFont systemFontOfSize: 25*(414.0/screen_width)];
+        self.editBtn.titleLabel.font = [UIFont systemFontOfSize: font(24)];
         self.editBtn.backgroundColor = FOSAgreen;
         [self.editBtn addTarget:self action:@selector(EditInfo) forControlEvents:UIControlEventTouchUpInside];
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.editBtn];
     }
 }
 - (void)creatHeaderView{
@@ -437,6 +456,7 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"dd/MM/yy/HH:mm"];
     NSString *currentDateStr = [formatter stringFromDate:currentDate];
+    storageStr = currentDateStr;
     NSArray *currentArrray = [currentDateStr componentsSeparatedByString:@"/"];
     NSString *storageDate = [NSString stringWithFormat:@"%@/%@/%@",currentArrray[0],[mouth valueForKey:currentArrray[1]],currentArrray[2]];
     
@@ -555,6 +575,7 @@
     [self.locationView addSubview:self.locationLabel];
     self.locationTextView.frame = CGRectMake(screen_width/20, contentHeight/8, screen_width*9/10, contentHeight/8);
     self.locationTextView.layer.cornerRadius = 5;
+    self.locationTextView.returnKeyType = UIReturnKeyDone;
     self.locationTextView.delegate = self;
     [self.locationTextView setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];
     self.locationTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
@@ -626,6 +647,8 @@
 
 - (void)showFoodInfoInView{
     if ([self.foodStyle isEqualToString:@"Info"]) {
+        //编辑按钮
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.editBtn];
         //禁止界面互动
         self.likeBtn.userInteractionEnabled = NO;
         self.foodTextView.userInteractionEnabled = NO;
@@ -643,10 +666,12 @@
         NSLog(@"%@",expireTimeArray);
         
         self.showFoodNameLabel.text = self.model.foodName;
-        //self.showFoodNameLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:20];//[UIFont systemFontOfSize:15 weight:50];
         self.showFoodNameLabel.font = [UIFont systemFontOfSize:22 weight:20];
         if ([self.model.islike isEqualToString:@"1"]) {
             [self.likeBtn setImage: [UIImage imageNamed:@"icon_likeHL"] forState:UIControlStateNormal];
+        }
+        if (self.model.device != nil) {
+            [self.storageIcon setImage:[UIImage imageNamed:@"img_foodCode"] forState:UIControlStateNormal];
         }
         self.storageDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",storageTimeArray[0],storageTimeArray[1],storageTimeArray[2]];
         self.storageTimeLabel.text = storageTimeArray[3];
@@ -657,14 +682,17 @@
         self.foodDescribedTextView.text = self.model.aboutFood;
         self.locationTextView.text = self.model.location;
         self.foodCell.kind.text = self.model.category;
-        self.foodCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.foodCategoryIconname]];
-        
+        //self.foodCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.foodCategoryIconname]];
+        self.foodCell.categoryPhoto.image = [UIImage imageNamed:@"BiscuitW"];
+
         //字数指示器
         if ((unsigned long)self.foodDescribedTextView.text.length > 80) {
             self.numberLabel.text = [NSString stringWithFormat:@"%d/80",80];
         }else{
             self.numberLabel.text = [NSString stringWithFormat:@"%lu/80",(unsigned long)self.foodDescribedTextView.text.length];
         }
+    }else{
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.helpBtn];
     }
 }
 
@@ -694,23 +722,37 @@
             NSString *img = [NSString stringWithFormat:@"%@%ld",self.model.foodPhoto,i+1];
             self.imageviewArray[i].image = [self getImage:img];
             self.foodImgArray[i] = self.imageviewArray[i].image;
+            NSLog(@"*********************************%ld",(long)i);
+//            btnArray[i].frame = CGRectMake(0, 0, 40, 40);
+//            [btnArray[i] setBackgroundImage:[UIImage imageNamed:@"icon_refreshPicture"] forState:UIControlStateNormal];
+//            btnArray[i].center = self.imageviewArray[i].center;
+//            [self.imageviewArray[i] addSubview:btnArray[i]];
         }else{
             NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"picturePlayer",i+1];
             self.imageviewArray[i].image = [UIImage imageNamed:imgName];
         }
+ 
         UITapGestureRecognizer *clickRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumptoPhoto)];
                //clickRecognizer.view.tag = i;
         [self.imageviewArray[i] addGestureRecognizer:clickRecognizer];
         [self.picturePlayer addSubview:self.imageviewArray[i]];
     }
-        [self.headerView addSubview:self.picturePlayer];
-            //轮播页面指示器
-        self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-15, headerWidth/5, 10)];
-        self.pageControl.currentPage = 0;
-        self.pageControl.numberOfPages = 3;
-        self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
-        self.pageControl.currentPageIndicatorTintColor = FOSAgreen;
-        [self.headerView addSubview:self.pageControl];
+    [self.headerView addSubview:self.picturePlayer];
+        //轮播页面指示器
+    self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-15, headerWidth/5, 10)];
+    self.pageControl.currentPage = 0;
+    self.pageControl.numberOfPages = 3;
+    self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
+    self.pageControl.currentPageIndicatorTintColor = FOSAgreen;
+    [self.headerView addSubview:self.pageControl];
+    
+    self.refreshBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 40, 40)];
+    self.refreshBtn.center = self.headerView.center;
+    [self.refreshBtn setBackgroundImage:[UIImage imageNamed:@"icon_refreshPicture"] forState:UIControlStateNormal];
+    [self.refreshBtn addTarget:self action:@selector(jumptoPhoto) forControlEvents:UIControlEventTouchUpInside];
+    self.refreshBtn.hidden = YES;
+    [self.headerView addSubview:self.refreshBtn];
+    
 }
 
 #pragma mark - 初始化日期选择器
@@ -731,6 +773,13 @@
     NSLog(@"保存点击");
     //处理日期字符串
     NSArray *array = [timer componentsSeparatedByString:@"/"];
+    
+    expireStr = [NSString stringWithFormat:@"%@/%@/%@/%@",array[2],array[0],array[1],array[3]];
+//    NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
+//    [formatter setDateFormat:@"yy/MM/dd/HH:mm"];
+//    NSDate *expDate = [formatter dateFromString:expireStr];
+//    NSLog(@">>>>>>>>>>>>>>>>>>>%@",expDate);
+    
     NSString *dateStr = [NSString stringWithFormat:@"%@/%@/%@",array[1],[mouth valueForKey:array[0]],array[2]];
     self.expireDateLabel.text = dateStr;
     self.expireTimeLabel.text= array[3];
@@ -811,25 +860,37 @@
 }
 //每个cell的具体内容
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:( NSIndexPath *)indexPath {
-    
     // 每次先从字典中根据IndexPath取出唯一标识符
-    NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
-     // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
-    if (identifier == nil) {
-        identifier = [NSString stringWithFormat:@"%@%@", kindID, [NSString stringWithFormat:@"%@", indexPath]];
-        [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
-    // 注册Cell
-        [self.categoryCollection registerClass:[foodKindCollectionViewCell class] forCellWithReuseIdentifier:identifier];
-        }
-    foodKindCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+//    NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
+//     // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+//    if (identifier == nil) {
+//        identifier = [NSString stringWithFormat:@"%@%@", kindID, [NSString stringWithFormat:@"%@", indexPath]];
+//        [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
+//    // 注册Cell
+//        [self.categoryCollection registerClass:[foodKindCollectionViewCell class] forCellWithReuseIdentifier:identifier];
+//    }
+    
+    foodKindCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:kindID forIndexPath:indexPath];
     cell.kind.text = self.categoryNameArray[indexPath.row];
-    cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
+    if (self.model.category != nil && [self.categoryNameArray indexOfObject:self.model.category] == indexPath.row) {
+        cell.rootView.backgroundColor = FOSAYellow;
+        cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]]];
+        selectCategory = self.categoryArray[indexPath.row];
+        self.selectedCategory = cell;
+    }else{
+        cell.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+        cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
+    }
     return cell;
 }
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     foodKindCollectionViewCell *cell = (foodKindCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
-
+    if (![cell.kind.text isEqualToString:selectCategory]) {
+        self.selectedCategory.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+        self.selectedCategory.categoryPhoto.image = [UIImage imageNamed:selectCategory];
+        self.selectedCategory.categoryPhoto.backgroundColor = [UIColor clearColor];
+    }
     cell.rootView.backgroundColor = FOSAYellow;
     cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]]];
     selectCategory = self.categoryArray[indexPath.row];
@@ -852,9 +913,14 @@
 }
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     //不支持系统表情的输入
-        if ([[textView textInputMode]primaryLanguage]==nil||[[[textView textInputMode]primaryLanguage]isEqualToString:@"emoji"]) {
-            return NO;
-        }
+    if ([[textView textInputMode]primaryLanguage]==nil||[[[textView textInputMode]primaryLanguage]isEqualToString:@"emoji"]) {
+        return NO;
+    }
+    if([text isEqualToString:@"\n"]){ //判断输入的字是否是回车，即按下return
+        //在这里做你响应return键的代码
+        [self.foodDescribedTextView resignFirstResponder];
+        return NO; //这里返回NO，就代表return键值失效，即页面上按下return，不会出现换行，如果为yes，则输入页面会换行
+    }
     return YES;
 }
 - (void)textViewDidChange:(UITextView *)textView{
@@ -934,8 +1000,24 @@
         self.rightIndex.hidden = NO;
         self.categoryCollection.hidden = NO;
         self.doneBtn.hidden = NO;
+        self.refreshBtn.hidden = NO;
         self.foodCell.hidden = YES;
         self.deleteBtn.hidden = YES;
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.helpBtn];
+    }];
+}
+- (void)recoverEditView{
+    self.foodCell.kind.text = selectCategory;
+    self.foodCell.categoryPhoto.image = self.selectedCategory.categoryPhoto.image;
+    [UIView animateWithDuration:0.5 animations:^{
+        self.leftIndex.hidden = YES;
+        self.rightIndex.hidden = YES;
+        self.categoryCollection.hidden = YES;
+        self.doneBtn.hidden = YES;
+        self.foodCell.hidden = NO;
+        self.deleteBtn.hidden = NO;
+        self.refreshBtn.hidden = YES;
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.editBtn];
     }];
 }
 - (void)selectToHelp{
@@ -1009,7 +1091,14 @@
 }
 
 - (void)back{
-    [self dismissViewControllerAnimated:YES completion:nil];
+     UIAlertController *backAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Do you want to leave the page?" preferredStyle:UIAlertControllerStyleAlert];
+    [backAlert addAction:[UIAlertAction actionWithTitle:@"YES" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+       }]];
+    [backAlert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+           
+       }]];
+    [self presentViewController:backAlert animated:true completion:nil];
 }
 
 - (void)jumpToScan{
@@ -1105,7 +1194,8 @@
             BOOL insertResult = [self.db executeUpdate:insertSql, self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory,self.likeBtn.accessibilityValue];
             NSLog(@"~~~~~~~~~~~~~~~~~~~~设备号：%@",device);
             if (insertResult) {
-                [self SystemAlert:@"Saving Data succeffully"];
+                //[self SystemAlert:@"Would you like to be send a notification when food expired"];
+                [self SystemAlert:@"Successfully"];
             }else{
                 [self SystemAlert:@"Error"];
             }
@@ -1245,6 +1335,18 @@
         return false;
     }
 }
+#pragma mark - 根据食物过期日期发送通知
+- (void)sendNotificationByExpireday{
+    self.fosaNotification = [[FosaNotification alloc]init];
+    [self.fosaNotification initNotification];
+    //self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory,self.likeBtn.accessibilityValue
+    FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr foodIcon:self.foodTextView.text category:selectCategory like:self.likeBtn.accessibilityValue Location:self.locationTextView.text];
+    NSString *body = [NSString stringWithFormat:@"Your food %@ has expired",self.foodTextView.text];
+    [self.fosaNotification sendNotificationByDate:model body:body date:expireStr];
+    
+    //[self SystemAlert:@"Successfully"];
+}
+
 #pragma mark - 生成分享视图
 //分享视图与食物二维码
 //仿照系统通知绘制UIview
@@ -1331,16 +1433,26 @@
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:message preferredStyle:UIAlertControllerStyleAlert];
-    if ([message isEqualToString:@"Saving Data succeffully"] || [message isEqualToString:@"delete data successfully"]) {
+    if ([message isEqualToString:@"Successfully"] || [message isEqualToString:@"delete data successfully"]) {
         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             NSLog(@"保存成功");
-            if ([self.foodStyle isEqualToString:@"Info"]) {
-                [self.navigationController popViewControllerAnimated:YES];
+            if ([self.foodStyle isEqualToString:@"edit"]){
+                self.foodStyle = @"Info";
+                //[self.navigationController popViewControllerAnimated:YES];
+                [self recoverEditView];
             }else{
                 [self dismissViewControllerAnimated:YES completion:nil];
             }
             
         }]];
+        [self presentViewController:alert animated:true completion:nil];
+    }else if([message isEqualToString:@"Would you like to be send a notification when food expired"]){
+        [alert addAction:[UIAlertAction actionWithTitle:@"YES" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self sendNotificationByExpireday];
+            
+        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:nil]];
+        
         [self presentViewController:alert animated:true completion:nil];
     }else{
         [alert addAction:[UIAlertAction actionWithTitle:@"Get It" style:UIAlertActionStyleDefault handler:nil]];
@@ -1351,10 +1463,9 @@
     [super viewWillDisappear:animated];
     [self.db close];
     self.likeBtn.hidden = YES;
+    self.backbtn.hidden = YES;
 }
-- (UIStatusBarStyle)preferredStatusBarStyle{
-     return UIStatusBarStyleLightContent;
-}
+
 /**隐藏底部横条，点击屏幕可显示*/
 - (BOOL)prefersHomeIndicatorAutoHidden{
     return YES;

@@ -80,7 +80,9 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     //UIStatusBarManager *statusBarManager = [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager;
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    //隐藏=YES,显示=NO; Animation:动画效果
+    [UIApplication sharedApplication].statusBarHidden = YES;
+    
     self.navigationController.navigationBar.hidden = YES;
     [self SetCurrentUser];
     [self InitData];
@@ -105,11 +107,11 @@
     self.headerBackgroundImgView.clipsToBounds = YES;
     [self.header addSubview:self.headerBackgroundImgView];
     
-    self.userIcon.frame = CGRectMake(headerWidth/10, headerHeight*2/5, headerWidth/5, headerWidth/5);
+    self.userIcon.frame = CGRectMake(headerWidth/10, headerHeight*3/10, headerWidth/5, headerWidth/5);
     self.userIcon.image = [UIImage imageNamed:@"icon_User"];
     [self.header addSubview:self.userIcon];
     
-    self.userName.frame = CGRectMake(headerWidth/30, headerHeight*3/5, headerWidth/3, headerWidth/5);
+    self.userName.frame = CGRectMake(headerWidth/30, headerHeight/2, headerWidth/3, headerWidth/5);
     self.userName.userInteractionEnabled = YES;
     //self.userName.layer.borderWidth = 0.5;
     self.userName.layer.cornerRadius = 5;
@@ -228,13 +230,13 @@
         default:
             break;
     }
-    //cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [self.userItemTable reloadData];
-    
+
 }
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
     
 }
+
 - (void)JUMP{
     LoginViewController *login = [[LoginViewController alloc]init];
     login.hidesBottomBarWhenPushed = YES;
@@ -258,6 +260,7 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.navigationController.navigationBar.hidden = NO;
+    [UIApplication sharedApplication].statusBarHidden = NO;
 }
 
 @end

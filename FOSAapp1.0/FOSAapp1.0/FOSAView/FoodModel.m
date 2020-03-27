@@ -26,20 +26,21 @@
 //}
 
 //add food
-+ (instancetype)modelWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate  foodIcon:(NSString *)foodPhoto category:(NSString *)category like:(NSString *)islike{
-    return [[self alloc]initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate  foodIcon:(NSString *)foodPhoto category:(NSString *)category like:(NSString *)islike];
++ (instancetype)modelWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate  foodIcon:(NSString *)foodPhoto category:(NSString *)category like:(NSString *)islike Location:(NSString *)location{
+    return [[self alloc]initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate  foodIcon:(NSString *)foodPhoto category:(NSString *)category like:(NSString *)islike Location:location];
 }
-- (instancetype)initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate  foodIcon:(NSString *)foodPhoto category:(NSString *)category like:(NSString *)islike{
+- (instancetype)initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate  foodIcon:(NSString *)foodPhoto category:(NSString *)category like:(NSString *)islike Location:(NSString *)location{
     self = [super init];
     if(self){
-        self.foodName = food_name;
-        self.aboutFood = aboutFood;
-        self.expireDate = expireDate;
-        self.storageDate = storageDate;
-        self.device = device;
-        self.foodPhoto = foodPhoto;
-        self.category = category;
-        self.islike = islike;
+        self.foodName       = food_name;
+        self.aboutFood      = aboutFood;
+        self.expireDate     = expireDate;
+        self.storageDate    = storageDate;
+        self.device         = device;
+        self.foodPhoto      = foodPhoto;
+        self.category       = category;
+        self.islike         = islike;
+        self.location       = location;
         return self;
     }else{
         return nil;

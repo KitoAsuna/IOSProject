@@ -36,7 +36,7 @@
     self.kind.font = [UIFont systemFontOfSize:13];
     self.rootView.frame = CGRectMake(0, height-width, width, width);
     self.rootView.layer.cornerRadius = self.rootView.frame.size.width/2;
-    self.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+    //self.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     self.categoryPhoto.frame = CGRectMake(self.rootView.frame.size.width/5, self.rootView.frame.size.width/5, self.rootView.frame.size.width*3/5, self.rootView.frame.size.width*3/5);
     self.categoryPhoto.backgroundColor = [UIColor clearColor];
     //self.categoryPhoto.layer.cornerRadius = width/2;

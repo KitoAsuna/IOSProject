@@ -26,7 +26,6 @@
     FMDatabase *db;
     //通知项计数
     int AlertCount;
-    
 }
 @property (nonatomic, strong) AVCaptureDevice *captureDevice;
 @property (nonatomic, strong) AVCaptureDeviceInput *captureInput;
@@ -37,10 +36,44 @@
 @property (nonatomic, strong) AVCaptureStillImageOutput *captureStillImageOutput;//照片输出流
 
 @property (nonatomic,strong) FoodMoreInfoView *circleAlertView1,*circleAlertView2,*circleAlertView3;
+
+//缩放
+ ///记录开始的缩放比例
+@property(nonatomic,assign) CGFloat minZoomFactor;
+ ///最后的缩放比例
+@property(nonatomic,assign) CGFloat maxZoomFactor;
+@property (nonatomic,assign) CGFloat currentZoomFactor;
+
+@property (nonatomic,strong) UILabel  *tipsLabel;
 @end
 
 @implementation QRCodeScanViewController
 #pragma mark - 懒加载属性
+
+//最小缩放值
+- (CGFloat)minZoomFactor
+{
+    CGFloat minZoomFactor = 1.0;
+    if (@available(iOS 11.0, *)) {
+        minZoomFactor = self.captureDevice.minAvailableVideoZoomFactor;
+    }
+    return minZoomFactor;
+}
+
+//最大缩放值
+- (CGFloat)maxZoomFactor
+{
+    CGFloat maxZoomFactor = self.captureDevice.activeFormat.videoMaxZoomFactor;
+    if (@available(iOS 11.0, *)) {
+        maxZoomFactor = self.captureDevice.maxAvailableVideoZoomFactor;
+    }
+
+    if (maxZoomFactor > 20.0) {
+        maxZoomFactor = 20.0;
+    }
+    return maxZoomFactor;
+}
+
 - (UIImageView *)scanFrame{
     if (_scanFrame == nil) {
         _scanFrame = [[UIImageView alloc]init];
@@ -141,6 +174,9 @@
     [self.captureSession startRunning];
     [self InitData];
     [self CreatNavigationButtonAndFocusBtn];
+    //开始动画
+    stopAnimation = false;
+    [self VerticalScanLineAnimation];
 }
 
 #pragma mark - 扫码属性初始化
@@ -170,8 +206,8 @@
     //指定设备的识别类型
         self.captureOutput.metadataObjectTypes = @[AVMetadataObjectTypeQRCode,AVMetadataObjectTypeCode128Code,AVMetadataObjectTypeEAN8Code,AVMetadataObjectTypeAztecCode,AVMetadataObjectTypeCode39Code,AVMetadataObjectTypeCode93Code,AVMetadataObjectTypeUPCECode,AVMetadataObjectTypeCode39Mod43Code,AVMetadataObjectTypeEAN13Code,AVMetadataObjectTypePDF417Code];
     //设备输出 初始化，并设置代理和回调，当设备扫描到数据时通过该代理输出队列，一般输出队列都设置为主队列，也是设置了回调方法执行所在的队列环境
-    dispatch_queue_t queue = dispatch_queue_create("fosaQueue", NULL);
-    [self.captureOutput setMetadataObjectsDelegate:self queue:queue];
+    //dispatch_queue_t queue = dispatch_queue_create("fosaQueue", NULL);
+    [self.captureOutput setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
     //视频流输出
      [self.VideoOutput setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
     //添加预览图层
@@ -199,21 +235,22 @@
     [self.captureInput.device unlockForConfiguration];
 }
 #pragma mark - 视图创建与初始化
+
 /**初始化标志与参数*/
 - (void)InitData{
-    UIImage *image  = [UIImage imageNamed:@"icon_logoHL"];
-    UIImage *image1 = [UIImage imageNamed:@"icon_logoHL"];
-    UIImage *image2 = [UIImage imageNamed:@"icon_logoHL"];
+//    UIImage *image  = [UIImage imageNamed:@"icon_logoHL"];
+//    UIImage *image1 = [UIImage imageNamed:@"icon_logoHL"];
+//    UIImage *image2 = [UIImage imageNamed:@"icon_logoHL"];
     imgArray = [[NSMutableArray alloc]init];
-    [imgArray addObject:image];
-    [imgArray addObject:image1];
-    [imgArray addObject:image2];
+    //[imgArray addObject:image];
+    //[imgArray addObject:image1];
+    //[imgArray addObject:image2];
     isJump = false;
     AlertCount = 0;
     //用于存储可读码的队列
     self.codeQueue = [[Fosa_QRCode_Queue alloc]initWithCapacity:3];
     self.QRcode = [[Fosa_NSString_Queue alloc]initWithCapacity:3];
-    
+    self.currentZoomFactor = 1.0;
     //notification window
     self.circleAlertView1 = [[FoodMoreInfoView alloc] init];
     self.circleAlertView2 = [[FoodMoreInfoView alloc] init];
@@ -222,11 +259,19 @@
  /**竖屏布局*/
 - (void)CreatVerticalScanView{
     self.ScanModel = 0;
+    
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    
+    //缩放手势
+    UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(ZoomByPinch:)];
+    self.view.userInteractionEnabled = YES;
+    [self.view addGestureRecognizer:pinchGestureRecognizer];
+    
     CGFloat imageX = screen_width*0.15;
     CGFloat imageY = (screen_height-screen_width*0.7)/2;
     self.scanMaskView.frame = self.view.bounds;
     self.scanMaskView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-    [self.view addSubview:self.scanMaskView];
+    //[self.view addSubview:self.scanMaskView];
     //从蒙版中扣出扫描框那一块,这块的大小尺寸将来也设成扫描输出的作用域大小
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.view.bounds];
     [maskPath appendPath:[[UIBezierPath bezierPathWithRect:CGRectMake(imageX, imageY,screen_width*0.7,screen_width*0.7)] bezierPathByReversingPath]];
@@ -236,15 +281,25 @@
 
     //扫描框
     self.scanFrame.frame = CGRectMake(imageX, imageY,screen_width*0.7,screen_width*0.7);
-    self.scanFrame.image = [UIImage imageNamed:@"saoyisao@3x"];
+    self.scanFrame.image = [UIImage imageNamed:@"img_scanner"];
     [self.view addSubview:self.scanFrame];
+
     //扫描线
-    self.scanLine.frame = CGRectMake(imageX, imageY, screen_width*0.7, 4);
-    self.scanLine.image = [UIImage imageNamed:@"scanLine_Horizontal"];
+    self.scanLine.frame = CGRectMake(screen_width/20, imageY, screen_width*9/10, 25);
+    self.scanLine.image = [UIImage imageNamed:@"icon_scanline"];
     scanLineVerticalCenter = self.scanLine.center;
     [self.view addSubview:self.scanLine];
+
+    //提示
+    self.tipsLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.scanFrame.frame)+20, screen_width, 30)];
+    self.tipsLabel.text = @"Put the QRCode into the scanning box for automatic scanning";
+    self.tipsLabel.textColor = FOSAWhite;
+    self.tipsLabel.textAlignment = NSTextAlignmentCenter;
+    self.tipsLabel.font = [UIFont systemFontOfSize:12];
+    [self.view addSubview:self.tipsLabel];
+
     //开始动画
-    stopAnimation = false;
+    //stopAnimation = false;
     [self VerticalScanLineAnimation];
     //闪光灯
     self.flashBtn.frame = CGRectMake(screen_width/2-20, CGRectGetMaxY(_scanFrame.frame)-45, 40, 40);
@@ -254,7 +309,7 @@
     [self.flashBtn addTarget:self action:@selector(OpenOrCloseFlash) forControlEvents:UIControlEventTouchUpInside];
     //UISlider
     self.zoomSlider.frame = CGRectMake(imageX,imageY+self.view.frame.size.width*0.7,self.view.frame.size.width*0.7+10,20);
-    [self.view addSubview:self.zoomSlider];
+    //[self.view addSubview:self.zoomSlider];
     self.zoomSlider.minimumValue = 0;
     self.zoomSlider.maximumValue = 100;
     [self.zoomSlider addTarget:self action:@selector(ZoomSliderValueChanged) forControlEvents:UIControlEventValueChanged];
@@ -263,6 +318,29 @@
     CGRect intertRect = [_previewLayer metadataOutputRectOfInterestForRect:CGRectMake(imageX, imageY,screen_width*0.7,screen_width*0.7)];
     _captureOutput.rectOfInterest = intertRect;
 }
+
+//双指手势缩放
+- (void)ZoomByPinch:(UIPinchGestureRecognizer *)pinchGestureRecognizer
+{
+    if (pinchGestureRecognizer.state == UIGestureRecognizerStateBegan ||
+           pinchGestureRecognizer.state == UIGestureRecognizerStateChanged)
+       {
+           CGFloat currentZoomFactor = self.currentZoomFactor*pinchGestureRecognizer.scale;
+           
+           NSLog(@"currentScale:%f",pinchGestureRecognizer.scale)
+           if (currentZoomFactor < self.maxZoomFactor &&
+               currentZoomFactor > self.minZoomFactor){
+               NSError *error = nil;
+               if ([self.captureDevice lockForConfiguration:&error] ) {
+                   self.captureDevice.videoZoomFactor = currentZoomFactor;
+                   [self.captureDevice unlockForConfiguration];
+               } else {
+                   NSLog( @"Could not lock device for configuration: %@", error );
+               }
+           }
+       }
+}
+
 /**横屏布局*/
 - (void)CreatHorizontalScanView{
     self.ScanModel = 1;
@@ -352,7 +430,7 @@
 #pragma mark - 视图相关事件
 //竖屏扫描动画
 - (void)VerticalScanLineAnimation{
-    [UIView animateWithDuration:2.0 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+    [UIView animateWithDuration:3.0 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         self.scanLine.center = CGPointMake(self->scanLineVerticalCenter.x, CGRectGetMaxY(self->_scanFrame.frame));
     } completion:^(BOOL finished) {
         if (self->stopAnimation == false && self.ScanModel == 0) {
@@ -437,7 +515,6 @@
 //横屏模式获取二维码的中心点坐标
 -(CGPoint)getCenter:(AVMetadataMachineReadableCodeObject *)objc
 {
-    
         CGPoint center = CGPointZero;
     //横屏状态下，二维码每个角的坐标顺序与竖屏时的有区别
         NSArray *array = objc.corners;
@@ -464,6 +541,7 @@
     UITouch *touch = [touches anyObject];
     [self processTouch:touch];
 }
+
 -(void)processTouch:(UITouch *)touch{
     //获取点击处的坐标
     CGPoint touchPoint = [touch locationInView:self.view];
@@ -472,7 +550,12 @@
     NSLog(@"%f,%f",x,y);
     if(x > [UIScreen mainScreen].bounds.size.width*0.45 && x < [UIScreen mainScreen].bounds.size.width*9/10){
         if(y > NavigationBarHeight*2 && y< screen_height-NavigationBarHeight*2){
-            [self StartRunning];
+//            [self.captureDevice lockForConfiguration:nil];
+//            [UIView animateWithDuration:1 animations:^{
+//                self.scale = 2;
+//                [self.captureDevice setVideoZoomFactor:self.scale];
+//            }];
+//            [self.captureDevice unlockForConfiguration];
         }
     }
 }
@@ -1011,15 +1094,16 @@ NSLog(@"************************************************************************
         return nil;
     }else{
         if([set next]) {
-           NSString *foodName = [set stringForColumn:@"foodName"];
-            NSString *device   = [set stringForColumn:@"device"];
-            NSString *aboutFood = [set stringForColumn:@"aboutFood"];
-            NSString *storageDate = [set stringForColumn:@"storageDate"];
-            NSString *expireDate = [set stringForColumn:@"expireDate"];
-            NSString *foodImg = [set stringForColumn:@"foodImg"];
-            NSString *category = [set stringForColumn:@"category"];
-            NSString *isLike   = [set stringForColumn:@"like"];
-            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category like:isLike];
+           NSString *foodName       = [set stringForColumn:@"foodName"];
+            NSString *device        = [set stringForColumn:@"device"];
+            NSString *aboutFood     = [set stringForColumn:@"aboutFood"];
+            NSString *storageDate   = [set stringForColumn:@"storageDate"];
+            NSString *expireDate    = [set stringForColumn:@"expireDate"];
+            NSString *foodImg       = [set stringForColumn:@"foodImg"];
+            NSString *location      = [set stringForColumn:@"location"];
+            NSString *category      = [set stringForColumn:@"category"];
+            NSString *isLike        = [set stringForColumn:@"like"];
+            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category like:isLike Location:location];
         }
     }
     return model;

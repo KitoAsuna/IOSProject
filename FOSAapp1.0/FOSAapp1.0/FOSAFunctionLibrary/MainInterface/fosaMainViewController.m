@@ -169,7 +169,12 @@
     }
     return _sortListView;
 }
-
+- (UIView *)smask{
+    if (_smask == nil) {
+        _smask = [UIView new];
+    }
+    return _smask;
+}
 - (UIButton *)cancelSortBtn{
     if (_cancelSortBtn == nil) {
         _cancelSortBtn = [UIButton new];
@@ -204,10 +209,10 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    //
+
     //[UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDarkContent;
-    
-    self.sortbtn.hidden = NO;
+
+    self.scanBtn.hidden = NO;
     isSelectCategory = NO;
     self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
     if (isUpdate) {
@@ -227,16 +232,17 @@
     [self.navigationRemindBtn addTarget:self action:@selector(SendRemindNotification) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.navigationRemindBtn];
 
-    self.sortbtn.frame = CGRectMake(screen_width*2/3, 0,NavigationBarH, NavigationBarH);
-    [self.sortbtn setImage:[UIImage imageNamed:@"icon_pullDown"] forState:UIControlStateNormal];
-    [self.navigationController.navigationBar addSubview:self.sortbtn];
-    [self.sortbtn addTarget:self action:@selector(selectToSort) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.scanBtn.widthAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
-    [self.scanBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
+    self.scanBtn.frame = CGRectMake(0, 0,NavigationBarH*3/5, NavigationBarH*3/5);
+    self.scanBtn.center = self.navigationController.navigationBar.center;
     [self.scanBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.scanBtn];
+    [self.navigationController.navigationBar addSubview:self.scanBtn];
     [self.scanBtn addTarget:self action:@selector(clickToScan) forControlEvents:UIControlEventTouchUpInside];
+
+    [self.sortbtn.widthAnchor constraintEqualToConstant:NavigationBarH/2].active = YES;
+    [self.sortbtn.heightAnchor constraintEqualToConstant:NavigationBarH/2].active = YES;
+    [self.sortbtn setImage:[UIImage imageNamed:@"icon_sort"] forState:UIControlStateNormal];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.sortbtn];
+    [self.sortbtn addTarget:self action:@selector(selectToSort) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)creatMainBackgroundPlayer{
@@ -329,8 +335,8 @@
     int collectionHeight = self.foodItemView.frame.size.height;
     
     UICollectionViewFlowLayout *fosaFlowLayout = [[UICollectionViewFlowLayout alloc] init];
-    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(5, 5, 0, 5);//上、左、下、右
-    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-20)/2,(collectionHeight-10)/2);
+    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(0, 5, 0, 5);//上、左、下、右
+    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-20)/2,(collectionHeight-20)/2);
     //固定的itemsize
     fosaFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;//滑动的方向 垂直
     
@@ -358,7 +364,7 @@
      self.fooditemCollection.dataSource = self;
      self.fooditemCollection.showsVerticalScrollIndicator = NO;
      self.fooditemCollection.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
+    //[self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
      //self.foodItemCollection.bounces = NO;
      [self.foodItemView addSubview:self.fooditemCollection];
     
@@ -367,11 +373,14 @@
 
 //创建排序列表视图
 - (void)creatSortListView{
-    sortArray = @[@"MOST RECENT",@"LEAST RECENT",@"RECENT ADD",@"LEAST ADD"];
+    sortArray = @[@"Most Recent",@"Least Reast",@"Recent Add",@"Least Add"];
     
-    self.smask = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    self.smask.frame = [UIScreen mainScreen].bounds;
     self.smask.backgroundColor = [UIColor blackColor];
     self.smask.alpha = 0.5;
+    self.smask.userInteractionEnabled = YES;
+    UITapGestureRecognizer *cancelRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(cancelSort)];
+    [self.smask addGestureRecognizer:cancelRecognizer];
     [self.tabBarController.view addSubview:self.smask];
     self.smask.hidden = YES;
     
@@ -409,10 +418,11 @@
     [self.cancelBtn addTarget:self action:@selector(cancelSort) forControlEvents:UIControlEventTouchUpInside];
 }
 - (void)cancelSort{
-    [UIView animateWithDuration:0.2 animations:^{
+    [UIView animateWithDuration:0.1 animations:^{
         self.sortListView.center = CGPointMake(screen_width/2, screen_height*6/5);
         self.smask.hidden = YES;
     }];
+    self.tabBarController.tabBar.hidden = NO;
 }
 #pragma mark - UItableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -438,6 +448,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
     cell.textLabel.text = sortArray[row];
+    cell.textLabel.font = [UIFont systemFontOfSize:font(15)];
     cell.textLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     cell.backgroundColor = FOSAWhite;
     return cell;
@@ -446,7 +457,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    cell.backgroundColor = FOSAGray;
+    //记录排序方式
+    [self.userdefault removeObjectForKey:@"sort"];
+    NSString *sortType = cell.textLabel.text;
+    NSLog(@"排序方式:%@",sortType);
+    [self.userdefault setObject:sortType forKey:@"sort"];
+    [self.userdefault synchronize];
+    [self CollectionReload];
+    [self cancelSort];
 }
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell * cell = (UITableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
@@ -521,18 +539,19 @@
     }else{
         long int index = indexPath.section*2+indexPath.row;
         // 每次先从字典中根据IndexPath取出唯一标识符
-//        NSString *identifier = [self.cellDictionary objectForKey:[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
-//         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
-//        if (identifier == nil) {
-//            identifier = [NSString stringWithFormat:@"%@%@", foodItemID,[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
-//            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
-//        // 注册Cell
-//            [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
-//            }
-//        NSLog(@"%ld",index);
-        foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:foodItemID forIndexPath:indexPath];
+        NSString *identifier = [self.cellDictionary objectForKey:[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
+         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+        if (identifier == nil) {
+            identifier = [NSString stringWithFormat:@"%@%@", foodItemID,[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
+            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
+        // 注册Cell
+            [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
+            }
+        NSLog(@"%ld",index);
+        foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
         if (index < self.collectionDataSource.count ) {
-                [cell setModel:self.collectionDataSource[index]];
+            cell.likebtn.hidden = NO;
+            [cell setModel:self.collectionDataSource[index]];
         }else{
             cell.likebtn.hidden = YES;
             FoodModel *model = nil;
@@ -634,15 +653,16 @@
     NSLog(@"#######################%@",sql);
     FMResultSet *set = [self.db executeQuery:sql];
     while ([set next]) {
-        NSString *foodName = [set stringForColumn:@"foodName"];
-        NSString *device   = [set stringForColumn:@"device"];
-        NSString *aboutFood = [set stringForColumn:@"aboutFood"];
+        NSString *foodName    = [set stringForColumn:@"foodName"];
+        NSString *device      = [set stringForColumn:@"device"];
+        NSString *aboutFood   = [set stringForColumn:@"aboutFood"];
         NSString *storageDate = [set stringForColumn:@"storageDate"];
-        NSString *expireDate = [set stringForColumn:@"expireDate"];
-        NSString *foodImg = [set stringForColumn:@"foodImg"];
-        NSString *category = [set stringForColumn:@"category"];
-        NSString *isLike   = [set stringForColumn:@"like"];
-        FoodModel *model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category like:isLike];
+        NSString *expireDate  = [set stringForColumn:@"expireDate"];
+        NSString *foodImg     = [set stringForColumn:@"foodImg"];
+        NSString *category    = [set stringForColumn:@"category"];
+        NSString *location    = [set stringForColumn:@"location"];
+        NSString *isLike      = [set stringForColumn:@"like"];
+        FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category like:isLike Location:location];
         [self.collectionDataSource addObject:model];
         NSLog(@"*********************************************foodName    = %@",foodName);
 //        NSLog(@"device      = %@",device);
@@ -656,13 +676,13 @@
     NSLog(@"数量：%lu",(unsigned long)self.collectionDataSource.count);
     NSString *currentSortType = [self.userdefault valueForKey:@"sort"];
     NSLog(@"当前排序方式:%@",currentSortType);
-    if ([currentSortType isEqualToString:@"MOSTRECENT"]) {
+    if ([currentSortType isEqualToString:@"Most Recent"]) {
         [self sortByMostRecent];
-    }else if([currentSortType isEqualToString:@"LEASTRECENT"]){
+    }else if([currentSortType isEqualToString:@"Least Recent"]){
         [self sortByLeastRecent];
-    }else if([currentSortType isEqualToString:@"RECENTADD"]){
+    }else if([currentSortType isEqualToString:@"Recent Add"]){
         [self sortByRecentAdd];
-    }else if([currentSortType isEqualToString:@"LEASTADD"]){
+    }else if([currentSortType isEqualToString:@"Least Add"]){
         [self sortByLeastAdd];
     }
     [self.fooditemCollection reloadData];
@@ -732,7 +752,8 @@
 }
 
 - (void)selectToSort{
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.2 animations:^{
+        self.tabBarController.tabBar.hidden = YES;
         self.sortListView.center = CGPointMake(screen_width/2, screen_height*4/5);
         self.smask.hidden = NO;
     }];
@@ -745,30 +766,7 @@
 //        [self.userdefault synchronize];
 //        [self CollectionReload];
 //    }];
-//    UIAlertAction *sortByExpireDateDown = [UIAlertAction actionWithTitle:@"LEAST RECENT" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        //删除原来的排序方式
-//        [self.userdefault removeObjectForKey:@"sort"];
-//        NSString *sortType = @"LEASTRECENT";
-//        [self.userdefault setObject:sortType forKey:@"sort"];
-//        [self.userdefault synchronize];
-//        [self CollectionReload];
-//    }];
-//    UIAlertAction *sortByStorageDateUp = [UIAlertAction actionWithTitle:@"RECENT ADD" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        //删除原来的排序方式
-//        [self.userdefault removeObjectForKey:@"sort"];
-//        NSString *sortType = @"RECENTADD";
-//        [self.userdefault setObject:sortType forKey:@"sort"];
-//        [self.userdefault synchronize];
-//        [self CollectionReload];
-//    }];
-//    UIAlertAction *sortByStorageDateDown = [UIAlertAction actionWithTitle:@"LEAST ADD" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//       //删除原来的排序方式
-//        [self.userdefault removeObjectForKey:@"sort"];
-//        NSString *sortType = @"LEASTADD";
-//        [self.userdefault setObject:sortType forKey:@"sort"];
-//        [self.userdefault synchronize];
-//        [self CollectionReload];
-//    }];
+
 //    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
 //        NSLog(@"取消");
 //    }];
@@ -962,9 +960,11 @@
 - (void)CreatLoadView{
     //self.loadView
     if (@available(iOS 13.0, *)) {
-        self.FOSAloadingView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleLarge)];
+        if (_FOSAloadingView == nil) {
+           self.FOSAloadingView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleLarge)];
+        }
     } else {
-        // Fallback on earlier versions
+        self.FOSAloadingView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleGray)];
     }
     [self.view addSubview:self.FOSAloadingView];
     //设置小菊花的frame
@@ -981,8 +981,7 @@
     [self CreatLoadView];
     [self.notification initNotification];
     UIImage *image;
-    //标志
-    //Boolean isSend = false;
+    //获取用户设定的提醒方式
     //获取当前日期
     NSDate *currentDate = [[NSDate alloc]init];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -993,7 +992,7 @@
 
     NSString *str = [formatter stringFromDate:currentDate];
     currentDate = [formatter dateFromString:str];
-    NSLog(@"--------------%@",str);
+    
     NSDate *foodDate;
     for(int i = 0;i < self.collectionDataSource.count; i++){
   NSLog(@"%@的过期日期为%@",self.collectionDataSource[i].foodName,self.collectionDataSource[i].expireDate);
@@ -1096,7 +1095,6 @@
     [self.mask removeFromSuperview];
     
 }
-
 /**隐藏底部横条，点击屏幕可显示*/
 - (BOOL)prefersHomeIndicatorAutoHidden{
     return YES;
@@ -1105,13 +1103,12 @@
 - (BOOL)shouldAutorotate{
     return NO;
 }
-
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     isUpdate = true;
     isSelectCategory = false;
     [self.db close];
-    self.sortbtn.hidden = YES;
+    self.scanBtn.hidden = YES;
 }
 
 @end

@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (UIImage *)SaveViewAsPicture:(UIView *)view;
 - (void)initNotification;
 - (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img;
+- (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate;
 - (UIImage *)GenerateQRCodeByMessage:(NSString *)message;
 @end
 

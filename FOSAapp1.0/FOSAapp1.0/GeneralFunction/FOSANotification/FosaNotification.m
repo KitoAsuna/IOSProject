@@ -82,16 +82,16 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     completionHandler();
 }
 
-- (void)sendNotificationByDate:(NSString *)foodName body:(NSString *)body path:(NSString *)photo deviceName:(NSString *)device date:(NSString *)mdate{
+- (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate{
     NSLog(@"我将发送一个系统通知");
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-    content.title = @"\"Reminding\"";
-    content.subtitle = @"by Fosa";
+    content.title = @"Notification";
+    content.subtitle = @"By Fosa";
     content.body = body;
     content.badge = @0;
     //获取沙盒中的图片
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *photopath = [NSString stringWithFormat:@"%@.png",photo];
+    NSString *photopath = [NSString stringWithFormat:@"%@1.png",model.foodPhoto];
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
     self.image = img;
@@ -110,7 +110,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     //设置时间间隔的触发器
     //格式化时间
     NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
-    [formatter setDateFormat:@"yyyy/MM/dd/HH:mm"];
+    [formatter setDateFormat:@"yy/MM/dd/HH:mm"];
     NSDate * date = [formatter dateFromString:mdate];
     NSDateComponents * components = [[NSCalendar currentCalendar]
                                                 components:NSCalendarUnitYear |
@@ -122,7 +122,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
                                                 NSCalendarUnitSecond
                                                 fromDate:date];
     UNCalendarNotificationTrigger *date_trigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:components repeats:NO];
-    NSString *requestIdentifer = photo;
+    NSString *requestIdentifer = model.foodPhoto;
            //content.categoryIdentifier = @"textCategory";
     content.categoryIdentifier = @"seeCategory";
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifer content:content trigger:date_trigger];
@@ -130,7 +130,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
            NSLog(@"%@",error);
     }];
-    //[self Savephoto:img name:photo];
+    //[self Savephoto:img name:model.foodPhoto];
 }
 - (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img{
     NSLog(@"我将发送一个系统通知");
