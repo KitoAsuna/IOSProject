@@ -91,6 +91,9 @@
     [self initControlView];
     // Do any additional setup after loading the view.
 }
+- (void)viewWillAppear:(BOOL)animated{
+    [self.navigationItem setHidesBackButton:YES];
+}
 
 - (void)initCameraInPosition:(BOOL)isBack {
     self.currentZoomFactor = 1.0;
@@ -167,7 +170,7 @@
     
     //确定
     self.finishBtn = [[UIButton alloc]initWithFrame:CGRectMake(screen_width*4/5, self.controlerView.frame.size.height/3-screen_width*4/50, screen_width*4/25, screen_width*4/25)];
-    [_finishBtn setTitle:@"TAKE" forState:UIControlStateNormal];
+    [_finishBtn setTitle:@"Fnish" forState:UIControlStateNormal];
     [self.controlerView addSubview:_finishBtn];
     [self.finishBtn addTarget:self action:@selector(clickToFinish) forControlEvents:UIControlEventTouchUpInside];
     
@@ -181,6 +184,7 @@
 }
 //点击确定
 - (void)clickToFinish{
+    NSLog(@"%@",self.pictureView.image);
     self.photoBlock(self.pictureView.image);
     [self.navigationController popViewControllerAnimated:YES];
 }

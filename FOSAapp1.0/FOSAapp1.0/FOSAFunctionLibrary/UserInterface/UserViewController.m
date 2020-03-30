@@ -80,7 +80,7 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     //UIStatusBarManager *statusBarManager = [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager;
-    //隐藏=YES,显示=NO; Animation:动画效果
+    
     [UIApplication sharedApplication].statusBarHidden = YES;
     
     self.navigationController.navigationBar.hidden = YES;

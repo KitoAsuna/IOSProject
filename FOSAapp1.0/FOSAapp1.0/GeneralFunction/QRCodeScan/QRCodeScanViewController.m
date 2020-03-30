@@ -269,8 +269,8 @@
     
     CGFloat imageX = screen_width*0.15;
     CGFloat imageY = (screen_height-screen_width*0.7)/2;
-    self.scanMaskView.frame = self.view.bounds;
-    self.scanMaskView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+//    self.scanMaskView.frame = self.view.bounds;
+//    self.scanMaskView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
     //[self.view addSubview:self.scanMaskView];
     //从蒙版中扣出扫描框那一块,这块的大小尺寸将来也设成扫描输出的作用域大小
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.view.bounds];
@@ -300,7 +300,7 @@
 
     //开始动画
     //stopAnimation = false;
-    [self VerticalScanLineAnimation];
+    //[self VerticalScanLineAnimation];
     //闪光灯
     self.flashBtn.frame = CGRectMake(screen_width/2-20, CGRectGetMaxY(_scanFrame.frame)-45, 40, 40);
     self.flashBtn.layer.cornerRadius = _flashBtn.frame.size.width/2;
@@ -430,7 +430,7 @@
 #pragma mark - 视图相关事件
 //竖屏扫描动画
 - (void)VerticalScanLineAnimation{
-    [UIView animateWithDuration:3.0 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+    [UIView animateWithDuration:2.0 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         self.scanLine.center = CGPointMake(self->scanLineVerticalCenter.x, CGRectGetMaxY(self->_scanFrame.frame));
     } completion:^(BOOL finished) {
         if (self->stopAnimation == false && self.ScanModel == 0) {
@@ -586,23 +586,24 @@ NSLog(@"************************************************************************
             if ([self.scanStyle isEqualToString:@""]){
                 //scanStyle  为 block，在sg获得结果后判断，如果是FOSA系列产品的码，则返回添加界面及产品设备号
                     [self performSelectorOnMainThread:@selector(setFocusCursorWithPoint:) withObject:(AVMetadataMachineReadableCodeObject *) mobject waitUntilDone:NO];     //在主线程中标记二维码的位置（还不够准确）
-                    if([result hasPrefix:@"http://"]||[result hasPrefix:@"https://"]){//若是一个网站，就打开这个链接
-                        if (!isJump) {
-                            [self ScanSuccess:@"ding.wav"];
-                            [self performSelectorOnMainThread:@selector(OpenURL:) withObject:result waitUntilDone:NO];
-                            isJump = true;
-                        }
-                    }else if([result hasPrefix:@"Fosa"]||[result hasPrefix:@"FS9"]||[result hasPrefix:@"FOSASealer"]){
+//                    if([result hasPrefix:@"http://"]||[result hasPrefix:@"https://"]){//若是一个网站，就打开这个链接
+//                        if (!isJump) {
+//                            [self ScanSuccess:@"ding.wav"];
+//                            [self performSelectorOnMainThread:@selector(OpenURL:) withObject:result waitUntilDone:NO];
+//                            isJump = true;
+//                        }
+//                    }else
+                if([result hasPrefix:@"Fosa"]||[result hasPrefix:@"FS9"]||[result hasPrefix:@"FOSASealer"]){
                         [self ScanSuccess:@"ding.wav"];
                         [self performSelectorOnMainThread:@selector(showOneMessage:) withObject:result waitUntilDone:NO]; //在主线程中展示这个物品的通知
                     }else if ([result hasPrefix:@"FOSAINFO"]) {
-                        FoodViewController *food = [[FoodViewController alloc]init];
+                        foodAddingViewController *food = [foodAddingViewController new];
                         //分割字符串的测试
-                        food.infoArray = [NSArray array];
-                        food.infoArray = [result componentsSeparatedByString:@"&"];
-                        NSLog(@"图片中的食物二维码信息为:%@",food.infoArray);
-                        food.isAdding = false;
-                       [self.navigationController pushViewController:food animated:YES];
+                        NSArray *infoArray = [NSArray array];
+                        infoArray = [result componentsSeparatedByString:@"&"];
+                        NSLog(@"图片中的食物二维码信息为:%@",infoArray);
+                        
+                       //[self.navigationController pushViewController:food animated:YES];
                     }else{
                         if (!isJump) {//当前还没有发生跳转
                             [self ScanSuccess:@"ding.wav"];
@@ -937,18 +938,22 @@ NSLog(@"************************************************************************
         [self SystemAlert:@"识别不到二维码"];
         return;
     } else {
+        
+        //NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@&%@",model.foodName,model.device,model.aboutFood,model.expireDate,model.storageDate,model.category,model.location];
+        
         CIQRCodeFeature *firstfeature = [features objectAtIndex:0];
         NSString *firstResult = firstfeature.messageString;
         if ([firstResult hasPrefix:@"FOSA"]) {
-            FoodViewController *food = [[FoodViewController alloc]init];
-             //分割字符串的测试
-             food.infoArray = [NSArray array];
-             food.infoArray = [firstResult componentsSeparatedByString:@"&"];
-             NSLog(@"图片中的食物二维码信息为:%@",food.infoArray);
-             food.isAdding = false;
-             [imgArray  replaceObjectAtIndex:0 withObject:[self getPartOfImage:image inRect:CGRectMake(0,screen_height/8, screen_width, screen_height/2)]];
-            food.food_image = [[NSMutableArray alloc]init];
-            food.food_image = imgArray;
+            foodAddingViewController *food = [foodAddingViewController new];
+            //分割字符串的测试
+            NSArray *infoArray = [NSArray array];
+            infoArray = [firstResult componentsSeparatedByString:@"&"];
+            
+            FoodModel *model = [FoodModel modelWithName:infoArray[1] DeviceID:infoArray[2] Description:infoArray[3] StrogeDate:infoArray[5] ExpireDate:infoArray[4] foodIcon:infoArray[1] category:infoArray[6] like:@"0" Location:infoArray[7]];
+            food.model = model;
+            food.foodStyle = @"Info";
+            food.imgOfFood = [self getPartOfImage:image inRect:CGRectMake(0,screen_height/8, screen_width, screen_height/2)];
+            NSLog(@"图片中的食物二维码信息为:%@",infoArray[1]);
             [self.navigationController pushViewController:food animated:YES];
         }else{
             [self SystemAlert:firstResult];

@@ -165,7 +165,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
         NSLog(@"%@",error);
     }];
     //生成二维码
-    NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@",model.foodName,model.device,model.aboutFood,model.expireDate,model.remindDate,model.category];
+    NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@&%@",model.foodName,model.device,model.aboutFood,model.expireDate,model.storageDate,model.category,model.location];
     self.codeImage = [self GenerateQRCodeByMessage:message];
     self.image = img;
     foodName = model.foodName;

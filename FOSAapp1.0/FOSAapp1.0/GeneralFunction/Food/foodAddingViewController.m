@@ -674,6 +674,7 @@
         if (self.model.device != nil) {
             [self.storageIcon setImage:[UIImage imageNamed:@"img_foodCode"] forState:UIControlStateNormal];
         }
+        selectCategory = self.model.category;
         self.storageDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",storageTimeArray[0],storageTimeArray[1],storageTimeArray[2]];
         self.storageTimeLabel.text = storageTimeArray[3];
         self.expireDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",expireTimeArray[0],expireTimeArray[1],expireTimeArray[2]];
@@ -723,11 +724,7 @@
             NSString *img = [NSString stringWithFormat:@"%@%ld",self.model.foodPhoto,i+1];
             self.imageviewArray[i].image = [self getImage:img];
             self.foodImgArray[i] = self.imageviewArray[i].image;
-            NSLog(@"*********************************%ld",(long)i);
-//            btnArray[i].frame = CGRectMake(0, 0, 40, 40);
-//            [btnArray[i] setBackgroundImage:[UIImage imageNamed:@"icon_refreshPicture"] forState:UIControlStateNormal];
-//            btnArray[i].center = self.imageviewArray[i].center;
-//            [self.imageviewArray[i] addSubview:btnArray[i]];
+            
         }else{
             NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"picturePlayer",i+1];
             self.imageviewArray[i].image = [UIImage imageNamed:imgName];
@@ -1086,8 +1083,10 @@
         takePictureViewController *photo = [[takePictureViewController alloc]init];
         photo.photoBlock = ^(UIImage *img){
             //通过block将相机拍摄的图片放置在对应的位置
-            self.imageviewArray[self->currentPictureIndex].image = img;
-            self.foodImgArray[self->currentPictureIndex] = img;
+            if (img != nil) {
+                self.imageviewArray[self->currentPictureIndex].image = img;
+                self.foodImgArray[self->currentPictureIndex] = img;
+            }
         };
         [self.navigationController pushViewController:photo animated:NO];
     }
@@ -1113,6 +1112,7 @@
         NSLog(@"我获得了设备号：%@",self->device);
     };
     [self.navigationController pushViewController:scan animated:NO];
+    //[self presentViewController:scan animated:YES completion:nil];
 }
 - (void)jumpToShare{
     NSLog(@"点击了分享");
@@ -1187,7 +1187,7 @@
         [self SystemAlert:@"Please input the name of your food!"];
     }else if([self.storageDateLabel.text isEqualToString:self.expireDateLabel.text]){
         [self SystemAlert:@"please select an expiration date"];
-    }else if(self.selectedCategory == nil){
+    }else if(selectCategory == nil){
         [self SystemAlert:@"Please select a category for your food"];
     }else{
         if ([self.db open]) {
@@ -1198,7 +1198,9 @@
             NSLog(@"~~~~~~~~~~~~~~~~~~~~设备号：%@",device);
             if (insertResult) {
                 //[self SystemAlert:@"Would you like to be send a notification when food expired"];
-                [self SystemAlert:@"Successfully"];
+                //[self SystemAlert:@"Successfully"];
+                [self sendNotificationByExpireday];
+                
             }else{
                 [self SystemAlert:@"Error"];
             }
@@ -1284,6 +1286,9 @@
     if (img == NULL) {
         img = [UIImage imageNamed:@"icon_defaultImg"];
     }
+    if (self.imgOfFood != nil) {
+        img = self.imgOfFood;
+    }
     NSLog(@"===%@", img);
     return img;
 }
@@ -1295,7 +1300,6 @@
     if ([self.db open]) {
          BOOL result = [self.db executeUpdate:delSql];
         if (result) {
-            NSLog(@"delete data successfully");
             if (![self.foodTextView.text isEqualToString:self.model.foodName]) {
                 for (int i = 1; i <= 3; i++) {
                     NSString *photoName = [NSString stringWithFormat:@"%@%d",self.model.foodName,i];
@@ -1340,14 +1344,20 @@
 }
 #pragma mark - 根据食物过期日期发送通知
 - (void)sendNotificationByExpireday{
-    self.fosaNotification = [[FosaNotification alloc]init];
-    [self.fosaNotification initNotification];
-    //self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory,self.likeBtn.accessibilityValue
-    FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr foodIcon:self.foodTextView.text category:selectCategory like:self.likeBtn.accessibilityValue Location:self.locationTextView.text];
-    NSString *body = [NSString stringWithFormat:@"Your food %@ has expired",self.foodTextView.text];
-    [self.fosaNotification sendNotificationByDate:model body:body date:expireStr];
+    NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
+    //获取用户设置，是否自动发送
+    NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
+    if ([autoNotification isEqualToString:@"YES"]) {
+        self.fosaNotification = [[FosaNotification alloc]init];
+        [self.fosaNotification initNotification];
+        //self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory,self.likeBtn.accessibilityValue
+        FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr foodIcon:self.foodTextView.text category:selectCategory like:self.likeBtn.accessibilityValue Location:self.locationTextView.text];
+        NSString *body = [NSString stringWithFormat:@"Your food %@ has expired",self.foodTextView.text];
+        [self.fosaNotification sendNotificationByDate:model body:body date:expireStr];
+    }
     
-    //[self SystemAlert:@"Successfully"];
+    //[self.navigationController popViewControllerAnimated:YES];
+    [self SystemAlert:@"Success"];
 }
 
 #pragma mark - 生成分享视图
@@ -1436,32 +1446,30 @@
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:message preferredStyle:UIAlertControllerStyleAlert];
-    if ([message isEqualToString:@"Successfully"] || [message isEqualToString:@"delete data successfully"]) {
-        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            NSLog(@"保存成功");
-            if ([self.foodStyle isEqualToString:@"edit"]){
-                self.foodStyle = @"Info";
-                //[self.navigationController popViewControllerAnimated:YES];
-                [self recoverEditView];
-            }else{
-                [self dismissViewControllerAnimated:YES completion:nil];
-            }
-            
-        }]];
+    
+    if ([message isEqualToString:@"Success"] || [message isEqualToString:@"delete data successfully"] ) {
         [self presentViewController:alert animated:true completion:nil];
-    }else if([message isEqualToString:@"Would you like to be send a notification when food expired"]){
-        [alert addAction:[UIAlertAction actionWithTitle:@"YES" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self sendNotificationByExpireday];
-            
-        }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:nil]];
-        
-        [self presentViewController:alert animated:true completion:nil];
+        [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
     }else{
         [alert addAction:[UIAlertAction actionWithTitle:@"Get It" style:UIAlertActionStyleDefault handler:nil]];
         [self presentViewController:alert animated:true completion:nil];
     }
 }
+- (void)dismissAlertView:(UIAlertController *)alert{
+    [alert dismissViewControllerAnimated:YES completion:nil];
+    if ([alert.message isEqualToString:@"Success"]) {
+        if ([self.foodStyle isEqualToString:@"edit"]){
+            self.foodStyle = @"Info";
+            //[self.navigationController popViewControllerAnimated:YES];
+            [self recoverEditView];
+        }else if([self.foodStyle isEqualToString:@"adding"]){
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
+    }else if([alert.message isEqualToString:@"delete data successfully"]){
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [self.db close];

@@ -10,8 +10,12 @@
 
 @interface settingViewController ()<UITableViewDelegate,UITableViewDataSource>{
     NSString *selectedSetting;
+    UITableViewCell *selectedCell;
+    NSString *autoNotification;
 }
 @property(nonatomic,strong) NSUserDefaults *userDefaults;
+@property (nonatomic,strong) NSDictionary *setDic;
+@property (nonatomic,strong) UISwitch *mswitch;
 @end
 @implementation settingViewController
 
@@ -27,9 +31,20 @@
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0],NSForegroundColorAttributeName, nil]];
 }
 - (void)creatTable{
+//    UIView *header = [[UIView alloc]initWithFrame:CGRectMake(0, NavigationBarHeight*2, screen_width, NavigationBarHeight)];
+//    UILabel *headerLable = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width/2, 20)];
+//    headerLable.text = @"Automatic Reminder";
+//    [header addSubview:headerLable];
+//    UISwitch *mswitch = [UISwitch new];
+//    mswitch.center = CGPointMake(screen_width*3/4, 10);
+//    [header addSubview:mswitch];
+//    [self.view addSubview:header];
+//
+    self.userDefaults = [NSUserDefaults standardUserDefaults];// 初始化
     self.dataSource = [NSMutableArray new];
-    [self.dataSource addObjectsFromArray:@[@"当天提醒",@"提前一天",@"提前两天"]];
-    self.settingTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationHeight*1.5, screen_width, screen_height/5) style:UITableViewStylePlain];
+    [self.dataSource addObjectsFromArray:@[@"Remind at expired day",@"Remind before one day",@"Remind before two days",@"Automatic Reminder"]];
+    self.setDic = [[NSDictionary alloc]init];
+    self.settingTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarHeight*3, screen_width, screen_height/4) style:UITableViewStylePlain];
     self.settingTable.delegate = self;
     self.settingTable.dataSource = self;
     self.settingTable.bounces = NO;
@@ -40,10 +55,18 @@
     [self.view addSubview:self.settingTable];
     
     [self.settingTable reloadData];
-    NSInteger selectedIndex = 0;
-    NSIndexPath *selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndex inSection:0];
-    [self.settingTable selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-    [self.settingTable cellForRowAtIndexPath:selectedIndexPath].accessoryType = UITableViewCellAccessoryCheckmark;
+   
+    NSString *select = [self.userDefaults valueForKey:@"notificationSetting"];
+    NSLog(@"当前选择：%@",[self.setDic valueForKey:select]);
+    NSInteger selectIndex0 = 0;
+    NSInteger selectIndex1 = 1;
+    NSInteger selectIndex2 = 2;
+    self.setDic = @{ @"Remind at expired day":[NSIndexPath indexPathForRow:selectIndex0 inSection:0],@"Remind before one day":[NSIndexPath indexPathForRow:selectIndex1 inSection:0],@"Remind before two days":[NSIndexPath indexPathForRow:selectIndex2 inSection:0]};
+    [self.settingTable selectRowAtIndexPath:[self.setDic valueForKey:select] animated:NO scrollPosition:UITableViewScrollPositionNone];
+    selectedCell = [self.settingTable cellForRowAtIndexPath:[self.setDic valueForKey:select]];
+    [self.settingTable cellForRowAtIndexPath:[self.setDic valueForKey:select]].accessoryType = UITableViewCellAccessoryCheckmark;
+
+    
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return self.settingTable.frame.size.height/self.dataSource.count;
@@ -77,28 +100,56 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
     cell.textLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
-    //cell.accessoryType = UITableViewCellAccessoryCheckmark;
     cell.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
 
     cell.textLabel.text = self.dataSource[row];
+    
+    if (row == 3) {
+        self.mswitch = [UISwitch new];
+        self.mswitch.frame = CGRectMake(0, 0, 100, 100);
+        self.mswitch.center = CGPointMake(screen_width-30, cell.contentView.center.y);
+        cell.backgroundView.userInteractionEnabled = NO;
+        [cell.contentView addSubview:self.mswitch];
+        [self.mswitch addTarget:self action:@selector(autoSwitch:) forControlEvents:UIControlEventValueChanged];
+    }
     //返回cell
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    selectedSetting = cell.textLabel.text;
+    if (indexPath.row != 3) {
+        
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if (![cell.textLabel.text isEqualToString:selectedCell.textLabel.text]) {
+            selectedCell.accessoryType = UITableViewCellAccessoryNone;
+        }
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        selectedSetting = cell.textLabel.text;
+        selectedCell = cell;
+    }
 }
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell * cell = (UITableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-    cell.accessoryType = UITableViewCellAccessoryNone;
+- (void)autoSwitch:(id)sender{
+    UISwitch *switchButton = (UISwitch*)sender;
+    BOOL isButtonOn = [switchButton isOn];
+    if (isButtonOn) {
+        NSLog(@"系统自动发送通知");
+        autoNotification = @"YES";
+    }else {
+           NSLog(@"系统不会自动发送通知");
+        autoNotification = @"NO";
+    }
 }
+
+//- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
+//    UITableViewCell * cell = (UITableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+//    cell.accessoryType = UITableViewCellAccessoryNone;
+//}
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-   self.userDefaults = [NSUserDefaults standardUserDefaults];// 初始化
-      [self.userDefaults setObject:selectedSetting forKey:@"notificationSetting"];
-    NSLog(@"%@",selectedSetting);
+    [self.userDefaults setObject:selectedSetting forKey:@"notificationSetting"];
+    [self.userDefaults setObject:autoNotification forKey:@"autonotification"];
+    [self.userDefaults synchronize];
+    NSLog(@"===========================%@",selectedSetting);
 }
 @end

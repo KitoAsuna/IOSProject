@@ -52,6 +52,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) foodKindView *foodCell;
 @property (nonatomic,strong) NSString *foodCategoryIconname;
 
+//相片二维码截图图片
+@property (nonatomic,strong) UIImage *imgOfFood;
+
 /**教学图片轮播*/
 @property (nonatomic,strong) UIScrollView *toturialPicturePlayer;
 @property (nonatomic,strong) UIPageControl *toturialPageControl;
