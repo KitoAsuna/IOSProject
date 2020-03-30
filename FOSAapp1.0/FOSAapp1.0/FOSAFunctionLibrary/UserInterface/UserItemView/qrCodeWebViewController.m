@@ -11,6 +11,7 @@
 
 @interface qrCodeWebViewController ()<WKNavigationDelegate,WKUIDelegate>
 @property(nonatomic,strong) WKWebView *qrWebView;
+@property (nonatomic,strong) UIProgressView *progressView;
 @end
 
 @implementation qrCodeWebViewController
@@ -50,17 +51,56 @@
     
     [self.qrWebView loadRequest:[NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://fosahome.com/qrlabel"]]];//https://fosahome.com/qrlabel/////https://www.bilibili.com
     [self.view addSubview:self.qrWebView];
-    
+
+    //加载进度条
+    //进度条高度不可修改
+    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(50, screen_height/2, screen_width-100, 40)];
+    //设置进度条的颜色
+    self.progressView.progressTintColor = [UIColor blueColor];
+    //设置进度条的当前值，范围：0~1；
+    self.progressView.progress = 0;
+    self.progressView.progressViewStyle = UIProgressViewStyleDefault;
+    [self.view addSubview:self.progressView];
+    //添加观察者
+    [self.qrWebView addObserver:self forKeyPath:@"estimatedProgress" options:0 context:nil];
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+   //kvo 监听进度 必须实现此方法
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(estimatedProgress))]
+        && object == self.qrWebView) {
+       NSLog(@"网页加载进度 = %f",self.qrWebView.estimatedProgress);
+        self.progressView.progress = self.qrWebView.estimatedProgress;
+        if (self.qrWebView.estimatedProgress >= 1.0f) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.progressView.progress = 0;
+            });
+        }
+    }else if([keyPath isEqualToString:@"title"]
+             && object == self.qrWebView){
+        self.navigationItem.title = self.qrWebView.title;
+    }else{
+        [super observeValueForKeyPath:keyPath
+                             ofObject:object
+                               change:change
+                              context:context];
+    }
 }
-*/
 
+    // 页面开始加载时调用
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
+    NSLog(@"开始加载");
+}
+// 页面加载失败时调用
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error {
+   
+}
+ // 页面加载完成之后调用
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    NSLog(@"加载完成");
+    [self.qrWebView removeObserver:self forKeyPath:NSStringFromSelector(@selector(estimatedProgress))];
+    [self.progressView removeFromSuperview];
+}
 @end
