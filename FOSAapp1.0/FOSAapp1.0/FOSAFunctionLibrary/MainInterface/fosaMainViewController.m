@@ -400,7 +400,7 @@
 
     //标题
     UILabel *sortTitle = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width, sortHeight/10-1)];
-    sortTitle.text = @"排序方式";
+    sortTitle.text = @"The Sorting Way";
     sortTitle.textAlignment = NSTextAlignmentCenter;
     [self.sortListView addSubview:sortTitle];
     UIView *line  = [[UIView alloc]initWithFrame:CGRectMake(0, sortHeight/8-1, screen_width, 0.5)];
