@@ -397,8 +397,10 @@
         self.editBtn.layer.cornerRadius = NavigationBarH*3/10;
         [self.editBtn setTitle:@"Edit" forState:UIControlStateNormal];
         self.editBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
-        self.editBtn.titleLabel.font = [UIFont systemFontOfSize: font(24)];
-        self.editBtn.backgroundColor = FOSAgreen;
+        self.editBtn.titleLabel.font = [UIFont systemFontOfSize: font(20)];
+        self.editBtn.layer.borderWidth = 0.5;
+        self.editBtn.layer.borderColor = FOSAWhite.CGColor;
+        //self.editBtn.backgroundColor = FOSAgreen;
         [self.editBtn addTarget:self action:@selector(EditInfo) forControlEvents:UIControlEventTouchUpInside];
     }
 }
@@ -569,7 +571,7 @@
     
     self.locationView.frame = CGRectMake(0, contentHeight*3/4, screen_width, contentHeight/4);
     [self.contentView addSubview:self.locationView];
-    self.locationLabel.frame = CGRectMake(screen_width/12, contentHeight/18, screen_width/3, contentHeight/16);
+    self.locationLabel.frame = CGRectMake(screen_width*5/66, contentHeight/18, screen_width/3, contentHeight/16);
     self.locationLabel.text = @"Location";
     self.locationLabel.font = [UIFont systemFontOfSize:15];
     self.locationLabel.textColor = [UIColor grayColor];
@@ -624,7 +626,7 @@
     
     self.doneBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.footerView.frame)+screen_height*6/143, screen_width/3, screen_height*6/143);
     self.doneBtn.layer.cornerRadius = self.doneBtn.frame.size.height/2;
-    [self.doneBtn setTitle:@"DONE" forState:UIControlStateNormal];
+    [self.doneBtn setTitle:@"Done" forState:UIControlStateNormal];
     self.doneBtn.backgroundColor = FOSAgreen;
     [self.view addSubview:self.doneBtn];
     [self.doneBtn addTarget:self action:@selector(saveInfoAndFinish) forControlEvents:UIControlEventTouchUpInside];
@@ -641,7 +643,7 @@
         self.deleteBtn.backgroundColor = FOSARed;
         [self.deleteBtn addTarget:self action:@selector(deleteFoodRecord) forControlEvents:UIControlEventTouchUpInside];
         self.deleteBtn.layer.cornerRadius = self.deleteBtn.frame.size.height/2;
-        [self.deleteBtn setTitle:@"DELETE" forState:UIControlStateNormal];
+        [self.deleteBtn setTitle:@"Delete" forState:UIControlStateNormal];
         [self.view addSubview:self.deleteBtn];
     }
 }
@@ -725,12 +727,11 @@
             NSString *img = [NSString stringWithFormat:@"%@%ld",self.model.foodPhoto,i+1];
             self.imageviewArray[i].image = [self getImage:img];
             self.foodImgArray[i] = self.imageviewArray[i].image;
-            
         }else{
             NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"picturePlayer",i+1];
             self.imageviewArray[i].image = [UIImage imageNamed:imgName];
         }
- 
+
         UITapGestureRecognizer *clickRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumptoPhoto)];
                //clickRecognizer.view.tag = i;
         [self.imageviewArray[i] addGestureRecognizer:clickRecognizer];

@@ -673,7 +673,6 @@
         FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category like:isLike Location:location];
         [self.collectionDataSource addObject:model];
         if (!isSelectCategory) {
-            NSLog(@"????????????????????????????");
             [self.AllFoodArray addObject:model];
         }
         
@@ -745,7 +744,7 @@
 - (void)cancelEdit{
     categoryEdit = false;
     [self getCategoryArray];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.scanBtn];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.sortbtn];
     //取消选中状态
     isSelectCategory = false;
     self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
@@ -917,11 +916,10 @@
     self.selectedCategoryCell = nil;
     [self CollectionReload];
 
-    
     //为退出按钮添加约束
     [self.cancelBtn.widthAnchor constraintEqualToConstant:NavigationBarH*5/3].active = YES;
     [self.cancelBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
-    [self.cancelBtn setTitle:@"CANCEL" forState:UIControlStateNormal];
+    [self.cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
     //self.cancelBtn.layer.borderWidth = 1;
     self.cancelBtn.layer.cornerRadius = NavigationBarH/3;
     self.cancelBtn.backgroundColor = FOSARed;
