@@ -22,6 +22,7 @@
         [self addSubview:self.rootView];
         self.categoryPhoto = [[UIImageView alloc]init];
         self.badgeBtn = [UIButton new];
+        self.badgeBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
         [self.rootView addSubview:self.badgeBtn];
         self.badgeBtn.hidden = YES;
         self.editbtn = [UIButton new];

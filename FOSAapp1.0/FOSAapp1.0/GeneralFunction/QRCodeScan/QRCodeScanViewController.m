@@ -13,6 +13,7 @@
 #import "FoodModel.h"
 #import "FoodViewController.h"
 #import "foodAddingViewController.h"
+#import "qrCodeWebViewController.h"
 #import "AFNetworking.h"
 
 @interface QRCodeScanViewController ()<AVCaptureMetadataOutputObjectsDelegate,UINavigationControllerDelegate,AVCaptureVideoDataOutputSampleBufferDelegate,UIImagePickerControllerDelegate,UIScrollViewDelegate>{
@@ -33,8 +34,6 @@
 @property (nonatomic,strong) AVCaptureVideoDataOutput *VideoOutput;
 @property (nonatomic, strong) AVCaptureSession * captureSession; //AVFoundation框架捕获类的中心枢纽，协调输入输出设备以获得数据
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer * previewLayer;//展示捕获图像的图层，是CALayer的子类
-@property (nonatomic, strong) AVCaptureStillImageOutput *captureStillImageOutput;//照片输出流
-
 @property (nonatomic,strong) FoodMoreInfoView *circleAlertView1,*circleAlertView2,*circleAlertView3;
 
 //缩放
@@ -586,24 +585,24 @@ NSLog(@"************************************************************************
             if ([self.scanStyle isEqualToString:@""]){
                 //scanStyle  为 block，在sg获得结果后判断，如果是FOSA系列产品的码，则返回添加界面及产品设备号
                     [self performSelectorOnMainThread:@selector(setFocusCursorWithPoint:) withObject:(AVMetadataMachineReadableCodeObject *) mobject waitUntilDone:NO];     //在主线程中标记二维码的位置（还不够准确）
-//                    if([result hasPrefix:@"http://"]||[result hasPrefix:@"https://"]){//若是一个网站，就打开这个链接
-//                        if (!isJump) {
-//                            [self ScanSuccess:@"ding.wav"];
-//                            [self performSelectorOnMainThread:@selector(OpenURL:) withObject:result waitUntilDone:NO];
-//                            isJump = true;
-//                        }
-//                    }else
-                if([result hasPrefix:@"Fosa"]||[result hasPrefix:@"FS9"]||[result hasPrefix:@"FOSASealer"]){
+                    if([result hasPrefix:@"http://"]||[result hasPrefix:@"https://"]){//若是一个网站，就打开这个链接
+                        if (!isJump) {
+                            [self ScanSuccess:@"ding.wav"];
+                            [self performSelectorOnMainThread:@selector(OpenURL:) withObject:result waitUntilDone:NO];
+                            isJump = true;
+                        }
+                    }else if([result hasPrefix:@"Fosa"]||[result hasPrefix:@"FS9"]||[result hasPrefix:@"FOSASealer"]){
                         [self ScanSuccess:@"ding.wav"];
                         [self performSelectorOnMainThread:@selector(showOneMessage:) withObject:result waitUntilDone:NO]; //在主线程中展示这个物品的通知
                     }else if ([result hasPrefix:@"FOSAINFO"]) {
                         foodAddingViewController *food = [foodAddingViewController new];
-                        //分割字符串的测试
-                        NSArray *infoArray = [NSArray array];
-                        infoArray = [result componentsSeparatedByString:@"&"];
-                        NSLog(@"图片中的食物二维码信息为:%@",infoArray);
-                        
-                       //[self.navigationController pushViewController:food animated:YES];
+                        //分割字符
+                        NSArray *infoArray = [result componentsSeparatedByString:@"&"];
+                        FoodModel *model = [FoodModel modelWithName:infoArray[1] DeviceID:infoArray[2] Description:infoArray[3] StrogeDate:infoArray[5] ExpireDate:infoArray[4] foodIcon:infoArray[1] category:infoArray[6] like:@"0" Location:infoArray[7]];
+                        food.model = model;
+                        food.foodStyle = @"Info";
+                        food.foodCategoryIconname = @"Biscuit";
+                        [self.navigationController pushViewController:food animated:YES];
                     }else{
                         if (!isJump) {//当前还没有发生跳转
                             [self ScanSuccess:@"ding.wav"];
@@ -685,7 +684,6 @@ NSLog(@"************************************************************************
             //删除与生成有时候顺序混乱，怀疑是进程的问题
                    [self performSelectorOnMainThread:@selector(MoreFoodInfo) withObject:nil waitUntilDone:NO];
             }
-        NSLog(@"ENDENDENDENDENDENDENDENDENDeNDendend");
 }
 
 //扫描成功的提示音
@@ -730,7 +728,24 @@ NSLog(@"************************************************************************
 }
 //打开扫描到的网页
 - (void)OpenURL:(NSString *)url{
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+    NSLog(@"%@",url);
+    qrCodeWebViewController *webView = [qrCodeWebViewController new];
+    webView.urlString = url;
+    [self.navigationController pushViewController:webView animated:YES];
+//    NSURL *URL = [[NSURL alloc]initWithString:url];
+//   [[UIApplication sharedApplication]openURL:URL options:@{} completionHandler:^(BOOL success) {
+//       NSLog(@"Open Successfully");
+//    }];
+////
+////    函数异步执行，在主队列中调用 completionHandler 中的回调。
+////    参数：
+////    openURL:打开的网址
+////    options:用来校验url和applicationConfigure是否配置正确，是否可用。
+////            如果校验为不可用，completionHandler的回调success为NO。
+////            唯一可用@{UIApplicationOpenURLOptionUniversalLinksOnly:@YES}。
+////            不需要就用@{}为置空，不能直接置nil。
+////            置空将不会校验，completionHandler的回调success恒为YES。
+////    ompletionHandler:如不需要可置nil
 }
 //弹出系统提示
 - (void)SystemAlert:(NSString *)message{
@@ -946,8 +961,7 @@ NSLog(@"************************************************************************
         if ([firstResult hasPrefix:@"FOSA"]) {
             foodAddingViewController *food = [foodAddingViewController new];
             //分割字符串的测试
-            NSArray *infoArray = [NSArray array];
-            infoArray = [firstResult componentsSeparatedByString:@"&"];
+            NSArray *infoArray = [firstResult componentsSeparatedByString:@"&"];
             
             FoodModel *model = [FoodModel modelWithName:infoArray[1] DeviceID:infoArray[2] Description:infoArray[3] StrogeDate:infoArray[5] ExpireDate:infoArray[4] foodIcon:infoArray[1] category:infoArray[6] like:@"0" Location:infoArray[7]];
             food.model = model;
@@ -1123,6 +1137,7 @@ NSLog(@"************************************************************************
     stopAnimation = YES;
     [self.captureSession stopRunning];
     [self unShowFocus];
+    self.navigationController.navigationBar.tintColor = FOSAGray;
     [db close];
 }
 

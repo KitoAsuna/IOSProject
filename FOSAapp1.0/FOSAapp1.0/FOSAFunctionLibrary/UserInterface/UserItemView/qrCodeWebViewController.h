@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface qrCodeWebViewController : UIViewController
-
+@property (nonatomic,strong) NSString *urlString;
 @end
 
 NS_ASSUME_NONNULL_END

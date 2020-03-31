@@ -82,7 +82,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     completionHandler();
 }
 
-- (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate{
+- (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(id)image{
     NSLog(@"我将发送一个系统通知");
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
     content.title = @"Notification";
@@ -91,7 +91,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     content.badge = @0;
     //获取沙盒中的图片
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *photopath = [NSString stringWithFormat:@"%@1.png",model.foodPhoto];
+    NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodPhoto];
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
     self.image = img;
@@ -130,7 +130,12 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
            NSLog(@"%@",error);
     }];
-    //[self Savephoto:img name:model.foodPhoto];
+    //生成二维码
+    NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@&%@",model.foodName,model.device,model.aboutFood,model.expireDate,model.storageDate,model.category,model.location];
+    self.codeImage = [self GenerateQRCodeByMessage:message];
+    self.image = img;
+    foodName = model.foodName;
+    NSLog(@"这是分享图片上的食物%@图片:%@",model.foodName,self.image);
 }
 - (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img{
     NSLog(@"我将发送一个系统通知");

@@ -594,13 +594,13 @@
     //self.footerView.backgroundColor = [UIColor yellowColor];
     [self.view addSubview:self.footerView];
     int footerHeight = self.footerView.frame.size.height;
-    self.leftIndex.frame = CGRectMake(screen_width/66, footerHeight*8/14, screen_width/18, screen_width/18);
+    self.leftIndex.frame = CGRectMake(screen_width/66, footerHeight*8/14, screen_width*2/33, screen_width*2/33);
     self.leftIndex.layer.cornerRadius = self.leftIndex.frame.size.width/2;
     [self.leftIndex setBackgroundImage:[UIImage imageNamed:@"icon_leftindex"] forState:UIControlStateNormal];
     [self.leftIndex addTarget:self action:@selector(offsetToLeft) forControlEvents:UIControlEventTouchUpInside];
     [self.footerView addSubview:self.leftIndex];
     
-    self.rightIndex.frame = CGRectMake(screen_width*31/33, footerHeight*8/14, screen_width/18, screen_width/18);//
+    self.rightIndex.frame = CGRectMake(screen_width*61/66, footerHeight*8/14, screen_width*2/33, screen_width*2/33);//
     self.rightIndex.layer.cornerRadius = self.rightIndex.frame.size.width/2;
     [self.rightIndex setBackgroundImage:[UIImage imageNamed:@"icon_rightindex"] forState:UIControlStateNormal];
     [self.rightIndex addTarget:self action:@selector(offsetToRight) forControlEvents:UIControlEventTouchUpInside];
@@ -684,8 +684,8 @@
         self.foodDescribedTextView.text = self.model.aboutFood;
         self.locationTextView.text = self.model.location;
         self.foodCell.kind.text = self.model.category;
-        //self.foodCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.foodCategoryIconname]];
-        self.foodCell.categoryPhoto.image = [UIImage imageNamed:@"BiscuitW"];
+        self.foodCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.foodCategoryIconname]];
+        //self.foodCell.categoryPhoto.image = [UIImage imageNamed:@"BiscuitW"];
 
         //字数指示器
         if ((unsigned long)self.foodDescribedTextView.text.length > 80) {
@@ -807,10 +807,9 @@
         CGFloat offset = scrollView.contentOffset.x;
         NSInteger index = offset/screen_width;
         self.toturialPageControl.currentPage = index;
-        
     }
-    
 }
+
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
     return self.bigImage;
 }
@@ -891,7 +890,7 @@
     }
     cell.rootView.backgroundColor = FOSAYellow;
     cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]]];
-    selectCategory = self.categoryArray[indexPath.row];
+    selectCategory = self.categoryNameArray[indexPath.row];
     self.selectedCategory = cell;
     NSLog(@"Selectd:%@",selectCategory);
 }
@@ -1124,12 +1123,13 @@
     [self presentViewController:activityVC animated:TRUE completion:nil];
 }
 - (void)saveInfoAndFinish{
+    
     if ([self.foodStyle isEqualToString:@"edit"]) {
         [self DeleteRecord];
     }
     [self SavephotosInSanBox:self.foodImgArray];
     [self CreatDataTable];
-    
+    [self sendNotificationByExpireday];
 }
 - (void)deleteFoodRecord{
     //功能有待完善，添加点击放大图片的功能
@@ -1197,16 +1197,14 @@
             BOOL insertResult = [self.db executeUpdate:insertSql, self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory,self.likeBtn.accessibilityValue];
             NSLog(@"~~~~~~~~~~~~~~~~~~~~设备号：%@",device);
             if (insertResult) {
-                //[self SystemAlert:@"Would you like to be send a notification when food expired"];
-                //[self SystemAlert:@"Successfully"];
-                [self sendNotificationByExpireday];
-                
+                [self SystemAlert:@"Success"];
             }else{
                 [self SystemAlert:@"Error"];
             }
         }
     }
 }
+
 //获取食品种类
 - (void)getCategoryArray{
     [self OpenSqlDatabase:@"FOSA"];
@@ -1259,7 +1257,6 @@
     [self.view addSubview:self.backGround];
 }
 
-
 - (void)SavephotosInSanBox:(NSMutableArray *)images{
     NSLog(@"************%@",images);
     if (images.count > 0) {
@@ -1274,6 +1271,17 @@
                 NSLog(@"保存成功");
             }
         }
+    }
+}
+//保存图片到沙盒
+-(void)Savephoto:(UIImage *)image name:(NSString *)foodname{
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *photoName = [NSString stringWithFormat:@"%@.png",foodname];
+    NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent: photoName];// 保存文件的路径
+    NSLog(@"这个是照片的保存地址:%@",filePath);
+    BOOL result =[UIImagePNGRepresentation(image) writeToFile:filePath  atomically:YES];// 保存成功会返回YES
+    if(result == YES) {
+        NSLog(@"通知界面图片保存成功");
     }
 }
 //取出保存在本地的图片
@@ -1344,20 +1352,25 @@
 }
 #pragma mark - 根据食物过期日期发送通知
 - (void)sendNotificationByExpireday{
-    NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
-    //获取用户设置，是否自动发送
-    NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
-    if ([autoNotification isEqualToString:@"YES"]) {
-        self.fosaNotification = [[FosaNotification alloc]init];
-        [self.fosaNotification initNotification];
-        //self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory,self.likeBtn.accessibilityValue
-        FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr foodIcon:self.foodTextView.text category:selectCategory like:self.likeBtn.accessibilityValue Location:self.locationTextView.text];
-        NSString *body = [NSString stringWithFormat:@"Your food %@ has expired",self.foodTextView.text];
-        [self.fosaNotification sendNotificationByDate:model body:body date:expireStr];
+    if (![self.foodStyle isEqualToString:@"edit"]) {
+        NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
+        //获取用户设置，是否自动发送
+        NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
+        if ([autoNotification isEqualToString:@"YES"]) {
+            self.fosaNotification = [[FosaNotification alloc]init];
+            [self.fosaNotification initNotification];
+            //self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory,self.likeBtn.accessibilityValue
+            FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr foodIcon:self.foodTextView.text category:selectCategory like:self.likeBtn.accessibilityValue Location:self.locationTextView.text];
+            NSString *body = [NSString stringWithFormat:@"Your food %@ has expired",self.foodTextView.text];
+            //获取通知的图片
+            UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
+            NSLog(@"%@",image)
+            //另存通知图片
+            [self Savephoto:image name:self.foodTextView.text];
+            
+            [self.fosaNotification sendNotificationByDate:model body:body date:expireStr foodImg:image];
+        }
     }
-    
-    //[self.navigationController popViewControllerAnimated:YES];
-    [self SystemAlert:@"Success"];
 }
 
 #pragma mark - 生成分享视图

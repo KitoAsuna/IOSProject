@@ -49,7 +49,8 @@
     //设置请求的User-Agent信息中应用程序名称 iOS9后可用
     config.applicationNameForUserAgent = @"ChinaDailyForiPad";
     
-    [self.qrWebView loadRequest:[NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://fosahome.com/qrlabel"]]];//https://fosahome.com/qrlabel/////https://www.bilibili.com
+    [self.qrWebView loadRequest:[NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.urlString]]];//https://fosahome.com/qrlabel/////https://www.bilibili.com
+    NSLog(@"%@",self.urlString);
     [self.view addSubview:self.qrWebView];
 
     //加载进度条
@@ -64,7 +65,6 @@
     //添加观察者
     [self.qrWebView addObserver:self forKeyPath:@"estimatedProgress" options:0 context:nil];
 }
-
 
    //kvo 监听进度 必须实现此方法
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -88,19 +88,19 @@
                               context:context];
     }
 }
-
     // 页面开始加载时调用
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
     NSLog(@"开始加载");
 }
 // 页面加载失败时调用
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error {
-   
+    NSLog(@"%@",error);
+    [self.navigationController popViewControllerAnimated:YES];
 }
  // 页面加载完成之后调用
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     NSLog(@"加载完成");
-    [self.qrWebView removeObserver:self forKeyPath:NSStringFromSelector(@selector(estimatedProgress))];
+    //[self.qrWebView removeObserver:self forKeyPath:NSStringFromSelector(@selector(estimatedProgress))];
     [self.progressView removeFromSuperview];
 }
 @end

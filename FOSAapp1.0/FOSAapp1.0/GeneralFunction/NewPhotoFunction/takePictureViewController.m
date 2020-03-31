@@ -86,12 +86,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     [self initCameraInPosition:YES];
     [self initControlView];
     // Do any additional setup after loading the view.
 }
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     [self.navigationItem setHidesBackButton:YES];
 }
 
@@ -100,7 +100,7 @@
     [self.view addSubview:self.containerView];
     self.session = [AVCaptureSession new];
     [self.session setSessionPreset:AVCaptureSessionPresetHigh];
-    
+
 //    NSArray *devices = [NSArray new];
 //    devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];过期方法
     AVCaptureDeviceDiscoverySession *deviceSession = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:@[AVCaptureDeviceTypeBuiltInWideAngleCamera] mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
@@ -161,6 +161,8 @@
     //预览
     self.pictureView = [[UIImageView alloc]initWithFrame:CGRectMake(screen_width/20, self.controlerView.frame.size.height/3-screen_width*4/50, screen_width*4/25, screen_width*4/25)];
     self.pictureView.layer.cornerRadius = self.pictureView.frame.size.width/8;
+    self.pictureView.contentMode =  UIViewContentModeScaleAspectFill;
+    self.pictureView.clipsToBounds = true;
     self.pictureView.backgroundColor = [UIColor grayColor];
     [self.controlerView addSubview:self.pictureView];
     self.pictureView.userInteractionEnabled = YES;
@@ -171,6 +173,8 @@
     //确定
     self.finishBtn = [[UIButton alloc]initWithFrame:CGRectMake(screen_width*4/5, self.controlerView.frame.size.height/3-screen_width*4/50, screen_width*4/25, screen_width*4/25)];
     [_finishBtn setTitle:@"Fnish" forState:UIControlStateNormal];
+    [self.finishBtn setTitleColor:FOSAWhite forState:UIControlStateNormal];
+    [self.finishBtn setTitleColor:FOSAgreen forState:UIControlStateHighlighted];
     [self.controlerView addSubview:_finishBtn];
     [self.finishBtn addTarget:self action:@selector(clickToFinish) forControlEvents:UIControlEventTouchUpInside];
     
@@ -186,7 +190,7 @@
 - (void)clickToFinish{
     NSLog(@"%@",self.pictureView.image);
     self.photoBlock(self.pictureView.image);
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 //打开闪光灯
@@ -292,12 +296,23 @@
 }
 
 #pragma mark - AVCapturePhotoCaptureDelegate
-- (void)captureOutput:(AVCapturePhotoOutput *)captureOutput didFinishProcessingPhotoSampleBuffer:(nullable CMSampleBufferRef)photoSampleBuffer previewPhotoSampleBuffer:(nullable CMSampleBufferRef)previewPhotoSampleBuffer resolvedSettings:(AVCaptureResolvedPhotoSettings *)resolvedSettings bracketSettings:(nullable AVCaptureBracketedStillImageSettings *)bracketSettings error:(nullable NSError *)error{
-    NSData *data = [AVCapturePhotoOutput JPEGPhotoDataRepresentationForJPEGSampleBuffer:photoSampleBuffer previewPhotoSampleBuffer:previewPhotoSampleBuffer];
-    UIImage *image = [UIImage imageWithData:data];
+
+
+- (void)captureOutput:(AVCapturePhotoOutput *)output didFinishProcessingPhoto:(AVCapturePhoto *)photo error:(NSError *)error{
+    /**
+     IOS 11之后使用该协议获取图片
+     */
+    NSData *imgData = [photo fileDataRepresentation];
+    UIImage *image = [UIImage imageWithData:imgData];
     self.pictureView.image = [self fixOrientation:image];
-       //UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
 }
+//
+//- (void)captureOutput:(AVCapturePhotoOutput *)captureOutput didFinishProcessingPhotoSampleBuffer:(nullable CMSampleBufferRef)photoSampleBuffer previewPhotoSampleBuffer:(nullable CMSampleBufferRef)previewPhotoSampleBuffer resolvedSettings:(AVCaptureResolvedPhotoSettings *)resolvedSettings bracketSettings:(nullable AVCaptureBracketedStillImageSettings *)bracketSettings error:(nullable NSError *)error{
+//    NSData *data = [AVCapturePhotoOutput JPEGPhotoDataRepresentationForJPEGSampleBuffer:photoSampleBuffer previewPhotoSampleBuffer:previewPhotoSampleBuffer];
+//    UIImage *image = [UIImage imageWithData:data];
+//    self.pictureView.image = [self fixOrientation:image];
+//       //UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+//}
 
 
 - (void)image: (UIImage *) image didFinishSavingWithError: (NSError *) error contextInfo: (void *) contextInfo {

@@ -31,15 +31,7 @@
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0],NSForegroundColorAttributeName, nil]];
 }
 - (void)creatTable{
-//    UIView *header = [[UIView alloc]initWithFrame:CGRectMake(0, NavigationBarHeight*2, screen_width, NavigationBarHeight)];
-//    UILabel *headerLable = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width/2, 20)];
-//    headerLable.text = @"Automatic Reminder";
-//    [header addSubview:headerLable];
-//    UISwitch *mswitch = [UISwitch new];
-//    mswitch.center = CGPointMake(screen_width*3/4, 10);
-//    [header addSubview:mswitch];
-//    [self.view addSubview:header];
-//
+
     self.userDefaults = [NSUserDefaults standardUserDefaults];// 初始化
     self.dataSource = [NSMutableArray new];
     [self.dataSource addObjectsFromArray:@[@"Remind at expired day",@"Remind before one day",@"Remind before two days",@"Automatic Reminder"]];
@@ -56,17 +48,16 @@
     
     [self.settingTable reloadData];
    
-    NSString *select = [self.userDefaults valueForKey:@"notificationSetting"];
-    NSLog(@"当前选择：%@",[self.setDic valueForKey:select]);
+    selectedSetting = [self.userDefaults valueForKey:@"notificationSetting"];
+    
     NSInteger selectIndex0 = 0;
     NSInteger selectIndex1 = 1;
     NSInteger selectIndex2 = 2;
     self.setDic = @{ @"Remind at expired day":[NSIndexPath indexPathForRow:selectIndex0 inSection:0],@"Remind before one day":[NSIndexPath indexPathForRow:selectIndex1 inSection:0],@"Remind before two days":[NSIndexPath indexPathForRow:selectIndex2 inSection:0]};
-    [self.settingTable selectRowAtIndexPath:[self.setDic valueForKey:select] animated:NO scrollPosition:UITableViewScrollPositionNone];
-    selectedCell = [self.settingTable cellForRowAtIndexPath:[self.setDic valueForKey:select]];
-    [self.settingTable cellForRowAtIndexPath:[self.setDic valueForKey:select]].accessoryType = UITableViewCellAccessoryCheckmark;
+    [self.settingTable selectRowAtIndexPath:[self.setDic valueForKey:selectedSetting] animated:NO scrollPosition:UITableViewScrollPositionNone];
+    selectedCell = [self.settingTable cellForRowAtIndexPath:[self.setDic valueForKey:selectedSetting]];
+    [self.settingTable cellForRowAtIndexPath:[self.setDic valueForKey:selectedSetting]].accessoryType = UITableViewCellAccessoryCheckmark;
 
-    
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return self.settingTable.frame.size.height/self.dataSource.count;
@@ -105,10 +96,14 @@
     cell.textLabel.text = self.dataSource[row];
     
     if (row == 3) {
+        autoNotification = [self.userDefaults valueForKey:@"autonotification"];
         self.mswitch = [UISwitch new];
         self.mswitch.frame = CGRectMake(0, 0, 100, 100);
         self.mswitch.center = CGPointMake(screen_width-30, cell.contentView.center.y);
         cell.backgroundView.userInteractionEnabled = NO;
+        if ([autoNotification isEqualToString:@"YES"]) {
+            [self.mswitch setOn:YES];
+        }
         [cell.contentView addSubview:self.mswitch];
         [self.mswitch addTarget:self action:@selector(autoSwitch:) forControlEvents:UIControlEventValueChanged];
     }

@@ -74,10 +74,13 @@
         [self.likebtn setImage:[UIImage imageNamed:@"icon_likeHL"] forState:UIControlStateNormal];
     }
     self.foodNamelabel.text = model.foodName;
-    timeArray = [model.expireDate componentsSeparatedByString:@"/"];
-    self.dayLabel.text = timeArray[0];
-    self.mouthLabel.text = timeArray[1];
-    self.timelabel.text = timeArray[3];
+    if (![model.foodName isEqualToString:@""]) {
+        timeArray = [model.expireDate componentsSeparatedByString:@"/"];
+        self.dayLabel.text = timeArray[0];
+        self.mouthLabel.text = timeArray[1];
+        self.timelabel.text = timeArray[3];
+    }
+
 }
 //取出保存在本地的图片
 - (UIImage*)getImage:(NSString *)filepath{
@@ -101,31 +104,37 @@
     CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
     CGContextClosePath(context);
     [[UIColor whiteColor] setStroke];
-    //判断当前日期与过期日期
-    //获取当前日期
-    NSDate *currentDate = [[NSDate alloc]init];
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yy/MM/dd"];
-
-    NSDateFormatter *formatter2 = [[NSDateFormatter alloc]init];
-    [formatter2 setDateFormat:@"MM/dd/yyyy HH:mm"];
-
-    NSString *str = [formatter stringFromDate:currentDate];
-    currentDate = [formatter dateFromString:str];
-    NSLog(@"--------------%@",str);
-    NSDate *foodDate;
     
-    NSArray<NSString *> *dateArray = [self.model.expireDate componentsSeparatedByString:@"/"];
-    NSString *RDate = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray[1],dateArray[0],dateArray[2],dateArray[3]];
-    
-    foodDate = [formatter2 dateFromString:RDate];
-    NSLog(@"foodDate:%@",foodDate);
-    RDate = [formatter stringFromDate:foodDate];
-    foodDate = [formatter dateFromString:RDate];
-    //比较过期日期与今天的日期
-    NSComparisonResult result = [currentDate compare:foodDate];
-    if (result == NSOrderedDescending) {//foodDate 在 currentDate 之前,即是食物已过期
-        [FOSARed setFill];
+    if (![self.model.foodName isEqualToString:@""]) {
+        //判断当前日期与过期日期
+        //获取当前日期
+        NSDate *currentDate = [[NSDate alloc]init];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"yy/MM/dd"];
+
+        NSDateFormatter *formatter2 = [[NSDateFormatter alloc]init];
+        [formatter2 setDateFormat:@"MM/dd/yyyy HH:mm"];
+
+        NSString *str = [formatter stringFromDate:currentDate];
+        currentDate = [formatter dateFromString:str];
+        NSLog(@"--------------%@",str);
+        NSDate *foodDate;
+        
+        NSArray<NSString *> *dateArray = [self.model.expireDate componentsSeparatedByString:@"/"];
+
+        NSString *RDate = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray[1],dateArray[0],dateArray[2],dateArray[3]];
+            
+        foodDate = [formatter2 dateFromString:RDate];
+        NSLog(@"foodDate:%@",foodDate);
+        RDate = [formatter stringFromDate:foodDate];
+        foodDate = [formatter dateFromString:RDate];
+        //比较过期日期与今天的日期
+        NSComparisonResult result = [currentDate compare:foodDate];
+        if (result == NSOrderedDescending) {//foodDate 在 currentDate 之前,即是食物已过期
+            [FOSARed setFill];
+        }else{
+            [FOSAgreen setFill];
+        }
     }else{
         [FOSAGray setFill];
     }

@@ -248,6 +248,7 @@
 - (void)jumpToQrCodeGenerator:(UIGestureRecognizer *)sender{
     NSLog(@"Click************");
     qrCodeWebViewController *qrCodeGenerator = [qrCodeWebViewController new];
+    qrCodeGenerator.urlString = @"https://fosahome.com/qrlabel/";
     qrCodeGenerator.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:qrCodeGenerator animated:YES];
 }
