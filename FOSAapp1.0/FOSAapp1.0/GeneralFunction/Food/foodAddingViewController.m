@@ -685,6 +685,7 @@
         self.locationTextView.text = self.model.location;
         self.foodCell.kind.text = self.model.category;
         self.foodCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.foodCategoryIconname]];
+        NSLog(@"-------------------------%@",self.foodCategoryIconname);
         //self.foodCell.categoryPhoto.image = [UIImage imageNamed:@"BiscuitW"];
 
         //字数指示器
@@ -1252,7 +1253,7 @@
     [_bigImage addGestureRecognizer:doubleTapGesture];
     
     [shrinkRecognizer requireGestureRecognizerToFail:doubleTapGesture];
-    
+
     [_backGround addSubview:self.bigImage];
     [self.view addSubview:self.backGround];
 }

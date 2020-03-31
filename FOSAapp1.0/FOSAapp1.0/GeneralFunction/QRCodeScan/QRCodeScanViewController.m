@@ -704,6 +704,7 @@ NSLog(@"************************************************************************
         add.foodStyle = @"Info";
         add.hidesBottomBarWhenPushed = YES;
         add.model = model;
+        add.foodCategoryIconname = @"Biscuit";
         [self.navigationController pushViewController:add animated:YES];
     }
 //    NSLog(@"%@",result);
