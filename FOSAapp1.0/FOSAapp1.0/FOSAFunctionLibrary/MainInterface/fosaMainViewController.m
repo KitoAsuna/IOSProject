@@ -373,7 +373,7 @@
      self.fooditemCollection.dataSource = self;
      self.fooditemCollection.showsVerticalScrollIndicator = NO;
      self.fooditemCollection.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    //[self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
+    [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
      //self.foodItemCollection.bounces = NO;
      [self.foodItemView addSubview:self.fooditemCollection];
     
@@ -548,35 +548,42 @@
         /**
                 创建唯一标识符
          */
-        //获取当天的时间并进行处理
-        NSDate *currentDate = [NSDate new];
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"dd/MM/yy/HH:mm"];
-        NSString *currentDateStr = [formatter stringFromDate:currentDate];
+//        //获取当天的时间并进行处理
+//        NSDate *currentDate = [NSDate new];
+//        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//        [formatter setDateFormat:@"dd/MM/yy/HH:mm"];
+//        NSString *currentDateStr = [formatter stringFromDate:currentDate];
+//
+//        NSLog(@"当前：%@",currentDateStr);
         
-        // 每次先从字典中根据IndexPath取出唯一标识符
-        NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@",currentDateStr]];
-             // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
-        if (identifier == nil) {
-                identifier = [NSString stringWithFormat:@"%@%@", foodItemID, currentDateStr];
-                [_cellDictionary setValue:identifier forKey:currentDateStr];
-            // 注册Cell
-                [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
-            }
+//        // 每次先从字典中根据IndexPath取出唯一标识符
+//        NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@%ld",currentDateStr,index]];
+//             // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+//        if (identifier == nil) {
+//                identifier = [NSString stringWithFormat:@"%@%@%ld", foodItemID, currentDateStr,index];
+//                [_cellDictionary setValue:identifier forKey:currentDateStr];
+//            // 注册Cell
+//                [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
+//            }
         NSLog(@"%ld",index);
         
-        foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+        foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:foodItemID forIndexPath:indexPath];
         
         if (index < self.collectionDataSource.count ) {
-            cell.likebtn.hidden = NO;
+            cell.isDraw = @"YES";
             [cell setModel:self.collectionDataSource[index]];
         }else{
+            cell.isDraw = @"NO";
+            [cell drawRect:cell.bounds];
+            cell.foodNamelabel.text = @"";
+            cell.locationLabel.text = @"";
+            cell.dayLabel.text = @"";
+            cell.timelabel.text = @"";
+            cell.mouthLabel.text = @"";
             cell.likebtn.hidden = YES;
-            FoodModel *model = [FoodModel modelWithName:@"" DeviceID:@"" Description:@"" StrogeDate:@"" ExpireDate:@"" foodIcon:@"" category:@"" Location:@""];
-            [cell setModel:model];
+            cell.squre.hidden = YES;
             cell.foodImgView.image = [UIImage imageNamed:@"icon_defaultImg"];
         }
-
         return cell;
     }
 }
@@ -692,13 +699,12 @@
         }
         
         NSLog(@"*********************************************foodName    = %@",foodName);
-//        NSLog(@"device      = %@",device);
-//        NSLog(@"aboutFood   = %@",aboutFood);
-//        NSLog(@"remindDate  = %@",storageDate);
-//        NSLog(@"expireDate  = %@",expireDate);
-//        NSLog(@"foodImg     = %@",foodImg);
-//        NSLog(@"category    = %@",category);
-//        NSLog(@"islike    = %@",isLike);
+        NSLog(@"device      = %@",device);
+        NSLog(@"aboutFood   = %@",aboutFood);
+        NSLog(@"remindDate  = %@",storageDate);
+        NSLog(@"expireDate  = %@",expireDate);
+        NSLog(@"foodImg     = %@",foodImg);
+        NSLog(@"category    = %@",category);
     }
     
     NSString *currentSortType = [self.userdefault valueForKey:@"sort"];
@@ -750,8 +756,8 @@
             num++;
         }
     }
-    NSLog(@"-----------------%lu",(unsigned long)self.AllFoodArray.count);
-    NSLog(@"%@的数量：%d",category,num);
+    //NSLog(@"-----------------%lu",(unsigned long)self.AllFoodArray.count);
+   // NSLog(@"%@的数量：%d",category,num);
     return num;
 
 }

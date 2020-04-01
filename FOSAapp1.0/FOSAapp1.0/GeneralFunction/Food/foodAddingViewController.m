@@ -353,16 +353,15 @@
     [self OpenSqlDatabase:@"FOSA"]; //打开数据库
     if (![self.foodStyle isEqualToString:@"Info"]) {
         self.backbtn.hidden = NO;
-        if (![device isEqualToString:@""]) {
+        if (![device isEqualToString:@"null"]) {
             [self SystemAlert:@"Binding device successfully"];
             self.likeBtn.hidden = NO;
         }
     }
-    
 }
 //UI
 - (void)creatNavigation{
-    device = @"";
+    device = @"null";
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
 /**like*/
     self.likeBtn.frame = CGRectMake(screen_width/2-NavigationBarH/3, NavigationBarH/6, NavigationBarH*2/3, NavigationBarH*2/3);
@@ -723,7 +722,7 @@
         self.showFoodNameLabel.text = self.model.foodName;
         self.showFoodNameLabel.font = [UIFont systemFontOfSize:22 weight:20];
         
-        if (![self.model.device isEqualToString:@""]) {
+        if (![self.model.device isEqualToString:@"null"]) {
             self.likeBtn.hidden = NO;
             device = self.model.device;
         }
@@ -753,6 +752,7 @@
 }
 
 #pragma mark - 图片轮播器
+
 - (void)creatPicturePlayer{
     self.imageviewArray = [[NSMutableArray alloc]initWithObjects:self.imageview1,self.imageview2,self.imageview3, nil];
     
@@ -1340,11 +1340,13 @@
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     // 保存文件的名称
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
-    if (img == NULL) {
-        img = [UIImage imageNamed:@"icon_defaultImg"];
-    }
+//    if (img == NULL) {
+//        img = [UIImage imageNamed:@"icon_defaultImg"];
+//    }
     if (self.imgOfFood != nil) {
+        //如果是读取相册二维码或者分享二维码，imeOfFood为图片中食物部分的截取
         img = self.imgOfFood;
+        _imgOfFood = nil;
     }
     NSLog(@"===%@", img);
     return img;

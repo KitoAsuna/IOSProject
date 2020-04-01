@@ -20,11 +20,12 @@
         self.foodImgView.clipsToBounds = YES;
         [self addSubview:self.foodImgView];
         self.squre = [UIView new];
-        [self addSubview:self.squre];
+        [self.foodImgView addSubview:self.squre];
         
         self.likebtn = [UIButton new];
         [self.likebtn setImage:[UIImage imageNamed:@"img_foodCode"] forState:UIControlStateNormal];
         [self.foodImgView addSubview:self.likebtn];
+        self.likebtn.hidden = YES;
         self.foodNamelabel = [UILabel new];
         [self addSubview:self.foodNamelabel];
         self.locationLabel = [UILabel new];
@@ -49,13 +50,13 @@
     self.foodImgView.frame = CGRectMake(0, 0, width, width*9/10);
     
     self.likebtn.frame = CGRectMake(width/30, width*3/4, width/8, width/8);
-    self.likebtn.hidden = YES;
+    //self.likebtn.hidden = YES;
     
     self.squre.frame = CGRectMake(0, 0, width/7, width/7);
     self.squre.center = self.likebtn.center;
     self.squre.layer.borderColor = FOSAWhite.CGColor;
     self.squre.layer.borderWidth = 2;
-    self.squre.hidden = YES;
+    //self.squre.hidden = YES;
     
     self.foodNamelabel.frame = CGRectMake(width/30, height*5/6, width*3/5, height/10);
     self.foodNamelabel.adjustsFontSizeToFitWidth = YES;
@@ -81,33 +82,35 @@
 }
 - (void)setModel:(FoodModel *)model
 {
+    NSLog(@"device:%@",model.device);
+    
     NSArray<NSString *> *timeArray;
     _model = model;
-    if (![model.foodName isEqualToString:@""] && [self getImage:model.foodPhoto] != nil) {
+    if ([self getImage:model.foodPhoto] != nil) {
         self.foodImgView.image = [self getImage:model.foodPhoto];
     }
-    if (![model.device isEqualToString:@""]) {
-        NSLog(@"!!!!!!!!!!!!!!!!!!!!!!%@",model.device);
+    
+    if (![model.device isEqualToString:@"null"]) {
+        NSLog(@">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        //[self.likebtn setImage:[UIImage imageNamed:@"img_foodCode"] forState:UIControlStateNormal];
         self.likebtn.hidden = NO;
         self.squre.hidden = NO;
-    }
-    
-    self.foodNamelabel.text = model.foodName;
-    self.locationLabel.text = model.location;
-    
-    if (![model.foodName isEqualToString:@""]) {
-        timeArray = [model.expireDate componentsSeparatedByString:@"/"];
-        self.dayLabel.text = timeArray[0];
-        self.mouthLabel.text = timeArray[1];
-        self.timelabel.text = timeArray[3];
     }else{
-        self.dayLabel.text = @"";
-        self.mouthLabel.text = @"";
-        self.timelabel.text = @"";
+        NSLog(@"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        //[self.likebtn setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
         self.likebtn.hidden = YES;
         self.squre.hidden = YES;
     }
     
+    self.foodNamelabel.text = model.foodName;
+    self.locationLabel.text = model.location;
+
+    if (![model.expireDate isEqualToString:@""]) {
+        timeArray = [model.expireDate componentsSeparatedByString:@"/"];
+        self.dayLabel.text = timeArray[0];
+        self.mouthLabel.text = timeArray[1];
+        self.timelabel.text = timeArray[3];
+    }
 }
 //取出保存在本地的图片
 - (UIImage*)getImage:(NSString *)filepath{
@@ -116,12 +119,15 @@
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     // 保存文件的名称
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
+    if (img == nil) {
+        img = [UIImage imageNamed:@"icon_defaultImg"];
+    }
     NSLog(@"===%@", img);
     return img;
 }
 
 - (void)drawRect:(CGRect)rect {
-   
+    NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^调用了drawRect");
     [[UIColor whiteColor] setFill];//使背景颜色为白色
     UIRectFill(rect);
     int rectHight = (int) self.bounds.size.height;
@@ -139,10 +145,9 @@
     CGContextClosePath(context);
     [[UIColor whiteColor] setStroke];
     [FOSAGray setFill];
-    if ([self.model.foodName isEqualToString:@""]) {
+    if ([self.isDraw isEqualToString:@"NO"]) {
         [FOSAGray setFill];
     }else{
-        NSLog(@"*******************************************");
         //判断当前日期与过期日期
         //获取当前日期
         NSDate *currentDate = [[NSDate alloc]init];
