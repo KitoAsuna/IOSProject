@@ -598,7 +598,7 @@ NSLog(@"************************************************************************
                         foodAddingViewController *food = [foodAddingViewController new];
                         //分割字符
                         NSArray *infoArray = [result componentsSeparatedByString:@"&"];
-                        FoodModel *model = [FoodModel modelWithName:infoArray[1] DeviceID:infoArray[2] Description:infoArray[3] StrogeDate:infoArray[5] ExpireDate:infoArray[4] foodIcon:infoArray[1] category:infoArray[6] like:@"0" Location:infoArray[7]];
+                        FoodModel *model = [FoodModel modelWithName:infoArray[1] DeviceID:infoArray[2] Description:infoArray[3] StrogeDate:infoArray[5] ExpireDate:infoArray[4] foodIcon:infoArray[1] category:infoArray[6] Location:infoArray[7]];
                         food.model = model;
                         food.foodStyle = @"Info";
                         food.foodCategoryIconname = @"Biscuit";
@@ -964,7 +964,7 @@ NSLog(@"************************************************************************
             //分割字符串的测试
             NSArray *infoArray = [firstResult componentsSeparatedByString:@"&"];
             
-            FoodModel *model = [FoodModel modelWithName:infoArray[1] DeviceID:infoArray[2] Description:infoArray[3] StrogeDate:infoArray[5] ExpireDate:infoArray[4] foodIcon:infoArray[1] category:infoArray[6] like:@"0" Location:infoArray[7]];
+            FoodModel *model = [FoodModel modelWithName:infoArray[1] DeviceID:infoArray[2] Description:infoArray[3] StrogeDate:infoArray[5] ExpireDate:infoArray[4] foodIcon:infoArray[1] category:infoArray[6] Location:infoArray[7]];
             food.model = model;
             food.foodStyle = @"Info";
             food.imgOfFood = [self getPartOfImage:image inRect:CGRectMake(0,screen_height/8, screen_width, screen_height/2)];
@@ -1122,8 +1122,8 @@ NSLog(@"************************************************************************
             NSString *foodImg       = [set stringForColumn:@"foodImg"];
             NSString *location      = [set stringForColumn:@"location"];
             NSString *category      = [set stringForColumn:@"category"];
-            NSString *isLike        = [set stringForColumn:@"like"];
-            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category like:isLike Location:location];
+            
+            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category  Location:location];
         }
     }
     return model;

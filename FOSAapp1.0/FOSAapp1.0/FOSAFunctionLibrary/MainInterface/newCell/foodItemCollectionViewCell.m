@@ -19,14 +19,18 @@
         self.foodImgView.contentMode = UIViewContentModeScaleAspectFill;
         self.foodImgView.clipsToBounds = YES;
         [self addSubview:self.foodImgView];
-       
+        self.squre = [UIView new];
+        [self addSubview:self.squre];
+        
         self.likebtn = [UIButton new];
-        [self.likebtn setImage:[UIImage imageNamed:@"icon_likeW"] forState:UIControlStateNormal];
+        [self.likebtn setImage:[UIImage imageNamed:@"img_foodCode"] forState:UIControlStateNormal];
         [self.foodImgView addSubview:self.likebtn];
         self.foodNamelabel = [UILabel new];
         [self addSubview:self.foodNamelabel];
+        self.locationLabel = [UILabel new];
+        [self addSubview:self.locationLabel];
         self.dayLabel = [UILabel new];
-        self.dayLabel.font = [UIFont systemFontOfSize:25*(414.0/screen_width)];
+        //self.dayLabel.font = [UIFont systemFontOfSize:25*(414.0/screen_width)];
         self.dayLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:self.dayLabel];
         self.timelabel = [UILabel new];
@@ -43,44 +47,67 @@
     int width = self.bounds.size.width;
     int height = self.bounds.size.height;
     self.foodImgView.frame = CGRectMake(0, 0, width, width*9/10);
-    self.likebtn.frame = CGRectMake(width/30, width*3/4, width/8, width/8);
-    self.foodNamelabel.frame = CGRectMake(width/30, height*5/6, width*3/5, height/10);
     
-    self.dayLabel.frame = CGRectMake(width*2/3, height*4/5, width/6, height/5);
-    self.dayLabel.adjustsFontSizeToFitWidth = YES;
-    self.dayLabel.font = [UIFont systemFontOfSize:30];
+    self.likebtn.frame = CGRectMake(width/30, width*3/4, width/8, width/8);
+    self.likebtn.hidden = YES;
+    
+    self.squre.frame = CGRectMake(0, 0, width/7, width/7);
+    self.squre.center = self.likebtn.center;
+    self.squre.layer.borderColor = FOSAWhite.CGColor;
+    self.squre.layer.borderWidth = 2;
+    self.squre.hidden = YES;
+    
+    self.foodNamelabel.frame = CGRectMake(width/30, height*5/6, width*3/5, height/10);
+    self.foodNamelabel.adjustsFontSizeToFitWidth = YES;
+    self.locationLabel.frame = CGRectMake(width/30, CGRectGetMaxY(self.foodNamelabel.frame), width*3/5, height/15);
+    self.locationLabel.font = [UIFont systemFontOfSize:font(10)];
+    self.locationLabel.textColor = FOSAGray;
+    
+    self.dayLabel.frame = CGRectMake(width*2/3, CGRectGetMaxY(self.foodImgView.frame), width/6, height/7);
+    self.dayLabel.adjustsFontSizeToFitWidth = YES;//self.dayLabel.backgroundColor = FOSAgreen;
+    self.dayLabel.font = [UIFont systemFontOfSize:font(30)];
     self.dayLabel.textColor = FOSAGray;
     
-    self.timelabel.frame = CGRectMake(width*5/6, height*5/6, width/6, height/15);
-    self.timelabel.font = [UIFont systemFontOfSize:10];
+    self.timelabel.frame = CGRectMake(width*5/6, height*5/6, width/6, height/18);
+    self.timelabel.font = [UIFont systemFontOfSize:font(10)];
     self.timelabel.textColor = FOSAGray;
     self.timelabel.textAlignment = NSTextAlignmentLeft;
 
-    self.mouthLabel.frame = CGRectMake(width*5/6, CGRectGetMaxY(self.timelabel.frame), width/6, height/15);
-    self.mouthLabel.font = [UIFont systemFontOfSize:10];
+    self.mouthLabel.frame = CGRectMake(width*5/6, CGRectGetMaxY(self.timelabel.frame), width/6, height/18);
+    self.mouthLabel.font = [UIFont systemFontOfSize:font(10)];
     self.mouthLabel.textColor = FOSAGray;
     self.mouthLabel.textAlignment = NSTextAlignmentLeft;
     
 }
 - (void)setModel:(FoodModel *)model
 {
-    
     NSArray<NSString *> *timeArray;
     _model = model;
-    if ([self getImage:model.foodPhoto] != nil) {
+    if (![model.foodName isEqualToString:@""] && [self getImage:model.foodPhoto] != nil) {
         self.foodImgView.image = [self getImage:model.foodPhoto];
     }
-    if ([model.islike isEqualToString:@"1"]) {
-        [self.likebtn setImage:[UIImage imageNamed:@"icon_likeHL"] forState:UIControlStateNormal];
+    if (![model.device isEqualToString:@""]) {
+        NSLog(@"!!!!!!!!!!!!!!!!!!!!!!%@",model.device);
+        self.likebtn.hidden = NO;
+        self.squre.hidden = NO;
     }
+    
     self.foodNamelabel.text = model.foodName;
+    self.locationLabel.text = model.location;
+    
     if (![model.foodName isEqualToString:@""]) {
         timeArray = [model.expireDate componentsSeparatedByString:@"/"];
         self.dayLabel.text = timeArray[0];
         self.mouthLabel.text = timeArray[1];
         self.timelabel.text = timeArray[3];
+    }else{
+        self.dayLabel.text = @"";
+        self.mouthLabel.text = @"";
+        self.timelabel.text = @"";
+        self.likebtn.hidden = YES;
+        self.squre.hidden = YES;
     }
-
+    
 }
 //取出保存在本地的图片
 - (UIImage*)getImage:(NSString *)filepath{
@@ -97,15 +124,25 @@
    
     [[UIColor whiteColor] setFill];//使背景颜色为白色
     UIRectFill(rect);
+    int rectHight = (int) self.bounds.size.height;
+    int rectWidth = (int) self.bounds.size.width;
     
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextMoveToPoint(context, self.bounds.size.width, self.bounds.size.height*14/15);
-    CGContextAddLineToPoint(context, self.bounds.size.width*14/15, self.bounds.size.height);
-    CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
+//    CGContextMoveToPoint(context, self.bounds.size.width, self.bounds.size.height*14/15);
+//    CGContextAddLineToPoint(context, self.bounds.size.width*14/15, self.bounds.size.height);
+//    CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
+    CGContextMoveToPoint(context, rectWidth*2/3, rectHight*39/40);
+    CGContextAddLineToPoint(context, rectWidth, rectHight*39/40);
+    CGContextAddLineToPoint(context, rectWidth, rectHight);
+    CGContextAddLineToPoint(context, rectWidth*2/3-rectHight/40, rectHight);
+    CGContextAddLineToPoint(context, rectWidth*2/3, rectHight*39/40);
     CGContextClosePath(context);
     [[UIColor whiteColor] setStroke];
-    
-    if (![self.model.foodName isEqualToString:@""]) {
+    [FOSAGray setFill];
+    if ([self.model.foodName isEqualToString:@""]) {
+        [FOSAGray setFill];
+    }else{
+        NSLog(@"*******************************************");
         //判断当前日期与过期日期
         //获取当前日期
         NSDate *currentDate = [[NSDate alloc]init];
@@ -135,10 +172,9 @@
         }else{
             [FOSAgreen setFill];
         }
-    }else{
-        [FOSAGray setFill];
     }
     CGContextDrawPath(context, kCGPathFillStroke);
+    
 }
 
 @end

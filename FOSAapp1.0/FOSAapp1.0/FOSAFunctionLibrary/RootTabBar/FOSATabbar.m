@@ -40,6 +40,7 @@
  // 按钮的尺寸
  CGFloat buttonW = self.frame.size.width / 2;
  CGFloat buttonH = self.frame.size.height;
+ 
  CGFloat buttonY = 0;
  // 按钮索引
  int buttonIndex = 0;
@@ -54,7 +55,7 @@
 // if (buttonIndex == 1) { // 右边的1个UITabBarButton
 //     buttonX += buttonW;
 // }
- subview.frame = CGRectMake(buttonX, buttonY, buttonW, buttonH);
+ subview.frame = CGRectMake(buttonX, buttonY, buttonW, buttonH-34);
   
  // 增加索引
  buttonIndex++;

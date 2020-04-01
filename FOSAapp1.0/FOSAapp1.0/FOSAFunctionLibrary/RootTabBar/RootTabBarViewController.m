@@ -55,8 +55,16 @@
 //        fosa.tabBarItem.imageInsets = ImageInsets;
 //    }else if([vcName isEqualToString:@"UserViewController"] && StatusBarH == 44){
 //
-//        UIEdgeInsets ImageInsets = UIEdgeInsetsMake(-10, screen_width/24, 10, -screen_width/24 );// top, left, bottom, right
-//        fosa.tabBarItem.imageInsets = ImageInsets;
+    if (screen_height/screen_width < 2) {
+        //iphone 8plus 以下的机型
+        UIEdgeInsets ImageInsets = UIEdgeInsetsMake(22, 0, -22, 0 );// top, left, bottom, right
+        fosa.tabBarItem.imageInsets = ImageInsets;
+    }else{
+        //iphone X以上的机型
+        UIEdgeInsets ImageInsets = UIEdgeInsetsMake(5, 0, -5, 0 );// top, left, bottom, right
+        fosa.tabBarItem.imageInsets = ImageInsets;
+    }
+        
 //    }
 
 //    //修改字体颜色大小

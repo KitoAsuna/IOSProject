@@ -38,10 +38,6 @@
     int width = self.bounds.size.width;
     int height = self.bounds.size.height;
     self.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    self.kind.frame = CGRectMake(0, width, width, height-width);
-    self.kind.font  = [UIFont systemFontOfSize:12];
-    self.kind.adjustsFontSizeToFitWidth = YES;
-    self.kind.userInteractionEnabled = NO;
     self.rootView.frame = CGRectMake(0, 0, width, width);
     self.rootView.layer.cornerRadius = width/2;
     self.rootView.backgroundColor = [UIColor whiteColor];
@@ -54,8 +50,12 @@
     self.editbtn.layer.cornerRadius = width/5;
     self.editbtn.backgroundColor = FOSARed;
     [self.editbtn setImage:[UIImage imageNamed:@"icon_editW"] forState:UIControlStateNormal];
-    
     self.categoryPhoto.backgroundColor = [UIColor clearColor];
+    
+    self.kind.frame = CGRectMake(0, CGRectGetMaxY(self.rootView.frame), width, (height-width));
+    self.kind.font  = [UIFont systemFontOfSize:font(12)];
+    self.kind.adjustsFontSizeToFitWidth = YES;
+    self.kind.userInteractionEnabled = NO;
     //self.categoryPhoto.layer.cornerRadius = width/2;
 
 }

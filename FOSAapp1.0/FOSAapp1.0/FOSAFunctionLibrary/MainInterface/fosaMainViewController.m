@@ -295,19 +295,19 @@
     [self getCategoryArray];
 
     isSelectCategory = false;
-    self.categoryView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), screen_width, screen_height/9);
+    self.categoryView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), screen_width, screen_width*5/24);
     [self.view addSubview:self.categoryView];
     int categoryViewWidth  = self.categoryView.frame.size.width;
     int categoeyViewHeight = self.categoryView.frame.size.height;
     
     self.leftBtn.frame = CGRectMake(0, 0, screen_width/15, screen_width/15);
-    self.leftBtn.center = CGPointMake(categoryViewWidth/20, categoeyViewHeight/2);
+    self.leftBtn.center = CGPointMake(categoryViewWidth/20,categoeyViewHeight*3/7);
     [self.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon_leftindexW"] forState:UIControlStateNormal];
     [self.leftBtn addTarget:self action:@selector(offsetToLeft) forControlEvents:UIControlEventTouchUpInside];
     [self.categoryView addSubview:self.leftBtn];
     
     self.rightBtn.frame = CGRectMake(0, 0, screen_width/15, screen_width/15);
-    self.rightBtn.center = CGPointMake(categoryViewWidth*19/20, categoeyViewHeight/2);
+    self.rightBtn.center = CGPointMake(categoryViewWidth*19/20, categoeyViewHeight*3/7);
     [self.rightBtn setBackgroundImage:[UIImage imageNamed:@"icon_rightindexW"] forState:UIControlStateNormal];
     [self.rightBtn addTarget:self action:@selector(offsetToRight) forControlEvents:UIControlEventTouchUpInside];
     [self.categoryView addSubview:self.rightBtn];
@@ -320,7 +320,9 @@
     //食物种类选择栏 可滚动
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    flowLayout.itemSize = CGSizeMake((screen_width*95/132)/5,(screen_width*95/132)/4);
+    
+    flowLayout.itemSize = CGSizeMake((categoryViewWidth*5/6-font(45))/5,categoeyViewHeight);
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 3, 0, 2);
 
     self.categoryCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, categoryViewWidth*5/6, categoeyViewHeight) collectionViewLayout:flowLayout];
     self.categoryCollection.center = CGPointMake(categoryViewWidth/2, categoeyViewHeight*7/12);
@@ -504,16 +506,16 @@
 //每个cell的具体内容
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:( NSIndexPath *)indexPath {
     if (collectionView == self.categoryCollection) {
-//        // 每次先从字典中根据IndexPath取出唯一标识符
-//        NSString *identifier = [self.categoryCellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
-//         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
-//        if (identifier == nil) {
-//            identifier = [NSString stringWithFormat:@"%@%@", categoryID, [NSString stringWithFormat:@"%@", indexPath]];
-//            [self.categoryCellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
-//        // 注册Cell
-//            [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:identifier];
-//            }
-        categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:categoryID forIndexPath:indexPath];
+        // 每次先从字典中根据IndexPath取出唯一标识符
+        NSString *identifier = [self.categoryCellDictionary objectForKey:[NSString stringWithFormat:@"%@", indexPath]];
+         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+        if (identifier == nil) {
+            identifier = [NSString stringWithFormat:@"%@%@", categoryID, [NSString stringWithFormat:@"%@", indexPath]];
+            [self.categoryCellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@", indexPath]];
+        // 注册Cell
+            [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:identifier];
+            }
+        categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
         cell.kind.text = self.categoryNameArray[indexPath.row];
         cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
         
@@ -543,23 +545,34 @@
         return cell;
     }else{
         long int index = indexPath.section*2+indexPath.row;
+        /**
+                创建唯一标识符
+         */
+        //获取当天的时间并进行处理
+        NSDate *currentDate = [NSDate new];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"dd/MM/yy/HH:mm"];
+        NSString *currentDateStr = [formatter stringFromDate:currentDate];
+        
         // 每次先从字典中根据IndexPath取出唯一标识符
-        NSString *identifier = [self.cellDictionary objectForKey:[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
-         // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+        NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@",currentDateStr]];
+             // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
         if (identifier == nil) {
-            identifier = [NSString stringWithFormat:@"%@%@", foodItemID,[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
-            [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%d%@", arc4random()%100,self.selectedCategoryCell.kind.text]];
-        // 注册Cell
-            [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
+                identifier = [NSString stringWithFormat:@"%@%@", foodItemID, currentDateStr];
+                [_cellDictionary setValue:identifier forKey:currentDateStr];
+            // 注册Cell
+                [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
             }
         NSLog(@"%ld",index);
+        
         foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+        
         if (index < self.collectionDataSource.count ) {
             cell.likebtn.hidden = NO;
             [cell setModel:self.collectionDataSource[index]];
         }else{
             cell.likebtn.hidden = YES;
-            FoodModel *model = [FoodModel modelWithName:@"" DeviceID:@"" Description:@"" StrogeDate:@"" ExpireDate:@"" foodIcon:@"" category:@"" like:@"" Location:@""];
+            FoodModel *model = [FoodModel modelWithName:@"" DeviceID:@"" Description:@"" StrogeDate:@"" ExpireDate:@"" foodIcon:@"" category:@"" Location:@""];
             [cell setModel:model];
             cell.foodImgView.image = [UIImage imageNamed:@"icon_defaultImg"];
         }
@@ -570,6 +583,11 @@
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView == self.categoryCollection) {
+        
+        if (categoryEdit) {
+            return;
+        }
+        
         categoryCollectionViewCell *cell = (categoryCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
 
         if ([cell.kind.text isEqualToString:self.selectedCategoryCell.kind.text]) {
@@ -593,16 +611,14 @@
 
     }else if(collectionView == self.fooditemCollection){
            foodItemCollectionViewCell *cell = (foodItemCollectionViewCell *)[self.fooditemCollection cellForItemAtIndexPath:indexPath];
-           if (![cell.model.foodName isEqualToString:@""]) {
                [self ClickFoodItem:cell];
-           }
-       }
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
     
     if (collectionView == self.categoryCollection) {
-//        categoryCollectionViewCell *cell = (categoryCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
+
         NSLog(@"取消选中%@",self.selectedCategoryCell.kind.text);
         self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
         self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:self.selectedCategoryCell.accessibilityValue];
@@ -669,8 +685,7 @@
         NSString *foodImg     = [set stringForColumn:@"foodImg"];
         NSString *category    = [set stringForColumn:@"category"];
         NSString *location    = [set stringForColumn:@"location"];
-        NSString *isLike      = [set stringForColumn:@"like"];
-        FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category like:isLike Location:location];
+        FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category Location:location];
         [self.collectionDataSource addObject:model];
         if (!isSelectCategory) {
             [self.AllFoodArray addObject:model];
@@ -772,8 +787,7 @@
     NSInteger selectIndex1 = 1;
     NSInteger selectIndex2 = 2;
     NSInteger selectIndex3 = 3;
-    NSDictionary *sortDic = [NSDictionary new];
-    sortDic = @{ @"Most Recent":[NSIndexPath indexPathForRow:selectIndex0 inSection:0],@"Least Recent":[NSIndexPath indexPathForRow:selectIndex1 inSection:0],@"Recent Add":[NSIndexPath indexPathForRow:selectIndex2 inSection:0],@"Least Add":[NSIndexPath indexPathForRow:selectIndex3 inSection:0]};
+    NSDictionary *sortDic  =  @{ @"Most Recent":[NSIndexPath indexPathForRow:selectIndex0 inSection:0],@"Least Recent":[NSIndexPath indexPathForRow:selectIndex1 inSection:0],@"Recent Add":[NSIndexPath indexPathForRow:selectIndex2 inSection:0],@"Least Add":[NSIndexPath indexPathForRow:selectIndex3 inSection:0]};
     [self.sortListTable selectRowAtIndexPath:[sortDic valueForKey:currentSortType] animated:NO scrollPosition:UITableViewScrollPositionNone];
     //selectedCell = [self.sortListView cellForRowAtIndexPath:[self.sortDic valueForKey:select]];
     [self.sortListTable cellForRowAtIndexPath:[sortDic valueForKey:currentSortType]].accessoryType = UITableViewCellAccessoryCheckmark;
@@ -934,13 +948,19 @@
 }
 
 - (void)offsetToRight{
-    [self.categoryCollection setContentOffset:CGPointMake(self.categoryCollection.frame.size.width, 0)];
+    [self.categoryCollection setContentOffset:CGPointMake(screen_width*5/6, 0)];
 }
 
 //食物Item点击事件
 - (void)ClickFoodItem:(foodItemCollectionViewCell *)cell{
     foodAddingViewController *add = [foodAddingViewController new];
-    add.foodStyle = @"Info";
+    if ([cell.foodNamelabel.text isEqualToString:@""]) {
+        add.foodStyle = @"adding";
+        add.navigationItem.hidesBackButton = YES;
+    }else{
+        add.foodStyle = @"Info";
+    }
+    
     add.hidesBottomBarWhenPushed = YES;
     add.model = cell.model;
     add.foodCategoryIconname = self.categoryArray[[self.categoryNameArray indexOfObject:cell.model.category]];
