@@ -751,7 +751,7 @@ NSLog(@"************************************************************************
 //弹出系统提示
 - (void)SystemAlert:(NSString *)message{
     //[self.captureSession stopRunning];
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Notification" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:message preferredStyle:UIAlertControllerStyleAlert];
    // if ([message isEqualToString:@"NO Record,Please adding"]) {
         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
             //点击回调

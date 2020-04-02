@@ -229,9 +229,9 @@
 //记住用户名和密码
 -(void)switchAction:(id)sender
 {
-UISwitch *switchButton = (UISwitch*)sender;
-BOOL isButtonOn = [switchButton isOn];
-if (isButtonOn) {
+    UISwitch *switchButton = (UISwitch*)sender;
+    BOOL isButtonOn = [switchButton isOn];
+    if (isButtonOn) {
     NSLog(@"YES");
     NSString *username = self.userNameInput.text;
     NSString *password = self.passwordInput.text;
@@ -360,7 +360,7 @@ if (isButtonOn) {
 }
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:message preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:alert animated:true completion:nil];
 }

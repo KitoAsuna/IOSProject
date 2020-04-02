@@ -124,7 +124,12 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     //格式化时间
     NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
     [formatter setDateFormat:@"yy/MM/dd/HH:mm"];
-    NSDate * date = [formatter dateFromString:mdate];
+    [formatter setTimeZone:[NSTimeZone localTimeZone]];
+    NSDate *date = [NSDate date];
+    NSTimeZone *zone = [NSTimeZone systemTimeZone];
+    NSInteger interval = [zone secondsFromGMTForDate: date];
+    NSDate *localeDate = [date dateByAddingTimeInterval: interval];
+    date = [formatter dateFromString:mdate];
     NSLog(@"----------发送通知的时间:%@",date);
     NSDateComponents * components = [[NSCalendar currentCalendar]
                                                 components:NSCalendarUnitYear |
