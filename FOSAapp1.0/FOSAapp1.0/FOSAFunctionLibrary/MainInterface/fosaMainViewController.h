@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UITableView *sortListTable;
 @property (nonatomic,strong) UIButton *cancelSortBtn;
 
+//改变图标的视图
+@property (nonatomic,strong) UICollectionView *<#object#>;
+
 @end
 
 NS_ASSUME_NONNULL_END

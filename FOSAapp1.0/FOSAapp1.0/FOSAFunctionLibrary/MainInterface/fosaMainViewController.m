@@ -27,10 +27,10 @@
     //排序方式数组
     NSArray *sortArray;
 }
-//种类数组
-@property (nonatomic,strong) NSMutableArray *categoryArray;
 //存储所有食物的数组
 @property (nonatomic,strong) NSMutableArray *AllFoodArray;
+//种类名-图标名字典
+@property (nonatomic,strong) NSMutableDictionary *categoryDictionary;
 //教学提示相关
 @property (nonatomic,strong) UIView *mask,*smask;
 //数据库
@@ -201,22 +201,20 @@
     [self creatCategoryView];
     [self creatFoodItemCategoryView];
     
-//    NSUserDefaults *userDefault = NSUserDefaults.standardUserDefaults;
-//    NSString *currentVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"];
-//    NSString *localVersion = [userDefault valueForKey:@"localVersion"];
-//    if (![currentVersion isEqualToString:localVersion]) {
-//        NSLog(@"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-//        [userDefault setObject:currentVersion forKey:@"localVersion"];
-//        [self showUsingTips];
-//    }else{
-//        NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-//    }
+    NSUserDefaults *userDefault = NSUserDefaults.standardUserDefaults;
+    NSString *currentVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"];
+    NSString *localVersion = [userDefault valueForKey:@"localVersion"];
+    if (![currentVersion isEqualToString:localVersion]) {
+        NSLog(@"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        [userDefault setObject:currentVersion forKey:@"localVersion"];
+        [self showUsingTips];
+    }else{
+        NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    }
     //[self showUsingTips];
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-
-    //[UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDarkContent;
 
     self.scanBtn.hidden = NO;
     isSelectCategory = false;
@@ -224,12 +222,14 @@
         self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
     }
     if (isUpdate) {
-           NSLog(@"异步刷新界面");
-           dispatch_async(dispatch_get_main_queue(), ^{
-               [self CollectionReload];
-               [self categoryReLoad];
-           });
-       }
+        NSLog(@"异步刷新界面");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self CollectionReload];
+            [self categoryReLoad];
+        });
+        //种类排序
+        [self categorySortByNumber];
+    }
 }
 
 - (void)creatNavigationButton{
@@ -291,9 +291,12 @@
            [self.headerView addSubview:self.pageControl];
 }
 - (void)creatCategoryView{
-    //获取系统数据库中的食物种类
+    //获取系统数据库中的食物种类categoryNameArray
     [self getCategoryArray];
-
+    //种类排序
+    [self categorySortByNumber];
+    
+    
     isSelectCategory = false;
     self.categoryView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), screen_width, screen_width*5/24);
     [self.view addSubview:self.categoryView];
@@ -312,9 +315,12 @@
     [self.rightBtn addTarget:self action:@selector(offsetToRight) forControlEvents:UIControlEventTouchUpInside];
     [self.categoryView addSubview:self.rightBtn];
     
-    //初始化种类数据
-    NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie"];
-    self.categoryArray = [[NSMutableArray alloc]initWithArray:array];
+//    //初始化种类图标数据
+//    NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie"];
+//    self.categoryArray = [[NSMutableArray alloc]initWithArray:array];
+//
+    
+    
     categoryID = @"categoryCell";
 
     //食物种类选择栏 可滚动
@@ -486,7 +492,7 @@
 //每个section有几个item
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (collectionView == self.categoryCollection) {
-        return self.categoryArray.count;
+        return self.categoryDictionary.count;
     }else{
         if (self.collectionDataSource.count <= 4) {
             return 4;
@@ -517,7 +523,7 @@
             }
         categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
         cell.kind.text = self.categoryNameArray[indexPath.row];
-        cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
+        cell.categoryPhoto.image = [UIImage imageNamed:[self.categoryDictionary valueForKey:self.categoryNameArray[indexPath.row]]];
         
         //为每一个Item添加长按事件
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressCellToEdit:)];
@@ -556,25 +562,26 @@
 //
 //        NSLog(@"当前：%@",currentDateStr);
         
-//        // 每次先从字典中根据IndexPath取出唯一标识符
-//        NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@%ld",currentDateStr,index]];
-//             // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
-//        if (identifier == nil) {
-//                identifier = [NSString stringWithFormat:@"%@%@%ld", foodItemID, currentDateStr,index];
-//                [_cellDictionary setValue:identifier forKey:currentDateStr];
-//            // 注册Cell
-//                [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
-//            }
-        NSLog(@"%ld",index);
+        // 每次先从字典中根据IndexPath取出唯一标识符
+        NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@",indexPath]];
+             // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
+        if (identifier == nil) {
+                identifier = [NSString stringWithFormat:@"%@%@", foodItemID, indexPath];
+                [_cellDictionary setValue:identifier forKey:[NSString stringWithFormat:@"%@",indexPath]];
+            // 注册Cell
+                [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:identifier];
+            }
+        NSLog(@"---------------------------------Item:%ld",index);
         
         foodItemCollectionViewCell *cell = [self.fooditemCollection dequeueReusableCellWithReuseIdentifier:foodItemID forIndexPath:indexPath];
         
         if (index < self.collectionDataSource.count ) {
             cell.isDraw = @"YES";
             [cell setModel:self.collectionDataSource[index]];
+            //标记为需要重绘，异步调用drawRect，但是绘制视图的动作需要等到下一个绘制周期执行，并非调用该方法立即执行;
+            [cell setNeedsDisplay];
         }else{
             cell.isDraw = @"NO";
-            [cell drawRect:cell.bounds];
             cell.foodNamelabel.text = @"";
             cell.locationLabel.text = @"";
             cell.dayLabel.text = @"";
@@ -583,6 +590,7 @@
             cell.likebtn.hidden = YES;
             cell.squre.hidden = YES;
             cell.foodImgView.image = [UIImage imageNamed:@"icon_defaultImg"];
+            [cell setNeedsDisplay];
         }
         return cell;
     }
@@ -590,11 +598,9 @@
 //点击item方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView == self.categoryCollection) {
-        
         if (categoryEdit) {
             return;
         }
-        
         categoryCollectionViewCell *cell = (categoryCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
 
         if ([cell.kind.text isEqualToString:self.selectedCategoryCell.kind.text]) {
@@ -605,14 +611,13 @@
             self.selectedCategoryCell = nil;
             [self CollectionReload];
             [self categoryReLoad];
-            
         }else{
             isSelectCategory = true;
             cell.rootView.backgroundColor = FOSAYellow;
-            NSString *imgName = [NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]];
+            NSString *imgName = [NSString stringWithFormat:@"%@W",[self.categoryDictionary valueForKey:self.categoryNameArray[indexPath.row]]];
             cell.categoryPhoto.image = [UIImage imageNamed:imgName];
             self.selectedCategoryCell = cell;
-            self.selectedCategoryCell.accessibilityValue = self.categoryArray[indexPath.row];
+            self.selectedCategoryCell.accessibilityValue = [self.categoryDictionary valueForKey:self.categoryNameArray[indexPath.row]];
             [self CollectionReload];
         }
 
@@ -718,7 +723,6 @@
     }else if([currentSortType isEqualToString:@"Least Add"]){
         [self sortByLeastAdd];
     }
-    
     [self.fooditemCollection reloadData];
     [self.db close];
 }
@@ -732,7 +736,13 @@
         NSLog(@"%@",kind);
         [self.categoryNameArray addObject:kind];
     }
-    NSLog(@"所有种类:%@",self.categoryNameArray);
+    //初始化种类数据
+    NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie"];
+    self.categoryDictionary = [NSMutableDictionary new];
+    for (int i = 0; i < self.categoryNameArray.count; i++) {
+        [self.categoryDictionary setValue:array[i] forKey:self.categoryNameArray[i]];
+    }
+    NSLog(@"所有种类:%@",self.categoryDictionary);
 }
 - (void)updateCategoryWithName:(NSString *)newCategory number:(NSInteger)num{
     if ([self.db open]) {
@@ -748,7 +758,7 @@
         }
     }
 }
-#pragma mark - 遍历食物数组
+#pragma mark - 遍历食物数组,返回对应种类的数量
 - (int)caculateCategoryNumber:(NSString *)category{
     int num = 0;
     for (FoodModel *model in self.AllFoodArray) {
@@ -762,18 +772,6 @@
 
 }
 #pragma mark - 响应事件
-- (void)cancelEdit{
-    categoryEdit = false;
-    [self getCategoryArray];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.sortbtn];
-    //取消选中状态
-    isSelectCategory = false;
-    self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
-    self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",self.selectedCategoryCell.accessibilityValue]];
-    self.selectedCategoryCell = nil;
-    [self CollectionReload];
-    [self.categoryCollection reloadData];
-}
 
 - (void)CollectionReload{
     [self.collectionDataSource removeAllObjects];
@@ -920,6 +918,27 @@
     self.collectionDataSource = [resultArray mutableCopy];
     [self.fooditemCollection reloadData];
 }
+#pragma mark - 种类栏事件
+
+//种类排序事件，按照食物数量排序
+- (void)categorySortByNumber{
+    NSComparator comparator = ^(NSString* str1,NSString* str2){
+        if ([self caculateCategoryNumber:str2] > [self caculateCategoryNumber:str1]) {
+            return (NSComparisonResult)NSOrderedDescending;
+        }
+        if([self caculateCategoryNumber:str2] < [self caculateCategoryNumber:str1]){
+            return (NSComparisonResult)NSOrderedAscending;
+        }
+        return (NSComparisonResult)NSOrderedSame;
+    };
+    NSArray *sortArray = [self.categoryNameArray copy];
+
+    NSArray *resultArray = [sortArray sortedArrayUsingComparator:comparator];
+    [self.categoryNameArray removeAllObjects];
+    self.categoryNameArray = [[NSMutableArray alloc]initWithArray:resultArray];
+    NSLog(@"%@",self.categoryNameArray);
+}
+
 //种类按钮长按事件
 -  (void)longPressCellToEdit:(UILongPressGestureRecognizer *)longPress{
     categoryCollectionViewCell *cell = (categoryCollectionViewCell *)longPress.view;
@@ -949,6 +968,24 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.cancelBtn];
 }
 
+//取消种类编辑
+- (void)cancelEdit{
+    categoryEdit = false;
+    [self getCategoryArray];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.sortbtn];
+    //取消选中状态
+    isSelectCategory = false;
+    self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
+    self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",self.selectedCategoryCell.accessibilityValue]];
+    self.selectedCategoryCell = nil;
+    [self CollectionReload];
+    [self.categoryCollection reloadData];
+}
+
+//变换图标事件
+- (void)changeIconOfCategory:(id)sender{
+    
+}
 - (void)offsetToLeft{
     [self.categoryCollection setContentOffset:CGPointMake(0, 0)];
 }
@@ -969,7 +1006,7 @@
     
     add.hidesBottomBarWhenPushed = YES;
     add.model = cell.model;
-    add.foodCategoryIconname = self.categoryArray[[self.categoryNameArray indexOfObject:cell.model.category]];
+    add.foodCategoryIconname = [self.categoryDictionary valueForKey:cell.model.category];
     NSLog(@"<<<<<<<<<<<<<<<<<%@",add.foodCategoryIconname);
     [self.navigationController pushViewController:add animated:YES];
 }

@@ -427,7 +427,7 @@
         [self.headerView addSubview:self.showFoodNameLabel];
     }
     //日期
-    self.storageView.frame = CGRectMake(headerWidth/22, headerHeight*4/5, headerWidth*5/22, headerHeight/6);
+    self.storageView.frame = CGRectMake(headerWidth/22, headerHeight*4/5, headerWidth*6/22, headerHeight/6);
     [self.headerView addSubview:self.storageView];
     
     self.expireView.frame = CGRectMake(headerWidth*15/22, headerHeight*4/5, headerWidth*6/22, headerHeight/6);
@@ -494,6 +494,7 @@
     NSLog(@"==========%@",currentDateStr);
     self.storageDateLabel.text = storageDate;
     self.storageDateLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18.0*(414.0/screen_width)];
+    self.storageDateLabel.adjustsFontSizeToFitWidth = YES;
     self.storageDateLabel.textColor = [UIColor whiteColor];
     [self.storageView addSubview:self.storageDateLabel];
     
@@ -537,6 +538,7 @@
     self.expireDateLabel.frame = CGRectMake(0, expireHeight/3, expireWidth, expireHeight/3);
     self.expireDateLabel.text = storageDate;
     self.expireDateLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18.0*(414.0/screen_width)];
+    self.expireDateLabel.adjustsFontSizeToFitWidth = YES;
     self.expireDateLabel.textColor = [UIColor whiteColor];
     //self.expireDateLabel.textAlignment = NSTextAlignmentRight;
     [self.expireView addSubview:self.expireDateLabel];
@@ -922,7 +924,7 @@
     
     foodKindCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:kindID forIndexPath:indexPath];
     cell.kind.text = self.categoryNameArray[indexPath.row];
-    if (self.model.category != nil && [self.categoryNameArray indexOfObject:self.model.category] == indexPath.row) {
+    if ([self.foodStyle isEqualToString:@"Info"] && [self.categoryNameArray indexOfObject:self.model.category] == indexPath.row) {
         cell.rootView.backgroundColor = FOSAYellow;
         cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]]];
         selectCategory = self.categoryArray[indexPath.row];

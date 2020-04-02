@@ -78,11 +78,10 @@
     self.mouthLabel.font = [UIFont systemFontOfSize:font(10)];
     self.mouthLabel.textColor = FOSAGray;
     self.mouthLabel.textAlignment = NSTextAlignmentLeft;
-    
 }
 - (void)setModel:(FoodModel *)model
 {
-    NSLog(@"device:%@",model.device);
+    NSLog(@"*********************setModel 执行*************************");
     
     NSArray<NSString *> *timeArray;
     _model = model;
@@ -127,7 +126,8 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-    NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^调用了drawRect");
+    
+    NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%@调用了drawRect?%@^^^^^^^^^^^^^^^^^^^^^^",self.model.foodName,self.isDraw);
     [[UIColor whiteColor] setFill];//使背景颜色为白色
     UIRectFill(rect);
     int rectHight = (int) self.bounds.size.height;
@@ -147,7 +147,7 @@
     [FOSAGray setFill];
     if ([self.isDraw isEqualToString:@"NO"]) {
         [FOSAGray setFill];
-    }else{
+    }else if([self.isDraw isEqualToString:@"YES"]){
         //判断当前日期与过期日期
         //获取当前日期
         NSDate *currentDate = [[NSDate alloc]init];
