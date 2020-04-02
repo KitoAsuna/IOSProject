@@ -532,7 +532,7 @@
     self.expireLabel.text = @"Reminder";
     self.expireLabel.font = [UIFont systemFontOfSize:15];
     self.expireLabel.textColor = [UIColor whiteColor];
-    //self.expireLabel.textAlignment = NSTextAlignmentRight;
+    self.expireLabel.textAlignment = NSTextAlignmentRight;
     [self.expireView addSubview:self.expireLabel];
     
     self.expireDateLabel.frame = CGRectMake(0, expireHeight/3, expireWidth, expireHeight/3);

@@ -34,8 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UITableView *sortListTable;
 @property (nonatomic,strong) UIButton *cancelSortBtn;
 
-
-
 @end
 
 NS_ASSUME_NONNULL_END

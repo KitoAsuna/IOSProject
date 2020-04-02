@@ -980,6 +980,8 @@
     self.selectedCategoryCell = nil;
     [self CollectionReload];
     [self.categoryCollection reloadData];
+    //种类排序
+    [self categorySortByNumber];
 }
 
 //变换图标事件
