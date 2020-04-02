@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.foodImgView = [UIImageView new];
-        self.foodImgView.image = [UIImage imageNamed:@"icon_defaultImg"];
+        //self.foodImgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_defaultImg%ld",self.indexOfImg+1]];
         self.foodImgView.contentMode = UIViewContentModeScaleAspectFill;
         self.foodImgView.clipsToBounds = YES;
         [self addSubview:self.foodImgView];
@@ -49,10 +49,10 @@
     int height = self.bounds.size.height;
     self.foodImgView.frame = CGRectMake(0, 0, width, width*9/10);
     
-    self.likebtn.frame = CGRectMake(width/30, width*3/4, width/8, width/8);
+    self.likebtn.frame = CGRectMake(width/30, width*3/4, width/10, width/10);
     //self.likebtn.hidden = YES;
     
-    self.squre.frame = CGRectMake(0, 0, width/7, width/7);
+    self.squre.frame = CGRectMake(0, 0, width/8, width/8);
     self.squre.center = self.likebtn.center;
     self.squre.layer.borderColor = FOSAWhite.CGColor;
     self.squre.layer.borderWidth = 2;
@@ -69,7 +69,7 @@
     self.dayLabel.font = [UIFont systemFontOfSize:font(30)];
     self.dayLabel.textColor = FOSAGray;
     
-    self.timelabel.frame = CGRectMake(width*5/6, height*5/6, width/6, height/18);
+    self.timelabel.frame = CGRectMake(width*5/6, height*49/60, width/6, height/18);
     self.timelabel.font = [UIFont systemFontOfSize:font(10)];
     self.timelabel.textColor = FOSAGray;
     self.timelabel.textAlignment = NSTextAlignmentLeft;
@@ -119,7 +119,7 @@
     // 保存文件的名称
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
     if (img == nil) {
-        img = [UIImage imageNamed:@"icon_defaultImg"];
+        img = [UIImage imageNamed:[NSString stringWithFormat:@"icon_defaultImg%ld",self.indexOfImg+1]];
     }
     NSLog(@"===%@", img);
     return img;

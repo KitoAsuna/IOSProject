@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UIView *squre;
 @property (nonatomic,strong) FoodModel *model;
 @property (nonatomic,strong) NSString *isDraw;
+@property (nonatomic,assign) long int indexOfImg;
 
 @end
 

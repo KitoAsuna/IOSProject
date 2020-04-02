@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "RootTabBarViewController.h"
+#import "foodAddingViewController.h"
 #import "AvoidCrash.h"
 #import "AFNetworking.h"
 #import "FMDB.h"
@@ -30,6 +31,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
     NSLog(@"********************AppDelegate");
     [AvoidCrash becomeEffective];
     //监听通知:AvoidCrashNotification, 获取AvoidCrash捕获的崩溃日志的详细信息
@@ -66,9 +68,21 @@
         [self.window makeKeyAndVisible];
         [NSThread sleepForTimeInterval:1];
     }
-    NSLog(@"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+    [self JumpToFoodVIew:launchOptions];
     return YES;
 }
+
+- (void)JumpToFoodVIew:(NSDictionary *)launchOptions{
+    if (launchOptions != nil) {
+         NSDictionary *remoteNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        if (remoteNotification != nil) {
+            foodAddingViewController *add = [foodAddingViewController new];
+            add.foodStyle = @"adding";
+            [self.window.rootViewController.navigationController pushViewController:add animated:YES];
+        }
+    }
+}
+
 - (void)dealwithCrashMessage:(NSNotification *)note {
     //注意:所有的信息都在userInfo中
     //你可以在这里收集相应的崩溃信息进行相应的处理(比如传到自己服务器)
@@ -149,7 +163,6 @@
         }
     }
 }
-
 
 
 

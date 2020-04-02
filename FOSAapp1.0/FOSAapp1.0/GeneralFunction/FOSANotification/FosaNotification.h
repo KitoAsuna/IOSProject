@@ -11,8 +11,14 @@
 #import "FoodModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
+@protocol fosaDelegate <NSObject>
+
+- (void)JumpByFoodName:(NSString *)foodname;
+
+@end
 
 @interface FosaNotification : NSObject
+@property (weak,nonatomic) id <fosaDelegate> delegate;
 - (UIView *)CreatNotificatonView:(NSString *)title body:(NSString *)body;
 - (UIImage *)SaveViewAsPicture:(UIView *)view;
 - (void)initNotification;

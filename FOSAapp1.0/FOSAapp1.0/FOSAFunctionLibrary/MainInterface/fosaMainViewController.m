@@ -16,7 +16,7 @@
 #import <UserNotifications/UserNotifications.h>
 
 
-@interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource>{
+@interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,fosaDelegate>{
     NSString *categoryID;//种类cell
     NSString *foodItemID;//食物cell
     NSString *docPath;//数据库地址
@@ -313,20 +313,14 @@
     [self.rightBtn addTarget:self action:@selector(offsetToRight) forControlEvents:UIControlEventTouchUpInside];
     [self.categoryView addSubview:self.rightBtn];
     
-//    //初始化种类图标数据
-//    NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie"];
-//    self.categoryArray = [[NSMutableArray alloc]initWithArray:array];
-//
-    
-    
     categoryID = @"categoryCell";
 
     //食物种类选择栏 可滚动
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     
-    flowLayout.itemSize = CGSizeMake((categoryViewWidth*5/6-font(45))/5,categoeyViewHeight);
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 3, 0, 2);
+    flowLayout.itemSize = CGSizeMake((categoryViewWidth*5/6-font(37))/5,categoeyViewHeight);
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 1, 0, 0);
 
     self.categoryCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, categoryViewWidth*5/6, categoeyViewHeight) collectionViewLayout:flowLayout];
     self.categoryCollection.center = CGPointMake(categoryViewWidth/2, categoeyViewHeight*7/12);
@@ -348,8 +342,8 @@
     int collectionHeight = self.foodItemView.frame.size.height;
     
     UICollectionViewFlowLayout *fosaFlowLayout = [[UICollectionViewFlowLayout alloc] init];
-    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(screen_height/143, 5, 0, 5);//上、左、下、右
-    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-20)/2,(collectionWidth-20)*5/9);
+    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(screen_height/135, font(6), 0, font(6));//上、左、下、右
+    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-font(18))/2,(collectionWidth-font(18))*41/72);
     //固定的itemsize
     fosaFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;//滑动的方向 垂直
     
@@ -549,17 +543,6 @@
         return cell;
     }else{
         long int index = indexPath.section*2+indexPath.row;
-        /**
-                创建唯一标识符
-         */
-//        //获取当天的时间并进行处理
-//        NSDate *currentDate = [NSDate new];
-//        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//        [formatter setDateFormat:@"dd/MM/yy/HH:mm"];
-//        NSString *currentDateStr = [formatter stringFromDate:currentDate];
-//
-//        NSLog(@"当前：%@",currentDateStr);
-        
         // 每次先从字典中根据IndexPath取出唯一标识符
         NSString *identifier = [_cellDictionary objectForKey:[NSString stringWithFormat:@"%@",indexPath]];
              // 如果取出的唯一标示符不存在，则初始化唯一标示符，并将其存入字典中，对应唯一标示符注册Cell
@@ -575,11 +558,13 @@
         
         if (index < self.collectionDataSource.count ) {
             cell.isDraw = @"YES";
+            cell.indexOfImg = index%4;
             [cell setModel:self.collectionDataSource[index]];
             //标记为需要重绘，异步调用drawRect，但是绘制视图的动作需要等到下一个绘制周期执行，并非调用该方法立即执行;
             [cell setNeedsDisplay];
         }else{
             cell.isDraw = @"NO";
+            cell.indexOfImg = index%4;
             cell.foodNamelabel.text = @"";
             cell.locationLabel.text = @"";
             cell.dayLabel.text = @"";
@@ -587,7 +572,7 @@
             cell.mouthLabel.text = @"";
             cell.likebtn.hidden = YES;
             cell.squre.hidden = YES;
-            cell.foodImgView.image = [UIImage imageNamed:@"icon_defaultImg"];
+            cell.foodImgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_defaultImg%ld",index%4+1]];
             [cell setNeedsDisplay];
         }
         return cell;
@@ -634,6 +619,24 @@
         self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:self.selectedCategoryCell.accessibilityValue];
     }else{
         
+    }
+}
+
+// 两列cell之间的间距
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+    if (collectionView == self.fooditemCollection) {
+        return font(7);
+    }else{
+        return font(8);
+    }
+}
+
+// 两行cell之间的间距
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+    if (collectionView == self.fooditemCollection) {
+        return font(6);
+    }else{
+        return 0;
     }
 }
 
@@ -756,6 +759,32 @@
         }
     }
 }
+
+- (FoodModel *)CheckFoodInfoWithName:(NSString *)device{
+    [self OpenSqlDatabase:@"FOSA"];
+    NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where device = '%@';",device];
+    NSLog(@"%@",sql);
+    FMResultSet *set = [self.db executeQuery:sql];
+    FoodModel *model;
+    if (set.columnCount == 0) {
+        return nil;
+    }else{
+        if([set next]) {
+           NSString *foodName       = [set stringForColumn:@"foodName"];
+            NSString *device        = [set stringForColumn:@"device"];
+            NSString *aboutFood     = [set stringForColumn:@"aboutFood"];
+            NSString *storageDate   = [set stringForColumn:@"storageDate"];
+            NSString *expireDate    = [set stringForColumn:@"expireDate"];
+            NSString *foodImg       = [set stringForColumn:@"foodImg"];
+            NSString *location      = [set stringForColumn:@"location"];
+            NSString *category      = [set stringForColumn:@"category"];
+            
+            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category  Location:location];
+        }
+    }
+    return model;
+}
+
 #pragma mark - 遍历食物数组,返回对应种类的数量
 - (int)caculateCategoryNumber:(NSString *)category{
     int num = 0;
@@ -1027,6 +1056,23 @@
     [sender endRefreshing];
 }
 #pragma mark - 发送提醒
+- (void)JumpByFoodName:(NSString *)foodname{
+    foodAddingViewController *add = [foodAddingViewController new];
+    add.foodStyle = @"Info";
+    add.hidesBottomBarWhenPushed = YES;
+    add.model = [self CheckFoodInfoWithName:foodname];
+    add.foodCategoryIconname = @"Biscuit";
+    add.navigationItem.hidesBackButton = YES;
+    [self.navigationController pushViewController:add animated:YES];
+}
+- (void)SystemAlert:(NSString *)message{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:message preferredStyle:UIAlertControllerStyleAlert];
+    [self presentViewController:alert animated:true completion:nil];
+    [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
+}
+- (void)dismissAlertView:(UIAlertController *)alert{
+    [alert dismissViewControllerAnimated:YES completion:nil];
+}
 - (void)CreatLoadView{
     //self.loadView
     if (@available(iOS 13.0, *)) {
@@ -1038,7 +1084,8 @@
     }
     [self.view addSubview:self.FOSAloadingView];
     //设置小菊花的frame
-    self.FOSAloadingView.frame= CGRectMake(screen_width/2-50, screen_height-TabbarHeight-150, 100, 100);
+    self.FOSAloadingView.frame= CGRectMake(0, 0, 200, 200);
+    self.FOSAloadingView.center = self.foodItemView.center;
     //设置小菊花颜色
     self.FOSAloadingView.color = FOSAgreen;
     //设置背景颜色
@@ -1051,12 +1098,12 @@
 //获取用户选择的提醒设定
 - (int)getNotificationSetting{
     NSString *notificationSetting = [self.userdefault valueForKey:@"notificationSetting"];
-    
-    if([notificationSetting isEqualToString:@"Remind at expired day"]) {
+    NSLog(@"%@",notificationSetting);
+    if([notificationSetting isEqualToString:@"On expiry day"]) {
         return 0;
-    }else if([notificationSetting isEqualToString:@"Remind before one day"]){
+    }else if([notificationSetting isEqualToString:@"One day before expiry"]){
         return 1;
-    }else if([notificationSetting isEqualToString:@"Remind before two days"]){
+    }else if([notificationSetting isEqualToString:@"Two days before expiry"]){
         return 2;
     }
     return 0;
@@ -1066,54 +1113,65 @@
     [self CreatLoadView];
     [self.notification initNotification];
     int day = [self getNotificationSetting];
+    Boolean isSend = false;
     UIImage *image;
     //获取用户设定的提醒方式
     //获取当前日期
     NSDate *currentDate = [[NSDate alloc]init];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yy/MM/dd"];
+    NSLog(@"currentDate:%@",currentDate);
     //根据设定获取需要发送通知的日期
     NSCalendar *calendar = [[NSCalendar alloc]initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
     [offsetComponents setDay:day];
-    NSDate *resultDate = [calendar dateByAddingComponents:offsetComponents toDate:currentDate options:0];
-    currentDate = resultDate;
+    NSDate *resultDate = [calendar dateByAddingComponents:offsetComponents toDate:[[NSDate alloc]init] options:0];
+    
+    NSLog(@"resultDate:%@",resultDate);
     
     NSDateFormatter *formatter2 = [[NSDateFormatter alloc]init];
-    [formatter2 setDateFormat:@"MM/dd/yy HH:mm"];
+    [formatter2 setDateFormat:@"yy/MM/dd"];
 
     NSString *str = [formatter stringFromDate:currentDate];
-    currentDate = [formatter dateFromString:str];
+    NSLog(@"current:%@",str);
+    //currentDate = [formatter dateFromString:str];
+    //NSLog(@"currentDate:%@",currentDate);
     
     NSDate *foodDate;
     for(int i = 0;i < self.collectionDataSource.count; i++){
-  NSLog(@"%@的过期日期为%@",self.collectionDataSource[i].foodName,self.collectionDataSource[i].expireDate);
+        NSLog(@"%@的过期日期为%@",self.collectionDataSource[i].foodName,self.collectionDataSource[i].expireDate);
         NSArray<NSString *> *dateArray = [self.collectionDataSource[i].expireDate componentsSeparatedByString:@"/"];
-        NSString *RDate = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray[1],dateArray[0],dateArray[2],dateArray[3]];
+        NSString *RDate = [NSString stringWithFormat:@"%@/%@/%@",dateArray[2],dateArray[1],dateArray[0]];
 
         foodDate = [formatter2 dateFromString:RDate];
-        NSLog(@"foodDate:%@",foodDate);
-        RDate = [formatter stringFromDate:foodDate];
-        foodDate = [formatter dateFromString:RDate];
-        NSLog(@"---------------RDate:%@",RDate);
+        NSLog(@"---------------RDate:%@",foodDate);
         //比较过期日期与今天的日期
-        NSComparisonResult result = [currentDate compare:foodDate];
-        if (result == NSOrderedSame) {
+        NSComparisonResult result = [resultDate compare:foodDate];
+        NSComparisonResult result2 = [currentDate compare:foodDate];
+        if (result == NSOrderedSame || result2 == NSOrderedDescending) {
                 //isSend = true;
-            NSString *body = [NSString stringWithFormat:@"FOSA 提醒你%@将在%@过期",self.collectionDataSource[i].foodName,self.collectionDataSource[i].expireDate];
+            NSString *body = [NSString stringWithFormat:@"FOSA remind you : the expiration date of %@ if %@",self.collectionDataSource[i].foodName,self.collectionDataSource[i].expireDate];
                 //发送通知
             //获取通知的图片
             image = [self getImage:self.collectionDataSource[i].foodPhoto];
             //另存通知图片
             [self Savephoto:image name:self.collectionDataSource[i].foodPhoto];
             [_notification sendNotification:self.collectionDataSource[i] body:body image:image];
-            }
+            isSend = true;
         }
-    [self performSelector:@selector(stopLoading) withObject:nil afterDelay:2.0];
+    }
+    if (!isSend) {
+        [self SystemAlert:@"No Result Found"];
+    }
+    [self performSelector:@selector(stoploading) withObject:nil afterDelay:2.0];
 }
-- (void)stopLoading{
+- (void)stoploading{
     [self.FOSAloadingView stopAnimating];
 }
+
+
+
+
 //取出保存在本地的图片
 - (UIImage*)getImage:(NSString *)filepath{
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);

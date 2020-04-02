@@ -532,7 +532,7 @@
     self.expireLabel.text = @"Reminder";
     self.expireLabel.font = [UIFont systemFontOfSize:15];
     self.expireLabel.textColor = [UIColor whiteColor];
-    self.expireLabel.textAlignment = NSTextAlignmentRight;
+    //self.expireLabel.textAlignment = NSTextAlignmentRight;
     [self.expireView addSubview:self.expireLabel];
     
     self.expireDateLabel.frame = CGRectMake(0, expireHeight/3, expireWidth, expireHeight/3);
@@ -828,6 +828,7 @@
     NSArray *array = [timer componentsSeparatedByString:@"/"];
     
     remindStr = [NSString stringWithFormat:@"%@/%@/%@/%@",array[2],array[0],array[1],array[3]];
+    NSLog(@"------------------%@",remindStr);
 //    NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
 //    [formatter setDateFormat:@"yy/MM/dd/HH:mm"];
 //    NSDate *expDate = [formatter dateFromString:expireStr];
@@ -1421,6 +1422,7 @@
             //另存通知图片
             [self Savephoto:image name:self.foodTextView.text];
             
+            
             [self.fosaNotification sendNotificationByDate:model body:body date:remindStr foodImg:image];
         }
     }
@@ -1512,7 +1514,7 @@
 }
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:message preferredStyle:UIAlertControllerStyleAlert];
     
     if ([message isEqualToString:@"Success"] || [message isEqualToString:@"delete data successfully"] ) {
         [self presentViewController:alert animated:true completion:nil];
@@ -1525,6 +1527,7 @@
 - (void)dismissAlertView:(UIAlertController *)alert{
     [alert dismissViewControllerAnimated:YES completion:nil];
     if ([alert.message isEqualToString:@"Success"]) {
+
         if ([self.foodStyle isEqualToString:@"edit"]){
             self.foodStyle = @"Info";
             //[self.navigationController popViewControllerAnimated:YES];
@@ -1535,10 +1538,8 @@
         }
     }else if([alert.message isEqualToString:@"delete data successfully"]){
         [self.navigationController popViewControllerAnimated:YES];
-        
     }
 }
-
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [self.db close];

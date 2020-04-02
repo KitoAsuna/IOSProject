@@ -8,12 +8,16 @@
 
 #import "FosaNotification.h"
 #import <UserNotifications/UserNotifications.h>
+#import "foodAddingViewController.h"
 #import <CoreImage/CoreImage.h>
+#import "FMDB.h"
 //图片宽高的最大值
 #define KCompressibilityFactor 1280.00
 
 @interface FosaNotification()<UNUserNotificationCenterDelegate>{
     NSString *foodName;
+    //数据库对象
+    FMDatabase *db;
 }
 @property (nonatomic,strong) UIImage *image,*codeImage;
 @end
@@ -65,18 +69,27 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
         UNTextInputNotificationResponse * textResponse = (UNTextInputNotificationResponse*)response;
         NSString * text = textResponse.userText;
         NSLog(@"%@",text);
-    }
-    else{
+    }else{
         if ([response.actionIdentifier isEqualToString:@"see1"]){
             NSLog(@"Save UIView as photo");
             UIImage *notificationImage = [self SaveViewAsPicture:[self CreatNotificatonView:title body:body]];
             //[self beginShare:image];
             UIImageWriteToSavedPhotosAlbum(notificationImage, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
-        }
-        if ([response.actionIdentifier isEqualToString:@"see2"]) {
+        }else if ([response.actionIdentifier isEqualToString:@"see2"]) {
             //I don't care~
             NSLog(@"I know");
             [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[response.notification.request.identifier]];
+        }else{
+            NSLog(@"-----------------我点击了通知，打开特定的界面------------------");
+//            foodAddingViewController *add = [foodAddingViewController new];
+//            add.foodStyle = @"Info";
+//            add.hidesBottomBarWhenPushed = YES;
+//            add.model = [self CheckFoodInfoWithName:content.subtitle];
+//            add.foodCategoryIconname = @"Biscuit";
+//            [add presentedViewController];
+//            if ([self.delegate respondsToSelector:@selector(JumpByFoodName:)]) {
+//                [self.delegate JumpByFoodName:content.subtitle];
+//            }
         }
     }
     completionHandler();
@@ -112,6 +125,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
     [formatter setDateFormat:@"yy/MM/dd/HH:mm"];
     NSDate * date = [formatter dateFromString:mdate];
+    NSLog(@"----------发送通知的时间:%@",date);
     NSDateComponents * components = [[NSCalendar currentCalendar]
                                                 components:NSCalendarUnitYear |
                                                 NSCalendarUnitMonth |
@@ -338,6 +352,46 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     //UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
 }
 
+#pragma mark - 数据库操作
+- (void)OpenSqlDatabase:(NSString *)dataBaseName{
+    //获取数据库地址
+    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject];
+    NSLog(@"%@",docPath);
+    //设置数据库名
+    NSString *fileName = [docPath stringByAppendingPathComponent:dataBaseName];
+    //创建数据库
+    db = [FMDatabase databaseWithPath:fileName];
+    if([db open]){
+        NSLog(@"打开数据库成功");
+    }else{
+        NSLog(@"打开数据库失败");
+    }
+}
+
+- (FoodModel *)CheckFoodInfoWithName:(NSString *)device{
+    [self OpenSqlDatabase:@"FOSA"];
+    NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where device = '%@';",device];
+    NSLog(@"%@",sql);
+    FMResultSet *set = [db executeQuery:sql];
+    FoodModel *model;
+    if (set.columnCount == 0) {
+        return nil;
+    }else{
+        if([set next]) {
+           NSString *foodName       = [set stringForColumn:@"foodName"];
+            NSString *device        = [set stringForColumn:@"device"];
+            NSString *aboutFood     = [set stringForColumn:@"aboutFood"];
+            NSString *storageDate   = [set stringForColumn:@"storageDate"];
+            NSString *expireDate    = [set stringForColumn:@"expireDate"];
+            NSString *foodImg       = [set stringForColumn:@"foodImg"];
+            NSString *location      = [set stringForColumn:@"location"];
+            NSString *category      = [set stringForColumn:@"category"];
+            
+            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category  Location:location];
+        }
+    }
+    return model;
+}
 #pragma mark - 压缩图片
 - (UIImage *)getJPEGImagerImg:(UIImage *)image{
  CGFloat oldImg_WID = image.size.width;
