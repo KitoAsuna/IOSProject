@@ -61,7 +61,7 @@
         fosa.tabBarItem.imageInsets = ImageInsets;
     }else{
         //iphone X以上的机型
-        UIEdgeInsets ImageInsets = UIEdgeInsetsMake(5, 0, -5, 0 );// top, left, bottom, right
+        UIEdgeInsets ImageInsets = UIEdgeInsetsMake(10, 0, -10, 0 );// top, left, bottom, right
         fosa.tabBarItem.imageInsets = ImageInsets;
     }
         

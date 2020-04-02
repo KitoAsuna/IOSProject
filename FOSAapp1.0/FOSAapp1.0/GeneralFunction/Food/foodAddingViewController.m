@@ -1531,9 +1531,11 @@
             [self recoverEditView];
         }else if([self.foodStyle isEqualToString:@"adding"]){
             [self dismissViewControllerAnimated:YES completion:nil];
+            [self.navigationController popViewControllerAnimated:YES];
         }
     }else if([alert.message isEqualToString:@"delete data successfully"]){
         [self.navigationController popViewControllerAnimated:YES];
+        
     }
 }
 
