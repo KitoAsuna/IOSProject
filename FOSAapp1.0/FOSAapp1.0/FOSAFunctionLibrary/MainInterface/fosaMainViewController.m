@@ -227,8 +227,6 @@
             [self CollectionReload];
             [self categoryReLoad];
         });
-        //种类排序
-        [self categorySortByNumber];
     }
 }
 
@@ -782,6 +780,8 @@
 }
 - (void)categoryReLoad{
     [self.categoryCellDictionary removeAllObjects];
+    //种类排序
+    [self categorySortByNumber];
     [self.categoryCollection reloadData];
 }
 

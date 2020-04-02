@@ -126,7 +126,9 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-    
+    /**
+     系统调用此方法
+     */
     NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%@调用了drawRect?%@^^^^^^^^^^^^^^^^^^^^^^",self.model.foodName,self.isDraw);
     [[UIColor whiteColor] setFill];//使背景颜色为白色
     UIRectFill(rect);
