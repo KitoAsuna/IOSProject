@@ -75,6 +75,7 @@
     dailyReminderView.backgroundColor = [UIColor whiteColor];
     UILabel *autoLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, screen_width/3, NavigationBarH)];
     autoLabel.text = @"On/Off";
+    autoLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
     autoLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     [dailyReminderView addSubview:autoLabel];
     autoNotification = [self.userDefaults valueForKey:@"autonotification"];
@@ -126,7 +127,6 @@
     cell.backgroundColor = FOSAWhite;//[UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
 
     cell.textLabel.text = self.dataSource[row];
-    
 //    if (row == 3) {
 //        autoNotification = [self.userDefaults valueForKey:@"autonotification"];
 //        self.mswitch = [UISwitch new];
@@ -139,7 +139,6 @@
 //        [cell.contentView addSubview:self.mswitch];
 //        [self.mswitch addTarget:self action:@selector(autoSwitch:) forControlEvents:UIControlEventValueChanged];
 //    }
-
     //返回cell
     return cell;
 }

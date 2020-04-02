@@ -29,7 +29,6 @@
         [self.rootView addSubview:self.editbtn];
         self.editbtn.hidden = YES;
         [self.rootView addSubview:self.categoryPhoto];
-        
     }
     return self;
 }

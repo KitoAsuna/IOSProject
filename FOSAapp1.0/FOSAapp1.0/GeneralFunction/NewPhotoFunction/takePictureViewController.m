@@ -36,6 +36,7 @@
 @property (nonatomic,strong) UIScrollView *backGround;
 @property (nonatomic,strong) UIImageView  *bigImage;
 
+
 @end
 
 @implementation takePictureViewController

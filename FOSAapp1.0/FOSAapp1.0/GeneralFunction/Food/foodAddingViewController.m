@@ -1148,7 +1148,7 @@
 }
 
 - (void)back{
-     UIAlertController *backAlert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"Do you want to leave the page?" preferredStyle:UIAlertControllerStyleAlert];
+     UIAlertController *backAlert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"Do you want to leave the page?" preferredStyle:UIAlertControllerStyleAlert];
     [backAlert addAction:[UIAlertAction actionWithTitle:@"YES" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self dismissViewControllerAnimated:YES completion:nil];
         [self.navigationController popViewControllerAnimated:YES];
@@ -1369,7 +1369,7 @@
                 }
             }
             if (!isEdit) {
-                [self SystemAlert:@"delete data successfully"];
+                [self SystemAlert:@"Delete data successfully"];
             }
         }else{
             NSLog(@"Fail to delete");
