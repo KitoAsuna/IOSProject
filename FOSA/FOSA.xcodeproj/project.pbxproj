@@ -14,6 +14,24 @@
 		452F77EB2436DBD1002C6083 /* categoryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77EA2436DBD1002C6083 /* categoryCollectionViewCell.m */; };
 		452F77EE2436DBF2002C6083 /* FodItemCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77ED2436DBF2002C6083 /* FodItemCollectionViewCell.m */; };
 		452F77F22436DD12002C6083 /* UserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77F12436DD12002C6083 /* UserViewController.m */; };
+		452F77F52436E8C4002C6083 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77F42436E8C4002C6083 /* TutorialViewController.m */; };
+		452F77F82436EC2A002C6083 /* LanguageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77F72436EC2A002C6083 /* LanguageViewController.m */; };
+		452F77FB2436EC64002C6083 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77FA2436EC64002C6083 /* SettingViewController.m */; };
+		452F77FE2436EE7D002C6083 /* AboutAppsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77FD2436EE7D002C6083 /* AboutAppsViewController.m */; };
+		452F78012436EE9D002C6083 /* fosaWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F78002436EE9D002C6083 /* fosaWebViewController.m */; };
+		452F78052436EEEC002C6083 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F78042436EEEC002C6083 /* LoginViewController.m */; };
+		452F78082436EF03002C6083 /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F78072436EF03002C6083 /* RegisterViewController.m */; };
+		452F780B2436EF1C002C6083 /* ResetAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F780A2436EF1C002C6083 /* ResetAccountViewController.m */; };
+		452F78102436EFEF002C6083 /* fosaCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F780F2436EFEF002C6083 /* fosaCameraViewController.m */; };
+		452F78142436F048002C6083 /* FosaDatePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F78132436F048002C6083 /* FosaDatePickerView.m */; };
+		452F78182436F100002C6083 /* foodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F78172436F100002C6083 /* foodViewController.m */; };
+		452F781B2436F170002C6083 /* foodkindCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F781A2436F170002C6083 /* foodkindCollectionViewCell.m */; };
+		452F781E2436F198002C6083 /* foodKindView.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F781D2436F198002C6083 /* foodKindView.m */; };
+		452F78222436F1F2002C6083 /* fosaNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F78212436F1F2002C6083 /* fosaNotificationManager.m */; };
+		452F78262436F233002C6083 /* qrCodeScannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F78252436F233002C6083 /* qrCodeScannerViewController.m */; };
+		452F78282436F27F002C6083 /* ding.wav in Resources */ = {isa = PBXBuildFile; fileRef = 452F78272436F27F002C6083 /* ding.wav */; };
+		452F782E24370629002C6083 /* FosaFMDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F782D24370629002C6083 /* FosaFMDBManager.m */; };
+		452F783124372463002C6083 /* FoodModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F783024372463002C6083 /* FoodModel.m */; };
 		45E5259724248E9D0028FF8E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E5259624248E9D0028FF8E /* AppDelegate.m */; };
 		45E5259A24248E9D0028FF8E /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E5259924248E9D0028FF8E /* SceneDelegate.m */; };
 		45E5259D24248E9D0028FF8E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E5259C24248E9D0028FF8E /* ViewController.m */; };
@@ -60,6 +78,41 @@
 		452F77ED2436DBF2002C6083 /* FodItemCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FodItemCollectionViewCell.m; sourceTree = "<group>"; };
 		452F77F02436DD12002C6083 /* UserViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserViewController.h; sourceTree = "<group>"; };
 		452F77F12436DD12002C6083 /* UserViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserViewController.m; sourceTree = "<group>"; };
+		452F77F32436E8C4002C6083 /* TutorialViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
+		452F77F42436E8C4002C6083 /* TutorialViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
+		452F77F62436EC2A002C6083 /* LanguageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LanguageViewController.h; sourceTree = "<group>"; };
+		452F77F72436EC2A002C6083 /* LanguageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LanguageViewController.m; sourceTree = "<group>"; };
+		452F77F92436EC64002C6083 /* SettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
+		452F77FA2436EC64002C6083 /* SettingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
+		452F77FC2436EE7D002C6083 /* AboutAppsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AboutAppsViewController.h; sourceTree = "<group>"; };
+		452F77FD2436EE7D002C6083 /* AboutAppsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AboutAppsViewController.m; sourceTree = "<group>"; };
+		452F77FF2436EE9D002C6083 /* fosaWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fosaWebViewController.h; sourceTree = "<group>"; };
+		452F78002436EE9D002C6083 /* fosaWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fosaWebViewController.m; sourceTree = "<group>"; };
+		452F78032436EEEC002C6083 /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		452F78042436EEEC002C6083 /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		452F78062436EF03002C6083 /* RegisterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RegisterViewController.h; sourceTree = "<group>"; };
+		452F78072436EF03002C6083 /* RegisterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RegisterViewController.m; sourceTree = "<group>"; };
+		452F78092436EF1C002C6083 /* ResetAccountViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResetAccountViewController.h; sourceTree = "<group>"; };
+		452F780A2436EF1C002C6083 /* ResetAccountViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ResetAccountViewController.m; sourceTree = "<group>"; };
+		452F780E2436EFEF002C6083 /* fosaCameraViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fosaCameraViewController.h; sourceTree = "<group>"; };
+		452F780F2436EFEF002C6083 /* fosaCameraViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fosaCameraViewController.m; sourceTree = "<group>"; };
+		452F78122436F047002C6083 /* FosaDatePickerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FosaDatePickerView.h; sourceTree = "<group>"; };
+		452F78132436F048002C6083 /* FosaDatePickerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FosaDatePickerView.m; sourceTree = "<group>"; };
+		452F78162436F100002C6083 /* foodViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foodViewController.h; sourceTree = "<group>"; };
+		452F78172436F100002C6083 /* foodViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = foodViewController.m; sourceTree = "<group>"; };
+		452F78192436F170002C6083 /* foodkindCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foodkindCollectionViewCell.h; sourceTree = "<group>"; };
+		452F781A2436F170002C6083 /* foodkindCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = foodkindCollectionViewCell.m; sourceTree = "<group>"; };
+		452F781C2436F198002C6083 /* foodKindView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foodKindView.h; sourceTree = "<group>"; };
+		452F781D2436F198002C6083 /* foodKindView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = foodKindView.m; sourceTree = "<group>"; };
+		452F78202436F1F2002C6083 /* fosaNotificationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fosaNotificationManager.h; sourceTree = "<group>"; };
+		452F78212436F1F2002C6083 /* fosaNotificationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fosaNotificationManager.m; sourceTree = "<group>"; };
+		452F78242436F233002C6083 /* qrCodeScannerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qrCodeScannerViewController.h; sourceTree = "<group>"; };
+		452F78252436F233002C6083 /* qrCodeScannerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = qrCodeScannerViewController.m; sourceTree = "<group>"; };
+		452F78272436F27F002C6083 /* ding.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = ding.wav; path = ../../FOSAapp1.0/FOSAapp1.0/GeneralFunction/QRCodeScan/ding.wav; sourceTree = "<group>"; };
+		452F782C24370629002C6083 /* FosaFMDBManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FosaFMDBManager.h; sourceTree = "<group>"; };
+		452F782D24370629002C6083 /* FosaFMDBManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FosaFMDBManager.m; sourceTree = "<group>"; };
+		452F782F24372463002C6083 /* FoodModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FoodModel.h; sourceTree = "<group>"; };
+		452F783024372463002C6083 /* FoodModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FoodModel.m; sourceTree = "<group>"; };
 		45E5259224248E9D0028FF8E /* FOSA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FOSA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45E5259524248E9D0028FF8E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		45E5259624248E9D0028FF8E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -158,6 +211,7 @@
 		452F77DE2436DAA3002C6083 /* UserInterface */ = {
 			isa = PBXGroup;
 			children = (
+				452F78022436EEAE002C6083 /* LoginAndRegister */,
 				452F77EF2436DC32002C6083 /* UserItemFunctionView */,
 				452F77F02436DD12002C6083 /* UserViewController.h */,
 				452F77F12436DD12002C6083 /* UserViewController.m */,
@@ -179,8 +233,121 @@
 		452F77EF2436DC32002C6083 /* UserItemFunctionView */ = {
 			isa = PBXGroup;
 			children = (
+				452F77F32436E8C4002C6083 /* TutorialViewController.h */,
+				452F77F42436E8C4002C6083 /* TutorialViewController.m */,
+				452F77F62436EC2A002C6083 /* LanguageViewController.h */,
+				452F77F72436EC2A002C6083 /* LanguageViewController.m */,
+				452F77F92436EC64002C6083 /* SettingViewController.h */,
+				452F77FA2436EC64002C6083 /* SettingViewController.m */,
+				452F77FC2436EE7D002C6083 /* AboutAppsViewController.h */,
+				452F77FD2436EE7D002C6083 /* AboutAppsViewController.m */,
+				452F77FF2436EE9D002C6083 /* fosaWebViewController.h */,
+				452F78002436EE9D002C6083 /* fosaWebViewController.m */,
 			);
 			name = UserItemFunctionView;
+			sourceTree = "<group>";
+		};
+		452F78022436EEAE002C6083 /* LoginAndRegister */ = {
+			isa = PBXGroup;
+			children = (
+				452F78032436EEEC002C6083 /* LoginViewController.h */,
+				452F78042436EEEC002C6083 /* LoginViewController.m */,
+				452F78062436EF03002C6083 /* RegisterViewController.h */,
+				452F78072436EF03002C6083 /* RegisterViewController.m */,
+				452F78092436EF1C002C6083 /* ResetAccountViewController.h */,
+				452F780A2436EF1C002C6083 /* ResetAccountViewController.m */,
+			);
+			name = LoginAndRegister;
+			sourceTree = "<group>";
+		};
+		452F780C2436EF5D002C6083 /* GeneralView */ = {
+			isa = PBXGroup;
+			children = (
+				452F782B2436F2DF002C6083 /* FosaViewAndDataStruct */,
+				452F782A2436F2AF002C6083 /* FosaSqlManager */,
+				452F78292436F29B002C6083 /* FosaImageManager */,
+				452F78232436F1FF002C6083 /* QrCodeScaner */,
+				452F781F2436F1C6002C6083 /* FosaNotification */,
+				452F78152436F058002C6083 /* FoodStorageFunction */,
+				452F780D2436EFA8002C6083 /* FosaCamera */,
+				452F78112436EFF8002C6083 /* FosaDatePicker */,
+			);
+			name = GeneralView;
+			sourceTree = "<group>";
+		};
+		452F780D2436EFA8002C6083 /* FosaCamera */ = {
+			isa = PBXGroup;
+			children = (
+				452F780E2436EFEF002C6083 /* fosaCameraViewController.h */,
+				452F780F2436EFEF002C6083 /* fosaCameraViewController.m */,
+			);
+			name = FosaCamera;
+			sourceTree = "<group>";
+		};
+		452F78112436EFF8002C6083 /* FosaDatePicker */ = {
+			isa = PBXGroup;
+			children = (
+				452F78122436F047002C6083 /* FosaDatePickerView.h */,
+				452F78132436F048002C6083 /* FosaDatePickerView.m */,
+			);
+			name = FosaDatePicker;
+			sourceTree = "<group>";
+		};
+		452F78152436F058002C6083 /* FoodStorageFunction */ = {
+			isa = PBXGroup;
+			children = (
+				452F78162436F100002C6083 /* foodViewController.h */,
+				452F78172436F100002C6083 /* foodViewController.m */,
+				452F78192436F170002C6083 /* foodkindCollectionViewCell.h */,
+				452F781A2436F170002C6083 /* foodkindCollectionViewCell.m */,
+				452F781C2436F198002C6083 /* foodKindView.h */,
+				452F781D2436F198002C6083 /* foodKindView.m */,
+			);
+			name = FoodStorageFunction;
+			sourceTree = "<group>";
+		};
+		452F781F2436F1C6002C6083 /* FosaNotification */ = {
+			isa = PBXGroup;
+			children = (
+				452F78202436F1F2002C6083 /* fosaNotificationManager.h */,
+				452F78212436F1F2002C6083 /* fosaNotificationManager.m */,
+			);
+			name = FosaNotification;
+			sourceTree = "<group>";
+		};
+		452F78232436F1FF002C6083 /* QrCodeScaner */ = {
+			isa = PBXGroup;
+			children = (
+				452F78242436F233002C6083 /* qrCodeScannerViewController.h */,
+				452F78252436F233002C6083 /* qrCodeScannerViewController.m */,
+				452F78272436F27F002C6083 /* ding.wav */,
+			);
+			name = QrCodeScaner;
+			sourceTree = "<group>";
+		};
+		452F78292436F29B002C6083 /* FosaImageManager */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = FosaImageManager;
+			sourceTree = "<group>";
+		};
+		452F782A2436F2AF002C6083 /* FosaSqlManager */ = {
+			isa = PBXGroup;
+			children = (
+				452F782C24370629002C6083 /* FosaFMDBManager.h */,
+				452F782D24370629002C6083 /* FosaFMDBManager.m */,
+			);
+			name = FosaSqlManager;
+			sourceTree = "<group>";
+		};
+		452F782B2436F2DF002C6083 /* FosaViewAndDataStruct */ = {
+			isa = PBXGroup;
+			children = (
+				452F782F24372463002C6083 /* FoodModel.h */,
+				452F783024372463002C6083 /* FoodModel.m */,
+			);
+			name = FosaViewAndDataStruct;
 			sourceTree = "<group>";
 		};
 		45E5258924248E9D0028FF8E = {
@@ -208,6 +375,7 @@
 		45E5259424248E9D0028FF8E /* FOSA */ = {
 			isa = PBXGroup;
 			children = (
+				452F780C2436EF5D002C6083 /* GeneralView */,
 				452F77DB2436DA32002C6083 /* FOSAFrameWork */,
 				45E5259524248E9D0028FF8E /* AppDelegate.h */,
 				45E5259624248E9D0028FF8E /* AppDelegate.m */,
@@ -363,6 +531,7 @@
 			files = (
 				45E525A524248EA30028FF8E /* LaunchScreen.storyboard in Resources */,
 				45E525A224248EA30028FF8E /* Assets.xcassets in Resources */,
+				452F78282436F27F002C6083 /* ding.wav in Resources */,
 				45E525A024248E9D0028FF8E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -458,15 +627,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				452F77E12436DADF002C6083 /* FosaTabBar.m in Sources */,
+				452F782E24370629002C6083 /* FosaFMDBManager.m in Sources */,
+				452F78082436EF03002C6083 /* RegisterViewController.m in Sources */,
 				452F77F22436DD12002C6083 /* UserViewController.m in Sources */,
+				452F783124372463002C6083 /* FoodModel.m in Sources */,
+				452F77FB2436EC64002C6083 /* SettingViewController.m in Sources */,
 				45E5259D24248E9D0028FF8E /* ViewController.m in Sources */,
 				45E5259724248E9D0028FF8E /* AppDelegate.m in Sources */,
 				452F77E42436DB25002C6083 /* FosaRootTabBarViewController.m in Sources */,
+				452F78142436F048002C6083 /* FosaDatePickerView.m in Sources */,
 				452F77EB2436DBD1002C6083 /* categoryCollectionViewCell.m in Sources */,
 				452F77E82436DB77002C6083 /* FosaMainViewController.m in Sources */,
+				452F78102436EFEF002C6083 /* fosaCameraViewController.m in Sources */,
+				452F78052436EEEC002C6083 /* LoginViewController.m in Sources */,
+				452F781B2436F170002C6083 /* foodkindCollectionViewCell.m in Sources */,
+				452F780B2436EF1C002C6083 /* ResetAccountViewController.m in Sources */,
+				452F781E2436F198002C6083 /* foodKindView.m in Sources */,
+				452F78222436F1F2002C6083 /* fosaNotificationManager.m in Sources */,
 				45E525A824248EA30028FF8E /* main.m in Sources */,
 				45E5259A24248E9D0028FF8E /* SceneDelegate.m in Sources */,
+				452F78262436F233002C6083 /* qrCodeScannerViewController.m in Sources */,
+				452F78182436F100002C6083 /* foodViewController.m in Sources */,
+				452F78012436EE9D002C6083 /* fosaWebViewController.m in Sources */,
 				452F77EE2436DBF2002C6083 /* FodItemCollectionViewCell.m in Sources */,
+				452F77F82436EC2A002C6083 /* LanguageViewController.m in Sources */,
+				452F77FE2436EE7D002C6083 /* AboutAppsViewController.m in Sources */,
+				452F77F52436E8C4002C6083 /* TutorialViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -645,7 +831,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hs.FOSA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -663,7 +849,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hs.FOSA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

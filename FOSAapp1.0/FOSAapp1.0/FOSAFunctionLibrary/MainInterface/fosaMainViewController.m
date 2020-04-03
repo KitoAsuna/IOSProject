@@ -673,9 +673,7 @@
         NSLog(@"打开数据库失败");
     }
 }
-- (void)SelectAllDataFromFoodTableByCategory{
-    
-}
+
 
 - (void)SelectDataFromFoodTable{
     [self.collectionDataSource removeAllObjects];
