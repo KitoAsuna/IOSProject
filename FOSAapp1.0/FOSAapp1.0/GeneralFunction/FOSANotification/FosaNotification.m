@@ -87,9 +87,10 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
 //            add.model = [self CheckFoodInfoWithName:content.subtitle];
 //            add.foodCategoryIconname = @"Biscuit";
 //            [add presentedViewController];
-//            if ([self.delegate respondsToSelector:@selector(JumpByFoodName:)]) {
-//                [self.delegate JumpByFoodName:content.subtitle];
-//            }
+            if ([self.fosadelegate respondsToSelector:@selector(JumpByFoodName:)]) {
+                NSLog(@"我将跳转页面");
+                [self.fosadelegate JumpByFoodName:content.subtitle];
+            }
         }
     }
     completionHandler();

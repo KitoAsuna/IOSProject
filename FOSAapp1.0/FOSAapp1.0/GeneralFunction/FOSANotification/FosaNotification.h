@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FosaNotification : NSObject
-@property (weak,nonatomic) id <fosaDelegate> delegate;
+@property (weak,nonatomic) id <fosaDelegate> fosadelegate;
 - (UIView *)CreatNotificatonView:(NSString *)title body:(NSString *)body;
 - (UIImage *)SaveViewAsPicture:(UIView *)view;
 - (void)initNotification;

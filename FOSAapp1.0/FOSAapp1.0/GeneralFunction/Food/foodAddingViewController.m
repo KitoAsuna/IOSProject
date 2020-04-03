@@ -1187,7 +1187,7 @@
 }
 - (void)deleteFoodRecord{
     //功能有待完善，添加点击放大图片的功能
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:@"You will delete this food record" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"You will delete this food record" preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self DeleteRecord];
     }]];
@@ -1358,11 +1358,13 @@
 //删除记录
 - (void)DeleteRecord{
     NSString *delSql = [NSString stringWithFormat:@"delete from FoodStorageInfo where foodName = '%@'",self.model.foodName];
-    NSLog(@"删除%@",self.model.foodName);
     if ([self.db open]) {
-         BOOL result = [self.db executeUpdate:delSql];
+        NSLog(@"删除%@",self.model.foodName);
+        BOOL result = [self.db executeUpdate:delSql];
         if (result) {
+            NSLog(@"**************************");
             if (![self.foodTextView.text isEqualToString:self.model.foodName]) {
+                NSLog(@"******%@ = %@*********",self.foodTextView.text,self.model.foodName);
                 for (int i = 1; i <= 3; i++) {
                     NSString *photoName = [NSString stringWithFormat:@"%@%d",self.model.foodName,i];
                     [self deleteFile:photoName];
@@ -1438,7 +1440,7 @@
     NSLog(@"begin creating");
     int mainwidth = screen_width;
     int mainHeight = screen_height;
-    
+
     UIView *notification = [[UIView alloc]initWithFrame:CGRectMake(0, 0, mainwidth,mainHeight)];
     notification.backgroundColor = [UIColor whiteColor];
 
@@ -1516,7 +1518,7 @@
 -(void)SystemAlert:(NSString *)message{
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:message preferredStyle:UIAlertControllerStyleAlert];
     
-    if ([message isEqualToString:@"Success"] || [message isEqualToString:@"delete data successfully"] ) {
+    if ([message isEqualToString:@"Success"] || [message isEqualToString:@"Delete data successfully"] ) {
         [self presentViewController:alert animated:true completion:nil];
         [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
     }else{
@@ -1536,7 +1538,7 @@
             [self dismissViewControllerAnimated:YES completion:nil];
             [self.navigationController popViewControllerAnimated:YES];
         }
-    }else if([alert.message isEqualToString:@"delete data successfully"]){
+    }else if([alert.message isEqualToString:@"Delete data successfully"]){
         [self.navigationController popViewControllerAnimated:YES];
     }
 }

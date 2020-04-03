@@ -1112,6 +1112,7 @@
 - (void)SendRemindNotification{
     [self CreatLoadView];
     [self.notification initNotification];
+    self.notification.fosadelegate = self;
     int day = [self getNotificationSetting];
     Boolean isSend = false;
     UIImage *image;
