@@ -43,7 +43,7 @@
 
 - (UIView *)containerView{
     if (_containerView == nil) {
-        _containerView = [[UIView alloc]initWithFrame:CGRectMake(0, NavigationBarH*4/3, screen_width, screen_width*4/3)];
+        _containerView = [[UIView alloc]initWithFrame:CGRectMake(0, NavigationBarH*2, screen_width, screen_width*4/3)];
     }
     return _containerView;
 }

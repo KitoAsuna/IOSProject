@@ -81,12 +81,6 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
             [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[response.notification.request.identifier]];
         }else{
             NSLog(@"-----------------我点击了通知，打开特定的界面------------------");
-//            foodAddingViewController *add = [foodAddingViewController new];
-//            add.foodStyle = @"Info";
-//            add.hidesBottomBarWhenPushed = YES;
-//            add.model = [self CheckFoodInfoWithName:content.subtitle];
-//            add.foodCategoryIconname = @"Biscuit";
-//            [add presentedViewController];
             if ([self.fosadelegate respondsToSelector:@selector(JumpByFoodName:)]) {
                 NSLog(@"我将跳转页面");
                 [self.fosadelegate JumpByFoodName:content.subtitle];
@@ -123,15 +117,16 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     content.sound = sound;
     //设置时间间隔的触发器
     //格式化时间
-    NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
+    NSDateFormatter* formatter = [[NSDateFormatter alloc]init];
     [formatter setDateFormat:@"yy/MM/dd/HH:mm"];
     [formatter setTimeZone:[NSTimeZone localTimeZone]];
     NSDate *date = [NSDate date];
     NSTimeZone *zone = [NSTimeZone systemTimeZone];
-    NSInteger interval = [zone secondsFromGMTForDate: date];
-    NSDate *localeDate = [date dateByAddingTimeInterval: interval];
-    date = [formatter dateFromString:mdate];
-    NSLog(@"----------发送通知的时间:%@",date);
+    NSInteger interval = [zone secondsFromGMTForDate:date];
+    NSDate *localeDate = [date  dateByAddingTimeInterval: interval];
+    localeDate = [formatter dateFromString:mdate];
+    
+    NSLog(@"==================发送时间：%@",localeDate);
     NSDateComponents * components = [[NSCalendar currentCalendar]
                                                 components:NSCalendarUnitYear |
                                                 NSCalendarUnitMonth |
@@ -140,7 +135,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
                                                 NSCalendarUnitHour |
                                                 NSCalendarUnitMinute |
                                                 NSCalendarUnitSecond
-                                                fromDate:date];
+                                                fromDate:localeDate];
     UNCalendarNotificationTrigger *date_trigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:components repeats:NO];
     NSString *requestIdentifer = model.foodPhoto;
            //content.categoryIdentifier = @"textCategory";

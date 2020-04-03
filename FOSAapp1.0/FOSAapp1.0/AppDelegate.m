@@ -75,11 +75,7 @@
 - (void)JumpToFoodVIew:(NSDictionary *)launchOptions{
     if (launchOptions != nil) {
          NSDictionary *remoteNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-        if (remoteNotification != nil) {
-            foodAddingViewController *add = [foodAddingViewController new];
-            add.foodStyle = @"adding";
-            [self.window.rootViewController.navigationController pushViewController:add animated:YES];
-        }
+        
     }
 }
 

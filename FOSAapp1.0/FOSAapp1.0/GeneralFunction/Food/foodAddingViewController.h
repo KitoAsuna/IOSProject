@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**教学图片轮播*/
 @property (nonatomic,strong) UIScrollView *toturialPicturePlayer;
 @property (nonatomic,strong) UIPageControl *toturialPageControl;
-@property (nonatomic,strong) UIButton *skipBtn;
+@property (nonatomic,strong) UIButton *skipBtn,*closeBtn;
 @end
 
 NS_ASSUME_NONNULL_END

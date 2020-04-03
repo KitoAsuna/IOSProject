@@ -760,9 +760,9 @@
     }
 }
 
-- (FoodModel *)CheckFoodInfoWithName:(NSString *)device{
+- (FoodModel *)CheckFoodInfoWithName:(NSString *)foodName{
     [self OpenSqlDatabase:@"FOSA"];
-    NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where device = '%@';",device];
+    NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where foodName = '%@';",foodName];
     NSLog(@"%@",sql);
     FMResultSet *set = [self.db executeQuery:sql];
     FoodModel *model;
@@ -1056,13 +1056,15 @@
     [sender endRefreshing];
 }
 #pragma mark - 发送提醒
+
+//fosaDelegate协议方法
 - (void)JumpByFoodName:(NSString *)foodname{
     foodAddingViewController *add = [foodAddingViewController new];
     add.foodStyle = @"Info";
     add.hidesBottomBarWhenPushed = YES;
     add.model = [self CheckFoodInfoWithName:foodname];
     add.foodCategoryIconname = @"Biscuit";
-    add.navigationItem.hidesBackButton = YES;
+    //add.navigationItem.hidesBackButton = YES;
     [self.navigationController pushViewController:add animated:YES];
 }
 - (void)SystemAlert:(NSString *)message{

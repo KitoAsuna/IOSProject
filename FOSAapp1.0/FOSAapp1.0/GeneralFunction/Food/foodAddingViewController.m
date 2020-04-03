@@ -71,6 +71,12 @@
     }
     return _toturialPageControl;
 }
+- (UIButton *)closeBtn{
+    if (_closeBtn == nil) {
+        _closeBtn = [UIButton new];
+    }
+    return _closeBtn;
+}
 - (UIButton *)skipBtn{
     if (_skipBtn == nil) {
         _skipBtn = [UIButton new];
@@ -863,6 +869,12 @@
         CGFloat offset = scrollView.contentOffset.x;
         NSInteger index = offset/screen_width;
         self.toturialPageControl.currentPage = index;
+        if (index == 16) {
+            self.skipBtn.hidden = YES;
+            //添加close按钮，功能同skip
+        }else{
+            self.skipBtn.hidden = NO;
+        }
     }
 }
 
@@ -925,7 +937,7 @@
     
     foodKindCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:kindID forIndexPath:indexPath];
     cell.kind.text = self.categoryNameArray[indexPath.row];
-    if ([self.foodStyle isEqualToString:@"Info"] && [self.categoryNameArray indexOfObject:self.model.category] == indexPath.row) {
+    if ([self.foodStyle isEqualToString:@"edit"] && [self.categoryNameArray indexOfObject:self.model.category] == indexPath.row) {
         cell.rootView.backgroundColor = FOSAYellow;
         cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]]];
         selectCategory = self.categoryArray[indexPath.row];
@@ -1060,6 +1072,7 @@
         self.deleteBtn.hidden = YES;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.helpBtn];
     }];
+    [self.categoryCollection reloadData];
 }
 - (void)recoverEditView{
     self.foodCell.kind.text = selectCategory;
@@ -1094,22 +1107,36 @@
     self.toturialPicturePlayer.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
             
     self.toturialPicturePlayer.bounces = NO;
-    self.toturialPicturePlayer.contentSize = CGSizeMake(screen_width*15, 0);
-    for (NSInteger i = 0; i < 15; i++) {
+    self.toturialPicturePlayer.contentSize = CGSizeMake(screen_width*17, 0);
+    for (NSInteger i = 0; i < 17; i++) {
         CGRect frame = CGRectMake(i*screen_width, 0, screen_width,screen_height);
         UIImageView *imageview = [[UIImageView alloc]initWithFrame:frame];
         imageview.userInteractionEnabled = YES;
         imageview.contentMode = UIViewContentModeScaleAspectFill;
         imageview.clipsToBounds = YES;
-        NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"img_tutorial",i+2];
+        NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"img_tutorial",i+1];
         imageview.image = [UIImage imageNamed:imgName];
+        [self.toturialPicturePlayer addSubview:imageview];
+        
+        if (i == 16) {
+            self.closeBtn.frame = CGRectMake(screen_width*12/33, screen_height*116/143, screen_width*3/11, screen_height*7/143);
+            self.closeBtn.layer.borderWidth = 1;
+            self.closeBtn.layer.cornerRadius = self.closeBtn.frame.size.height/2;
+            [self.closeBtn setTitle:@"close" forState:UIControlStateNormal];
+            [self.closeBtn setTitleColor:FOSAWhite forState:UIControlStateNormal];
+            self.closeBtn.titleLabel.font = [UIFont systemFontOfSize:25];
+            self.closeBtn.layer.borderColor = FOSAWhite.CGColor;
+            [self.closeBtn addTarget:self action:@selector(skipTutorial) forControlEvents:UIControlEventTouchUpInside];
+            [imageview addSubview:self.closeBtn];
+            
+        }
         [self.toturialPicturePlayer addSubview:imageview];
     }
     [self.view addSubview:self.toturialPicturePlayer];
         //轮播页面指示器
     self.toturialPageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(screen_width*2/5, screen_height-30, screen_width/5, 20)];
     self.toturialPageControl.currentPage = 0;
-    self.toturialPageControl.numberOfPages = 15;
+    self.toturialPageControl.numberOfPages = 17;
     self.toturialPageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
     self.toturialPageControl.currentPageIndicatorTintColor = FOSAgreen;
     [self.view addSubview:self.toturialPageControl];
@@ -1180,9 +1207,13 @@
 }
 - (void)saveInfoAndFinish{
     if ([self.foodStyle isEqualToString:@"edit"]) {
-        [self DeleteRecord];
+        if (![self.foodTextView.text isEqualToString:self.model.foodName]) {
+            [self SavephotosInSanBox:self.foodImgArray];
+            [self DeleteRecord];
+        }
+    }else{
+        [self SavephotosInSanBox:self.foodImgArray];
     }
-    [self SavephotosInSanBox:self.foodImgArray];
     [self CreatDataTable];
 }
 - (void)deleteFoodRecord{
@@ -1318,6 +1349,7 @@
             NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent: photoName];// 保存文件的路径
             NSLog(@"这个是照片的保存地址:%@",filePath);
             UIImage *img = images[i];//[self fixOrientation:images[i]];
+            
             BOOL result =[UIImagePNGRepresentation(img) writeToFile:filePath  atomically:YES];// 保存成功会返回YES
             if(result == YES) {
                 NSLog(@"保存成功");
@@ -1349,7 +1381,7 @@
     if (self.imgOfFood != nil) {
         //如果是读取相册二维码或者分享二维码，imeOfFood为图片中食物部分的截取
         img = self.imgOfFood;
-        _imgOfFood = nil;
+        //_imgOfFood = nil;
     }
     NSLog(@"===%@", img);
     return img;
@@ -1362,13 +1394,9 @@
         NSLog(@"删除%@",self.model.foodName);
         BOOL result = [self.db executeUpdate:delSql];
         if (result) {
-            NSLog(@"**************************");
-            if (![self.foodTextView.text isEqualToString:self.model.foodName]) {
-                NSLog(@"******%@ = %@*********",self.foodTextView.text,self.model.foodName);
-                for (int i = 1; i <= 3; i++) {
-                    NSString *photoName = [NSString stringWithFormat:@"%@%d",self.model.foodName,i];
-                    [self deleteFile:photoName];
-                }
+            for (int i = 1; i <= 3; i++) {
+                NSString *photoName = [NSString stringWithFormat:@"%@%d",self.model.foodName,i];
+                [self deleteFile:photoName];
             }
             if (!isEdit) {
                 [self SystemAlert:@"Delete data successfully"];
@@ -1424,7 +1452,7 @@
             //另存通知图片
             [self Savephoto:image name:self.foodTextView.text];
             
-            
+            NSLog(@">>>=================%@",remindStr);
             [self.fosaNotification sendNotificationByDate:model body:body date:remindStr foodImg:image];
         }
     }
