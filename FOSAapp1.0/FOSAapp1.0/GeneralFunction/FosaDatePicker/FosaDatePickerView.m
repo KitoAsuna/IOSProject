@@ -124,11 +124,11 @@
 
     NSString *newDate = [[date stringByReplacingOccurrencesOfString:@"-" withString:@" "] stringByReplacingOccurrencesOfString:@":" withString:@" "];
     NSMutableArray *timerArray = [NSMutableArray arrayWithArray:[newDate componentsSeparatedByString:@" "]];
-    [timerArray replaceObjectAtIndex:0 withObject:[NSString stringWithFormat:@"%@年", timerArray[0]]];
-    [timerArray replaceObjectAtIndex:1 withObject:[NSString stringWithFormat:@"%@月", timerArray[1]]];
-    [timerArray replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%@日", timerArray[2]]];
-    [timerArray replaceObjectAtIndex:3 withObject:[NSString stringWithFormat:@"%@时", timerArray[3]]];
-    [timerArray replaceObjectAtIndex:4 withObject:[NSString stringWithFormat:@"%@分", timerArray[4]]];
+    [timerArray replaceObjectAtIndex:0 withObject:[NSString stringWithFormat:@"%@y", timerArray[0]]];
+    [timerArray replaceObjectAtIndex:1 withObject:[NSString stringWithFormat:@"%@M", timerArray[1]]];
+    [timerArray replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%@d", timerArray[2]]];
+    [timerArray replaceObjectAtIndex:3 withObject:[NSString stringWithFormat:@"%@H", timerArray[3]]];
+    [timerArray replaceObjectAtIndex:4 withObject:[NSString stringWithFormat:@"%@m", timerArray[4]]];
     self.timeArr = timerArray;
 }
 
@@ -147,10 +147,10 @@
 
 - (void)show {
     self.year = self.timeArr[0];
-    self.month = [NSString stringWithFormat:@"%ld月", [self.timeArr[1] integerValue]];
-    self.day = [NSString stringWithFormat:@"%ld日", [self.timeArr[2] integerValue]];
-    self.hour = [NSString stringWithFormat:@"%ld时", [self.timeArr[3] integerValue]];
-    self.minute = self.minuteInterval == 1 ? [NSString stringWithFormat:@"%ld分", [self.timeArr[4] integerValue]] : self.minuteArr[self.minuteArr.count / 2];
+    self.month = [NSString stringWithFormat:@"%ldM", [self.timeArr[1] integerValue]];
+    self.day = [NSString stringWithFormat:@"%ldd", [self.timeArr[2] integerValue]];
+    self.hour = [NSString stringWithFormat:@"%ldH", [self.timeArr[3] integerValue]];
+    self.minute = self.minuteInterval == 1 ? [NSString stringWithFormat:@"%ldm", [self.timeArr[4] integerValue]] : self.minuteArr[self.minuteArr.count / 2];
     
     [self.pickerView selectRow:[self.yearArr indexOfObject:self.year] inComponent:0 animated:YES];
     /// 重新格式化转一下，是因为如果是09月/日/时，数据源是9月/日/时,就会出现崩溃
@@ -216,8 +216,8 @@
                 NSString *dayStr = [self getDayNumber:[self.year integerValue] month:[self.month integerValue]];
                 if (self.dayArr.count > [dayStr integerValue]) {
                     if (self.day.integerValue > [dayStr integerValue]) {
-                        [pickerView selectRow:[self.dataArray[2] indexOfObject:[dayStr stringByAppendingString:@"日"]] inComponent:2 animated:YES];
-                        self.day = [dayStr stringByAppendingString:@"日"];
+                        [pickerView selectRow:[self.dataArray[2] indexOfObject:[dayStr stringByAppendingString:@"d"]] inComponent:2 animated:YES];
+                        self.day = [dayStr stringByAppendingString:@"d"];
                     }
                 }
             }
@@ -240,8 +240,8 @@
                 if (self.dayArr.count > [dayStr integerValue]) {
                     if (self.day.integerValue > [dayStr integerValue]) {
                         if (self.isSlide) {
-                            [pickerView selectRow:[self.dataArray[2] indexOfObject:[dayStr stringByAppendingString:@"日"]] inComponent:2 animated:YES];
-                            self.day = [dayStr stringByAppendingString:@"日"];
+                            [pickerView selectRow:[self.dataArray[2] indexOfObject:[dayStr stringByAppendingString:@"d"]] inComponent:2 animated:YES];
+                            self.day = [dayStr stringByAppendingString:@"d"];
                         } else {
                             self.month = month_value;
                         }
@@ -252,7 +252,7 @@
                 // 如果选择的月份小于当前月份 就刷新到当前月份
                 if (month_value.integerValue < [self.timeArr[component] integerValue]) {
                     if (self.isSlide) {
-                        [pickerView selectRow:[self.dataArray[component] indexOfObject:[NSString stringWithFormat:@"%ld月", [self.timeArr[component] integerValue]]] inComponent:component animated:YES];
+                        [pickerView selectRow:[self.dataArray[component] indexOfObject:[NSString stringWithFormat:@"%ldM", [self.timeArr[component] integerValue]]] inComponent:component animated:YES];
                     } else {
                         self.month = month_value;
                     }
@@ -264,8 +264,8 @@
                     NSString *dayStr = [self getDayNumber:[self.year integerValue] month:[self.month integerValue]];
                     if (self.dayArr.count > dayStr.integerValue) {
                         if (self.day.integerValue > dayStr.integerValue) {
-                            [pickerView selectRow:[self.dataArray[2] indexOfObject:[dayStr stringByAppendingString:@"日"]] inComponent:2 animated:YES];
-                            self.day = [dayStr stringByAppendingString:@"日"];
+                            [pickerView selectRow:[self.dataArray[2] indexOfObject:[dayStr stringByAppendingString:@"d"]] inComponent:2 animated:YES];
+                            self.day = [dayStr stringByAppendingString:@"d"];
                         }
                     }
                 }
@@ -292,7 +292,7 @@
                     if (day_value.integerValue <= [dayStr integerValue]) {
                         self.day = day_value;
                     } else {
-                        [pickerView selectRow:[self.dataArray[component] indexOfObject:[dayStr stringByAppendingString:@"日"]] inComponent:component animated:YES];
+                        [pickerView selectRow:[self.dataArray[component] indexOfObject:[dayStr stringByAppendingString:@"d"]] inComponent:component animated:YES];
                     }
                 }
                 // 如果选择的年等于当前年，就判断月份
@@ -305,7 +305,7 @@
                         if (day_value.integerValue <= [dayStr integerValue]) {
                             self.day = day_value;
                         } else {
-                            [pickerView selectRow:[self.dataArray[component] indexOfObject:[dayStr stringByAppendingString:@"日"]] inComponent:component animated:YES];
+                            [pickerView selectRow:[self.dataArray[component] indexOfObject:[dayStr stringByAppendingString:@"d"]] inComponent:component animated:YES];
                         }
                     }
                     // 如果选择的月份等于当前月份，就判断日
@@ -313,7 +313,7 @@
                     // 如果选择的日小于当前日，就刷新到当前日
                     if (day_value.integerValue < [self.timeArr[component] integerValue]) {
                         if (self.isSlide) {
-                            [pickerView selectRow:[self.dataArray[component] indexOfObject:[NSString stringWithFormat:@"%ld日", time_integerValue]] inComponent:component animated:YES];
+                            [pickerView selectRow:[self.dataArray[component] indexOfObject:[NSString stringWithFormat:@"%ldd", time_integerValue]] inComponent:component animated:YES];
                         } else {
                             self.day = day_value;
                         }
@@ -325,7 +325,7 @@
                             if ([self.dayArr[row%[self.dataArray[component] count]] integerValue] <= [dayStr integerValue]) {
                                 self.day = day_value;
                             } else {
-                                [pickerView selectRow:[self.dataArray[component] indexOfObject:[dayStr stringByAppendingString:@"日"]] inComponent:component animated:YES];
+                                [pickerView selectRow:[self.dataArray[component] indexOfObject:[dayStr stringByAppendingString:@"d"]] inComponent:component animated:YES];
                             }
                         }
                     }
@@ -356,7 +356,7 @@
                         // 如果选择的时小于当前时，就刷新到当前时
                         if (hour_value.integerValue < [self.timeArr[component] integerValue]) {
                         if (self.isSlide) {
-                            [pickerView selectRow:[self.dataArray[component] indexOfObject:[NSString stringWithFormat:@"%ld时", [self.timeArr[component] integerValue]]] inComponent:component animated:YES];
+                            [pickerView selectRow:[self.dataArray[component] indexOfObject:[NSString stringWithFormat:@"%ldH", [self.timeArr[component] integerValue]]] inComponent:component animated:YES];
                         }
                             // 如果选择的时大于当前时，就直接赋值
                         } else {
@@ -438,7 +438,7 @@
     if (!_yearArr) {
         _yearArr = [NSMutableArray array];
         for (int i = 1970; i < 2099; i ++) {
-            [_yearArr addObject:[NSString stringWithFormat:@"%d年", i]];
+            [_yearArr addObject:[NSString stringWithFormat:@"%dy", i]];
         }
     }
     return _yearArr;
@@ -452,7 +452,7 @@
     if (!_monthArr) {
         _monthArr = [NSMutableArray array];
         for (int i = 1; i <= 12; i ++) {
-            [_monthArr addObject:[NSString stringWithFormat:@"%d月", i]];
+            [_monthArr addObject:[NSString stringWithFormat:@"%dM", i]];
         }
     }
     return _monthArr;
@@ -463,7 +463,7 @@
     if (!_dayArr) {
         _dayArr = [NSMutableArray array];
         for (int i = 1; i <= 31; i ++) {
-            [_dayArr addObject:[NSString stringWithFormat:@"%d日", i]];
+            [_dayArr addObject:[NSString stringWithFormat:@"%dd", i]];
         }
     }
     return _dayArr;
@@ -474,7 +474,7 @@
     if (!_hourArr) {
         _hourArr = [NSMutableArray array];
         for (int i = 0; i < 24; i ++) {
-            [_hourArr addObject:[NSString stringWithFormat:@"%d时", i]];
+            [_hourArr addObject:[NSString stringWithFormat:@"%dH", i]];
         }
     }
     return _hourArr;
@@ -485,7 +485,7 @@
     NSMutableArray *minuteArray = [NSMutableArray array];
     for (int i = 0; i <= 60 - self.minuteInterval; i ++) {
         if (i % self.minuteInterval == 0) {
-            [minuteArray addObject:[NSString stringWithFormat:@"%d分", i]];
+            [minuteArray addObject:[NSString stringWithFormat:@"%dm", i]];
             continue;
         }
     }
@@ -516,7 +516,7 @@
 - (void)refreshDay {
     NSMutableArray *arr = [NSMutableArray array];
     for (int i = 1; i < [self getDayNumber:self.year.integerValue month:self.month.integerValue].integerValue + 1; i ++) {
-        [arr addObject:[NSString stringWithFormat:@"%d日", i]];
+        [arr addObject:[NSString stringWithFormat:@"%dd", i]];
     }
     
     [self.dataArray replaceObjectAtIndex:2 withObject:arr];

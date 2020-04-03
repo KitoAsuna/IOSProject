@@ -24,6 +24,7 @@
     
     return YES;
 }
+
 - (void)startAvoidCrash{
     //启动防止崩溃功能(注意区分becomeEffective和makeAllEffective的区别)
     //具体区别请看 AvoidCrash.h中的描述

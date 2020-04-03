@@ -718,7 +718,7 @@
         self.storageView.userInteractionEnabled = NO;
         self.expireView.userInteractionEnabled = NO;
         self.locationView.userInteractionEnabled = NO;
-        //self.picturePlayer.userInteractionEnabled = NO;
+
         
         NSArray<NSString *> *storageTimeArray;
         storageTimeArray = [self.model.storageDate componentsSeparatedByString:@"/"];
@@ -818,7 +818,7 @@
 -(void)InitialDatePicker{
     FosaDatePickerView *DatePicker = [[FosaDatePickerView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 300)];
     DatePicker.delegate = self;
-    DatePicker.title = @"请选择时间";
+    DatePicker.title = @"Reminder date";
     [self.view addSubview:DatePicker];
     self.fosaDatePicker = DatePicker;
     self.fosaDatePicker.hidden = YES;
@@ -839,7 +839,7 @@
 //    [formatter setDateFormat:@"yy/MM/dd/HH:mm"];
 //    NSDate *expDate = [formatter dateFromString:expireStr];
 //    NSLog(@">>>>>>>>>>>>>>>>>>>%@",expDate);
-    
+
     NSString *dateStr = [NSString stringWithFormat:@"%@/%@/%@",array[1],[mouth valueForKey:array[0]],array[2]];
     self.expireDateLabel.text = dateStr;
     self.expireTimeLabel.text= array[3];
@@ -1052,7 +1052,6 @@
 - (void)EditInfo{
     isEdit = true;
     self.foodStyle = @"edit";
-    self.likeBtn.userInteractionEnabled = YES;
     self.foodTextView.userInteractionEnabled = YES;
     self.foodDescribedTextView.userInteractionEnabled = YES;
     self.storageView.userInteractionEnabled = YES;
@@ -1077,6 +1076,14 @@
 - (void)recoverEditView{
     self.foodCell.kind.text = selectCategory;
     self.foodCell.categoryPhoto.image = self.selectedCategory.categoryPhoto.image;
+    
+    //禁止界面互动
+    self.foodTextView.userInteractionEnabled = NO;
+    self.foodDescribedTextView.userInteractionEnabled = NO;
+    self.storageView.userInteractionEnabled = NO;
+    self.expireView.userInteractionEnabled = NO;
+    self.locationView.userInteractionEnabled = NO;
+    
     [UIView animateWithDuration:0.5 animations:^{
         self.leftIndex.hidden = YES;
         self.rightIndex.hidden = YES;
@@ -1207,10 +1214,7 @@
 }
 - (void)saveInfoAndFinish{
     if ([self.foodStyle isEqualToString:@"edit"]) {
-        if (![self.foodTextView.text isEqualToString:self.model.foodName]) {
-            [self SavephotosInSanBox:self.foodImgArray];
             [self DeleteRecord];
-        }
     }else{
         [self SavephotosInSanBox:self.foodImgArray];
     }
@@ -1394,9 +1398,12 @@
         NSLog(@"删除%@",self.model.foodName);
         BOOL result = [self.db executeUpdate:delSql];
         if (result) {
-            for (int i = 1; i <= 3; i++) {
-                NSString *photoName = [NSString stringWithFormat:@"%@%d",self.model.foodName,i];
-                [self deleteFile:photoName];
+            if (![self.foodTextView.text isEqualToString:self.model.foodName]) {
+                [self SavephotosInSanBox:self.foodImgArray];
+                for (int i = 1; i <= 3; i++) {
+                    NSString *photoName = [NSString stringWithFormat:@"%@%d",self.model.foodName,i];
+                    [self deleteFile:photoName];
+                }
             }
             if (!isEdit) {
                 [self SystemAlert:@"Delete data successfully"];

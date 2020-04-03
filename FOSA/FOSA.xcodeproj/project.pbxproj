@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		1BA1F5E76ABA3BAC98F0B91C /* libPods-FOSATests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67EFA1173D8FB7C5DBBFCD51 /* libPods-FOSATests.a */; };
+		452F77E12436DADF002C6083 /* FosaTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77E02436DADF002C6083 /* FosaTabBar.m */; };
+		452F77E42436DB25002C6083 /* FosaRootTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77E32436DB25002C6083 /* FosaRootTabBarViewController.m */; };
+		452F77E82436DB77002C6083 /* FosaMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77E72436DB77002C6083 /* FosaMainViewController.m */; };
+		452F77EB2436DBD1002C6083 /* categoryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77EA2436DBD1002C6083 /* categoryCollectionViewCell.m */; };
+		452F77EE2436DBF2002C6083 /* FodItemCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77ED2436DBF2002C6083 /* FodItemCollectionViewCell.m */; };
+		452F77F22436DD12002C6083 /* UserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77F12436DD12002C6083 /* UserViewController.m */; };
 		45E5259724248E9D0028FF8E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E5259624248E9D0028FF8E /* AppDelegate.m */; };
 		45E5259A24248E9D0028FF8E /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E5259924248E9D0028FF8E /* SceneDelegate.m */; };
 		45E5259D24248E9D0028FF8E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E5259C24248E9D0028FF8E /* ViewController.m */; };
@@ -42,6 +48,18 @@
 		02D4B1BA50A30EB3B90DD094 /* Pods-FOSA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FOSA.debug.xcconfig"; path = "Target Support Files/Pods-FOSA/Pods-FOSA.debug.xcconfig"; sourceTree = "<group>"; };
 		241E12ED0E23BC09648FFDDA /* Pods-FOSA-FOSAUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FOSA-FOSAUITests.release.xcconfig"; path = "Target Support Files/Pods-FOSA-FOSAUITests/Pods-FOSA-FOSAUITests.release.xcconfig"; sourceTree = "<group>"; };
 		262DEE86645D5CFE953D3466 /* Pods-FOSA-FOSAUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FOSA-FOSAUITests.debug.xcconfig"; path = "Target Support Files/Pods-FOSA-FOSAUITests/Pods-FOSA-FOSAUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		452F77DF2436DADF002C6083 /* FosaTabBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FosaTabBar.h; sourceTree = "<group>"; };
+		452F77E02436DADF002C6083 /* FosaTabBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FosaTabBar.m; sourceTree = "<group>"; };
+		452F77E22436DB25002C6083 /* FosaRootTabBarViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FosaRootTabBarViewController.h; sourceTree = "<group>"; };
+		452F77E32436DB25002C6083 /* FosaRootTabBarViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FosaRootTabBarViewController.m; sourceTree = "<group>"; };
+		452F77E62436DB77002C6083 /* FosaMainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FosaMainViewController.h; sourceTree = "<group>"; };
+		452F77E72436DB77002C6083 /* FosaMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FosaMainViewController.m; sourceTree = "<group>"; };
+		452F77E92436DBD1002C6083 /* categoryCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = categoryCollectionViewCell.h; sourceTree = "<group>"; };
+		452F77EA2436DBD1002C6083 /* categoryCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = categoryCollectionViewCell.m; sourceTree = "<group>"; };
+		452F77EC2436DBF2002C6083 /* FodItemCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FodItemCollectionViewCell.h; sourceTree = "<group>"; };
+		452F77ED2436DBF2002C6083 /* FodItemCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FodItemCollectionViewCell.m; sourceTree = "<group>"; };
+		452F77F02436DD12002C6083 /* UserViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserViewController.h; sourceTree = "<group>"; };
+		452F77F12436DD12002C6083 /* UserViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserViewController.m; sourceTree = "<group>"; };
 		45E5259224248E9D0028FF8E /* FOSA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FOSA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45E5259524248E9D0028FF8E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		45E5259624248E9D0028FF8E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -106,6 +124,65 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		452F77DB2436DA32002C6083 /* FOSAFrameWork */ = {
+			isa = PBXGroup;
+			children = (
+				452F77DE2436DAA3002C6083 /* UserInterface */,
+				452F77DD2436DA86002C6083 /* MainInterface */,
+				452F77DC2436DA6B002C6083 /* RootTabVIew */,
+			);
+			name = FOSAFrameWork;
+			sourceTree = "<group>";
+		};
+		452F77DC2436DA6B002C6083 /* RootTabVIew */ = {
+			isa = PBXGroup;
+			children = (
+				452F77DF2436DADF002C6083 /* FosaTabBar.h */,
+				452F77E02436DADF002C6083 /* FosaTabBar.m */,
+				452F77E22436DB25002C6083 /* FosaRootTabBarViewController.h */,
+				452F77E32436DB25002C6083 /* FosaRootTabBarViewController.m */,
+			);
+			name = RootTabVIew;
+			sourceTree = "<group>";
+		};
+		452F77DD2436DA86002C6083 /* MainInterface */ = {
+			isa = PBXGroup;
+			children = (
+				452F77E52436DB39002C6083 /* MainInterfaceCell */,
+				452F77E62436DB77002C6083 /* FosaMainViewController.h */,
+				452F77E72436DB77002C6083 /* FosaMainViewController.m */,
+			);
+			name = MainInterface;
+			sourceTree = "<group>";
+		};
+		452F77DE2436DAA3002C6083 /* UserInterface */ = {
+			isa = PBXGroup;
+			children = (
+				452F77EF2436DC32002C6083 /* UserItemFunctionView */,
+				452F77F02436DD12002C6083 /* UserViewController.h */,
+				452F77F12436DD12002C6083 /* UserViewController.m */,
+			);
+			name = UserInterface;
+			sourceTree = "<group>";
+		};
+		452F77E52436DB39002C6083 /* MainInterfaceCell */ = {
+			isa = PBXGroup;
+			children = (
+				452F77E92436DBD1002C6083 /* categoryCollectionViewCell.h */,
+				452F77EA2436DBD1002C6083 /* categoryCollectionViewCell.m */,
+				452F77EC2436DBF2002C6083 /* FodItemCollectionViewCell.h */,
+				452F77ED2436DBF2002C6083 /* FodItemCollectionViewCell.m */,
+			);
+			name = MainInterfaceCell;
+			sourceTree = "<group>";
+		};
+		452F77EF2436DC32002C6083 /* UserItemFunctionView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = UserItemFunctionView;
+			sourceTree = "<group>";
+		};
 		45E5258924248E9D0028FF8E = {
 			isa = PBXGroup;
 			children = (
@@ -131,6 +208,7 @@
 		45E5259424248E9D0028FF8E /* FOSA */ = {
 			isa = PBXGroup;
 			children = (
+				452F77DB2436DA32002C6083 /* FOSAFrameWork */,
 				45E5259524248E9D0028FF8E /* AppDelegate.h */,
 				45E5259624248E9D0028FF8E /* AppDelegate.m */,
 				45E5259824248E9D0028FF8E /* SceneDelegate.h */,
@@ -174,7 +252,6 @@
 				9E26D66240BADB03D72479C5 /* Pods-FOSATests.debug.xcconfig */,
 				9E4ED550C462FA669AE80D64 /* Pods-FOSATests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -380,10 +457,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				452F77E12436DADF002C6083 /* FosaTabBar.m in Sources */,
+				452F77F22436DD12002C6083 /* UserViewController.m in Sources */,
 				45E5259D24248E9D0028FF8E /* ViewController.m in Sources */,
 				45E5259724248E9D0028FF8E /* AppDelegate.m in Sources */,
+				452F77E42436DB25002C6083 /* FosaRootTabBarViewController.m in Sources */,
+				452F77EB2436DBD1002C6083 /* categoryCollectionViewCell.m in Sources */,
+				452F77E82436DB77002C6083 /* FosaMainViewController.m in Sources */,
 				45E525A824248EA30028FF8E /* main.m in Sources */,
 				45E5259A24248E9D0028FF8E /* SceneDelegate.m in Sources */,
+				452F77EE2436DBF2002C6083 /* FodItemCollectionViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
