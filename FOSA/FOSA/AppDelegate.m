@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <AvoidCrash.h>
+#import "FosaRootTabBarViewController.h"
 
 @interface AppDelegate ()
 
@@ -21,7 +22,31 @@
     //启动防奔溃第三方库
     [self startAvoidCrash];
     
-    
+    //判断是否有更新
+    NSUserDefaults *userDefault = NSUserDefaults.standardUserDefaults;
+    NSString *currentVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"];
+    NSString *localVersion = [userDefault valueForKey:@"localVersion"];
+    if (![currentVersion isEqualToString:localVersion]) {
+            //新特性界面
+    //      UIViewController *newVc = [[UIViewController alloc]init];
+    //      newVc.view.backgroundColor = [UIColor redColor];
+    //      self.window.rootViewController = newVc;
+//            [self CreatSqlDatabase:@"FOSA"];
+//            [self CreatDataTable];
+//            [self CreatCategoryTable];
+//            [userDefault setObject:currentVersion forKey:@"localVersion"];
+    }
+    //根据系统版本选择视图生成方式
+    if (@available(iOS 13,*)) {
+        return YES;
+    }else{
+        self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
+        //添加根控制器
+        self.window.rootViewController = [FosaRootTabBarViewController new];
+        //显示window
+        [self.window makeKeyAndVisible];
+        [NSThread sleepForTimeInterval:1];
+    }
     return YES;
 }
 
@@ -29,9 +54,7 @@
     //启动防止崩溃功能(注意区分becomeEffective和makeAllEffective的区别)
     //具体区别请看 AvoidCrash.h中的描述
     //建议在didFinishLaunchingWithOptions最初始位置调用 上面的方法
-    
     [AvoidCrash makeAllEffective];
-    
     //若出现unrecognized selector sent to instance导致的崩溃并且控制台输出:
     //-[__NSCFConstantString initWithName:age:height:weight:]: unrecognized selector sent to instance
     //你可以将@"__NSCFConstantString"添加到如下数组中，当然，你也可以将它的父类添加到下面数组中
@@ -42,7 +65,6 @@
                                      @"NSString"
                                      ];
     [AvoidCrash setupNoneSelClassStringsArr:noneSelClassStrings];
-    
     //监听通知:AvoidCrashNotification, 获取AvoidCrash捕获的崩溃日志的详细信息
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dealwithCrashMessage:) name:AvoidCrashNotification object:nil];
 }
