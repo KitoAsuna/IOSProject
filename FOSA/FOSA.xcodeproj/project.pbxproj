@@ -185,14 +185,21 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		452F77DB2436DA32002C6083 /* FOSAFrameWork */ = {
+		451AF74F243AF310006141D2 /* FOSAFrameWork */ = {
 			isa = PBXGroup;
 			children = (
-				452F77DE2436DAA3002C6083 /* UserInterface */,
-				452F77DD2436DA86002C6083 /* MainInterface */,
 				452F77DC2436DA6B002C6083 /* RootTabVIew */,
+				452F77DD2436DA86002C6083 /* MainInterface */,
+				452F77DE2436DAA3002C6083 /* UserInterface */,
 			);
-			name = FOSAFrameWork;
+			path = FOSAFrameWork;
+			sourceTree = "<group>";
+		};
+		452F77DB2436DA32002C6083 /* FOSAFrameWork1 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = FOSAFrameWork1;
 			sourceTree = "<group>";
 		};
 		452F77DC2436DA6B002C6083 /* RootTabVIew */ = {
@@ -204,6 +211,7 @@
 				452F77E32436DB25002C6083 /* FosaRootTabBarViewController.m */,
 			);
 			name = RootTabVIew;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		452F77DD2436DA86002C6083 /* MainInterface */ = {
@@ -214,6 +222,7 @@
 				452F77E72436DB77002C6083 /* FosaMainViewController.m */,
 			);
 			name = MainInterface;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		452F77DE2436DAA3002C6083 /* UserInterface */ = {
@@ -225,6 +234,7 @@
 				452F77F12436DD12002C6083 /* UserViewController.m */,
 			);
 			name = UserInterface;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		452F77E52436DB39002C6083 /* MainInterfaceCell */ = {
@@ -387,8 +397,9 @@
 		45E5259424248E9D0028FF8E /* FOSA */ = {
 			isa = PBXGroup;
 			children = (
+				451AF74F243AF310006141D2 /* FOSAFrameWork */,
 				452F780C2436EF5D002C6083 /* GeneralView */,
-				452F77DB2436DA32002C6083 /* FOSAFrameWork */,
+				452F77DB2436DA32002C6083 /* FOSAFrameWork1 */,
 				45E5259524248E9D0028FF8E /* AppDelegate.h */,
 				45E5259624248E9D0028FF8E /* AppDelegate.m */,
 				45E5259824248E9D0028FF8E /* SceneDelegate.h */,
