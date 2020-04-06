@@ -17,11 +17,11 @@
 @end
 
 @implementation FosaFMDBManager
-+ (instancetype)initFMDBMaanagerWithdbName:(NSString *)dbName{
-    return [[FosaFMDBManager alloc]initFMdatabaseWithName:dbName];
++ (instancetype)initFMDBManagerWithdbName:(NSString *)dbName{
+    return [[FosaFMDBManager alloc]initFMDBdatabaseWithName:dbName];
 }
 
-- (instancetype)initFMdatabaseWithName:(NSString *)dbName{
+- (instancetype)initFMDBdatabaseWithName:(NSString *)dbName{
     //获取数据库地址
     docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject];
        NSLog(@"%@",docPath);
@@ -36,37 +36,51 @@
        }
     return self;
 }
+- (BOOL)creatTableWithSql:(nonnull NSString *)tableSql{
+    return [db executeUpdate:tableSql];
+}
+- (BOOL)isFmdbOpen{
+    return [db open];
+}
 
-- (BOOL)insertDataWithTableName:(NSString *)tableName sql:(NSString *)insertSql{
+- (BOOL)insertDataWithSql:(NSString *)insertSql{
     BOOL insertResult = [db executeUpdate:insertSql];
     return insertResult;
 }
 
 - (NSMutableArray *)selectDataWithTableName:(NSString *)tableName sql:(NSString *)selectSql{
-    NSMutableArray *resultArray;
+    NSMutableArray *resultArray = [NSMutableArray new];
     FMResultSet *set = [db executeQuery:selectSql];
-    while ([set next]) {
-        NSString *foodName    = [set stringForColumn:@"foodName"];
-        NSString *device      = [set stringForColumn:@"device"];
-        NSString *aboutFood   = [set stringForColumn:@"aboutFood"];
-        NSString *storageDate = [set stringForColumn:@"storageDate"];
-        NSString *expireDate  = [set stringForColumn:@"expireDate"];
-        NSString *foodImg     = [set stringForColumn:@"foodImg"];
-        NSString *category    = [set stringForColumn:@"category"];
-        NSString *location    = [set stringForColumn:@"location"];
-        FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category Location:location];
-        [resultArray addObject:model];
-        
-//        NSLog(@"*********************************************foodName    = %@",foodName);
-//        NSLog(@"device      = %@",device);
-//        NSLog(@"aboutFood   = %@",aboutFood);
-//        NSLog(@"remindDate  = %@",storageDate);
-//        NSLog(@"expireDate  = %@",expireDate);
-//        NSLog(@"foodImg     = %@",foodImg);
-//        NSLog(@"category    = %@",category);
+    
+    if ([tableName isEqualToString:@"FoodStorageInfo"]) {
+        while ([set next]) {
+            NSString *foodName    = [set stringForColumn:@"foodName"];
+            NSString *device      = [set stringForColumn:@"device"];
+            NSString *aboutFood   = [set stringForColumn:@"aboutFood"];
+            NSString *storageDate = [set stringForColumn:@"storageDate"];
+            NSString *expireDate  = [set stringForColumn:@"expireDate"];
+            NSString *foodImg     = [set stringForColumn:@"foodImg"];
+            NSString *category    = [set stringForColumn:@"category"];
+            NSString *location    = [set stringForColumn:@"location"];
+            FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category Location:location];
+            [resultArray addObject:model];
+
+        }
+    }else if([tableName isEqualToString:@"category"]){
+        while ([set next]) {
+            NSString *kind = [set stringForColumn:@"categoryName"];
+            [resultArray addObject:kind];
+        }
     }
     return resultArray;
 }
 
+- (BOOL)deleteDataWithSql:(NSString *)deleteSql{
+    return [db executeUpdate:deleteSql];
+}
+
+- (BOOL)closeDB{
+    return [db close];
+}
 
 @end

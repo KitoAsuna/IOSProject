@@ -56,7 +56,7 @@
     if (@available(iOS 13,*)) {
         //在IOS13中获取状态栏视图
 //        UIStatusBarManager *statusBarManager = [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager;
-//        NSLog(@"================%f",statusBarManager.statusBarFrame.size.height);
+        NSLog(@"================%f",[UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager.statusBarFrame.size.height);
         //[self GetJSONFromServerByAFN];
         return YES;
     }else{

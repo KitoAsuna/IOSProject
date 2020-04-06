@@ -14,12 +14,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FosaFMDBManager : NSObject
 
-+(instancetype) initFMDBMaanagerWithdbName:(NSString *)dbName;
--(instancetype) initFMdatabaseWithName:(NSString *)dbName;
++(instancetype) initFMDBManagerWithdbName:(NSString *)dbName;
+-(instancetype) initFMDBdatabaseWithName:(NSString *)dbName;
 
-- (BOOL)insertDataWithTableName:(NSString *)tableName sql:(NSString *)insertSql;
+- (BOOL)isFmdbOpen;
+- (BOOL)creatTableWithSql:(NSString *)tableSql;
+- (BOOL)insertDataWithSql:(NSString *)insertSql;
 - (NSMutableArray *)selectDataWithTableName:(NSString *)tableName sql:(NSString *)selectSql;
-- (BOOL)deleteDataWithTableName:(NSString *)tableName sql:(NSString *)deleteSql;
+- (BOOL)deleteDataWithSql:(NSString *)deleteSql;
+- (BOOL)closeDB;
 
 @end
 

@@ -272,11 +272,11 @@
 //    self.scanMaskView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
     //[self.view addSubview:self.scanMaskView];
     //从蒙版中扣出扫描框那一块,这块的大小尺寸将来也设成扫描输出的作用域大小
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.view.bounds];
-    [maskPath appendPath:[[UIBezierPath bezierPathWithRect:CGRectMake(imageX, imageY,screen_width*0.7,screen_width*0.7)] bezierPathByReversingPath]];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.path = maskPath.CGPath;
-    self.scanMaskView.layer.mask = maskLayer;
+//    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.view.bounds];
+//    [maskPath appendPath:[[UIBezierPath bezierPathWithRect:CGRectMake(imageX, imageY,screen_width*0.7,screen_width*0.7)] bezierPathByReversingPath]];
+//    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+//    maskLayer.path = maskPath.CGPath;
+//    self.scanMaskView.layer.mask = maskLayer;
 
     //扫描框
     self.scanFrame.frame = CGRectMake(imageX, imageY,screen_width*0.7,screen_width*0.7);
@@ -307,12 +307,12 @@
     [self.flashBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashOff.png"] forState:UIControlStateNormal];
     [self.flashBtn addTarget:self action:@selector(OpenOrCloseFlash) forControlEvents:UIControlEventTouchUpInside];
     //UISlider
-    self.zoomSlider.frame = CGRectMake(imageX,imageY+self.view.frame.size.width*0.7,self.view.frame.size.width*0.7+10,20);
-    //[self.view addSubview:self.zoomSlider];
-    self.zoomSlider.minimumValue = 0;
-    self.zoomSlider.maximumValue = 100;
-    [self.zoomSlider addTarget:self action:@selector(ZoomSliderValueChanged) forControlEvents:UIControlEventValueChanged];
-    
+//    self.zoomSlider.frame = CGRectMake(imageX,imageY+self.view.frame.size.width*0.7,self.view.frame.size.width*0.7+10,20);
+//    //[self.view addSubview:self.zoomSlider];
+//    self.zoomSlider.minimumValue = 0;
+//    self.zoomSlider.maximumValue = 100;
+//    [self.zoomSlider addTarget:self action:@selector(ZoomSliderValueChanged) forControlEvents:UIControlEventValueChanged];
+//
     //设置有效扫描区域
     CGRect intertRect = [_previewLayer metadataOutputRectOfInterestForRect:CGRectMake(imageX, imageY,screen_width*0.7,screen_width*0.7)];
     _captureOutput.rectOfInterest = intertRect;

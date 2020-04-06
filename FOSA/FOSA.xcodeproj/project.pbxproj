@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		1BA1F5E76ABA3BAC98F0B91C /* libPods-FOSATests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67EFA1173D8FB7C5DBBFCD51 /* libPods-FOSATests.a */; };
+		451AF743243AAE7A006141D2 /* FosaIMGManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 451AF742243AAE7A006141D2 /* FosaIMGManager.m */; };
+		451AF746243AB731006141D2 /* qrResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 451AF745243AB731006141D2 /* qrResultViewController.m */; };
+		451AF74E243AE2D1006141D2 /* fosaNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 451AF74D243AE2D1006141D2 /* fosaNotificationManager.m */; };
 		452F77E12436DADF002C6083 /* FosaTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77E02436DADF002C6083 /* FosaTabBar.m */; };
 		452F77E42436DB25002C6083 /* FosaRootTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77E32436DB25002C6083 /* FosaRootTabBarViewController.m */; };
 		452F77E82436DB77002C6083 /* FosaMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F77E72436DB77002C6083 /* FosaMainViewController.m */; };
@@ -27,7 +30,6 @@
 		452F78182436F100002C6083 /* foodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F78172436F100002C6083 /* foodViewController.m */; };
 		452F781B2436F170002C6083 /* foodkindCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F781A2436F170002C6083 /* foodkindCollectionViewCell.m */; };
 		452F781E2436F198002C6083 /* foodKindView.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F781D2436F198002C6083 /* foodKindView.m */; };
-		452F78222436F1F2002C6083 /* fosaNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F78212436F1F2002C6083 /* fosaNotificationManager.m */; };
 		452F78262436F233002C6083 /* qrCodeScannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F78252436F233002C6083 /* qrCodeScannerViewController.m */; };
 		452F78282436F27F002C6083 /* ding.wav in Resources */ = {isa = PBXBuildFile; fileRef = 452F78272436F27F002C6083 /* ding.wav */; };
 		452F782E24370629002C6083 /* FosaFMDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 452F782D24370629002C6083 /* FosaFMDBManager.m */; };
@@ -66,6 +68,14 @@
 		02D4B1BA50A30EB3B90DD094 /* Pods-FOSA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FOSA.debug.xcconfig"; path = "Target Support Files/Pods-FOSA/Pods-FOSA.debug.xcconfig"; sourceTree = "<group>"; };
 		241E12ED0E23BC09648FFDDA /* Pods-FOSA-FOSAUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FOSA-FOSAUITests.release.xcconfig"; path = "Target Support Files/Pods-FOSA-FOSAUITests/Pods-FOSA-FOSAUITests.release.xcconfig"; sourceTree = "<group>"; };
 		262DEE86645D5CFE953D3466 /* Pods-FOSA-FOSAUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FOSA-FOSAUITests.debug.xcconfig"; path = "Target Support Files/Pods-FOSA-FOSAUITests/Pods-FOSA-FOSAUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		451AF741243AAE7A006141D2 /* FosaIMGManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FosaIMGManager.h; sourceTree = "<group>"; };
+		451AF742243AAE7A006141D2 /* FosaIMGManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FosaIMGManager.m; sourceTree = "<group>"; };
+		451AF744243AB731006141D2 /* qrResultViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qrResultViewController.h; sourceTree = "<group>"; };
+		451AF745243AB731006141D2 /* qrResultViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = qrResultViewController.m; sourceTree = "<group>"; };
+		451AF748243ABB84006141D2 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		451AF749243AC5CD006141D2 /* MacroHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MacroHeader.h; sourceTree = "<group>"; };
+		451AF74C243AE285006141D2 /* fosaNotificationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fosaNotificationManager.h; sourceTree = "<group>"; };
+		451AF74D243AE2D1006141D2 /* fosaNotificationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fosaNotificationManager.m; sourceTree = "<group>"; };
 		452F77DF2436DADF002C6083 /* FosaTabBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FosaTabBar.h; sourceTree = "<group>"; };
 		452F77E02436DADF002C6083 /* FosaTabBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FosaTabBar.m; sourceTree = "<group>"; };
 		452F77E22436DB25002C6083 /* FosaRootTabBarViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FosaRootTabBarViewController.h; sourceTree = "<group>"; };
@@ -104,8 +114,6 @@
 		452F781A2436F170002C6083 /* foodkindCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = foodkindCollectionViewCell.m; sourceTree = "<group>"; };
 		452F781C2436F198002C6083 /* foodKindView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foodKindView.h; sourceTree = "<group>"; };
 		452F781D2436F198002C6083 /* foodKindView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = foodKindView.m; sourceTree = "<group>"; };
-		452F78202436F1F2002C6083 /* fosaNotificationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fosaNotificationManager.h; sourceTree = "<group>"; };
-		452F78212436F1F2002C6083 /* fosaNotificationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fosaNotificationManager.m; sourceTree = "<group>"; };
 		452F78242436F233002C6083 /* qrCodeScannerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qrCodeScannerViewController.h; sourceTree = "<group>"; };
 		452F78252436F233002C6083 /* qrCodeScannerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = qrCodeScannerViewController.m; sourceTree = "<group>"; };
 		452F78272436F27F002C6083 /* ding.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = ding.wav; path = ../../FOSAapp1.0/FOSAapp1.0/GeneralFunction/QRCodeScan/ding.wav; sourceTree = "<group>"; };
@@ -309,8 +317,8 @@
 		452F781F2436F1C6002C6083 /* FosaNotification */ = {
 			isa = PBXGroup;
 			children = (
-				452F78202436F1F2002C6083 /* fosaNotificationManager.h */,
-				452F78212436F1F2002C6083 /* fosaNotificationManager.m */,
+				451AF74C243AE285006141D2 /* fosaNotificationManager.h */,
+				451AF74D243AE2D1006141D2 /* fosaNotificationManager.m */,
 			);
 			name = FosaNotification;
 			sourceTree = "<group>";
@@ -321,6 +329,8 @@
 				452F78242436F233002C6083 /* qrCodeScannerViewController.h */,
 				452F78252436F233002C6083 /* qrCodeScannerViewController.m */,
 				452F78272436F27F002C6083 /* ding.wav */,
+				451AF744243AB731006141D2 /* qrResultViewController.h */,
+				451AF745243AB731006141D2 /* qrResultViewController.m */,
 			);
 			name = QrCodeScaner;
 			sourceTree = "<group>";
@@ -328,6 +338,8 @@
 		452F78292436F29B002C6083 /* FosaImageManager */ = {
 			isa = PBXGroup;
 			children = (
+				451AF741243AAE7A006141D2 /* FosaIMGManager.h */,
+				451AF742243AAE7A006141D2 /* FosaIMGManager.m */,
 			);
 			name = FosaImageManager;
 			sourceTree = "<group>";
@@ -388,6 +400,8 @@
 				45E525A324248EA30028FF8E /* LaunchScreen.storyboard */,
 				45E525A624248EA30028FF8E /* Info.plist */,
 				45E525A724248EA30028FF8E /* main.m */,
+				451AF748243ABB84006141D2 /* PrefixHeader.pch */,
+				451AF749243AC5CD006141D2 /* MacroHeader.h */,
 			);
 			path = FOSA;
 			sourceTree = "<group>";
@@ -629,7 +643,9 @@
 				452F77E12436DADF002C6083 /* FosaTabBar.m in Sources */,
 				452F782E24370629002C6083 /* FosaFMDBManager.m in Sources */,
 				452F78082436EF03002C6083 /* RegisterViewController.m in Sources */,
+				451AF746243AB731006141D2 /* qrResultViewController.m in Sources */,
 				452F77F22436DD12002C6083 /* UserViewController.m in Sources */,
+				451AF743243AAE7A006141D2 /* FosaIMGManager.m in Sources */,
 				452F783124372463002C6083 /* FoodModel.m in Sources */,
 				452F77FB2436EC64002C6083 /* SettingViewController.m in Sources */,
 				45E5259D24248E9D0028FF8E /* ViewController.m in Sources */,
@@ -643,7 +659,6 @@
 				452F781B2436F170002C6083 /* foodkindCollectionViewCell.m in Sources */,
 				452F780B2436EF1C002C6083 /* ResetAccountViewController.m in Sources */,
 				452F781E2436F198002C6083 /* foodKindView.m in Sources */,
-				452F78222436F1F2002C6083 /* fosaNotificationManager.m in Sources */,
 				45E525A824248EA30028FF8E /* main.m in Sources */,
 				45E5259A24248E9D0028FF8E /* SceneDelegate.m in Sources */,
 				452F78262436F233002C6083 /* qrCodeScannerViewController.m in Sources */,
@@ -652,6 +667,7 @@
 				452F77EE2436DBF2002C6083 /* FodItemCollectionViewCell.m in Sources */,
 				452F77F82436EC2A002C6083 /* LanguageViewController.m in Sources */,
 				452F77FE2436EE7D002C6083 /* AboutAppsViewController.m in Sources */,
+				451AF74E243AE2D1006141D2 /* fosaNotificationManager.m in Sources */,
 				452F77F52436E8C4002C6083 /* TutorialViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -747,6 +763,8 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FOSA/MacroHeader.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -803,6 +821,8 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FOSA/MacroHeader.h";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -824,6 +844,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NFW4WTJX6R;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FOSA/MacroHeader.h";
 				INFOPLIST_FILE = FOSA/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -842,6 +863,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NFW4WTJX6R;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/FOSA/MacroHeader.h";
 				INFOPLIST_FILE = FOSA/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

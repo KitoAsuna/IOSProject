@@ -11,7 +11,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface foodKindView : UIView
-
+@property (nonatomic,strong) UILabel *kind;
+@property (nonatomic,strong) UIImageView *categoryPhoto;
+@property (nonatomic,strong) UIView *rootView;
 @end
 
 NS_ASSUME_NONNULL_END

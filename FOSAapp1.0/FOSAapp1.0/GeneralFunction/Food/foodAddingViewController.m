@@ -1271,17 +1271,17 @@
 }
 
 - (void)InsertDataIntoFoodTable{
-    NSString *insertSql = @"insert into FoodStorageInfo(foodName,device,aboutFood,storageDate,expireDate,location,foodImg,category,like) values(?,?,?,?,?,?,?,?,?)";
+    NSString *storagedate = [NSString stringWithFormat:@"%@/%@",self.storageDateLabel.text,self.storageTimeLabel.text];
+    NSString *expiredate  = [NSString stringWithFormat:@"%@/%@",self.expireDateLabel.text,self.expireTimeLabel.text];
+    NSString *insertSql = [NSString stringWithFormat:@"insert into FoodStorageInfo(foodName,device,aboutFood,storageDate,expireDate,location,foodImg,category) values('%@','%@','%@','%@','%@','%@','%@','%@')",self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory];
     if ([self.foodTextView.text isEqualToString:@""]) {
         [self SystemAlert:@"Please input the name of your food!"];
     }else if(selectCategory == nil){
         [self SystemAlert:@"Please select a category for your food"];
     }else{
         if ([self.db open]) {
-            NSString *storagedate = [NSString stringWithFormat:@"%@/%@",self.storageDateLabel.text,self.storageTimeLabel.text];
-            NSString *expiredate  = [NSString stringWithFormat:@"%@/%@",self.expireDateLabel.text,self.expireTimeLabel.text];
             
-            BOOL insertResult = [self.db executeUpdate:insertSql, self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory,self.likeBtn.accessibilityValue];
+            BOOL insertResult = [self.db executeUpdate:insertSql];
             NSLog(@"~~~~~~~~~~~~~~~~~~~~设备号：%@",device);
             if (insertResult) {
                 [self sendNotificationByExpireday];
