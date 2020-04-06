@@ -352,6 +352,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor whiteColor];
+    [self initData];
+    [self creatNavigation];
+    [self creatHeaderView];
+    [self creatContentView];
+    [self creatFooterView];
+    [self showFoodInfoInView];
+    [self InitialDatePicker];
+}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    if (![self.foodStyle isEqualToString:@"Info"]) {
+        self.backbtn.hidden = NO;
+        if (![device isEqualToString:@"null"]) {
+            [self SystemAlert:@"Binding device successfully"];
+            self.likeBtn.hidden = NO;
+        }
+    }
 }
 - (void)initData{
     self.fmdbManager = [FosaFMDBManager initFMDBManagerWithdbName:@"FOSA"];
@@ -362,7 +380,6 @@
 }
 //导航栏视图
 - (void)creatNavigation{
-    device = @"null";
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
 /**like*/
     self.likeBtn.frame = CGRectMake(screen_width/2-NavigationBarHeight/3, NavigationBarHeight/6, NavigationBarHeight*2/3, NavigationBarHeight*2/3);
@@ -579,8 +596,8 @@
 
 - (void)creatFooterView{
     NSString *selSql = @"select * from category";
-    self.categoryArray = [self.fmdbManager selectDataWithTableName:@"category" sql:selSql];
-    
+    self.categoryNameArray = [self.fmdbManager selectDataWithTableName:@"category" sql:selSql];
+
     //初始化种类数据
     NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie"];
     self.categoryArray = [[NSMutableArray alloc]initWithArray:array];
@@ -746,6 +763,15 @@
     [self.refreshBtn addTarget:self action:@selector(jumptoPhoto) forControlEvents:UIControlEventTouchUpInside];
     self.refreshBtn.hidden = YES;
     [self.headerView addSubview:self.refreshBtn];
+}
+#pragma mark - 初始化日期选择器
+-(void)InitialDatePicker{
+    FosaDatePickerView *DatePicker = [[FosaDatePickerView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 300)];
+    DatePicker.delegate = self;
+    DatePicker.title = @"Reminder date";
+    [self.view addSubview:DatePicker];
+    self.fosaDatePicker = DatePicker;
+    self.fosaDatePicker.hidden = YES;
 }
 #pragma mark -- FosaDatePickerViewDelegate
 /**

@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <AvoidCrash.h>
 #import "FosaRootTabBarViewController.h"
+#import "FosaFMDBManager.h"
 
 @interface AppDelegate ()
 
@@ -34,7 +35,9 @@
 //            [self CreatSqlDatabase:@"FOSA"];
 //            [self CreatDataTable];
 //            [self CreatCategoryTable];
-//            [userDefault setObject:currentVersion forKey:@"localVersion"];
+        
+        [self updateCategoryTable];
+        [userDefault setObject:currentVersion forKey:@"localVersion"];
     }
     //根据系统版本选择视图生成方式
     if (@available(iOS 13,*)) {
@@ -72,6 +75,27 @@
     //注意:所有的信息都在userInfo中
     //你可以在这里收集相应的崩溃信息进行相应的处理(比如传到自己服务器)
     NSLog(@"%@",note.userInfo);
+}
+
+#pragma mark - 更新食物种类数据
+- (void)updateCategoryTable{
+    //数据库管理者
+    FosaFMDBManager *fmdbManager = [FosaFMDBManager initFMDBManagerWithdbName:@"FOSA"];
+    if ([fmdbManager isFmdbOpen]) {
+        NSString *categoryTableSql = @"create table if not exists category(id integer primary key,categoryName text)";
+        NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie"];
+        if ([fmdbManager creatTableWithSql:categoryTableSql]) {
+            for (int i = 0; i < array.count; i++) {
+                NSString *insertSql = [NSString stringWithFormat:@"insert into category(categoryName) values('%@')",array[i]];
+                BOOL result = [fmdbManager insertDataWithSql:insertSql];
+                if (result) {
+                    NSLog(@"insert data:%@ successfully",array[i]);
+                }
+            }
+        }
+    }else{
+        NSLog(@"database open failed")
+    }
 }
 
 #pragma mark - UISceneSession lifecycle

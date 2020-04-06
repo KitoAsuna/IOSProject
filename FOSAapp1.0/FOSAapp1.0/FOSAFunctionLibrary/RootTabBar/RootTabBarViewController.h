@@ -11,8 +11,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RootTabBarViewController : UITabBarController
-/** 中间的发布按钮 */
-@property (nonatomic, strong) UIButton *AddButton;
 @end
 
 NS_ASSUME_NONNULL_END

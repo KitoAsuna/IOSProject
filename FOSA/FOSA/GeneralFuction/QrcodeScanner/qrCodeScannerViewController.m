@@ -35,6 +35,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self startScanQRCode];
+    [self CreatVerticalScanView];
+}
+- (void)viewWillAppear:(BOOL)animated{
+    [self.captureSession startRunning];
+    [self InitData];
+    [self CreatNavigationButtonAndFocusBtn];
+    //开始动画
+    stopAnimation = false;
+    [self VerticalScanLineAnimation];
 }
 
 #pragma mark - 懒加载属性
@@ -146,6 +156,7 @@
             [_captureSession addInput:self.captureInput];
         }else{
             NSLog(@"找不到摄像头设备");
+            //[self.navigationController popViewControllerAnimated:YES];
         }
         if ([self.captureSession canAddOutput:self.captureOutput]) {
             [self.captureSession addOutput:self.captureOutput];
