@@ -129,7 +129,6 @@
     /**
      系统调用此方法
      */
-    NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^%@调用了drawRect?%@^^^^^^^^^^^^^^^^^^^^^^",self.model.foodName,self.isDraw);
     [[UIColor whiteColor] setFill];//使背景颜色为白色
     UIRectFill(rect);
     int rectHight = (int) self.bounds.size.height;
@@ -167,7 +166,7 @@
         NSArray<NSString *> *dateArray = [self.model.expireDate componentsSeparatedByString:@"/"];
 
         NSString *RDate = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray[1],dateArray[0],dateArray[2],dateArray[3]];
-            
+
         foodDate = [formatter2 dateFromString:RDate];
         NSLog(@"foodDate:%@",foodDate);
         RDate = [formatter stringFromDate:foodDate];
@@ -175,6 +174,8 @@
         //比较过期日期与今天的日期
         NSComparisonResult result = [currentDate compare:foodDate];
         if (result == NSOrderedDescending) {//foodDate 在 currentDate 之前,即是食物已过期
+            [FOSAGray setFill];
+        }else if(result == NSOrderedSame){
             [FOSARed setFill];
         }else{
             [FOSAgreen setFill];

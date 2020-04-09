@@ -22,7 +22,6 @@
 		4500E12523BAEB14002EB9FE /* AvoidCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 4500E11423BAEB14002EB9FE /* AvoidCrash.m */; };
 		4500E12623BAEB14002EB9FE /* AvoidCrashStubProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4500E11723BAEB14002EB9FE /* AvoidCrashStubProxy.m */; };
 		4500E12D23BB1DCE002EB9FE /* QRCodeScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4500E12C23BB1DCE002EB9FE /* QRCodeScanViewController.m */; };
-		4500E13723BB1FF9002EB9FE /* ding.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4500E13223BB1FF9002EB9FE /* ding.wav */; };
 		4500E13E23BB248A002EB9FE /* Fosa_QRCode_Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4500E13A23BB2489002EB9FE /* Fosa_QRCode_Queue.m */; };
 		4500E13F23BB248A002EB9FE /* Fosa_NSString_Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4500E13C23BB2489002EB9FE /* Fosa_NSString_Queue.m */; };
 		4500E14223BB2594002EB9FE /* PortraitScanView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4500E14123BB2594002EB9FE /* PortraitScanView.m */; };
@@ -31,6 +30,7 @@
 		4502FF7023CFE2480013AB31 /* IMG_Pound.png in Resources */ = {isa = PBXBuildFile; fileRef = 4502FF6E23CFE2480013AB31 /* IMG_Pound.png */; };
 		4502FF7623CFF0140013AB31 /* IMG_OtherSealer.png in Resources */ = {isa = PBXBuildFile; fileRef = 4502FF7523CFF0140013AB31 /* IMG_OtherSealer.png */; };
 		4502FF7E23D033380013AB31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4502FF7D23D033380013AB31 /* Assets.xcassets */; };
+		4503BD81243BF9E100B1E555 /* ding.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4503BD80243BF9E100B1E555 /* ding.wav */; };
 		450A3C2723C4687E000D55C8 /* ResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 450A3C2523C4687E000D55C8 /* ResultViewController.m */; };
 		450D586623C9B7D70032E905 /* LoadCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 450D586523C9B7D70032E905 /* LoadCircleView.m */; };
 		4513DD2523BECB3B0005A1E2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4513DD2423BECB3B0005A1E2 /* SystemConfiguration.framework */; };
@@ -68,6 +68,10 @@
 		45514BEB23F2E285000E321E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
 		45514BEC23F2E287000E321E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
 		455F4AC723D157FE00BE3822 /* saoyisao@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 455F4AC623D157FE00BE3822 /* saoyisao@3x.png */; };
+		45822172243EC841002970EC /* alarmView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45822171243EC841002970EC /* alarmView.m */; };
+		45822175243ECCEC002970EC /* notificationListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45822174243ECCEC002970EC /* notificationListTableViewCell.m */; };
+		45822178243ECD05002970EC /* NotificationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45822177243ECD05002970EC /* NotificationView.m */; };
+		4582217C243EE827002970EC /* FosaFMDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4582217A243EE827002970EC /* FosaFMDBManager.m */; };
 		458EA2D5241233C700F1FCC7 /* fosaMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 458EA2D4241233C700F1FCC7 /* fosaMainViewController.m */; };
 		4590C81C23B9A58700691461 /* FoodModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C81B23B9A58700691461 /* FoodModel.m */; };
 		4590C83723B9C5F500691461 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C82C23B9C5F500691461 /* FMDatabaseQueue.m */; };
@@ -93,6 +97,7 @@
 		45A506DC23B8402E0046FC09 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A506DB23B8402E0046FC09 /* main.m */; };
 		45A506E623B8402E0046FC09 /* FOSAapp1_0Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A506E523B8402E0046FC09 /* FOSAapp1_0Tests.m */; };
 		45A506F123B8402E0046FC09 /* FOSAapp1_0UITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A506F023B8402E0046FC09 /* FOSAapp1_0UITests.m */; };
+		45AD4D2C243D6F6100955B1E /* fosaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AD4D2B243D6F6100955B1E /* fosaView.m */; };
 		45CE418623F3971100B9F884 /* fosaLauch.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CE418523F3971100B9F884 /* fosaLauch.png */; };
 		45D3745B23C075B200192014 /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D3745123C075B100192014 /* AFURLResponseSerialization.m */; };
 		45D3745C23C075B200192014 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D3745223C075B100192014 /* AFHTTPSessionManager.m */; };
@@ -168,7 +173,6 @@
 		4500E11B23BAEB14002EB9FE /* NSMutableArray+AvoidCrash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+AvoidCrash.h"; sourceTree = "<group>"; };
 		4500E12B23BB1DCE002EB9FE /* QRCodeScanViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QRCodeScanViewController.h; sourceTree = "<group>"; };
 		4500E12C23BB1DCE002EB9FE /* QRCodeScanViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QRCodeScanViewController.m; sourceTree = "<group>"; };
-		4500E13223BB1FF9002EB9FE /* ding.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ding.wav; sourceTree = "<group>"; };
 		4500E13A23BB2489002EB9FE /* Fosa_QRCode_Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fosa_QRCode_Queue.m; sourceTree = "<group>"; };
 		4500E13B23BB2489002EB9FE /* Fosa_QRCode_Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fosa_QRCode_Queue.h; sourceTree = "<group>"; };
 		4500E13C23BB2489002EB9FE /* Fosa_NSString_Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fosa_NSString_Queue.m; sourceTree = "<group>"; };
@@ -181,6 +185,7 @@
 		4502FF6E23CFE2480013AB31 /* IMG_Pound.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_Pound.png; sourceTree = "<group>"; };
 		4502FF7523CFF0140013AB31 /* IMG_OtherSealer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_OtherSealer.png; sourceTree = "<group>"; };
 		4502FF7D23D033380013AB31 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4503BD80243BF9E100B1E555 /* ding.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = ding.wav; path = ../../../../FOSA/FOSA/GeneralFuction/QrcodeScanner/ding.wav; sourceTree = "<group>"; };
 		450A3C2523C4687E000D55C8 /* ResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResultViewController.m; sourceTree = "<group>"; };
 		450A3C2623C4687E000D55C8 /* ResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResultViewController.h; sourceTree = "<group>"; };
 		450D586423C9B7D70032E905 /* LoadCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadCircleView.h; sourceTree = "<group>"; };
@@ -244,6 +249,14 @@
 		4544298423CF05B500662F18 /* CategoryTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryTableViewCell.h; sourceTree = "<group>"; };
 		4544298523CF05B500662F18 /* CategoryTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CategoryTableViewCell.m; sourceTree = "<group>"; };
 		455F4AC623D157FE00BE3822 /* saoyisao@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saoyisao@3x.png"; sourceTree = "<group>"; };
+		45822170243EC841002970EC /* alarmView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alarmView.h; sourceTree = "<group>"; };
+		45822171243EC841002970EC /* alarmView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = alarmView.m; sourceTree = "<group>"; };
+		45822173243ECCEC002970EC /* notificationListTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = notificationListTableViewCell.h; sourceTree = "<group>"; };
+		45822174243ECCEC002970EC /* notificationListTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = notificationListTableViewCell.m; sourceTree = "<group>"; };
+		45822176243ECD05002970EC /* NotificationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationView.h; sourceTree = "<group>"; };
+		45822177243ECD05002970EC /* NotificationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationView.m; sourceTree = "<group>"; };
+		4582217A243EE827002970EC /* FosaFMDBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FosaFMDBManager.m; sourceTree = "<group>"; };
+		4582217B243EE827002970EC /* FosaFMDBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FosaFMDBManager.h; sourceTree = "<group>"; };
 		458EA2D3241233C700F1FCC7 /* fosaMainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fosaMainViewController.h; sourceTree = "<group>"; };
 		458EA2D4241233C700F1FCC7 /* fosaMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fosaMainViewController.m; sourceTree = "<group>"; };
 		4590C81A23B9A58700691461 /* FoodModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FoodModel.h; sourceTree = "<group>"; };
@@ -297,6 +310,8 @@
 		45A506EC23B8402E0046FC09 /* FOSAapp1.0UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FOSAapp1.0UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		45A506F023B8402E0046FC09 /* FOSAapp1_0UITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FOSAapp1_0UITests.m; sourceTree = "<group>"; };
 		45A506F223B8402E0046FC09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		45AD4D2A243D6F6100955B1E /* fosaView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fosaView.h; sourceTree = "<group>"; };
+		45AD4D2B243D6F6100955B1E /* fosaView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fosaView.m; sourceTree = "<group>"; };
 		45CE418523F3971100B9F884 /* fosaLauch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fosaLauch.png; sourceTree = "<group>"; };
 		45D3744D23C075B100192014 /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFSecurityPolicy.h; sourceTree = "<group>"; };
 		45D3744E23C075B100192014 /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
@@ -412,7 +427,7 @@
 		4500E12A23BB1C4F002EB9FE /* QRCodeScan */ = {
 			isa = PBXGroup;
 			children = (
-				4500E13223BB1FF9002EB9FE /* ding.wav */,
+				4503BD80243BF9E100B1E555 /* ding.wav */,
 				4528AAF223BDE12700957279 /* icon_flashOff.png */,
 				4528AAF323BDE12700957279 /* icon_flashON.png */,
 				4528AAEE23BD7DF100957279 /* scanLine_Horizontal.png */,
@@ -522,6 +537,10 @@
 				45A30E1E2429DABF0059B8F7 /* foodItemCellXIB.h */,
 				45A30E1F2429DABF0059B8F7 /* foodItemCellXIB.m */,
 				45A30E202429DABF0059B8F7 /* foodItemCellXIB.xib */,
+				45822173243ECCEC002970EC /* notificationListTableViewCell.h */,
+				45822174243ECCEC002970EC /* notificationListTableViewCell.m */,
+				45822176243ECD05002970EC /* NotificationView.h */,
+				45822177243ECD05002970EC /* NotificationView.m */,
 			);
 			path = newCell;
 			sourceTree = "<group>";
@@ -561,6 +580,16 @@
 			path = UserItemView;
 			sourceTree = "<group>";
 		};
+		45822179243EE827002970EC /* FosaSqlManager */ = {
+			isa = PBXGroup;
+			children = (
+				4582217A243EE827002970EC /* FosaFMDBManager.m */,
+				4582217B243EE827002970EC /* FosaFMDBManager.h */,
+			);
+			name = FosaSqlManager;
+			path = ../../../FOSA/FOSA/GeneralFuction/FosaSqlManager;
+			sourceTree = "<group>";
+		};
 		4590C81923B9A49900691461 /* FOSAView */ = {
 			isa = PBXGroup;
 			children = (
@@ -572,6 +601,10 @@
 				454421EA23CBF5A0002FADFE /* FoodInfoView.m */,
 				454421ED23CC1680002FADFE /* FoodMoreInfoView.h */,
 				454421EC23CC1680002FADFE /* FoodMoreInfoView.m */,
+				45AD4D2A243D6F6100955B1E /* fosaView.h */,
+				45AD4D2B243D6F6100955B1E /* fosaView.m */,
+				45822170243EC841002970EC /* alarmView.h */,
+				45822171243EC841002970EC /* alarmView.m */,
 			);
 			path = FOSAView;
 			sourceTree = "<group>";
@@ -579,6 +612,7 @@
 		4590C82423B9C53000691461 /* FOSAFunctionLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				45822179243EE827002970EC /* FosaSqlManager */,
 				4590C82923B9C5C100691461 /* UserInterface */,
 				4590C82823B9C59F00691461 /* ProductInterface */,
 				4590C82723B9C57F00691461 /* SealerAndPoundInterface */,
@@ -976,6 +1010,7 @@
 				4502FF7E23D033380013AB31 /* Assets.xcassets in Resources */,
 				4502FF7023CFE2480013AB31 /* IMG_Pound.png in Resources */,
 				455F4AC723D157FE00BE3822 /* saoyisao@3x.png in Resources */,
+				4503BD81243BF9E100B1E555 /* ding.wav in Resources */,
 				45CE418623F3971100B9F884 /* fosaLauch.png in Resources */,
 				4528AAF423BDE12800957279 /* icon_flashOff.png in Resources */,
 				4502FF6F23CFE2480013AB31 /* IMG_Sealer.png in Resources */,
@@ -985,7 +1020,6 @@
 				4528AAF523BDE12800957279 /* icon_flashON.png in Resources */,
 				4528AAEF23BD7DF100957279 /* scanLine_Horizontal.png in Resources */,
 				45A30E222429DABF0059B8F7 /* foodItemCellXIB.xib in Resources */,
-				4500E13723BB1FF9002EB9FE /* ding.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1022,6 +1056,7 @@
 				4500E11D23BAEB14002EB9FE /* NSString+AvoidCrash.m in Sources */,
 				45DC9618242069B90070BD75 /* qrCodeWebViewController.m in Sources */,
 				45D3747E23C075BA00192014 /* AFImageDownloader.m in Sources */,
+				45822172243EC841002970EC /* alarmView.m in Sources */,
 				45A30E212429DABF0059B8F7 /* foodItemCellXIB.m in Sources */,
 				4500E14223BB2594002EB9FE /* PortraitScanView.m in Sources */,
 				45D3747723C075BA00192014 /* UIRefreshControl+AFNetworking.m in Sources */,
@@ -1053,6 +1088,7 @@
 				454421F223CC6B70002FADFE /* AboutAppsViewController.m in Sources */,
 				4500E11C23BAEB14002EB9FE /* NSArray+AvoidCrash.m in Sources */,
 				4590C84B23B9C74D00691461 /* UserViewController.m in Sources */,
+				45AD4D2C243D6F6100955B1E /* fosaView.m in Sources */,
 				45EBE6702415ED380072843C /* settingViewController.m in Sources */,
 				45D3745C23C075B200192014 /* AFHTTPSessionManager.m in Sources */,
 				4513DD4023BED4B00005A1E2 /* FosaScrollview.m in Sources */,
@@ -1083,7 +1119,9 @@
 				45D3747B23C075BA00192014 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				45EBE6732415F4AA0072843C /* languageViewController.m in Sources */,
 				4590C83823B9C5F500691461 /* FMDatabaseAdditions.m in Sources */,
+				4582217C243EE827002970EC /* FosaFMDBManager.m in Sources */,
 				4590C85823B9D58F00691461 /* RootTabBarViewController.m in Sources */,
+				45822175243ECCEC002970EC /* notificationListTableViewCell.m in Sources */,
 				4513DD4223BED4B00005A1E2 /* OtherViewController.m in Sources */,
 				45D3745B23C075B200192014 /* AFURLResponseSerialization.m in Sources */,
 				45172FE8240F5EAB00408A75 /* takePictureViewController.m in Sources */,
@@ -1094,6 +1132,7 @@
 				4590C84823B9C73E00691461 /* ProductViewController.m in Sources */,
 				4590C83723B9C5F500691461 /* FMDatabaseQueue.m in Sources */,
 				4590C83923B9C5F500691461 /* FMDatabase.m in Sources */,
+				45822178243ECD05002970EC /* NotificationView.m in Sources */,
 				4597BD6323C2BCE30031DC4C /* DeviceCollectionViewCell.m in Sources */,
 				45D3747923C075BA00192014 /* UIImageView+AFNetworking.m in Sources */,
 				454421EE23CC1680002FADFE /* FoodMoreInfoView.m in Sources */,

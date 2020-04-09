@@ -387,8 +387,9 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
             NSString *foodImg       = [set stringForColumn:@"foodImg"];
             NSString *location      = [set stringForColumn:@"location"];
             NSString *category      = [set stringForColumn:@"category"];
+            NSString *remindDate    = [set stringForColumn:@"remindDate"];
             
-            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category  Location:location];
+            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category  Location:location];
         }
     }
     return model;

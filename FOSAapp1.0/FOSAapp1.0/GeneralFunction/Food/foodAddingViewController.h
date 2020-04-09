@@ -28,9 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 //内容视图
 @property (nonatomic,strong) UIScrollView *contentView;
-@property (nonatomic,strong) UIView *foodNameView,*foodDescribedView,*locationView;
-@property (nonatomic,strong) UILabel *foodNameLabel,*foodDescribedLabel,*locationLabel,*numberLabel;;
-@property (nonatomic,strong) UITextField *foodTextView,*locationTextView;
+@property (nonatomic,strong) UIView *foodNameView,*foodDescribedView,*remindView,*locationView;
+@property (nonatomic,strong) UILabel *foodNameLabel,*foodDescribedLabel,*remindLabel,*locationLabel,*numberLabel;
+@property (nonatomic,strong) UITextField *foodTextView,*locationTextView,*remindDateTextView;
 @property (nonatomic,strong) UITextView *foodDescribedTextView;
 @property (nonatomic,strong) UIButton *scanBtn;
 

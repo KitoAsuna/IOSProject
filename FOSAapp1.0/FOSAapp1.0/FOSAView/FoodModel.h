@@ -21,8 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 //- (instancetype)initWithName:(NSString *)food_name expireDate:(NSString *)expireDate storageDate:(NSString *)storageDate fdevice:(NSString *)device photoPath:(NSString *)foodPhoto;
 
 //add food
-+ (instancetype)modelWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate  foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location;
-- (instancetype)initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate  foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location;
++ (instancetype)modelWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location;
+- (instancetype)initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location;
 
 ////show info
 //+ (instancetype)modelWithName:(NSString *) food_name DeviceID:(NSString *)device StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate;

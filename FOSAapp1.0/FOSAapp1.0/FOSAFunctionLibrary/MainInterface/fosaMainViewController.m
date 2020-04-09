@@ -14,9 +14,10 @@
 #import "FMDB.h"
 #import "FosaNotification.h"
 #import <UserNotifications/UserNotifications.h>
+#import "NotificationView.h"
 
 
-@interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,fosaDelegate>{
+@interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,fosaDelegate,closeViewDelegate>{
     NSString *categoryID;//种类cell
     NSString *foodItemID;//食物cell
     NSString *docPath;//数据库地址
@@ -44,6 +45,8 @@
 @property (nonatomic,strong) FosaNotification *notification;
 //排序标志记录
 @property (nonatomic,strong) NSUserDefaults *userdefault;
+
+@property (nonatomic,strong) NotificationView *notifiView;
 @end
 
 @implementation fosaMainViewController
@@ -235,7 +238,7 @@
     [self.navigationRemindBtn setImage:[UIImage imageNamed:@"icon_sendNotification"] forState:UIControlStateNormal];
     [self.navigationRemindBtn.widthAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
     [self.navigationRemindBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
-    [self.navigationRemindBtn addTarget:self action:@selector(SendRemindNotification) forControlEvents:UIControlEventTouchUpInside];
+    [self.navigationRemindBtn addTarget:self action:@selector(openNotificationList) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.navigationRemindBtn];
 
     self.scanBtn.frame = CGRectMake(0, 0,NavigationBarH*3/5, NavigationBarH*3/5);
@@ -696,7 +699,8 @@
         NSString *foodImg     = [set stringForColumn:@"foodImg"];
         NSString *category    = [set stringForColumn:@"category"];
         NSString *location    = [set stringForColumn:@"location"];
-        FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category Location:location];
+        NSString *remindDate  = [set stringForColumn:@"remindDate"];
+        FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location];
         [self.collectionDataSource addObject:model];
         if (!isSelectCategory) {
             [self.AllFoodArray addObject:model];
@@ -705,10 +709,11 @@
         NSLog(@"*********************************************foodName    = %@",foodName);
         NSLog(@"device      = %@",device);
         NSLog(@"aboutFood   = %@",aboutFood);
-        NSLog(@"remindDate  = %@",storageDate);
+        NSLog(@"storageDate  = %@",storageDate);
         NSLog(@"expireDate  = %@",expireDate);
         NSLog(@"foodImg     = %@",foodImg);
         NSLog(@"category    = %@",category);
+        NSLog(@"remindDate  = %@",remindDate);
     }
     
     NSString *currentSortType = [self.userdefault valueForKey:@"sort"];
@@ -776,8 +781,9 @@
             NSString *foodImg       = [set stringForColumn:@"foodImg"];
             NSString *location      = [set stringForColumn:@"location"];
             NSString *category      = [set stringForColumn:@"category"];
-            
-            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category  Location:location];
+            NSString *remindDate    = [set stringForColumn:@"remindDate"];
+
+            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate    foodIcon:foodImg category:category  Location:location];
         }
     }
     return model;
@@ -1109,6 +1115,30 @@
     return 0;
 }
 
+- (void)openNotificationList{
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        self.smask.hidden = NO;
+        self.smask.userInteractionEnabled = NO;
+        if (self->_notifiView == nil) {
+            self->_notifiView = [[NotificationView alloc]initWithFrame:CGRectMake(5, NavigationBarH, screen_width-10, screen_height*127/143)];
+        }
+        [self.notifiView getFoodDataFromSql];
+        self.notifiView.closeDelegate = self;
+        self.notifiView.layer.cornerRadius = 15;
+        [self.tabBarController.view addSubview:self.notifiView];
+    }];
+}
+#pragma mark - closeViewDelegate
+- (void)closeNotificationList{
+    [UIView animateWithDuration:0.5 animations:^{
+        self.smask.hidden = YES;
+        self.smask.userInteractionEnabled = YES;
+        [self.notifiView removeFromSuperview];
+    }];
+    
+}
+
 - (void)SendRemindNotification{
     [self CreatLoadView];
     [self.notification initNotification];
@@ -1169,9 +1199,6 @@
 - (void)stoploading{
     [self.FOSAloadingView stopAnimating];
 }
-
-
-
 
 //取出保存在本地的图片
 - (UIImage*)getImage:(NSString *)filepath{

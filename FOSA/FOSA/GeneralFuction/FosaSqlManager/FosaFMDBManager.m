@@ -62,9 +62,13 @@
             NSString *foodImg     = [set stringForColumn:@"foodImg"];
             NSString *category    = [set stringForColumn:@"category"];
             NSString *location    = [set stringForColumn:@"location"];
-            FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate foodIcon:foodImg category:category Location:location];
-            [resultArray addObject:model];
+            NSString *remindDate  = [set stringForColumn:@"remindDate"];
+            if (![remindDate isEqualToString:@""]) {
+                FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location];
 
+                [resultArray addObject:model];
+
+            }
         }
     }else if([tableName isEqualToString:@"category"]){
         while ([set next]) {

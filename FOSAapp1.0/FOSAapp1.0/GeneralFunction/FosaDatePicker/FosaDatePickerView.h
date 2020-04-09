@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  保存按钮代理方法
  @param timer 选择的数据
  */
-- (void)datePickerViewSaveBtnClickDelegate:(NSString *)timer;
+- (void)datePickerViewSaveBtnClickDelegate:(NSString *)timer remindDate:(NSString *)remindTimer;
 /**
  取消按钮代理方法
  */

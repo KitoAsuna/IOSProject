@@ -7,8 +7,11 @@
 //
 
 #import "FosaDatePickerView.h"
+#import "fosaView.h"
 
-@interface FosaDatePickerView()<UIPickerViewDelegate, UIPickerViewDataSource>
+@interface FosaDatePickerView()<UIPickerViewDelegate, UIPickerViewDataSource>{
+    CGFloat height;
+}
 
 @property (strong, nonatomic) UIPickerView *pickerView; // 选择器
 @property (strong, nonatomic) UIView *toolView; // 工具条
@@ -16,6 +19,7 @@
 
 @property (strong, nonatomic) NSMutableArray *dataArray; // 数据源
 @property (copy, nonatomic) NSString *selectStr; // 选中的时间
+@property (copy, nonatomic) NSString *selectRemindStr;
 
 @property (strong, nonatomic) NSMutableArray *yearArr; // 年数组
 @property (strong, nonatomic) NSMutableArray *monthArr; // 月数组
@@ -30,6 +34,20 @@
 @property (copy, nonatomic) NSString *hour; //选中时
 @property (copy, nonatomic) NSString *minute; //选中分
 
+//reminder
+@property (nonatomic,strong) UIView *remindView;
+@property (nonatomic,strong) UILabel *remindLabel;
+@property (nonatomic,strong) UISwitch *remindSwitch;
+
+@property (nonatomic,strong) fosaView *repeatView,*AlarView;
+
+@property (nonatomic,strong) UILabel *Alarm,*rightDatelabel,*leftDatelabel;
+@property (nonatomic,strong) UIDatePicker *remindDatepicker;
+
+@property (nonatomic,strong) UILabel *repeatLabel,*repeatWayLabel;
+@property (nonatomic,strong) UIImageView *rightSign;
+
+
 @end
 
 #define THColorRGB(rgb)    [UIColor colorWithRed:(rgb)/255.0 green:(rgb)/255.0 blue:(rgb)/255.0 alpha:1.0]
@@ -42,20 +60,23 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor whiteColor];
+        height = self.bounds.size.height;
+        self.backgroundColor = FOSAColor(242, 242, 242);
 
         self.timeArr = [NSArray array];
         self.dataArray = [NSMutableArray array];
         self.minuteArr = [NSMutableArray array];
         
-        [self.dataArray addObject:self.yearArr];
-        [self.dataArray addObject:self.monthArr];
         [self.dataArray addObject:self.dayArr];
+        [self.dataArray addObject:self.monthArr];
+        [self.dataArray addObject:self.yearArr];
         [self.dataArray addObject:self.hourArr];
-
+        self.selectRemindStr = @"";
+        
         [self configData];
         [self configToolView];
         [self configPickerView];
+        [self configReminder];
     }
     return self;
 }
@@ -67,68 +88,224 @@
 
     NSDate *date = [NSDate date];
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm"];
+    [dateFormatter setDateFormat:@"dd-MM-yyyy HH:mm"];
     self.date = [dateFormatter stringFromDate:date];
 }
-
 
 #pragma mark - 配置界面
 /// 配置工具条
 - (void)configToolView {
 
     self.toolView = [[UIView alloc] init];
-    self.toolView.frame = CGRectMake(0, 0, self.frame.size.width, 44);
+    self.toolView.frame = CGRectMake(0, 0, self.frame.size.width, height/10);
+    self.toolView.backgroundColor = FOSAWhite;
     [self addSubview:self.toolView];
     
     UIButton *saveBtn = [[UIButton alloc] init];
-    saveBtn.frame = CGRectMake(self.frame.size.width - 90, 2, 80, 40);
+    saveBtn.frame = CGRectMake(self.frame.size.width - 90, 0, 80, height/10);
     [saveBtn setTitle:@"Save" forState:UIControlStateNormal];
-    [saveBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    saveBtn.titleLabel.font = [UIFont systemFontOfSize:font(18)];
+    [saveBtn setTitleColor:FOSAColor(2, 121, 255) forState:UIControlStateNormal];
     //[saveBtn setImage:[UIImage imageNamed:@"icon_select1"] forState:UIControlStateNormal];
     [saveBtn addTarget:self action:@selector(saveBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.toolView addSubview:saveBtn];
     
     UIButton *cancelBtn = [[UIButton alloc] init];
-    cancelBtn.frame = CGRectMake(10, 2, 80, 40);
+    cancelBtn.frame = CGRectMake(10, 0, 80, height/10);
     [cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
-    [cancelBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    cancelBtn.titleLabel.font = [UIFont systemFontOfSize:font(18)];
+    [cancelBtn setTitleColor:FOSARed forState:UIControlStateNormal];
 
     //[cancelBtn setImage:[UIImage imageNamed:@"icon_revocation1"] forState:UIControlStateNormal];
     [cancelBtn addTarget:self action:@selector(cancelBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.toolView addSubview:cancelBtn];
     
     self.titleLbl = [[UILabel alloc] init];
-    self.titleLbl.frame = CGRectMake(60, 2, self.frame.size.width - 120, 40);
+    self.titleLbl.frame = CGRectMake(60, 0, self.frame.size.width - 120, height/10);
     self.titleLbl.textAlignment = NSTextAlignmentCenter;
     self.titleLbl.textColor = THColorRGB(34);
+    self.titleLbl.font = [UIFont systemFontOfSize:font(18)];
     [self.toolView addSubview:self.titleLbl];
 }
 
 /// 配置UIPickerView
 - (void)configPickerView {
-    self.pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.toolView.frame), self.frame.size.width, self.frame.size.height - 44)];
-    self.pickerView.backgroundColor = [UIColor whiteColor];
+    self.pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.toolView.frame), self.frame.size.width, self.frame.size.height*3/10)];
+    self.pickerView.backgroundColor = FOSAWhite;FOSAColor(242, 242, 242);
     self.pickerView.dataSource = self;
     self.pickerView.delegate = self;
     //self.pickerView.showsSelectionIndicator = YES;
     [self addSubview:self.pickerView];
 }
 
+- (void)configReminder{
+
+    self.remindView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.pickerView.frame)+10, screen_width, height/10)];
+    self.remindView.backgroundColor = FOSAWhite;
+    [self addSubview:self.remindView];
+    
+    self.remindLabel = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width/4, height/10)];
+    self.remindSwitch = [UISwitch new];
+    self.remindSwitch.center = CGPointMake(screen_width-50, height/20);
+    [self.remindSwitch addTarget:self action:@selector(autoSwitch:) forControlEvents:UIControlEventValueChanged];
+    self.remindLabel.text = @"Remind Me";
+    [self.remindView addSubview:self.remindLabel];
+    [self.remindView addSubview:self.remindSwitch];
+    UIView *boundary1 = [[UIView alloc]initWithFrame:CGRectMake(font(15), CGRectGetMaxY(self.remindLabel.frame), screen_width-font(15), 1)];
+    boundary1.backgroundColor = FOSAColor(242, 242, 242);
+    [self.remindView addSubview:boundary1];
+    
+    self.AlarView = [[fosaView alloc]initWithFrame:CGRectMake(0, height/5, screen_width, height/10)];
+    self.AlarView.backgroundColor = FOSAWhite;
+    self.AlarView.userInteractionEnabled = YES;
+    UITapGestureRecognizer *clickRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openDatePicker)];
+    self.AlarView.tag = 0;
+    [self.AlarView addGestureRecognizer:clickRecognizer];
+
+    self.Alarm = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width/4, height/10)];
+    self.Alarm.text = @"Alarm";
+
+    self.rightDatelabel = [[UILabel alloc]initWithFrame:CGRectMake(screen_width/2, 0, screen_width/2-30, height/10)];
+    NSDate *current = [NSDate new];
+    self.rightDatelabel.text = [self getTimeAndWeekDay:current][0];
+    self.rightDatelabel.textColor = FOSAGray;
+    self.rightDatelabel.textAlignment = NSTextAlignmentRight;
+    
+    self.leftDatelabel = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width-10, height/10)];
+    self.leftDatelabel.text = [self getTimeAndWeekDay:current][1];
+    self.leftDatelabel.textColor = FOSAColor(2, 121, 255);
+    self.leftDatelabel.hidden = YES;
+    
+    [self.AlarView addSubview:self.leftDatelabel];
+
+    [self.AlarView addSubview:self.rightDatelabel];
+    
+    UIView *boundary2 = [[UIView alloc]initWithFrame:CGRectMake(font(15), CGRectGetMaxY(self.Alarm.frame), screen_width-font(15), 1)];
+    boundary2.backgroundColor = FOSAColor(242, 242, 242);
+    [self.remindView addSubview:boundary2];
+    
+    
+    self.remindDatepicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, 0)];//(self.frame.size.height/2-22)/2
+    self.remindDatepicker.datePickerMode = UIDatePickerModeDateAndTime;
+    self.remindDatepicker.minimumDate = [NSDate new];
+    [self.remindDatepicker addTarget:self action:@selector(changeDate:) forControlEvents:UIControlEventValueChanged];
+    [self.remindView addSubview:self.remindDatepicker];
+    
+    [self.AlarView addSubview:self.Alarm];
+    self.AlarView.hidden = YES;
+    [self.remindView addSubview:self.AlarView];
+    
+    self.repeatView = [[fosaView alloc]initWithFrame:CGRectMake(0, height/10, screen_width, height/10)];
+    self.repeatView.backgroundColor = FOSAWhite;
+    self.repeatView.userInteractionEnabled = YES;
+    UITapGestureRecognizer *repeatRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectRepeatWay)];
+    [self.repeatView addGestureRecognizer:repeatRecognizer];
+    
+    self.repeatLabel = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width/4, height/10)];
+    self.repeatLabel.text = @"Repeat";
+    self.repeatView.hidden = YES;
+    self.repeatWayLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width-font(40)-height/13, 0, font(40), height/10)];
+    self.repeatWayLabel.adjustsFontSizeToFitWidth = YES;
+    self.repeatWayLabel.text = @"Never";
+    self.repeatWayLabel.textColor = FOSAGray;
+    self.repeatWayLabel.hidden = YES;
+    
+    self.rightSign = [[UIImageView alloc]initWithFrame:CGRectMake(self.frame.size.width-height/13, height/40, height/20, height/20)];
+    self.rightSign.image = [UIImage imageNamed:@"icon_arrowright"];
+    
+    UIView *boundary3 = [[UIView alloc]initWithFrame:CGRectMake(font(15), CGRectGetMaxY(self.repeatLabel.frame), screen_width-font(15), 1)];
+    boundary3.backgroundColor = FOSAColor(242, 242, 242);
+    [self.remindView addSubview:boundary3];
+    [self.repeatView addSubview:self.repeatWayLabel];
+    [self.repeatView addSubview:self.rightSign];
+    [self.repeatView addSubview:self.repeatLabel];
+    [self.remindView addSubview:self.repeatView];
+    
+}
+- (void)openDatePicker{
+    NSLog(@"======================================================");
+    //float height = (self.bounds.size.height-CGRectGetMaxY(self.alarmView.frame))/2;
+    if (self.AlarView.tag == 0) {
+        [UIView animateWithDuration:0.2 animations:^{
+            self.Alarm.hidden = YES;
+            self.rightDatelabel.hidden = YES;
+            self.leftDatelabel.hidden = NO;
+            self.remindDatepicker.hidden = NO;
+            self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.pickerView.frame)+10, screen_width, self->height*3/5-10);
+            self.remindDatepicker.frame = CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, self->height/4);
+            //self.repeatView.frame = CGRectMake(0, CGRectGetMaxY(self.remindDatepicker.frame), screen_width, self->height/10);
+        }];
+        self.AlarView.tag = 1;
+    }else{
+        //self.alarmView.alpha = 0.5;
+        [UIView animateWithDuration:0.2 animations:^{
+            self.leftDatelabel.hidden = YES;
+            self.Alarm.hidden = NO;
+            self.rightDatelabel.hidden = NO;
+            
+            self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.pickerView.frame)+10, screen_width, self->height*3/10);
+            self.remindDatepicker.frame = CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, 0);
+            //self.repeatView.frame = CGRectMake(0, CGRectGetMaxY(self.alarmView.frame), screen_width, self->height/10);
+            self.remindDatepicker.hidden = YES;
+            //self.alarmView.alpha = 1;
+        }];
+        self.AlarView.tag = 0;
+    }
+    
+}
+- (void)selectRepeatWay{
+    NSLog(@"+++++++++++++++++++++++++++++++++")
+}
+
+- (void)autoSwitch:(id)sender{
+    UISwitch *switchButton = (UISwitch*)sender;
+    BOOL isButtonOn = [switchButton isOn];
+    if (isButtonOn) {
+        [UIView animateWithDuration:0.2 animations:^{
+            self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.pickerView.frame)+10, screen_width, self->height*3/10);
+            self.AlarView.hidden = NO;
+            self.repeatView.hidden = NO;
+            self.repeatWayLabel.hidden = NO;
+
+        }];
+    }else {
+        [UIView animateWithDuration:0.2 animations:^{
+            self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.pickerView.frame)+10, screen_width, self->height/10);
+            self.remindDatepicker.frame = CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, 0);
+            self.repeatView.frame = CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, self->height/10);
+            self.AlarView.hidden = YES;
+            self.repeatView.hidden = YES;
+            self.repeatWayLabel.hidden = YES;
+            
+            self.leftDatelabel.hidden = YES;
+            self.rightDatelabel.hidden = NO;
+            self.Alarm.hidden = NO;
+            self.AlarView.tag = 0;
+        }];
+    }
+}
+- (void)changeDate:(UIDatePicker *)picker{
+    NSLog(@"当前选择:%@",picker.date);
+    self.rightDatelabel.text = [self getTimeAndWeekDay:picker.date][0];
+    self.leftDatelabel.text  = [self getTimeAndWeekDay:picker.date][1];
+
+    self.selectRemindStr = [self getTimeAndWeekDay:picker.date][1];
+}
+
 - (void)setTitle:(NSString *)title {
     _title = title;
     self.titleLbl.text = title;
 }
-
 - (void)setDate:(NSString *)date {
     _date = date;
 
     NSString *newDate = [[date stringByReplacingOccurrencesOfString:@"-" withString:@" "] stringByReplacingOccurrencesOfString:@":" withString:@" "];
     NSMutableArray *timerArray = [NSMutableArray arrayWithArray:[newDate componentsSeparatedByString:@" "]];
-    [timerArray replaceObjectAtIndex:0 withObject:[NSString stringWithFormat:@"%@y", timerArray[0]]];
-    [timerArray replaceObjectAtIndex:1 withObject:[NSString stringWithFormat:@"%@M", timerArray[1]]];
-    [timerArray replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%@d", timerArray[2]]];
-    [timerArray replaceObjectAtIndex:3 withObject:[NSString stringWithFormat:@"%@H", timerArray[3]]];
-    [timerArray replaceObjectAtIndex:4 withObject:[NSString stringWithFormat:@"%@m", timerArray[4]]];
+    [timerArray replaceObjectAtIndex:0 withObject:[NSString stringWithFormat:@"%@", timerArray[0]]];
+    [timerArray replaceObjectAtIndex:1 withObject:[NSString stringWithFormat:@"%@", timerArray[1]]];
+    [timerArray replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%@", timerArray[2]]];
+    [timerArray replaceObjectAtIndex:3 withObject:[NSString stringWithFormat:@"%@", timerArray[3]]];
+    [timerArray replaceObjectAtIndex:4 withObject:[NSString stringWithFormat:@"%@", timerArray[4]]];
     self.timeArr = timerArray;
 }
 
@@ -146,16 +323,16 @@
 }
 
 - (void)show {
-    self.year = self.timeArr[0];
-    self.month = [NSString stringWithFormat:@"%ldM", [self.timeArr[1] integerValue]];
-    self.day = [NSString stringWithFormat:@"%ldd", [self.timeArr[2] integerValue]];
-    self.hour = [NSString stringWithFormat:@"%ldH", [self.timeArr[3] integerValue]];
-    self.minute = self.minuteInterval == 1 ? [NSString stringWithFormat:@"%ldm", [self.timeArr[4] integerValue]] : self.minuteArr[self.minuteArr.count / 2];
+    self.year = self.timeArr[2];
+    self.month = [NSString stringWithFormat:@"%ld", [self.timeArr[1] integerValue]];
+    self.day = [NSString stringWithFormat:@"%ld", [self.timeArr[0] integerValue]];
+    self.hour = [NSString stringWithFormat:@"%ld", [self.timeArr[3] integerValue]];
+    self.minute = self.minuteInterval == 1 ? [NSString stringWithFormat:@"%ld", [self.timeArr[4] integerValue]] : self.minuteArr[self.minuteArr.count / 2];
     
-    [self.pickerView selectRow:[self.yearArr indexOfObject:self.year] inComponent:0 animated:YES];
+    [self.pickerView selectRow:[self.dayArr indexOfObject:self.day] inComponent:0 animated:YES];
     /// 重新格式化转一下，是因为如果是09月/日/时，数据源是9月/日/时,就会出现崩溃
     [self.pickerView selectRow:[self.monthArr indexOfObject:self.month] inComponent:1 animated:YES];
-    [self.pickerView selectRow:[self.dayArr indexOfObject:self.day] inComponent:2 animated:YES];
+    [self.pickerView selectRow:[self.yearArr indexOfObject:self.year] inComponent:2 animated:YES];
     [self.pickerView selectRow:[self.hourArr indexOfObject:self.hour] inComponent:3 animated:YES];
     [self.pickerView selectRow:self.minuteInterval == 1 ? ([self.minuteArr indexOfObject:self.minute]) : (self.minuteArr.count / 2) inComponent:4 animated:YES];
     
@@ -168,14 +345,14 @@
 - (void)saveBtnClick {
     NSLog(@"点击了保存");
     
-    NSString *month = self.month.length == 3 ? [NSString stringWithFormat:@"%ld", self.month.integerValue] : [NSString stringWithFormat:@"0%ld", self.month.integerValue];
-    NSString *day = self.day.length == 3 ? [NSString stringWithFormat:@"%ld", self.day.integerValue] : [NSString stringWithFormat:@"0%ld", self.day.integerValue];
-    NSString *hour = self.hour.length == 3 ? [NSString stringWithFormat:@"%ld", self.hour.integerValue] : [NSString stringWithFormat:@"0%ld", self.hour.integerValue];
-    NSString *minute = self.minute.length == 3 ? [NSString stringWithFormat:@"%ld", self.minute.integerValue] : [NSString stringWithFormat:@"0%ld", self.minute.integerValue];
+    NSString *month = self.month.length == 2 ? [NSString stringWithFormat:@"%ld", self.month.integerValue] : [NSString stringWithFormat:@"0%ld", self.month.integerValue];
+    NSString *day = self.day.length == 2 ? [NSString stringWithFormat:@"%ld", self.day.integerValue] : [NSString stringWithFormat:@"0%ld", self.day.integerValue];
+    NSString *hour = self.hour.length == 2 ? [NSString stringWithFormat:@"%ld", self.hour.integerValue] : [NSString stringWithFormat:@"0%ld", self.hour.integerValue];
+    NSString *minute = self.minute.length == 2 ? [NSString stringWithFormat:@"%ld", self.minute.integerValue] : [NSString stringWithFormat:@"0%ld", self.minute.integerValue];
     
     self.selectStr = [NSString stringWithFormat:@"%@/%@/%ld/%@:%@", month, day, [self.year integerValue]%100, hour, minute];
-    if ([self.delegate respondsToSelector:@selector(datePickerViewSaveBtnClickDelegate:)]) {
-        [self.delegate datePickerViewSaveBtnClickDelegate:self.selectStr];
+    if ([self.delegate respondsToSelector:@selector(datePickerViewSaveBtnClickDelegate:remindDate:)]) {
+        [self.delegate datePickerViewSaveBtnClickDelegate:self.selectStr remindDate:self.selectRemindStr];
     }
 }
 
@@ -200,7 +377,7 @@
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     NSInteger time_integerValue = [self.timeArr[component] integerValue];
     switch (component) {
-        case 0: { // 年
+        case 2: { // 年
             NSString *year_integerValue = self.yearArr[row%[self.dataArray[component] count]];
             if (!self.isSlide) {
                 self.year = year_integerValue;
@@ -231,7 +408,7 @@
                 return;
             }
             // 如果选择年大于当前年 就直接赋值月
-            if ([self.year integerValue] > [self.timeArr[0] integerValue]) {
+            if ([self.year integerValue] > [self.timeArr[2] integerValue]) {
                 
                 self.month = month_value;
                 
@@ -248,11 +425,11 @@
                     }
                 }
                 // 如果选择的年等于当前年，就判断月份
-            } else if ([self.year integerValue] == [self.timeArr[0] integerValue]) {
+            } else if ([self.year integerValue] == [self.timeArr[2] integerValue]) {
                 // 如果选择的月份小于当前月份 就刷新到当前月份
                 if (month_value.integerValue < [self.timeArr[component] integerValue]) {
                     if (self.isSlide) {
-                        [pickerView selectRow:[self.dataArray[component] indexOfObject:[NSString stringWithFormat:@"%ldM", [self.timeArr[component] integerValue]]] inComponent:component animated:YES];
+                        [pickerView selectRow:[self.dataArray[component] indexOfObject:[NSString stringWithFormat:@"%ld", [self.timeArr[component] integerValue]]] inComponent:component animated:YES];
                     } else {
                         self.month = month_value;
                     }
@@ -274,7 +451,7 @@
             [self refreshDay];
 
         } break;
-        case 2: { // 日
+        case 0: { // 日
             /// 根据当前选择的年份和月份获取当月的天数
             NSString *dayStr = [self getDayNumber:[self.year integerValue] month:[self.month integerValue]];
             // 如果选择年大于当前年 就直接赋值日
@@ -285,7 +462,7 @@
                 return;
             }
 
-            if ([self.year integerValue] > [self.timeArr[0] integerValue]) {
+            if ([self.year integerValue] > [self.timeArr[2] integerValue]) {
                 if (self.dayArr.count <= [dayStr integerValue]) {
                     self.day = day_value;
                 } else {
@@ -296,7 +473,7 @@
                     }
                 }
                 // 如果选择的年等于当前年，就判断月份
-            } else if ([self.year integerValue] == [self.timeArr[0] integerValue]) {
+            } else if ([self.year integerValue] == [self.timeArr[2] integerValue]) {
                 // 如果选择的月份大于当前月份 就直接复制
                 if ([self.month integerValue] > [self.timeArr[1] integerValue]) {
                     if (self.dayArr.count <= [dayStr integerValue]) {
@@ -313,7 +490,7 @@
                     // 如果选择的日小于当前日，就刷新到当前日
                     if (day_value.integerValue < [self.timeArr[component] integerValue]) {
                         if (self.isSlide) {
-                            [pickerView selectRow:[self.dataArray[component] indexOfObject:[NSString stringWithFormat:@"%ldd", time_integerValue]] inComponent:component animated:YES];
+                            [pickerView selectRow:[self.dataArray[component] indexOfObject:[NSString stringWithFormat:@"%ld", time_integerValue]] inComponent:component animated:YES];
                         } else {
                             self.day = day_value;
                         }
@@ -339,24 +516,24 @@
                 return;
             }
             // 如果选择年大于当前年 就直接赋值时
-            if ([self.year integerValue] > [self.timeArr[0] integerValue]) {
+            if ([self.year integerValue] > [self.timeArr[2] integerValue]) {
                 self.hour = hour_value;
                 // 如果选择的年等于当前年，就判断月份
-            } else if ([self.year integerValue] == [self.timeArr[0] integerValue]) {
+            } else if ([self.year integerValue] == [self.timeArr[2] integerValue]) {
                 // 如果选择的月份大于当前月份 就直接复制时
                 if ([self.month integerValue] > [self.timeArr[1] integerValue]) {
                     self.hour = hour_value;
                     // 如果选择的月份等于当前月份，就判断日
                 } else if ([self.month integerValue] == [self.timeArr[1] integerValue]) {
                     // 如果选择的日大于当前日，就直接复制时
-                    if ([self.day integerValue] > [self.timeArr[2] integerValue]) {
+                    if ([self.day integerValue] > [self.timeArr[0] integerValue]) {
                         self.hour = hour_value;
                         // 如果选择的日等于当前日，就判断时
-                    } else if ([self.day integerValue] == [self.timeArr[2] integerValue]) {
+                    } else if ([self.day integerValue] == [self.timeArr[0] integerValue]) {
                         // 如果选择的时小于当前时，就刷新到当前时
                         if (hour_value.integerValue < [self.timeArr[component] integerValue]) {
                         if (self.isSlide) {
-                            [pickerView selectRow:[self.dataArray[component] indexOfObject:[NSString stringWithFormat:@"%ldH", [self.timeArr[component] integerValue]]] inComponent:component animated:YES];
+                            [pickerView selectRow:[self.dataArray[component] indexOfObject:[NSString stringWithFormat:@"%ld", [self.timeArr[component] integerValue]]] inComponent:component animated:YES];
                         }
                             // 如果选择的时大于当前时，就直接赋值
                         } else {
@@ -416,12 +593,22 @@
     UILabel *titleLbl;
     if (!view) {
         titleLbl = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 44)];
-        titleLbl.font = [UIFont systemFontOfSize:15];
+        titleLbl.font = [UIFont systemFontOfSize:font(20)];
         titleLbl.textAlignment = NSTextAlignmentCenter;
     } else {
         titleLbl = (UILabel *)view;
+        
     }
-    titleLbl.text = [self.dataArray[component] objectAtIndex:row%[self.dataArray[component] count]];
+    
+    if (component == 1) {
+         NSString  *title = [self.dataArray[component] objectAtIndex:row%[self.dataArray[component] count]];
+        titleLbl.text = [self getMouthByindex:title.integerValue];
+        NSLog(@"========>>>>>>>>>>>>%@", [self getMouthByindex:(int)titleLbl.text.integerValue] );
+    }else{
+        titleLbl.text = [self.dataArray[component] objectAtIndex:row%[self.dataArray[component] count]];
+    }
+    
+    
     return titleLbl;
 }
 
@@ -437,8 +624,8 @@
 - (NSMutableArray *)yearArr {
     if (!_yearArr) {
         _yearArr = [NSMutableArray array];
-        for (int i = 1970; i < 2099; i ++) {
-            [_yearArr addObject:[NSString stringWithFormat:@"%dy", i]];
+        for (int i = 2000; i < 2099; i ++) {
+            [_yearArr addObject:[NSString stringWithFormat:@"%d", i]];
         }
     }
     return _yearArr;
@@ -452,7 +639,7 @@
     if (!_monthArr) {
         _monthArr = [NSMutableArray array];
         for (int i = 1; i <= 12; i ++) {
-            [_monthArr addObject:[NSString stringWithFormat:@"%dM", i]];
+            [_monthArr addObject:[NSString stringWithFormat:@"%d", i]];
         }
     }
     return _monthArr;
@@ -463,7 +650,7 @@
     if (!_dayArr) {
         _dayArr = [NSMutableArray array];
         for (int i = 1; i <= 31; i ++) {
-            [_dayArr addObject:[NSString stringWithFormat:@"%dd", i]];
+            [_dayArr addObject:[NSString stringWithFormat:@"%d", i]];
         }
     }
     return _dayArr;
@@ -474,7 +661,7 @@
     if (!_hourArr) {
         _hourArr = [NSMutableArray array];
         for (int i = 0; i < 24; i ++) {
-            [_hourArr addObject:[NSString stringWithFormat:@"%dH", i]];
+            [_hourArr addObject:[NSString stringWithFormat:@"%d", i]];
         }
     }
     return _hourArr;
@@ -485,7 +672,7 @@
     NSMutableArray *minuteArray = [NSMutableArray array];
     for (int i = 0; i <= 60 - self.minuteInterval; i ++) {
         if (i % self.minuteInterval == 0) {
-            [minuteArray addObject:[NSString stringWithFormat:@"%dm", i]];
+            [minuteArray addObject:[NSString stringWithFormat:@"%d", i]];
             continue;
         }
     }
@@ -512,15 +699,14 @@
     return ci;
 }
 
-
 - (void)refreshDay {
     NSMutableArray *arr = [NSMutableArray array];
     for (int i = 1; i < [self getDayNumber:self.year.integerValue month:self.month.integerValue].integerValue + 1; i ++) {
-        [arr addObject:[NSString stringWithFormat:@"%dd", i]];
+        [arr addObject:[NSString stringWithFormat:@"%d", i]];
     }
     
-    [self.dataArray replaceObjectAtIndex:2 withObject:arr];
-    [self.pickerView reloadComponent:2];
+    [self.dataArray replaceObjectAtIndex:0 withObject:arr];
+    [self.pickerView reloadComponent:0];
 }
 - (NSString *)getDayNumber:(NSInteger)year month:(NSInteger)month{
     NSArray *days = @[@"31", @"28", @"31", @"30", @"31", @"30", @"31", @"31", @"30", @"31", @"30", @"31"];
@@ -529,4 +715,50 @@
     }
     return days[month - 1];
 }
+- (NSString *)getMouthByindex:(NSInteger)index{
+    NSLog(@"***********************************%ld",index);
+    NSArray *mouthArray = @[@"Jan",@"Feb",@"Mar",@"Arp",@"May",@"June",@"July",@"Aug",@"Sept",@"Oct",@"Nov",@"Dec"];
+    return mouthArray[(index-1)%12];
+}
+//获取当前时间日期星期
+- (NSArray *)getTimeAndWeekDay:(NSDate *)date{
+    
+    NSArray * arrWeek=[NSArray arrayWithObjects:@"Sun",@"Mon",@"Tue",@"Wed",@"Thu",@"Fri",@"Sat", nil];
+    NSArray * arrWeekDay=[NSArray arrayWithObjects:@"Sunday",@"Monday",@"Tuesday",@"Wednesday",@"Thursday",@"Friday",@"Saturday", nil];
+
+    NSDateFormatter *format = [NSDateFormatter new];
+    [format setDateFormat:@"hh:mm  a"];
+    format.AMSymbol = @"AM";
+    format.PMSymbol = @"PM";
+    NSString *timeStr = [format stringFromDate:date];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *comps = [[NSDateComponents alloc] init];
+    /*
+     NSInteger unitFlags = NSYearCalendarUnit |
+     NSMonthCalendarUnit |
+     NSDayCalendarUnit |
+     NSWeekdayCalendarUnit |
+     NSHourCalendarUnit |
+     NSMinuteCalendarUnit |
+     NSSecondCalendarUnit;
+     */
+    NSInteger unitFlags = NSCalendarUnitYear |NSCalendarUnitMonth | NSCalendarUnitDay |NSCalendarUnitWeekday | NSCalendarUnitHour |NSCalendarUnitMinute |NSCalendarUnitSecond;
+    comps = [calendar components:unitFlags fromDate:date];
+    NSInteger week  = [comps weekday]-1;
+    NSInteger year  = [comps year];
+    NSInteger month = [comps month];
+    NSInteger day   = [comps day];
+    NSInteger minute    = [comps minute];
+    NSString *minu;
+    if (minute < 10) {
+        minu = [NSString stringWithFormat:@"0%ld",minute];
+    }else{
+        minu = [NSString stringWithFormat:@"%ld",minute];
+    }
+    NSString *weekStr = [NSString stringWithFormat:@"%@,%ld/%ld/%ld,%@",[arrWeek objectAtIndex:week],(long)month,(long)day,(long)year%100,timeStr];
+    NSString *weekdayStr = [NSString stringWithFormat:@"%@, %ld  %@, %ld ,%@",[arrWeekDay objectAtIndex:week],day,[self getMouthByindex:month],year,timeStr];
+    NSArray *arrStr = @[weekStr,weekdayStr];
+    return   arrStr;
+}
+
 @end

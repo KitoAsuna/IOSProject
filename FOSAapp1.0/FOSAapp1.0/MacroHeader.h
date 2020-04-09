@@ -43,7 +43,7 @@
 #define IS_IPHONE_X (fabs((double)[[UIScreen mainScreen]bounds].size.height - (double)812) < DBL_EPSILON) || (fabs((double)[[UIScreen mainScreen]bounds].size.height - (double)896) < DBL_EPSILON)
 
 // 1.获得RGB颜色
-#define YTHColor(r, g, b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1]
+#define FOSAColor(r, g, b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1]
 #define YTHColorAlpha(r, g, b ,a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:a]
 
 // 2.用代码形式代码
@@ -129,6 +129,7 @@
 //屏幕底部 toolbar高度 + 安全视图高度34pt
 #define ToolbarHeight self.navigationController.toolbar.frame.size.height
 
-#define mouth [NSDictionary dictionaryWithObjectsAndKeys:@"JAN",@"01",@"FEB",@"02",@"MAR",@"03",@"APR",@"04",@"MAY",@"05",@"JUNE",@"06",@"JULY",@"07",@"AUG",@"08",@"SEPT",@"09",@"OCT",@"10",@"NOV",@"11",@"DEC",@"12",nil]
+#define mouth [NSDictionary dictionaryWithObjectsAndKeys:@"Jan",@"01",@"Feb",@"02",@"Mar",@"03",@"Arp",@"04",@"May",@"05",@"June",@"06",@"July",@"07",@"Aug",@"08",@"Sept",@"09",@"Oct",@"10",@"Nov",@"11",@"Dec",@"12",nil]
 
 #endif /* MacroHeader_h */
+

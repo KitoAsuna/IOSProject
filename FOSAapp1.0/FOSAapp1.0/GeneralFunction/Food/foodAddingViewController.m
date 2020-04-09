@@ -15,6 +15,7 @@
 #import "FosaNotification.h"
 #import "QRCodeScanViewController.h"
 
+
 @interface foodAddingViewController ()<UIScrollViewDelegate,UITextViewDelegate,UITextFieldDelegate, UICollectionViewDelegate,FosaDatePickerViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UNUserNotificationCenterDelegate>{
     NSString *kindID;
     NSString *selectCategory;
@@ -22,7 +23,8 @@
     NSInteger currentPictureIndex;//标识图片轮播器当前指向哪张图片
     NSString *device;
     Boolean isEdit;
-    NSString *remindStr,*storageStr;
+    NSString *expireStr,*storageStr;
+    //NSString *selectRemindDate;
 }
 
 @property (nonatomic,weak)   FosaDatePickerView *fosaDatePicker;//日期选择器
@@ -201,6 +203,7 @@
     }
     return _shareBtn;
 }
+
 - (UIView *)foodDescribedView{
     if (_foodDescribedView == nil) {
         _foodDescribedView = [UIView new];
@@ -225,6 +228,27 @@
     }
     return _numberLabel;
 }
+
+- (UIView *)remindView{
+    if (_remindView == nil) {
+        _remindView = [UIView new];
+    }
+    return _remindView;
+}
+
+- (UILabel *)remindLabel{
+    if (_remindLabel == nil) {
+        _remindLabel = [UILabel new];
+    }
+    return _remindLabel;
+}
+- (UITextField *)remindDateTextView{
+    if (_remindDateTextView == nil) {
+        _remindDateTextView = [UITextField new];
+    }
+    return _remindDateTextView;
+}
+
 - (UIView *)locationView{
     if (_locationView == nil) {
         _locationView = [UIView new];
@@ -496,7 +520,7 @@
  
     NSArray *currentArrray = [currentDateStr componentsSeparatedByString:@"/"];
     NSString *storageDate = [NSString stringWithFormat:@"%@/%@/%@",currentArrray[0],[mouth valueForKey:currentArrray[1]],currentArrray[2]];
-    remindStr = [NSString stringWithFormat:@"%@/%@/%@/%@",currentArrray[2],currentArrray[1],currentArrray[0],currentArrray[3]];
+    expireStr = [NSString stringWithFormat:@"%@/%@/%@/%@",currentArrray[2],currentArrray[1],currentArrray[0],currentArrray[3]];
     NSLog(@"==========%@",currentDateStr);
     self.storageDateLabel.text = storageDate;
     self.storageDateLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18.0*(414.0/screen_width)];
@@ -535,7 +559,7 @@
      [self.expireView addSubview:self.expireTimeLabel];
      */
     self.expireLabel.frame = CGRectMake(0, 0, expireWidth, expireHeight/3);
-    self.expireLabel.text = @"Reminder";
+    self.expireLabel.text = @"Expiration Date";
     self.expireLabel.font = [UIFont systemFontOfSize:15];
     self.expireLabel.textColor = [UIColor whiteColor];
     //self.expireLabel.textAlignment = NSTextAlignmentRight;
@@ -546,31 +570,29 @@
     self.expireDateLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18.0*(414.0/screen_width)];
     self.expireDateLabel.adjustsFontSizeToFitWidth = YES;
     self.expireDateLabel.textColor = [UIColor whiteColor];
-    //self.expireDateLabel.textAlignment = NSTextAlignmentRight;
     [self.expireView addSubview:self.expireDateLabel];
     
     self.expireTimeLabel.frame = CGRectMake(0, expireHeight*2/3, expireWidth, expireHeight/3);
     self.expireTimeLabel.text = currentArrray[3];
     self.expireTimeLabel.textColor = [UIColor whiteColor];
-    //self.expireTimeLabel.textAlignment = NSTextAlignmentRight;
     [self.expireView addSubview:self.expireTimeLabel];
 }
 
 - (void)creatContentView{
-    self.contentView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), screen_width, screen_height*42/143);
+    self.contentView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), screen_width, screen_height*50/143);
     //self.contentView.
     int contentHeight = self.contentView.frame.size.height;
     [self.view addSubview:self.contentView];
     
-    self.foodNameView.frame = CGRectMake(0, 0, screen_width, contentHeight*11/42);
+    self.foodNameView.frame = CGRectMake(0, 0, screen_width, contentHeight/5);
     [self.contentView addSubview:self.foodNameView];
 
-    self.foodNameLabel.frame = CGRectMake(screen_width*5/66, contentHeight/18, screen_width/3, contentHeight/16);
+    self.foodNameLabel.frame = CGRectMake(screen_width*5/66, contentHeight/30, screen_width/3, contentHeight*2/30);
     self.foodNameLabel.text = @"Name";
     self.foodNameLabel.font = [UIFont systemFontOfSize:15];
     self.foodNameLabel.textColor = [UIColor grayColor];
     [self.foodNameView addSubview:self.foodNameLabel];
-    self.foodTextView.frame = CGRectMake(screen_width/22, contentHeight/8, screen_width*51/66, contentHeight/8);
+    self.foodTextView.frame = CGRectMake(screen_width/22, contentHeight/10, screen_width*51/66, contentHeight/10);
     self.foodTextView.layer.cornerRadius = 5;
     self.foodTextView.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
     //self.foodTextView.
@@ -579,11 +601,11 @@
     self.foodTextView.returnKeyType = UIReturnKeyDone;
     self.foodTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     [self.foodNameView addSubview:self.foodTextView];
-    self.shareBtn.frame = CGRectMake(screen_width*28/33, contentHeight/8, contentHeight/8, contentHeight/8);
+    self.shareBtn.frame = CGRectMake(screen_width*28/33, contentHeight/10, contentHeight/10, contentHeight/10);
     [self.shareBtn setImage:[UIImage imageNamed:@"icon_share"] forState:UIControlStateNormal];
     [self.shareBtn addTarget:self action:@selector(jumpToShare) forControlEvents:UIControlEventTouchUpInside];
     [self.foodNameView addSubview:self.shareBtn];
-    self.scanBtn.frame = CGRectMake(screen_width*28/33, contentHeight/8, contentHeight/8, contentHeight/8);
+    self.scanBtn.frame = CGRectMake(screen_width*28/33, contentHeight/10, contentHeight/10, contentHeight/10);
     [self.scanBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
     [self.scanBtn addTarget:self action:@selector(jumpToScan) forControlEvents:UIControlEventTouchUpInside];
     [self.foodNameView addSubview:self.scanBtn];
@@ -596,14 +618,14 @@
                 提示与文字上下一致
      */
     //描述
-    self.foodDescribedView.frame = CGRectMake(0, contentHeight/4, screen_width, contentHeight/2);
+    self.foodDescribedView.frame = CGRectMake(0, CGRectGetMaxY(self.foodNameView.frame), screen_width, contentHeight*2/5);
     [self.contentView addSubview:self.foodDescribedView];
-    self.foodDescribedLabel.frame = CGRectMake(screen_width*5/66, contentHeight/18, screen_width/3, contentHeight/16);
+    self.foodDescribedLabel.frame = CGRectMake(screen_width*5/66, contentHeight/30, screen_width/3, contentHeight/15);
     self.foodDescribedLabel.text = @"Description";
     self.foodDescribedLabel.font = [UIFont systemFontOfSize:15];
     self.foodDescribedLabel.textColor = [UIColor grayColor];
     [self.foodDescribedView addSubview:self.foodDescribedLabel];
-    self.foodDescribedTextView.frame = CGRectMake(screen_width/22, contentHeight/8, screen_width*9/10, contentHeight*3/8);
+    self.foodDescribedTextView.frame = CGRectMake(screen_width/22, contentHeight/10, screen_width*9/10, contentHeight*3/10);
     self.foodDescribedTextView.layer.cornerRadius = 5;
     self.foodDescribedTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     self.foodDescribedTextView.textColor = [UIColor blackColor];
@@ -627,14 +649,30 @@
     self.numberLabel.textAlignment = 2;
     [self.foodDescribedTextView addSubview:self.numberLabel];
     
-    self.locationView.frame = CGRectMake(0, contentHeight*3/4, screen_width, contentHeight/4);
+    self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.foodDescribedView.frame), screen_width, contentHeight/5);
+    [self.contentView addSubview:self.remindView];
+    self.remindLabel.frame = CGRectMake(screen_width*5/66, contentHeight/30, screen_width/3, contentHeight/15);
+    self.remindLabel.text = @"Reminder";
+    self.remindLabel.font = [UIFont systemFontOfSize:font(15)];
+    self.remindLabel.textColor = [UIColor grayColor];
+    [self.remindView addSubview:self.remindLabel];
+    
+    self.remindDateTextView.frame = CGRectMake(screen_width/20, contentHeight/10, screen_width*9/10, contentHeight/10);
+    self.remindDateTextView.layer.cornerRadius = 5;
+    self.remindDateTextView.userInteractionEnabled = NO;
+    self.remindDateTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+    [self.remindDateTextView setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
+    [self.remindView addSubview:self.remindDateTextView];
+    
+    
+    self.locationView.frame = CGRectMake(0, CGRectGetMaxY(self.remindView.frame), screen_width, contentHeight/5);
     [self.contentView addSubview:self.locationView];
-    self.locationLabel.frame = CGRectMake(screen_width*5/66, contentHeight/18, screen_width/3, contentHeight/16);
+    self.locationLabel.frame = CGRectMake(screen_width*5/66, contentHeight/30, screen_width/3, contentHeight/15);
     self.locationLabel.text = @"Location";
-    self.locationLabel.font = [UIFont systemFontOfSize:15];
+    self.locationLabel.font = [UIFont systemFontOfSize:font(15)];
     self.locationLabel.textColor = [UIColor grayColor];
     [self.locationView addSubview:self.locationLabel];
-    self.locationTextView.frame = CGRectMake(screen_width/20, contentHeight/8, screen_width*9/10, contentHeight/8);
+    self.locationTextView.frame = CGRectMake(screen_width/20, contentHeight/10, screen_width*9/10, contentHeight/10);
     self.locationTextView.layer.cornerRadius = 5;
     self.locationTextView.returnKeyType = UIReturnKeyDone;
     self.locationTextView.delegate = self;
@@ -650,7 +688,7 @@
     self.categoryArray = [[NSMutableArray alloc]initWithArray:array];
     kindID = @"categoryCell";
     
-    self.footerView.frame = CGRectMake(0, CGRectGetMaxY(self.contentView.frame), screen_width, screen_width*5/24);
+    self.footerView.frame = CGRectMake(0, CGRectGetMaxY(self.contentView.frame)+5, screen_width, screen_width*5/24);
     //self.footerView.backgroundColor = [UIColor yellowColor];
     [self.view addSubview:self.footerView];
     int footerHeight = self.footerView.frame.size.height;
@@ -684,7 +722,7 @@
     [self.categoryCollection registerClass:[foodKindCollectionViewCell class] forCellWithReuseIdentifier:kindID];
     [self.footerView addSubview:self.categoryCollection];
     
-    self.doneBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.footerView.frame)+screen_height*6/143, screen_width/3, screen_height*6/143);
+    self.doneBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.footerView.frame)+screen_height*4/143, screen_width/3, screen_height*6/143);
     self.doneBtn.layer.cornerRadius = self.doneBtn.frame.size.height/2;
     [self.doneBtn setTitle:@"Done" forState:UIControlStateNormal];
     self.doneBtn.backgroundColor = FOSAgreen;
@@ -699,7 +737,7 @@
         self.foodCell = [[foodKindView alloc]initWithFrame:CGRectMake(0, 0, (screen_width*48/66)/5, footerHeight)];
         self.foodCell.center = self.categoryCollection.center;
         [self.footerView addSubview:self.foodCell];
-        self.deleteBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.footerView.frame)+screen_height*3/143, screen_width/3, screen_height*6/143);
+        self.deleteBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.footerView.frame)+screen_height*4/143, screen_width/3, screen_height*6/143);
         self.deleteBtn.backgroundColor = FOSARed;
         [self.deleteBtn addTarget:self action:@selector(deleteFoodRecord) forControlEvents:UIControlEventTouchUpInside];
         self.deleteBtn.layer.cornerRadius = self.deleteBtn.frame.size.height/2;
@@ -735,11 +773,12 @@
             device = self.model.device;
         }
         selectCategory = self.model.category;
+        self.remindDateTextView.text = self.model.remindDate;
         self.storageDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",storageTimeArray[0],storageTimeArray[1],storageTimeArray[2]];
         self.storageTimeLabel.text = storageTimeArray[3];
         self.expireDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",expireTimeArray[0],expireTimeArray[1],expireTimeArray[2]];
         self.expireTimeLabel.text = expireTimeArray[3];
-        
+
         self.foodTextView.text = self.model.foodName;
         self.foodDescribedTextView.text = self.model.aboutFood;
         self.locationTextView.text = self.model.location;
@@ -813,12 +852,11 @@
     [self.headerView addSubview:self.refreshBtn];
     
 }
-
 #pragma mark - 初始化日期选择器
 -(void)InitialDatePicker{
-    FosaDatePickerView *DatePicker = [[FosaDatePickerView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 300)];
+    FosaDatePickerView *DatePicker = [[FosaDatePickerView alloc]initWithFrame:CGRectMake(0, screen_height, self.view.frame.size.width, screen_height*80/143)];
     DatePicker.delegate = self;
-    DatePicker.title = @"Reminder date";
+    DatePicker.title = @"Expiration date";
     [self.view addSubview:DatePicker];
     self.fosaDatePicker = DatePicker;
     self.fosaDatePicker.hidden = YES;
@@ -828,13 +866,13 @@
  保存按钮代理方法
  @param timer 选择的数据
  */
-- (void)datePickerViewSaveBtnClickDelegate:(NSString *)timer {
+- (void)datePickerViewSaveBtnClickDelegate:(NSString *)timer remindDate:(nonnull NSString *)remindTimer {
     NSLog(@"保存点击");
     //处理日期字符串
     NSArray *array = [timer componentsSeparatedByString:@"/"];
     
-    remindStr = [NSString stringWithFormat:@"%@/%@/%@/%@",array[2],array[0],array[1],array[3]];
-    NSLog(@"------------------%@",remindStr);
+    expireStr = [NSString stringWithFormat:@"%@/%@/%@/%@",array[2],array[0],array[1],array[3]];
+
 //    NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
 //    [formatter setDateFormat:@"yy/MM/dd/HH:mm"];
 //    NSDate *expDate = [formatter dateFromString:expireStr];
@@ -843,9 +881,10 @@
     NSString *dateStr = [NSString stringWithFormat:@"%@/%@/%@",array[1],[mouth valueForKey:array[0]],array[2]];
     self.expireDateLabel.text = dateStr;
     self.expireTimeLabel.text= array[3];
+    self.remindDateTextView.text = remindTimer;
     NSLog(@"%@",dateStr);
     [UIView animateWithDuration:0.3 animations:^{
-       self.fosaDatePicker.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 300);
+       self.fosaDatePicker.frame = CGRectMake(0, screen_height, self.view.frame.size.width, screen_height*80/143);
    }];
 }
 /**
@@ -854,7 +893,7 @@
 - (void)datePickerViewCancelBtnClickDelegate {
     NSLog(@"取消点击");
     [UIView animateWithDuration:0.3 animations:^{
-        self.fosaDatePicker.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 300);
+        self.fosaDatePicker.frame = CGRectMake(0, screen_height, self.view.frame.size.width, screen_height*80/143);
     }];
 }
 
@@ -877,7 +916,6 @@
         }
     }
 }
-
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
     return self.bigImage;
 }
@@ -1159,7 +1197,7 @@
 - (void)selectExpireDate{
     self.fosaDatePicker.hidden = NO;
        [UIView animateWithDuration:0.3 animations:^{
-           self.fosaDatePicker.frame = CGRectMake(0, self.view.frame.size.height - 300, self.view.frame.size.width, 300);
+           self.fosaDatePicker.center = CGPointMake(screen_width/2, screen_height*103/143);
            [self.fosaDatePicker show];
        }];
 }
@@ -1259,7 +1297,7 @@
     }
 }
 - (void)CreatDataTable{
-    NSString *Sql = @"CREATE TABLE IF NOT EXISTS FoodStorageInfo(id integer PRIMARY KEY AUTOINCREMENT, foodName text NOT NULL, device text, aboutFood text,storageDate text NOT NULL,expireDate text NOT NULL,location text,foodImg text NOT NULL,category text NOT NULL,like text);";
+    NSString *Sql = @"CREATE TABLE IF NOT EXISTS FoodStorageInfo(id integer PRIMARY KEY AUTOINCREMENT, foodName text NOT NULL, device text, aboutFood text,storageDate text NOT NULL,expireDate text NOT NULL,remindDate text NOT NULL,location text,foodImg text NOT NULL,category text NOT NULL,like text);";
     BOOL categoryResult = [self.db executeUpdate:Sql];
     if(categoryResult)
     {
@@ -1273,7 +1311,7 @@
 - (void)InsertDataIntoFoodTable{
     NSString *storagedate = [NSString stringWithFormat:@"%@/%@",self.storageDateLabel.text,self.storageTimeLabel.text];
     NSString *expiredate  = [NSString stringWithFormat:@"%@/%@",self.expireDateLabel.text,self.expireTimeLabel.text];
-    NSString *insertSql = [NSString stringWithFormat:@"insert into FoodStorageInfo(foodName,device,aboutFood,storageDate,expireDate,location,foodImg,category) values('%@','%@','%@','%@','%@','%@','%@','%@')",self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory];
+    NSString *insertSql = [NSString stringWithFormat:@"insert into FoodStorageInfo(foodName,device,aboutFood,storageDate,expireDate,remindDate,location,foodImg,category) values('%@','%@','%@','%@','%@','%@','%@','%@','%@')",self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.remindDateTextView.text,self.locationTextView.text,self.foodTextView.text,selectCategory];
     if ([self.foodTextView.text isEqualToString:@""]) {
         [self SystemAlert:@"Please input the name of your food!"];
     }else if(selectCategory == nil){
@@ -1451,7 +1489,7 @@
             self.fosaNotification = [[FosaNotification alloc]init];
             [self.fosaNotification initNotification];
             //self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory,self.likeBtn.accessibilityValue
-            FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:remindStr foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text];
+            FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text];
             NSString *body = [NSString stringWithFormat:@"Your food %@ has expired",self.foodTextView.text];
             //获取通知的图片
             UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
@@ -1459,8 +1497,8 @@
             //另存通知图片
             [self Savephoto:image name:self.foodTextView.text];
             
-            NSLog(@">>>=================%@",remindStr);
-            [self.fosaNotification sendNotificationByDate:model body:body date:remindStr foodImg:image];
+            NSLog(@">>>=================%@",expireStr);
+            [self.fosaNotification sendNotificationByDate:model body:body date:expireStr foodImg:image];
         }
     }
     [self SystemAlert:@"Success"];
