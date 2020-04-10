@@ -450,8 +450,6 @@
     //名称
     if ([self.foodStyle isEqualToString:@"Info"]) {
         self.showFoodNameLabel.frame = CGRectMake(headerWidth/22, headerHeight*7/10, headerWidth, headerHeight/10);
-        //self.showFoodNameLabel.text  = @"SPECIAL SASAME";
-        //self.showFoodNameLabel.font = [UIFont systemFontOfSize:15 weight:50];
         self.showFoodNameLabel.font  = [UIFont systemFontOfSize:25*(414.0/screen_width)];
         self.showFoodNameLabel.textColor = [UIColor whiteColor];
         [self.headerView addSubview:self.showFoodNameLabel];
@@ -518,10 +516,10 @@
     NSString *currentDateStr = [formatter stringFromDate:currentDate];
     storageStr = currentDateStr;
  
+    //界面初始化，默认存储日期和过期日期均为当天的时间
     NSArray *currentArrray = [currentDateStr componentsSeparatedByString:@"/"];
     NSString *storageDate = [NSString stringWithFormat:@"%@/%@/%@",currentArrray[0],[mouth valueForKey:currentArrray[1]],currentArrray[2]];
-    expireStr = [NSString stringWithFormat:@"%@/%@/%@/%@",currentArrray[2],currentArrray[1],currentArrray[0],currentArrray[3]];
-    NSLog(@"==========%@",currentDateStr);
+    expireStr = [NSString stringWithFormat:@"%@/%@/%@/%@",currentArrray[0],currentArrray[1],currentArrray[2],currentArrray[3]];
     self.storageDateLabel.text = storageDate;
     self.storageDateLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18.0*(414.0/screen_width)];
     self.storageDateLabel.adjustsFontSizeToFitWidth = YES;
@@ -566,21 +564,20 @@
     [self.expireView addSubview:self.expireLabel];
     
     self.expireDateLabel.frame = CGRectMake(0, expireHeight/3, expireWidth, expireHeight/3);
-    self.expireDateLabel.text = storageDate;
+    self.expireDateLabel.text = @"Tap to add";//storageDate;
     self.expireDateLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18.0*(414.0/screen_width)];
     self.expireDateLabel.adjustsFontSizeToFitWidth = YES;
     self.expireDateLabel.textColor = [UIColor whiteColor];
     [self.expireView addSubview:self.expireDateLabel];
     
     self.expireTimeLabel.frame = CGRectMake(0, expireHeight*2/3, expireWidth, expireHeight/3);
-    self.expireTimeLabel.text = currentArrray[3];
+    //self.expireTimeLabel.text = currentArrray[3];
     self.expireTimeLabel.textColor = [UIColor whiteColor];
     [self.expireView addSubview:self.expireTimeLabel];
 }
 
 - (void)creatContentView{
     self.contentView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), screen_width, screen_height*50/143);
-    //self.contentView.
     int contentHeight = self.contentView.frame.size.height;
     [self.view addSubview:self.contentView];
     
@@ -589,23 +586,23 @@
 
     self.foodNameLabel.frame = CGRectMake(screen_width*5/66, contentHeight/30, screen_width/3, contentHeight*2/30);
     self.foodNameLabel.text = @"Name";
-    self.foodNameLabel.font = [UIFont systemFontOfSize:15];
+    self.foodNameLabel.font = [UIFont systemFontOfSize:font(15)];
     self.foodNameLabel.textColor = [UIColor grayColor];
     [self.foodNameView addSubview:self.foodNameLabel];
-    self.foodTextView.frame = CGRectMake(screen_width/22, contentHeight/10, screen_width*51/66, contentHeight/10);
+    self.foodTextView.frame = CGRectMake(screen_width*2/33, contentHeight/10, screen_width*51/66, contentHeight/10);
     self.foodTextView.layer.cornerRadius = 5;
-    self.foodTextView.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
+    self.foodTextView.font = [UIFont systemFontOfSize:font(15)];
     //self.foodTextView.
-    [self.foodTextView setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
+    [self.foodTextView setValue:[NSNumber numberWithInt:Width(10)] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.foodTextView.delegate = self;
     self.foodTextView.returnKeyType = UIReturnKeyDone;
     self.foodTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     [self.foodNameView addSubview:self.foodTextView];
-    self.shareBtn.frame = CGRectMake(screen_width*28/33, contentHeight/10, contentHeight/10, contentHeight/10);
+    self.shareBtn.frame = CGRectMake(screen_width*31/33-contentHeight/10, contentHeight/10, contentHeight/10, contentHeight/10);
     [self.shareBtn setImage:[UIImage imageNamed:@"icon_share"] forState:UIControlStateNormal];
     [self.shareBtn addTarget:self action:@selector(jumpToShare) forControlEvents:UIControlEventTouchUpInside];
     [self.foodNameView addSubview:self.shareBtn];
-    self.scanBtn.frame = CGRectMake(screen_width*28/33, contentHeight/10, contentHeight/10, contentHeight/10);
+    self.scanBtn.frame = CGRectMake(screen_width*31/33-contentHeight/10, contentHeight/10, contentHeight/10, contentHeight/10);
     [self.scanBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
     [self.scanBtn addTarget:self action:@selector(jumpToScan) forControlEvents:UIControlEventTouchUpInside];
     [self.foodNameView addSubview:self.scanBtn];
@@ -622,14 +619,14 @@
     [self.contentView addSubview:self.foodDescribedView];
     self.foodDescribedLabel.frame = CGRectMake(screen_width*5/66, contentHeight/30, screen_width/3, contentHeight/15);
     self.foodDescribedLabel.text = @"Description";
-    self.foodDescribedLabel.font = [UIFont systemFontOfSize:15];
+    self.foodDescribedLabel.font = [UIFont systemFontOfSize:font(15)];
     self.foodDescribedLabel.textColor = [UIColor grayColor];
     [self.foodDescribedView addSubview:self.foodDescribedLabel];
-    self.foodDescribedTextView.frame = CGRectMake(screen_width/22, contentHeight/10, screen_width*9/10, contentHeight*3/10);
+    self.foodDescribedTextView.frame = CGRectMake(screen_width*2/33, contentHeight/10, screen_width*29/33, contentHeight*3/10);
     self.foodDescribedTextView.layer.cornerRadius = 5;
     self.foodDescribedTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     self.foodDescribedTextView.textColor = [UIColor blackColor];
-    self.foodDescribedTextView.font = [UIFont systemFontOfSize:15*(screen_width/414.0)];
+    self.foodDescribedTextView.font = [UIFont systemFontOfSize:font(15)];
     self.foodDescribedTextView.delegate = self;
     self.foodDescribedTextView.returnKeyType = UIReturnKeyDone;
     self.foodDescribedTextView.textContainerInset = UIEdgeInsetsMake(5, 5, 0, 0);//上、左、下、右
@@ -657,11 +654,12 @@
     self.remindLabel.textColor = [UIColor grayColor];
     [self.remindView addSubview:self.remindLabel];
     
-    self.remindDateTextView.frame = CGRectMake(screen_width/20, contentHeight/10, screen_width*9/10, contentHeight/10);
+    self.remindDateTextView.frame = CGRectMake(screen_width*2/33, contentHeight/10, screen_width*29/33, contentHeight/10);
     self.remindDateTextView.layer.cornerRadius = 5;
     self.remindDateTextView.userInteractionEnabled = NO;
     self.remindDateTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    [self.remindDateTextView setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];//设置输入文本的起始位置
+    self.remindDateTextView.font = [UIFont systemFontOfSize:font(15)];
+    [self.remindDateTextView setValue:[NSNumber numberWithInt:font(10)] forKey:@"paddingLeft"];//设置输入文本的起始位置
     [self.remindView addSubview:self.remindDateTextView];
     
     
@@ -672,7 +670,8 @@
     self.locationLabel.font = [UIFont systemFontOfSize:font(15)];
     self.locationLabel.textColor = [UIColor grayColor];
     [self.locationView addSubview:self.locationLabel];
-    self.locationTextView.frame = CGRectMake(screen_width/20, contentHeight/10, screen_width*9/10, contentHeight/10);
+    self.locationTextView.frame = CGRectMake(screen_width*2/33, contentHeight/10, screen_width*29/33, contentHeight/10);
+    self.locationTextView.font = [UIFont systemFontOfSize:font(15)];
     self.locationTextView.layer.cornerRadius = 5;
     self.locationTextView.returnKeyType = UIReturnKeyDone;
     self.locationTextView.delegate = self;
@@ -764,7 +763,8 @@
         expireTimeArray = [self.model.expireDate componentsSeparatedByString:@"/"];
         NSLog(@"%@",storageTimeArray);
         NSLog(@"%@",expireTimeArray);
-        
+        expireStr = self.model.expireDate;
+
         self.showFoodNameLabel.text = self.model.foodName;
         self.showFoodNameLabel.font = [UIFont systemFontOfSize:22 weight:20];
         
@@ -775,6 +775,7 @@
         selectCategory = self.model.category;
         self.remindDateTextView.text = self.model.remindDate;
         self.storageDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",storageTimeArray[0],storageTimeArray[1],storageTimeArray[2]];
+        
         self.storageTimeLabel.text = storageTimeArray[3];
         self.expireDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",expireTimeArray[0],expireTimeArray[1],expireTimeArray[2]];
         self.expireTimeLabel.text = expireTimeArray[3];
@@ -854,7 +855,7 @@
 }
 #pragma mark - 初始化日期选择器
 -(void)InitialDatePicker{
-    FosaDatePickerView *DatePicker = [[FosaDatePickerView alloc]initWithFrame:CGRectMake(0, screen_height, self.view.frame.size.width, screen_height*80/143)];
+    FosaDatePickerView *DatePicker = [[FosaDatePickerView alloc]initWithFrame:CGRectMake(0, screen_height, self.view.frame.size.width, screen_height*80/143) expireDate:expireStr remindDate:self.remindDateTextView.text];
     DatePicker.delegate = self;
     DatePicker.title = @"Expiration date";
     [self.view addSubview:DatePicker];
@@ -871,7 +872,8 @@
     //处理日期字符串
     NSArray *array = [timer componentsSeparatedByString:@"/"];
     
-    expireStr = [NSString stringWithFormat:@"%@/%@/%@/%@",array[2],array[0],array[1],array[3]];
+    expireStr = [NSString stringWithFormat:@"%@/%@/%@/%@",array[1],array[0],array[2],array[3]];
+    NSLog(@"^^^^^^^^^^^^^^^^^^^^我选择了expireStr:%@",expireStr);
 
 //    NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
 //    [formatter setDateFormat:@"yy/MM/dd/HH:mm"];
@@ -993,8 +995,10 @@
         self.selectedCategory.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
         self.selectedCategory.categoryPhoto.image = [UIImage imageNamed:selectCategory];
         self.selectedCategory.categoryPhoto.backgroundColor = [UIColor clearColor];
+        self.selectedCategory.kind.textColor = [UIColor grayColor];
     }
     cell.rootView.backgroundColor = FOSAYellow;
+    cell.kind.textColor = FOSAYellow;
     cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]]];
     selectCategory = self.categoryNameArray[indexPath.row];
     self.selectedCategory = cell;
@@ -1195,10 +1199,15 @@
 }
 
 - (void)selectExpireDate{
+    NSDate *date = [NSDate date];
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
+    [dateFormatter setDateFormat:@"dd/MM/yyyy/HH:mm"];
+    date = [dateFormatter dateFromString:expireStr];
     self.fosaDatePicker.hidden = NO;
-       [UIView animateWithDuration:0.3 animations:^{
-           self.fosaDatePicker.center = CGPointMake(screen_width/2, screen_height*103/143);
-           [self.fosaDatePicker show];
+    [UIView animateWithDuration:0.3 animations:^{
+        self.fosaDatePicker.center = CGPointMake(screen_width/2, screen_height*103/143);
+        self.fosaDatePicker.date = [dateFormatter stringFromDate:date];
+        [self.fosaDatePicker show];
        }];
 }
 
@@ -1251,11 +1260,11 @@
     [self presentViewController:activityVC animated:TRUE completion:nil];
 }
 - (void)saveInfoAndFinish{
-    if ([self.foodStyle isEqualToString:@"edit"]) {
+    //if ([self.foodStyle isEqualToString:@"edit"]) {
             [self DeleteRecord];
-    }else{
+    //}else{
         [self SavephotosInSanBox:self.foodImgArray];
-    }
+    //}
     [self CreatDataTable];
 }
 - (void)deleteFoodRecord{
@@ -1437,13 +1446,13 @@
         BOOL result = [self.db executeUpdate:delSql];
         if (result) {
             if (![self.foodTextView.text isEqualToString:self.model.foodName]) {
-                [self SavephotosInSanBox:self.foodImgArray];
+                //[self SavephotosInSanBox:self.foodImgArray];
                 for (int i = 1; i <= 3; i++) {
                     NSString *photoName = [NSString stringWithFormat:@"%@%d",self.model.foodName,i];
                     [self deleteFile:photoName];
                 }
             }
-            if (!isEdit) {
+            if (!isEdit && [self.foodStyle isEqualToString:@"Info"]) {
                 [self SystemAlert:@"Delete data successfully"];
             }
         }else{
@@ -1485,7 +1494,7 @@
         NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
         //获取用户设置，是否自动发送
         NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
-        if ([autoNotification isEqualToString:@"YES"]) {
+        if ([autoNotification isEqualToString:@"NO"]) {
             self.fosaNotification = [[FosaNotification alloc]init];
             [self.fosaNotification initNotification];
             //self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory,self.likeBtn.accessibilityValue
@@ -1501,7 +1510,9 @@
             [self.fosaNotification sendNotificationByDate:model body:body date:expireStr foodImg:image];
         }
     }
-    [self SystemAlert:@"Success"];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];
+    [self presentViewController:alert animated:true completion:nil];
+    [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
 }
 
 #pragma mark - 生成分享视图
@@ -1509,7 +1520,7 @@
 //仿照系统通知绘制UIview
 - (UIView *)CreatNotificatonViewWithContent:(NSString *)body{
     //分享二维码食物信息
-    NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@",self.foodTextView.text,device,self.foodDescribedTextView.text,self.expireDateLabel.text,self.storageDateLabel.text,selectCategory];
+    NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@&%@",self.foodTextView.text,device,self.foodDescribedTextView.text,self.expireDateLabel.text,self.storageDateLabel.text,self.remindDateTextView.text,selectCategory];
     NSLog(@"begin creating");
     int mainwidth = screen_width;
     int mainHeight = screen_height;
@@ -1591,7 +1602,7 @@
 -(void)SystemAlert:(NSString *)message{
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:message preferredStyle:UIAlertControllerStyleAlert];
     
-    if ([message isEqualToString:@"Success"] || [message isEqualToString:@"Delete data successfully"] ) {
+    if ([message isEqualToString:@"Delete data successfully"] ) {
         [self presentViewController:alert animated:true completion:nil];
         [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
     }else{

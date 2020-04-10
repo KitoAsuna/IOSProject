@@ -36,6 +36,7 @@
        }
     return self;
 }
+
 - (BOOL)creatTableWithSql:(nonnull NSString *)tableSql{
     return [db executeUpdate:tableSql];
 }
@@ -46,6 +47,10 @@
 - (BOOL)insertDataWithSql:(NSString *)insertSql{
     BOOL insertResult = [db executeUpdate:insertSql];
     return insertResult;
+}
+
+- (BOOL)updateDataWithSql:(NSString *)updateSql{
+    return [db executeUpdate:updateSql];
 }
 
 - (NSMutableArray *)selectDataWithTableName:(NSString *)tableName sql:(NSString *)selectSql{

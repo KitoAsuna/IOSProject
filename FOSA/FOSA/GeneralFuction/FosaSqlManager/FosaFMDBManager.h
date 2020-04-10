@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isFmdbOpen;
 - (BOOL)creatTableWithSql:(NSString *)tableSql;
 - (BOOL)insertDataWithSql:(NSString *)insertSql;
+- (BOOL)updateDataWithSql:(NSString *)updateSql;
 - (NSMutableArray *)selectDataWithTableName:(NSString *)tableName sql:(NSString *)selectSql;
 - (BOOL)deleteDataWithSql:(NSString *)deleteSql;
 - (BOOL)closeDB;

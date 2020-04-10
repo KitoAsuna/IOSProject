@@ -145,10 +145,8 @@
     CGContextAddLineToPoint(context, rectWidth*2/3, rectHight*39/40);
     CGContextClosePath(context);
     [[UIColor whiteColor] setStroke];
-    [FOSAGray setFill];
-    if ([self.isDraw isEqualToString:@"NO"]) {
-        [FOSAGray setFill];
-    }else if([self.isDraw isEqualToString:@"YES"]){
+    [FOSAWhite setFill];
+    if([self.isDraw isEqualToString:@"YES"]){
         //判断当前日期与过期日期
         //获取当前日期
         NSDate *currentDate = [[NSDate alloc]init];

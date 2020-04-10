@@ -10,12 +10,18 @@
 #import "notificationListTableViewCell.h"
 #import "FosaFMDBManager.h"
 #import "notificationListTableViewCell.h"
+#import "FosaNotification.h"
 
 @interface NotificationView()<UITableViewDelegate,UITableViewDataSource>{
     Boolean isSelect;
+    NSMutableArray<NSString *> *selectArray;
+    NSMutableArray<FoodModel *> *remindArray;
 }
+
 @property (nonatomic,strong) FosaFMDBManager *fmdbManager;
 @property (nonatomic,strong) NSMutableArray<FoodModel *> *dataSource;
+@property (nonatomic,strong) UILabel *titleLabel;
+@property (nonatomic,strong) FosaNotification *fosaNotification;
 @end
 @implementation NotificationView
 //#pragma mark - 延时加载
@@ -34,6 +40,8 @@
         isSelect = false;
         self.bellBtn = [UIButton new];
         [self addSubview:self.bellBtn];
+        self.titleLabel = [UILabel new];
+        [self addSubview:self.titleLabel];
         
         self.selectbtn = [UIButton new];
         [self.selectbtn addTarget:self action:@selector(selectCell) forControlEvents:UIControlEventTouchUpInside];
@@ -55,18 +63,27 @@
         self.deleBtn = [UIButton new];
         [self addSubview:self.deleBtn];
         self.deleBtn.hidden = YES;
+        [self.deleBtn addTarget:self action:@selector(deleteReminder) forControlEvents:UIControlEventTouchUpInside];
+        
+        //初始化数组
+        selectArray = [NSMutableArray new];
+        remindArray = [NSMutableArray new];
+        self.fosaNotification = [FosaNotification new];
     }
     return self;
 }
-
 - (void)layoutSubviews{
     [super layoutSubviews];
     CGFloat height = self.bounds.size.height;
     CGFloat width  = self.bounds.size.width;
     self.bellBtn.frame = CGRectMake(0, 0, width/12, width/12);
-    self.bellBtn.center = CGPointMake(width/2, height/16);
+    self.bellBtn.center = CGPointMake(width/2, height/24);
     [self.bellBtn setBackgroundImage:[UIImage imageNamed:@"icon_bell"] forState:UIControlStateNormal];
     self.bellBtn.userInteractionEnabled = NO;
+    self.titleLabel.frame = CGRectMake(width*2/5, CGRectGetMaxY(self.bellBtn.frame), width/5, height/24);
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.titleLabel.text = @"Reminder";
+    self.titleLabel.font = [UIFont systemFontOfSize:font(15)];
     
     self.selectbtn.frame = CGRectMake(width*4/5, height/24, width/6, height/24);
     self.selectbtn.tag = 0;
@@ -109,6 +126,9 @@
     NSArray *ary = [self.dataSource[indexPath.row].remindDate componentsSeparatedByString:@","];
     cell.timeLabel.text = ary[3];
     cell.dateLabel.text = [NSString stringWithFormat:@"%@,%@ %@",ary[0],ary[1],ary[2]];
+    cell.sendSwitch.tag = indexPath.row;
+    [cell.sendSwitch addTarget:self action:@selector(openSendNotification:) forControlEvents:UIControlEventValueChanged];
+    cell.selectImgView.image = [UIImage imageNamed:@"icon_unselect"];
     
     if (isSelect) {
         cell.sendSwitch.hidden = YES;
@@ -120,7 +140,21 @@
     
    return cell;
 }
-
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    notificationListTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (isSelect) {
+        //如果当前处于选择编辑模式
+        if(cell.selectImgView.tag == 0){
+            cell.selectImgView.tag = 1;
+            cell.selectImgView.image = [UIImage imageNamed:@"icon_select"];
+            [selectArray addObject:self.dataSource[indexPath.row].foodName];
+        }else{
+            cell.selectImgView.tag = 0;
+            cell.selectImgView.image = [UIImage imageNamed:@"icon_unselect"];
+            [selectArray removeObjectAtIndex:[selectArray indexOfObject:self.dataSource[indexPath.row].foodName]];
+        }
+    }
+}
 - (void)selectCell{
     if (self.selectbtn.tag == 0) {
         [self.selectbtn setTitle:@"Cancel" forState:UIControlStateNormal];
@@ -129,6 +163,7 @@
         self.backBtn.hidden = YES;
         self.deleBtn.hidden = NO;
         [self.notificationList reloadData];
+        
     }else{
         [self.selectbtn setTitle:@"Select" forState:UIControlStateNormal];
         self.selectbtn.tag = 0;
@@ -137,16 +172,72 @@
         self.deleBtn.hidden = YES;
         [self.notificationList reloadData];
     }
-   
-    
+}
+- (void)openSendNotification:(UISwitch *)cellSwitch{
+    if ([cellSwitch isOn]) {
+        [remindArray addObject:self.dataSource[cellSwitch.tag]];
+    }else{
+        [remindArray removeObjectAtIndex:[remindArray indexOfObject:self.dataSource[cellSwitch.tag]]];
+    }
 }
 
 - (void)closeNotificationView{
+    NSLog(@"%@",remindArray);
+    NSArray *tempArray;
+    NSString *tempStr;
+    NSDateFormatter *format = [NSDateFormatter new];
+    NSDateFormatter *format2 = [NSDateFormatter new];
+    [format setDateFormat:@"dd MM/yyyy hh:mm a"];
+    [format2 setDateFormat:@"dd/MM/yyyy/HH:mm"];
+    format.AMSymbol = @"AM";
+    format.PMSymbol = @"PM";
+    //设定通知
+    NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
+    //获取用户设置，是否设定免打扰
+    NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
+    if ([autoNotification isEqualToString:@"NO"]) {
+        //[self.fosaNotification initNotification];
+        for (int i = 0; i < remindArray.count; i++) {
+            NSString *body = [NSString stringWithFormat:@"FOSA remind you to eat your food %@ in time",remindArray[i].foodName];
+            //获取通知的图片
+            UIImage *image = [self getImage:remindArray[i].foodName];
+            NSLog(@"%@",image)
+            //另存通知图片
+            [self Savephoto:image name:remindArray[i].foodName];
+            
+            tempArray = [remindArray[i].remindDate componentsSeparatedByString:@","];
+            tempStr = [NSString stringWithFormat:@"%@/%@ %@",tempArray[1],tempArray[2],tempArray[3]];
+            NSDate *date = [format dateFromString:tempStr];
+            //NSLog(@"<<<<<<<<<<<<<<<<<<<<<<remindDate :%@",[format2 stringFromDate:date]);
+            
+            
+            [self.fosaNotification sendNotificationByDate:remindArray[i] body:body date:[format2 stringFromDate:date] foodImg:image];
+        }
+    }
     if ([self.closeDelegate respondsToSelector:@selector(closeNotificationList)]) {
         [self.closeDelegate closeNotificationList];
     }
 }
 
+- (void)deleteReminder{
+    NSLog(@"%@",selectArray);
+
+    if ([self.fmdbManager isFmdbOpen]) {
+        for (int i = 0; i < selectArray.count; i++) {
+            NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set remindDate = '%@' where foodName = '%@'",@"",selectArray[i]];
+            if ([self.fmdbManager updateDataWithSql:updateSql]) {
+                NSLog(@"更新成功");
+            }
+        }
+    }
+    [self getFoodDataFromSql];
+    [self.selectbtn setTitle:@"Select" forState:UIControlStateNormal];
+    self.selectbtn.tag = 0;
+    isSelect = false;
+    self.backBtn.hidden = NO;
+    self.deleBtn.hidden = YES;
+    [self.notificationList reloadData];
+}
 //获取数据库的食物
 - (void)getFoodDataFromSql{
     self.fmdbManager = [FosaFMDBManager initFMDBManagerWithdbName:@"FOSA"];
@@ -154,6 +245,7 @@
     NSString *sql = @"select * from FoodStorageInfo";
     self.dataSource = [self.fmdbManager selectDataWithTableName:@"FoodStorageInfo" sql:sql];
     NSLog(@"%@",self.dataSource);
+    [self.notificationList reloadData];
 }
 //取出保存在本地的图片
 - (UIImage*)getImage:(NSString *)filepath{
@@ -162,7 +254,20 @@
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     // 保存文件的名称
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
-    NSLog(@">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>%@", img);
+    if (img == nil) {
+        img = [UIImage imageNamed:@"icon_defaultImg1"];
+    }
     return img;
+}
+//保存图片到沙盒
+-(void)Savephoto:(UIImage *)image name:(NSString *)foodname{
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *photoName = [NSString stringWithFormat:@"%@.png",foodname];
+    NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent: photoName];// 保存文件的路径
+    NSLog(@"这个是照片的保存地址:%@",filePath);
+    BOOL result =[UIImagePNGRepresentation(image) writeToFile:filePath  atomically:YES];// 保存成功会返回YES
+    if(result == YES) {
+        NSLog(@"通知界面图片保存成功");
+    }
 }
 @end

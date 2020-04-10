@@ -35,7 +35,7 @@
     UILabel *reminderLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, NavigationBarH*2, screen_width/2, NavigationBarH-0.5)];
     reminderLabel.text = @"Reminder";
     reminderLabel.font = [UIFont systemFontOfSize:font(20)];
-    [self.view addSubview:reminderLabel];
+    //[self.view addSubview:reminderLabel];
     UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(reminderLabel.frame), screen_width, 0.5)];
     line.backgroundColor = FOSAGray;
     //[self.view addSubview:line];
@@ -52,7 +52,7 @@
     self.settingTable.showsVerticalScrollIndicator = NO;
     [self.settingTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
     self.settingTable.backgroundColor = FOSAWhite;//[UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    [self.view addSubview:self.settingTable];
+    //[self.view addSubview:self.settingTable];
     
     [self.settingTable reloadData];
    
@@ -66,15 +66,15 @@
     selectedCell = [self.settingTable cellForRowAtIndexPath:[self.setDic valueForKey:selectedSetting]];
     [self.settingTable cellForRowAtIndexPath:[self.setDic valueForKey:selectedSetting]].accessoryType = UITableViewCellAccessoryCheckmark;
     
-    UILabel *dailyReminderLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, CGRectGetMaxY(self.settingTable.frame), screen_width/2, NavigationBarH)];
+    UILabel *dailyReminderLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, NavigationBarH*2, screen_width/2, NavigationBarH-0.5)];
     dailyReminderLabel.text = @"Daily Reminder";
     dailyReminderLabel.font = [UIFont systemFontOfSize:font(20)];
-    [self.view addSubview:dailyReminderLabel];
+    //[self.view addSubview:dailyReminderLabel];
     
     UIView *dailyReminderView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(dailyReminderLabel.frame), screen_width, self.settingTable.frame.size.height/self.dataSource.count)];
     dailyReminderView.backgroundColor = [UIColor whiteColor];
     UILabel *autoLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, screen_width/3, NavigationBarH)];
-    autoLabel.text = @"On/Off";
+    autoLabel.text = @"Do Not Disturb";
     autoLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
     autoLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     [dailyReminderView addSubview:autoLabel];
@@ -156,10 +156,10 @@
     UISwitch *switchButton = (UISwitch*)sender;
     BOOL isButtonOn = [switchButton isOn];
     if (isButtonOn) {
-        NSLog(@"系统自动发送通知");
+        NSLog(@"系统在过期日期自动发送通知");
         autoNotification = @"YES";
     }else {
-           NSLog(@"系统不会自动发送通知");
+           NSLog(@"系统不会发送通知");
         autoNotification = @"NO";
     }
 }
@@ -171,7 +171,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    [self.userDefaults setObject:selectedSetting forKey:@"notificationSetting"];
+    //[self.userDefaults setObject:selectedSetting forKey:@"notificationSetting"];
     [self.userDefaults setObject:autoNotification forKey:@"autonotification"];
     [self.userDefaults synchronize];
     NSLog(@"===========================%@",selectedSetting);

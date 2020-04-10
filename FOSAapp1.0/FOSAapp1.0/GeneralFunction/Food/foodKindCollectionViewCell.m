@@ -13,7 +13,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
+
         self.kind = [[UILabel alloc]init];
         self.kind.textAlignment = NSTextAlignmentCenter;
         self.kind.textColor = [UIColor grayColor];
@@ -22,7 +22,7 @@
         [self addSubview:self.rootView];
         self.categoryPhoto = [[UIImageView alloc]init];
         [self.rootView addSubview:self.categoryPhoto];
-        
+
     }
     return self;
 }
@@ -30,10 +30,10 @@
     [super layoutSubviews];
     int width = self.bounds.size.width;
     int height = self.bounds.size.height;
-    
+
     self.kind.frame = CGRectMake(0, 0, width, (height-width));
     //self.kind.adjustsFontSizeToFitWidth = YES;
-    self.kind.font = [UIFont systemFontOfSize:13];
+    self.kind.font = [UIFont systemFontOfSize:font(15)];
     self.rootView.frame = CGRectMake(0, height-width, width, width);
     self.rootView.layer.cornerRadius = self.rootView.frame.size.width/2;
     //self.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];

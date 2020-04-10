@@ -109,7 +109,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     UNNotificationAttachment *img_attachment = [UNNotificationAttachment attachmentWithIdentifier:@"att1" URL:[NSURL fileURLWithPath:imagePath] options:nil error:&error];
     if (error) {
         NSLog(@"%@", error);
-       }
+    }
     content.attachments = @[img_attachment];
     //设置为@""以后，进入app将没有启动页
     content.launchImageName = @"";
@@ -118,7 +118,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     //设置时间间隔的触发器
     //格式化时间
     NSDateFormatter* formatter = [[NSDateFormatter alloc]init];
-    [formatter setDateFormat:@"yy/MM/dd/HH:mm"];
+    [formatter setDateFormat:@"dd/MM/yy/HH:mm"];
     [formatter setTimeZone:[NSTimeZone localTimeZone]];
     NSDate *date = [NSDate date];
     NSTimeZone *zone = [NSTimeZone systemTimeZone];
@@ -351,48 +351,6 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     //UIImage *sharephoto1 = [self getJPEGImagerImg:[UIImage imageNamed:@"启动图2"]];
     //NSArray *activityItems = @[image];
     //UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
-}
-
-#pragma mark - 数据库操作
-- (void)OpenSqlDatabase:(NSString *)dataBaseName{
-    //获取数据库地址
-    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject];
-    NSLog(@"%@",docPath);
-    //设置数据库名
-    NSString *fileName = [docPath stringByAppendingPathComponent:dataBaseName];
-    //创建数据库
-    db = [FMDatabase databaseWithPath:fileName];
-    if([db open]){
-        NSLog(@"打开数据库成功");
-    }else{
-        NSLog(@"打开数据库失败");
-    }
-}
-
-- (FoodModel *)CheckFoodInfoWithName:(NSString *)device{
-    [self OpenSqlDatabase:@"FOSA"];
-    NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where device = '%@';",device];
-    NSLog(@"%@",sql);
-    FMResultSet *set = [db executeQuery:sql];
-    FoodModel *model;
-    if (set.columnCount == 0) {
-        return nil;
-    }else{
-        if([set next]) {
-           NSString *foodName       = [set stringForColumn:@"foodName"];
-            NSString *device        = [set stringForColumn:@"device"];
-            NSString *aboutFood     = [set stringForColumn:@"aboutFood"];
-            NSString *storageDate   = [set stringForColumn:@"storageDate"];
-            NSString *expireDate    = [set stringForColumn:@"expireDate"];
-            NSString *foodImg       = [set stringForColumn:@"foodImg"];
-            NSString *location      = [set stringForColumn:@"location"];
-            NSString *category      = [set stringForColumn:@"category"];
-            NSString *remindDate    = [set stringForColumn:@"remindDate"];
-            
-            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category  Location:location];
-        }
-    }
-    return model;
 }
 #pragma mark - 压缩图片
 - (UIImage *)getJPEGImagerImg:(UIImage *)image{

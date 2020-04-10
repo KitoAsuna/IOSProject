@@ -17,11 +17,7 @@
 - (UIButton *)addFoodItemBtn{
     if (_addFoodItemBtn == nil) {
         UIButton *publishButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        //publishButton.backgroundColor = XMGRandomColor;
-//        [publishButton setImage:[UIImage imageNamed:@"tabBar_publish_icon"] forState:UIControlStateNormal];
-//        [publishButton setImage:[UIImage imageNamed:@"tabBar_publish_click_icon"] forState:UIControlStateHighlighted];
         [publishButton setImage:[UIImage imageNamed:@"icon_Addbtn"] forState:UIControlStateNormal];
-        //[publishButton addTarget:self action:@selector(publishClick) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:publishButton];
         _addFoodItemBtn = publishButton;
         [_addFoodItemBtn addTarget:self action:@selector(JumpToAdd) forControlEvents:UIControlEventTouchUpInside];
@@ -61,7 +57,7 @@
  buttonIndex++;
  }
  /**** 设置中间的发布按钮的frame ****/
- self.addFoodItemBtn.frame = CGRectMake(0, 0, buttonH*3/4, buttonH*3/4);
+ self.addFoodItemBtn.frame = CGRectMake(0, 0, buttonH*4/5, buttonH*4/5);
  self.addFoodItemBtn.center = CGPointMake(self.frame.size.width * 0.5, 0);
 }
 

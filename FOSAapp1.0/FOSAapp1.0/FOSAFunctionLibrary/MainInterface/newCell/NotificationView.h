@@ -12,6 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @protocol closeViewDelegate <NSObject>
 - (void)closeNotificationList;
+//- (void)deleteReminder;
 @end
 
 @interface NotificationView : UIView

@@ -223,6 +223,7 @@
     isSelectCategory = false;
     if (self.selectedCategoryCell != nil) {
         self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
+        self.selectedCategoryCell.kind.textColor = [UIColor grayColor];
     }
     if (isUpdate) {
         NSLog(@"异步刷新界面");
@@ -297,7 +298,6 @@
     //种类排序
     [self categorySortByNumber];
     
-    
     isSelectCategory = false;
     self.categoryView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), screen_width, screen_width*5/24);
     [self.view addSubview:self.categoryView];
@@ -338,7 +338,7 @@
 }
 - (void)creatFoodItemCategoryView{
     foodItemID = @"foodItemCell";
-    self.foodItemView.frame = CGRectMake(0, CGRectGetMaxY(self.categoryView.frame), screen_width, screen_height-CGRectGetMaxY(self.categoryView.frame)-TabbarHeight*11/8);
+    self.foodItemView.frame = CGRectMake(0, CGRectGetMaxY(self.categoryView.frame)+Height(5), screen_width, screen_height-CGRectGetMaxY(self.categoryView.frame)-TabbarHeight*11/8);
     [self.view addSubview:self.foodItemView];
     //self.foodItemView.backgroundColor = [UIColor yellowColor];
     int collectionWidth = self.foodItemView.frame.size.width;
@@ -373,7 +373,7 @@
      self.fooditemCollection.delegate   = self;
      self.fooditemCollection.dataSource = self;
      self.fooditemCollection.showsVerticalScrollIndicator = NO;
-     self.fooditemCollection.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+    self.fooditemCollection.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
      //self.foodItemCollection.bounces = NO;
      [self.foodItemView addSubview:self.fooditemCollection];
@@ -593,6 +593,7 @@
             NSLog(@"取消选中%@",self.selectedCategoryCell.kind.text);
             isSelectCategory = false;
             self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
+            self.selectedCategoryCell.kind.textColor = [UIColor grayColor];
             self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",self.selectedCategoryCell.accessibilityValue]];
             self.selectedCategoryCell = nil;
             [self CollectionReload];
@@ -600,6 +601,7 @@
         }else{
             isSelectCategory = true;
             cell.rootView.backgroundColor = FOSAYellow;
+            cell.kind.textColor = FOSAYellow;
             NSString *imgName = [NSString stringWithFormat:@"%@W",[self.categoryDictionary valueForKey:self.categoryNameArray[indexPath.row]]];
             cell.categoryPhoto.image = [UIImage imageNamed:imgName];
             self.selectedCategoryCell = cell;
@@ -619,6 +621,7 @@
 
         NSLog(@"取消选中%@",self.selectedCategoryCell.kind.text);
         self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
+        self.selectedCategoryCell.kind.textColor = [UIColor grayColor];
         self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:self.selectedCategoryCell.accessibilityValue];
     }else{
         
@@ -628,7 +631,7 @@
 // 两列cell之间的间距
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     if (collectionView == self.fooditemCollection) {
-        return font(7);
+        return font(8);
     }else{
         return font(8);
     }
@@ -677,7 +680,6 @@
     }
 }
 
-
 - (void)SelectDataFromFoodTable{
     [self.collectionDataSource removeAllObjects];
     //[self.cellDictionary removeAllObjects];
@@ -707,13 +709,13 @@
         }
         
         NSLog(@"*********************************************foodName    = %@",foodName);
-        NSLog(@"device      = %@",device);
-        NSLog(@"aboutFood   = %@",aboutFood);
-        NSLog(@"storageDate  = %@",storageDate);
-        NSLog(@"expireDate  = %@",expireDate);
-        NSLog(@"foodImg     = %@",foodImg);
-        NSLog(@"category    = %@",category);
-        NSLog(@"remindDate  = %@",remindDate);
+        //NSLog(@"device      = %@",device);
+        //NSLog(@"aboutFood   = %@",aboutFood);
+        NSLog(@"===========storageDate  = %@",storageDate);
+        NSLog(@"===========expireDate  = %@",expireDate);
+        //NSLog(@"foodImg     = %@",foodImg);
+        //NSLog(@"category    = %@",category);
+        NSLog(@"===========remindDate  = %@",remindDate);
     }
     
     NSString *currentSortType = [self.userdefault valueForKey:@"sort"];
@@ -838,11 +840,12 @@
 - (void)sortByMostRecent{
     NSComparator compare = ^(FoodModel* obj1,FoodModel* obj2){
         NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
-        [formatter setDateFormat:@"MM/dd/yyyy HH:mm"];
+        [formatter setDateFormat:@"MM/dd/yy HH:mm"];
         
         NSArray<NSString *> *dateArray1 = [obj1.expireDate componentsSeparatedByString:@"/"];
-        NSString *RDate1 = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray1[1],dateArray1[0],dateArray1[2],dateArray1[3]];
+        NSString *RDate1 = [NSString stringWithFormat:@"%@/%@/%@ %@", dateArray1[1],dateArray1[0],dateArray1[2],dateArray1[3]];
         NSDate *foodDate1 = [formatter dateFromString:RDate1];
+        NSLog(@"---------------%@",foodDate1);
         
         NSArray<NSString *> *dateArray2 = [obj2.expireDate componentsSeparatedByString:@"/"];
         NSString *RDate2 = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray2[1],dateArray2[0],dateArray2[2],dateArray2[3]];
@@ -1037,10 +1040,9 @@
         add.navigationItem.hidesBackButton = YES;
     }else{
         add.foodStyle = @"Info";
+        add.model = cell.model;
     }
-    
     add.hidesBottomBarWhenPushed = YES;
-    add.model = cell.model;
     add.foodCategoryIconname = [self.categoryDictionary valueForKey:cell.model.category];
     NSLog(@"<<<<<<<<<<<<<<<<<%@",add.foodCategoryIconname);
     [self.navigationController pushViewController:add animated:YES];
@@ -1119,6 +1121,7 @@
     
     [UIView animateWithDuration:0.5 animations:^{
         self.smask.hidden = NO;
+        self.tabBarController.tabBar.hidden = YES;
         self.smask.userInteractionEnabled = NO;
         if (self->_notifiView == nil) {
             self->_notifiView = [[NotificationView alloc]initWithFrame:CGRectMake(5, NavigationBarH, screen_width-10, screen_height*127/143)];
@@ -1134,9 +1137,9 @@
     [UIView animateWithDuration:0.5 animations:^{
         self.smask.hidden = YES;
         self.smask.userInteractionEnabled = YES;
+        self.tabBarController.tabBar.hidden = NO;
         [self.notifiView removeFromSuperview];
     }];
-    
 }
 
 - (void)SendRemindNotification{
