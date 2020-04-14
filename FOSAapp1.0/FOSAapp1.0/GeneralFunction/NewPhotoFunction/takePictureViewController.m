@@ -199,7 +199,7 @@
     [self.device lockForConfiguration:nil];
     if (self.device.torchMode == AVCaptureTorchModeOff) {
         [self.device setTorchMode:AVCaptureTorchModeOn];
-        [self.flashBtn setImage:[UIImage imageNamed:@"icon_flashW"] forState:UIControlStateNormal];
+        [self.flashBtn setImage:[UIImage imageNamed:@"icon_flashHL"] forState:UIControlStateNormal];
     }else{
         [self.device setTorchMode:AVCaptureTorchModeOff];
         [self.flashBtn setImage:[UIImage imageNamed:@"icon_flashG"] forState:UIControlStateNormal];

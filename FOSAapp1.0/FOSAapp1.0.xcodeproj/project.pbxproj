@@ -55,10 +55,10 @@
 		45172FE8240F5EAB00408A75 /* takePictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45172FE7240F5EAB00408A75 /* takePictureViewController.m */; };
 		45172FEB240F74F300408A75 /* foodAddingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45172FEA240F74F300408A75 /* foodAddingViewController.m */; };
 		45184AB523CDBEAE005E987B /* FosaDatePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45184AB423CDBEAE005E987B /* FosaDatePickerView.m */; };
+		45229B7E24453E520063100D /* icon_flashOff.png in Resources */ = {isa = PBXBuildFile; fileRef = 45229B7D24453E520063100D /* icon_flashOff.png */; };
+		45229B8024453E710063100D /* icon_flashOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 45229B7F24453E710063100D /* icon_flashOn.png */; };
 		4528AAEF23BD7DF100957279 /* scanLine_Horizontal.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAEE23BD7DF100957279 /* scanLine_Horizontal.png */; };
 		4528AAF123BD7DF800957279 /* scanLine_Vertical.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAF023BD7DF800957279 /* scanLine_Vertical.png */; };
-		4528AAF423BDE12800957279 /* icon_flashOff.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAF223BDE12700957279 /* icon_flashOff.png */; };
-		4528AAF523BDE12800957279 /* icon_flashON.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAF323BDE12700957279 /* icon_flashON.png */; };
 		453938D123C00F7B0006474E /* CategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453938D023C00F7B0006474E /* CategoryViewController.m */; };
 		453C88342413DA37006B52A8 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453C88332413DA37006B52A8 /* MainViewController.m */; };
 		454421EB23CBF5A0002FADFE /* FoodInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421EA23CBF5A0002FADFE /* FoodInfoView.m */; };
@@ -72,6 +72,7 @@
 		45822175243ECCEC002970EC /* notificationListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45822174243ECCEC002970EC /* notificationListTableViewCell.m */; };
 		45822178243ECD05002970EC /* NotificationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45822177243ECD05002970EC /* NotificationView.m */; };
 		4582217C243EE827002970EC /* FosaFMDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4582217A243EE827002970EC /* FosaFMDBManager.m */; };
+		458778DA244400930097594A /* repeatWayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 458778D9244400930097594A /* repeatWayViewController.m */; };
 		458EA2D5241233C700F1FCC7 /* fosaMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 458EA2D4241233C700F1FCC7 /* fosaMainViewController.m */; };
 		4590C81C23B9A58700691461 /* FoodModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C81B23B9A58700691461 /* FoodModel.m */; };
 		4590C83723B9C5F500691461 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4590C82C23B9C5F500691461 /* FMDatabaseQueue.m */; };
@@ -232,10 +233,10 @@
 		45172FEA240F74F300408A75 /* foodAddingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = foodAddingViewController.m; sourceTree = "<group>"; };
 		45184AB323CDBEAE005E987B /* FosaDatePickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FosaDatePickerView.h; sourceTree = "<group>"; };
 		45184AB423CDBEAE005E987B /* FosaDatePickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FosaDatePickerView.m; sourceTree = "<group>"; };
+		45229B7D24453E520063100D /* icon_flashOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_flashOff.png; sourceTree = "<group>"; };
+		45229B7F24453E710063100D /* icon_flashOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_flashOn.png; sourceTree = "<group>"; };
 		4528AAEE23BD7DF100957279 /* scanLine_Horizontal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scanLine_Horizontal.png; sourceTree = "<group>"; };
 		4528AAF023BD7DF800957279 /* scanLine_Vertical.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scanLine_Vertical.png; sourceTree = "<group>"; };
-		4528AAF223BDE12700957279 /* icon_flashOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_flashOff.png; sourceTree = "<group>"; };
-		4528AAF323BDE12700957279 /* icon_flashON.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_flashON.png; sourceTree = "<group>"; };
 		453938CF23C00F7B0006474E /* CategoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryViewController.h; sourceTree = "<group>"; };
 		453938D023C00F7B0006474E /* CategoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CategoryViewController.m; sourceTree = "<group>"; };
 		453C88322413DA37006B52A8 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -257,6 +258,8 @@
 		45822177243ECD05002970EC /* NotificationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationView.m; sourceTree = "<group>"; };
 		4582217A243EE827002970EC /* FosaFMDBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FosaFMDBManager.m; sourceTree = "<group>"; };
 		4582217B243EE827002970EC /* FosaFMDBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FosaFMDBManager.h; sourceTree = "<group>"; };
+		458778D8244400930097594A /* repeatWayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = repeatWayViewController.h; sourceTree = "<group>"; };
+		458778D9244400930097594A /* repeatWayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = repeatWayViewController.m; sourceTree = "<group>"; };
 		458EA2D3241233C700F1FCC7 /* fosaMainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fosaMainViewController.h; sourceTree = "<group>"; };
 		458EA2D4241233C700F1FCC7 /* fosaMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fosaMainViewController.m; sourceTree = "<group>"; };
 		4590C81A23B9A58700691461 /* FoodModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FoodModel.h; sourceTree = "<group>"; };
@@ -428,8 +431,8 @@
 			isa = PBXGroup;
 			children = (
 				4503BD80243BF9E100B1E555 /* ding.wav */,
-				4528AAF223BDE12700957279 /* icon_flashOff.png */,
-				4528AAF323BDE12700957279 /* icon_flashON.png */,
+				45229B7D24453E520063100D /* icon_flashOff.png */,
+				45229B7F24453E710063100D /* icon_flashOn.png */,
 				4528AAEE23BD7DF100957279 /* scanLine_Horizontal.png */,
 				4528AAF023BD7DF800957279 /* scanLine_Vertical.png */,
 				455F4AC623D157FE00BE3822 /* saoyisao@3x.png */,
@@ -559,6 +562,8 @@
 			children = (
 				45184AB323CDBEAE005E987B /* FosaDatePickerView.h */,
 				45184AB423CDBEAE005E987B /* FosaDatePickerView.m */,
+				458778D8244400930097594A /* repeatWayViewController.h */,
+				458778D9244400930097594A /* repeatWayViewController.m */,
 			);
 			path = FosaDatePicker;
 			sourceTree = "<group>";
@@ -1009,15 +1014,15 @@
 				45A506D923B8402E0046FC09 /* LaunchScreen.storyboard in Resources */,
 				4502FF7E23D033380013AB31 /* Assets.xcassets in Resources */,
 				4502FF7023CFE2480013AB31 /* IMG_Pound.png in Resources */,
+				45229B7E24453E520063100D /* icon_flashOff.png in Resources */,
+				45229B8024453E710063100D /* icon_flashOn.png in Resources */,
 				455F4AC723D157FE00BE3822 /* saoyisao@3x.png in Resources */,
 				4503BD81243BF9E100B1E555 /* ding.wav in Resources */,
 				45CE418623F3971100B9F884 /* fosaLauch.png in Resources */,
-				4528AAF423BDE12800957279 /* icon_flashOff.png in Resources */,
 				4502FF6F23CFE2480013AB31 /* IMG_Sealer.png in Resources */,
 				4500E0FA23BACF89002EB9FE /* Img_mainimg.png in Resources */,
 				45A506D423B8402C0046FC09 /* Main.storyboard in Resources */,
 				4528AAF123BD7DF800957279 /* scanLine_Vertical.png in Resources */,
-				4528AAF523BDE12800957279 /* icon_flashON.png in Resources */,
 				4528AAEF23BD7DF100957279 /* scanLine_Horizontal.png in Resources */,
 				45A30E222429DABF0059B8F7 /* foodItemCellXIB.xib in Resources */,
 			);
@@ -1064,6 +1069,7 @@
 				450D586623C9B7D70032E905 /* LoadCircleView.m in Sources */,
 				4513DD5E23BF3BC00005A1E2 /* FosaNotification.m in Sources */,
 				4513DD3223BED3550005A1E2 /* PhotoViewController2.m in Sources */,
+				458778DA244400930097594A /* repeatWayViewController.m in Sources */,
 				4513DD5223BF31410005A1E2 /* FoodViewController.m in Sources */,
 				4500E12423BAEB14002EB9FE /* NSAttributedString+AvoidCrash.m in Sources */,
 				4500E11E23BAEB14002EB9FE /* NSDictionary+AvoidCrash.m in Sources */,

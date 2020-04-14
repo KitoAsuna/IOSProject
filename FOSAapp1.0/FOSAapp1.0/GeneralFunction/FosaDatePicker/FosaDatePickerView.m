@@ -36,19 +36,7 @@
 @property (copy, nonatomic) NSString *hour; //选中时
 @property (copy, nonatomic) NSString *minute; //选中分
 
-//reminder
-@property (nonatomic,strong) UIView *remindView;
-@property (nonatomic,strong) UILabel *remindLabel;
-@property (nonatomic,strong) UISwitch *remindSwitch;
-
 @property (nonatomic,strong) fosaView *repeatView,*AlarView;
-
-@property (nonatomic,strong) UILabel *Alarm,*rightDatelabel,*leftDatelabel;
-@property (nonatomic,strong) UIDatePicker *remindDatepicker;
-
-@property (nonatomic,strong) UILabel *repeatLabel,*repeatWayLabel;
-@property (nonatomic,strong) UIImageView *rightSign;
-
 
 @end
 
@@ -58,7 +46,7 @@
 
 #pragma mark - init
 /// 初始化
-- (instancetype)initWithFrame:(CGRect)frame expireDate:(NSString *)expirestr remindDate:(nonnull NSString *)remindstr
+- (instancetype)initWithFrame:(CGRect)frame expireDate:(NSString *)expirestr remindDate:(NSString *)remindstr repeatWay:(NSString *)repeat
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -69,13 +57,15 @@
         self.dataArray = [NSMutableArray array];
         self.minuteArr = [NSMutableArray array];
         
+        NSLog(@"expiry:%@,remind:%@",expirestr,remindstr);
+        
         [self.dataArray addObject:self.dayArr];
         [self.dataArray addObject:self.monthArr];
         [self.dataArray addObject:self.yearArr];
         [self.dataArray addObject:self.hourArr];
         self.selectRemindStr = @"";
         
-        [self configData:expirestr remind:remindstr];
+        [self configData:expirestr remind:remindstr repeatway:repeat];
         [self configToolView];
         [self configPickerView];
         [self configReminder];
@@ -83,7 +73,7 @@
     return self;
 }
 
-- (void)configData:(NSString *)expirestr remind:(NSString *)remindstr{
+- (void)configData:(NSString *)expirestr remind:(NSString *)remindstr repeatway:repeat{
 
     NSLog(@"expirestr:%@",expirestr);
     self.isSlide = YES;
@@ -96,9 +86,9 @@
     NSString *newDate = [dateStr stringByReplacingOccurrencesOfString:@":" withString:@"/"];
     self.currentTime = [NSMutableArray arrayWithArray:[newDate componentsSeparatedByString:@"/"]];
     NSLog(@"%@",self.currentTime);
-//    NSLog(@"初始日期:%@========%@",date,[dateFormatter stringFromDate:date]);
-//
-//    self.date = [dateFormatter stringFromDate:date];
+    
+    self.reminderDate = remindstr;
+    self.repeatWay = repeat;
 }
 
 #pragma mark - 配置界面
@@ -157,6 +147,7 @@
     self.remindSwitch = [UISwitch new];
     self.remindSwitch.center = CGPointMake(screen_width-50, height/20);
     [self.remindSwitch addTarget:self action:@selector(autoSwitch:) forControlEvents:UIControlEventValueChanged];
+
     self.remindLabel.text = @"Remind Me";
     [self.remindView addSubview:self.remindLabel];
     [self.remindView addSubview:self.remindSwitch];
@@ -174,14 +165,14 @@
     self.Alarm = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width/4, height/10)];
     self.Alarm.text = @"Alarm";
 
-    self.rightDatelabel = [[UILabel alloc]initWithFrame:CGRectMake(screen_width/2, 0, screen_width/2-30, height/10)];
+    self.rightDatelabel = [[UILabel alloc]initWithFrame:CGRectMake(screen_width/3, 0, screen_width*2/3-font(20), height/10)];
     NSDate *current = [NSDate new];
-    self.rightDatelabel.text = [self getTimeAndWeekDay:current][0];
+    self.rightDatelabel.text = [self getTimeAndWeekDay:current];
     self.rightDatelabel.textColor = FOSAGray;
     self.rightDatelabel.textAlignment = NSTextAlignmentRight;
     
     self.leftDatelabel = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width-10, height/10)];
-    self.leftDatelabel.text = [self getTimeAndWeekDay:current][1];
+    self.leftDatelabel.text = [self getTimeAndWeekDay:current];
     self.leftDatelabel.textColor = FOSAColor(2, 121, 255);
     self.leftDatelabel.hidden = YES;
     
@@ -192,8 +183,7 @@
     UIView *boundary2 = [[UIView alloc]initWithFrame:CGRectMake(font(15), CGRectGetMaxY(self.Alarm.frame), screen_width-font(15), 1)];
     boundary2.backgroundColor = FOSAColor(242, 242, 242);
     [self.remindView addSubview:boundary2];
-    
-    
+
     self.remindDatepicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, 0)];//(self.frame.size.height/2-22)/2
     self.remindDatepicker.datePickerMode = UIDatePickerModeDateAndTime;
     self.remindDatepicker.minimumDate = [NSDate new];
@@ -213,9 +203,15 @@
     self.repeatLabel = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width/4, height/10)];
     self.repeatLabel.text = @"Repeat";
     self.repeatView.hidden = YES;
-    self.repeatWayLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width-font(40)-height/13, 0, font(40), height/10)];
+    self.repeatWayLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width-font(60)-height/13, 0, font(60), height/10)];
+    self.repeatWayLabel.textAlignment = NSTextAlignmentRight;
     self.repeatWayLabel.adjustsFontSizeToFitWidth = YES;
-    self.repeatWayLabel.text = @"Never";
+    if (self.repeatWay == NULL) {
+        self.repeatWayLabel.text = @"Never";
+    }else{
+        self.repeatWayLabel.text = self.repeatWay;
+    }
+
     self.repeatWayLabel.textColor = FOSAGray;
     self.repeatWayLabel.hidden = YES;
     
@@ -229,7 +225,20 @@
     [self.repeatView addSubview:self.rightSign];
     [self.repeatView addSubview:self.repeatLabel];
     [self.remindView addSubview:self.repeatView];
-    
+
+    if (![self.reminderDate isEqualToString:@""]) {
+        [self.remindSwitch setOn:true];
+        [self autoSwitch:_remindSwitch];
+        //self.leftDatelabel.text = self.reminderDate;
+        self.rightDatelabel.text = self.reminderDate;
+//        NSArray *array = [self.reminderDate componentsSeparatedByString:@","];
+//        NSDateFormatter *format = [NSDateFormatter new];
+//        [format setDateFormat:@" dd  MM, yyyy ,hh:mm  a"];
+//        NSDate *date = [format dateFromString:[NSString stringWithFormat:@"%@,%@,%@",array[1],array[2],array[3]]];
+//        NSLog(@"****************%@",date);
+//        [self.remindDatepicker setDate:date];
+           //[self.remindSwitch respondsToSelector:@selector(autoSwitch:)];
+    }
 }
 - (void)openDatePicker{
     NSLog(@"======================================================");
@@ -251,7 +260,7 @@
             self.leftDatelabel.hidden = YES;
             self.Alarm.hidden = NO;
             self.rightDatelabel.hidden = NO;
-            
+
             self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.pickerView.frame)+10, screen_width, self->height*3/10);
             self.remindDatepicker.frame = CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, 0);
             //self.repeatView.frame = CGRectMake(0, CGRectGetMaxY(self.alarmView.frame), screen_width, self->height/10);
@@ -260,11 +269,14 @@
         }];
         self.AlarView.tag = 0;
     }
-    
 }
+
 - (void)selectRepeatWay{
-    NSLog(@"+++++++++++++++++++++++++++++++++")
+    if ([self.delegate respondsToSelector:@selector(jumpToRepeatView)]) {
+        [self.delegate jumpToRepeatView];
+    }
 }
+
 - (void)autoSwitch:(id)sender{
     UISwitch *switchButton = (UISwitch*)sender;
     BOOL isButtonOn = [switchButton isOn];
@@ -279,7 +291,7 @@
         [UIView animateWithDuration:0.2 animations:^{
             self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.pickerView.frame)+10, screen_width, self->height/10);
             self.remindDatepicker.frame = CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, 0);
-            self.repeatView.frame = CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, self->height/10);
+            //self.repeatView.frame = CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, self->height/10);
             self.AlarView.hidden = YES;
             self.repeatView.hidden = YES;
             self.repeatWayLabel.hidden = YES;
@@ -293,10 +305,11 @@
 }
 - (void)changeDate:(UIDatePicker *)picker{
     NSLog(@"当前选择:%@",picker.date);
-    self.rightDatelabel.text = [self getTimeAndWeekDay:picker.date][0];
-    self.leftDatelabel.text  = [self getTimeAndWeekDay:picker.date][1];
+    self.rightDatelabel.text = [self getTimeAndWeekDay:picker.date];
+    self.leftDatelabel.text  = [self getTimeAndWeekDay:picker.date];
 
-    self.selectRemindStr = [self getTimeAndWeekDay:picker.date][1];
+    self.reminderDate = [self getTimeAndWeekDay:picker.date];
+    //self.selectRemindStr = self.reminderDate;
 }
 
 - (void)setTitle:(NSString *)title {
@@ -309,14 +322,13 @@
     NSString *newDate = [date stringByReplacingOccurrencesOfString:@":" withString:@"/"];
     NSMutableArray *timerArray = [NSMutableArray arrayWithArray:[newDate componentsSeparatedByString:@"/"]];
     NSLog(@"timeArray:%@",timerArray);
-    
+
     [timerArray replaceObjectAtIndex:0 withObject:[NSString stringWithFormat:@"%@", timerArray[0]]];
     [timerArray replaceObjectAtIndex:1 withObject:[NSString stringWithFormat:@"%@", timerArray[1]]];
     [timerArray replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%ld", (long)[timerArray[2] integerValue]+2000]];
     [timerArray replaceObjectAtIndex:3 withObject:[NSString stringWithFormat:@"%@", timerArray[3]]];
-    [timerArray replaceObjectAtIndex:4 withObject:[NSString stringWithFormat:@"%@", timerArray[4]]];
+   [timerArray replaceObjectAtIndex:4 withObject:[NSString stringWithFormat:@"%@", timerArray[4]]];
     self.timeArr = timerArray;
-    
 }
 
 - (void)setMinuteInterval:(NSInteger)minuteInterval {
@@ -361,7 +373,7 @@
     NSString *minute = self.minute.length == 2 ? [NSString stringWithFormat:@"%ld", self.minute.integerValue] : [NSString stringWithFormat:@"0%ld", self.minute.integerValue];
     self.selectStr = [NSString stringWithFormat:@"%@/%@/%ld/%@:%@", month, day, [self.year integerValue]%100, hour, minute];
     if ([self.delegate respondsToSelector:@selector(datePickerViewSaveBtnClickDelegate:remindDate:)]) {
-        [self.delegate datePickerViewSaveBtnClickDelegate:self.selectStr remindDate:self.selectRemindStr];
+        [self.delegate datePickerViewSaveBtnClickDelegate:self.selectStr remindDate:self.reminderDate];
     }
 }
 /// 取消按钮点击方法
@@ -727,7 +739,7 @@
     return mouthArray[(index-1)%12];
 }
 //获取当前时间日期星期
-- (NSArray *)getTimeAndWeekDay:(NSDate *)date{
+- (NSString *)getTimeAndWeekDay:(NSDate *)date{
     
     NSArray * arrWeek=[NSArray arrayWithObjects:@"Sun",@"Mon",@"Tue",@"Wed",@"Thu",@"Fri",@"Sat", nil];
     NSArray * arrWeekDay=[NSArray arrayWithObjects:@"Sunday",@"Monday",@"Tuesday",@"Wednesday",@"Thursday",@"Friday",@"Saturday", nil];
@@ -761,10 +773,10 @@
     }else{
         minu = [NSString stringWithFormat:@"%ld",minute];
     }
-    NSString *weekStr = [NSString stringWithFormat:@"%@,%ld/%ld/%ld,%@",[arrWeek objectAtIndex:week],(long)month,(long)day,(long)year%100,timeStr];
+   // NSString *weekStr = [NSString stringWithFormat:@"%@,%ld/%ld/%ld,%@",[arrWeek objectAtIndex:week],(long)month,(long)day,(long)year%100,timeStr];
     NSString *weekdayStr = [NSString stringWithFormat:@"%@, %ld  %@, %ld ,%@",[arrWeekDay objectAtIndex:week],day,[self getMouthByindex:(int)month],year,timeStr];
-    NSArray *arrStr = @[weekStr,weekdayStr];
-    return   arrStr;
+   // NSArray *arrStr = @[weekStr,weekdayStr];
+    return  weekdayStr;
 }
 
 @end

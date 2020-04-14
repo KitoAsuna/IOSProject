@@ -20,6 +20,7 @@
     FMDatabase *db;
 }
 @property (nonatomic,strong) UIImage *image,*codeImage;
+@property (nonatomic,strong) UNUserNotificationCenter *center;
 @end
 
 @implementation FosaNotification
@@ -27,15 +28,16 @@
 
 -(void)initNotification{
     NSLog(@"获取权限");
-    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    self.center = [UNUserNotificationCenter currentNotificationCenter];
             // 必须写代理，不然无法监听通知的接收与点击
-    center.delegate = self;
-        //设置预设好的交互类型，NSSet里面是设置好的UNNotificationCategory
-    [center setNotificationCategories:[self createNotificationCategoryActions]];
     
-    [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
+    self.center.delegate = self;
+        //设置预设好的交互类型，NSSet里面是设置好的UNNotificationCategory
+    [self.center setNotificationCategories:[self createNotificationCategoryActions]];
+    
+    [self.center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
     if (settings.authorizationStatus==UNAuthorizationStatusNotDetermined){
-        [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert|UNAuthorizationOptionBadge | UNAuthorizationOptionSound) completionHandler:^(BOOL granted, NSError * _Nullable error){
+        [self.center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert|UNAuthorizationOptionBadge | UNAuthorizationOptionSound) completionHandler:^(BOOL granted, NSError * _Nullable error){
                 if (granted) {
                     } else {
                     }
@@ -89,6 +91,10 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     }
     completionHandler();
 }
+- (void)removeReminder:(NSArray *)array{
+    [self.center removeDeliveredNotificationsWithIdentifiers:array];
+    [self.center removePendingNotificationRequestsWithIdentifiers:array];
+}
 
 - (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(id)image{
     NSLog(@"我将发送一个系统通知");
@@ -112,7 +118,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     }
     content.attachments = @[img_attachment];
     //设置为@""以后，进入app将没有启动页
-    content.launchImageName = @"";
+    //content.launchImageName = @"";
     UNNotificationSound *sound = [UNNotificationSound defaultSound];
     content.sound = sound;
     //设置时间间隔的触发器
@@ -136,8 +142,8 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
                                                 NSCalendarUnitMinute |
                                                 NSCalendarUnitSecond
                                                 fromDate:localeDate];
-    UNCalendarNotificationTrigger *date_trigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:components repeats:NO];
-    NSString *requestIdentifer = model.foodPhoto;
+    UNCalendarNotificationTrigger *date_trigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:components repeats:YES];
+    NSString *requestIdentifer = model.foodName;
            //content.categoryIdentifier = @"textCategory";
     content.categoryIdentifier = @"seeCategory";
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifer content:content trigger:date_trigger];
@@ -146,7 +152,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
            NSLog(@"%@",error);
     }];
     //生成二维码
-    NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@&%@",model.foodName,model.device,model.aboutFood,model.expireDate,model.storageDate,model.category,model.location];
+    NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@&%@&%@",model.foodName,model.device,model.aboutFood,model.expireDate,model.storageDate,model.category,model.location,model.repeat];
     self.codeImage = [self GenerateQRCodeByMessage:message];
     self.image = img;
     foodName = model.foodName;

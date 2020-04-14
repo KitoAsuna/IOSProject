@@ -13,20 +13,16 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FoodModel : NSObject
 @property (nonatomic,copy) NSString *foodName,*aboutFood,*foodPhoto
                                     ,*remindDate,*device,*expireDate
-                                    ,*storageDate,*calorie,*weight,*location,*category,*islike;
+                                    ,*storageDate,*calorie,*weight,*location,*category,*repeat,*isSend;
 
-//
-///**SealerTableViewCell*/
-//+ (instancetype)modelWithName:(NSString *)food_name expireDate:(NSString*)expireDate storageDate:(NSString *)storageDate fdevice:(NSString *)device photoPath:(NSString *)foodPhoto;
-//- (instancetype)initWithName:(NSString *)food_name expireDate:(NSString *)expireDate storageDate:(NSString *)storageDate fdevice:(NSString *)device photoPath:(NSString *)foodPhoto;
 
 //add food
-+ (instancetype)modelWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location;
-- (instancetype)initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location;
++ (instancetype)modelWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location repeatWay:(NSString *)repeat;
+- (instancetype)initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location repeatWay:(NSString *)repeat;
 
-////show info
-//+ (instancetype)modelWithName:(NSString *) food_name DeviceID:(NSString *)device StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate;
-//- (instancetype)initWithName:(NSString *) food_name DeviceID:(NSString *)device StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate;
++ (instancetype)modelWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location repeatWay:(NSString *)repeat send:(NSString *)isSend;
+- (instancetype)initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location repeatWay:(NSString *)repeat send:(NSString *)isSend;
+
 
 @end
 

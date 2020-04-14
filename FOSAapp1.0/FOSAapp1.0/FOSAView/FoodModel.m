@@ -10,26 +10,12 @@
 @implementation FoodModel
 
 
-///**SealerTableViewCell*/
-//+ (instancetype)modelWithName:(NSString *)food_name expireDate:(NSString *)expireDate storageDate:(NSString *)storageDate fdevice:(NSString *)device photoPath:(NSString *)foodPhoto{
-//    return [[self alloc]initWithName:food_name expireDate:expireDate storageDate:storageDate fdevice:device photoPath:foodPhoto];
-//}
-//- (instancetype)initWithName:(NSString *)food_name expireDate:(NSString *)expireDate storageDate:(NSString *)storageDate fdevice:(NSString *)device photoPath:(NSString *)foodPhoto{
-//    if(self == [super init]){
-//        self.foodName = food_name;
-//        self.expireDate = expireDate;
-//        self.storageDate = storageDate;
-//        self.device = device;
-//        self.foodPhoto = foodPhoto;
-//    }
-//    return self;
-//}
 
 //add food
-+ (instancetype)modelWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location{
-    return [[self alloc]initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:location];
++ (instancetype)modelWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location repeatWay:(NSString *)repeat{
+    return [[self alloc]initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:location repeatWay:repeat];
 }
-- (instancetype)initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location{
+- (instancetype)initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location repeatWay:(NSString *)repeat{
     self = [super init];
     if(self){
         self.foodName       = food_name;
@@ -41,6 +27,7 @@
         self.foodPhoto      = foodPhoto;
         self.category       = category;
         self.location       = location;
+        self.repeat         = repeat;
         return self;
     }else{
         return nil;
@@ -48,19 +35,28 @@
     
 }
 
-////show info
-//+ (instancetype)modelWithName:(NSString *)food_name DeviceID:(NSString *)device RemindDate:(NSString *)remindDate ExpireDate:(NSString *)expireDate{
-//    return [[self alloc]initWithName:food_name DeviceID:device RemindDate:remindDate ExpireDate:expireDate];
-//}
-//- (instancetype)initWithName:(NSString *)food_name DeviceID:(NSString *)device RemindDate:(NSString *)remindDate ExpireDate:(NSString *)expireDate{
-//    if(self == [super init]){
-//        self.foodName = food_name;
-//        self.expireDate = expireDate;
-//        self.remindDate = remindDate;
-//        self.device = device;
-//
-//    }
-//    return self;
-//}
++ (instancetype)modelWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location repeatWay:(NSString *)repeat send:(nonnull NSString *)isSend{
+    return [[self alloc]initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:location repeatWay:repeat send:isSend];
+}
+- (instancetype)initWithName:(NSString *) food_name DeviceID:(NSString *)device Description:(NSString *)aboutFood StrogeDate:(NSString *)storageDate ExpireDate:(NSString *)expireDate remindDate:(NSString *)remindDate foodIcon:(NSString *)foodPhoto category:(NSString *)category Location:(NSString *)location repeatWay:(NSString *)repeat send:(nonnull NSString *)isSend{
+    self = [super init];
+    if(self){
+        self.foodName       = food_name;
+        self.aboutFood      = aboutFood;
+        self.expireDate     = expireDate;
+        self.storageDate    = storageDate;
+        self.remindDate     = remindDate;
+        self.device         = device;
+        self.foodPhoto      = foodPhoto;
+        self.category       = category;
+        self.location       = location;
+        self.repeat         = repeat;
+        self.isSend         = isSend;
+        return self;
+    }else{
+        return nil;
+    }
+    
+}
 
 @end

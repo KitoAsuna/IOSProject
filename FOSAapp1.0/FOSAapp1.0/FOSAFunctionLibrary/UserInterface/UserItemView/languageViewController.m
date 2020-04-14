@@ -31,7 +31,7 @@
     self.dataSource = [NSMutableArray new];
     [self.dataSource addObjectsFromArray:@[@"Chinese",@"Japanese",@"English"]];
     if (@available(iOS 13.0, *)) {
-        self.languageTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationHeight*3, screen_width, screen_height/5) style:UITableViewStylePlain];
+        self.languageTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarH*3, screen_width, screen_height/5) style:UITableViewStylePlain];
     } else {
         self.languageTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarH*1.5, screen_width, screen_height/5) style:UITableViewStylePlain];
     }

@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)datePickerViewCancelBtnClickDelegate;
 
+- (void)jumpToRepeatView;
+
 @end
 
 @interface FosaDatePickerView : UIView
@@ -35,11 +37,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,copy) NSString *reminderDate;
 
+@property (nonatomic,copy) NSString *repeatWay;
+
 /// 分钟间隔 默认5分钟
 @property (assign, nonatomic) NSInteger minuteInterval;
 
 @property (weak, nonatomic) id <FosaDatePickerViewDelegate> delegate;
-- (instancetype)initWithFrame:(CGRect)frame expireDate:(NSString *)expirestr remindDate:(NSString *)remindstr;
+
+//reminder
+@property (nonatomic,strong) UIView *remindView;
+@property (nonatomic,strong) UILabel *remindLabel;
+@property (nonatomic,strong) UISwitch *remindSwitch;
+
+@property (nonatomic,strong) UILabel *Alarm,*rightDatelabel,*leftDatelabel;
+@property (nonatomic,strong) UIDatePicker *remindDatepicker;
+
+@property (nonatomic,strong) UILabel *repeatLabel,*repeatWayLabel;
+@property (nonatomic,strong) UIImageView *rightSign;
+
+
+- (instancetype)initWithFrame:(CGRect)frame expireDate:(NSString *)expirestr remindDate:(NSString *)remindstr repeatWay:(NSString *)repeat;
 /// 显示
 - (void)show;
 

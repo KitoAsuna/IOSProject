@@ -15,7 +15,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.foodImgView = [UIImageView new];
-        //self.foodImgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_defaultImg%ld",self.indexOfImg+1]];
         self.foodImgView.contentMode = UIViewContentModeScaleAspectFill;
         self.foodImgView.clipsToBounds = YES;
         [self addSubview:self.foodImgView];
@@ -81,8 +80,6 @@
 }
 - (void)setModel:(FoodModel *)model
 {
-    NSLog(@"*********************setModel 执行*************************");
-    
     NSArray<NSString *> *timeArray;
     _model = model;
     if ([self getImage:model.foodPhoto] != nil) {
@@ -90,13 +87,9 @@
     }
     
     if (![model.device isEqualToString:@"null"]) {
-        NSLog(@">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        //[self.likebtn setImage:[UIImage imageNamed:@"img_foodCode"] forState:UIControlStateNormal];
         self.likebtn.hidden = NO;
         self.squre.hidden = NO;
     }else{
-        NSLog(@"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        //[self.likebtn setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
         self.likebtn.hidden = YES;
         self.squre.hidden = YES;
     }
@@ -146,7 +139,7 @@
     CGContextClosePath(context);
     [[UIColor whiteColor] setStroke];
     [FOSAWhite setFill];
-    if([self.isDraw isEqualToString:@"YES"]){
+    if([self.isDraw isEqualToString:@"YES"] && ![self.model.expireDate isEqualToString:@""]){
         //判断当前日期与过期日期
         //获取当前日期
         NSDate *currentDate = [[NSDate alloc]init];
@@ -158,7 +151,6 @@
 
         NSString *str = [formatter stringFromDate:currentDate];
         currentDate = [formatter dateFromString:str];
-        NSLog(@"--------------%@",str);
         NSDate *foodDate;
         
         NSArray<NSString *> *dateArray = [self.model.expireDate componentsSeparatedByString:@"/"];
@@ -166,7 +158,6 @@
         NSString *RDate = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray[1],dateArray[0],dateArray[2],dateArray[3]];
 
         foodDate = [formatter2 dateFromString:RDate];
-        NSLog(@"foodDate:%@",foodDate);
         RDate = [formatter stringFromDate:foodDate];
         foodDate = [formatter dateFromString:RDate];
         //比较过期日期与今天的日期

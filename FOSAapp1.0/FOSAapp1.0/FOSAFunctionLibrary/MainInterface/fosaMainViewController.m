@@ -16,18 +16,19 @@
 #import <UserNotifications/UserNotifications.h>
 #import "NotificationView.h"
 
-
 @interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,fosaDelegate,closeViewDelegate>{
     NSString *categoryID;//种类cell
     NSString *foodItemID;//食物cell
     NSString *docPath;//数据库地址
     //刷新标识
-    Boolean isUpdate;
+    Boolean isUpdate,isFirst;
     Boolean isSelectCategory;
     Boolean categoryEdit;
     //排序方式数组
     NSArray *sortArray;
+    
 }
+
 //存储所有食物的数组
 @property (nonatomic,strong) NSMutableArray *AllFoodArray;
 //种类名-图标名字典
@@ -195,9 +196,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+    isFirst = true;
     // Do any additional setup after [UIApplication sharedApplication].statusBarFrame.size.heightloading the view.
-    [self OpenSqlDatabase:@"FOSA"];
-    [self SelectDataFromFoodTable];
+//    [self OpenSqlDatabase:@"FOSA"];
+//    [self SelectDataFromFoodTable];
 
     [self creatNavigationButton];
     [self creatMainBackgroundPlayer];
@@ -225,13 +227,13 @@
         self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
         self.selectedCategoryCell.kind.textColor = [UIColor grayColor];
     }
-    if (isUpdate) {
-        NSLog(@"异步刷新界面");
+//    if (isUpdate) {
+//        NSLog(@"异步刷新界面");
         dispatch_async(dispatch_get_main_queue(), ^{
             [self CollectionReload];
             [self categoryReLoad];
         });
-    }
+//    }
 }
 
 - (void)creatNavigationButton{
@@ -372,7 +374,7 @@
      //self.foodItemCollection.alwaysBounceVertical = YES;
      self.fooditemCollection.delegate   = self;
      self.fooditemCollection.dataSource = self;
-     self.fooditemCollection.showsVerticalScrollIndicator = NO;
+     //self.fooditemCollection.showsVerticalScrollIndicator = NO;
     self.fooditemCollection.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
      //self.foodItemCollection.bounces = NO;
@@ -702,7 +704,8 @@
         NSString *category    = [set stringForColumn:@"category"];
         NSString *location    = [set stringForColumn:@"location"];
         NSString *remindDate  = [set stringForColumn:@"remindDate"];
-        FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location];
+        NSString *repeat      = [set stringForColumn:@"repeatWay"];
+        FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location repeatWay:repeat];
         [self.collectionDataSource addObject:model];
         if (!isSelectCategory) {
             [self.AllFoodArray addObject:model];
@@ -731,6 +734,11 @@
     }
     [self.fooditemCollection reloadData];
     [self.db close];
+    if (isFirst) {
+        [self SendExpiryNotification];
+        isFirst = false;
+    }
+    
 }
 - (void)getCategoryArray{
     [self OpenSqlDatabase:@"FOSA"];
@@ -784,8 +792,9 @@
             NSString *location      = [set stringForColumn:@"location"];
             NSString *category      = [set stringForColumn:@"category"];
             NSString *remindDate    = [set stringForColumn:@"remindDate"];
+            NSString *repeat        = [set stringForColumn:@"repeatWay"];
 
-            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate    foodIcon:foodImg category:category  Location:location];
+            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate    foodIcon:foodImg category:category Location:location repeatWay:repeat];
         }
     }
     return model;
@@ -1139,15 +1148,16 @@
         self.smask.userInteractionEnabled = YES;
         self.tabBarController.tabBar.hidden = NO;
         [self.notifiView removeFromSuperview];
+        [self CollectionReload];
     }];
 }
 
-- (void)SendRemindNotification{
+- (void)SendExpiryNotification{
     [self CreatLoadView];
     [self.notification initNotification];
     self.notification.fosadelegate = self;
-    int day = [self getNotificationSetting];
-    Boolean isSend = false;
+    //day = [self getNotificationSetting];
+    //Boolean isSend = false;
     UIImage *image;
     //获取用户设定的提醒方式
     //获取当前日期
@@ -1155,49 +1165,32 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yy/MM/dd"];
     NSLog(@"currentDate:%@",currentDate);
-    //根据设定获取需要发送通知的日期
-    NSCalendar *calendar = [[NSCalendar alloc]initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
-    [offsetComponents setDay:day];
-    NSDate *resultDate = [calendar dateByAddingComponents:offsetComponents toDate:[[NSDate alloc]init] options:0];
-    
-    NSLog(@"resultDate:%@",resultDate);
-    
-    NSDateFormatter *formatter2 = [[NSDateFormatter alloc]init];
-    [formatter2 setDateFormat:@"yy/MM/dd"];
-
-    NSString *str = [formatter stringFromDate:currentDate];
-    NSLog(@"current:%@",str);
-    //currentDate = [formatter dateFromString:str];
-    //NSLog(@"currentDate:%@",currentDate);
-    
     NSDate *foodDate;
     for(int i = 0;i < self.collectionDataSource.count; i++){
         NSLog(@"%@的过期日期为%@",self.collectionDataSource[i].foodName,self.collectionDataSource[i].expireDate);
         NSArray<NSString *> *dateArray = [self.collectionDataSource[i].expireDate componentsSeparatedByString:@"/"];
         NSString *RDate = [NSString stringWithFormat:@"%@/%@/%@",dateArray[2],dateArray[1],dateArray[0]];
-
-        foodDate = [formatter2 dateFromString:RDate];
+        foodDate = [formatter dateFromString:RDate];
         NSLog(@"---------------RDate:%@",foodDate);
         //比较过期日期与今天的日期
-        NSComparisonResult result = [resultDate compare:foodDate];
-        NSComparisonResult result2 = [currentDate compare:foodDate];
-        if (result == NSOrderedSame || result2 == NSOrderedDescending) {
+        NSComparisonResult result = [currentDate compare:foodDate];
+        NSLog(@"==============================%ld",(long)result)
+        if (result == NSOrderedSame || result == NSOrderedDescending) {
                 //isSend = true;
-            NSString *body = [NSString stringWithFormat:@"FOSA remind you : the expiration date of %@ if %@",self.collectionDataSource[i].foodName,self.collectionDataSource[i].expireDate];
+            NSString *body = [NSString stringWithFormat:@"FOSA remind you :%@ will expir today",self.collectionDataSource[i].foodName];
                 //发送通知
             //获取通知的图片
             image = [self getImage:self.collectionDataSource[i].foodPhoto];
             //另存通知图片
             [self Savephoto:image name:self.collectionDataSource[i].foodPhoto];
-            [_notification sendNotification:self.collectionDataSource[i] body:body image:image];
-            isSend = true;
+            [self.notification sendNotification:self.collectionDataSource[i] body:body image:image];
+
         }
     }
-    if (!isSend) {
-        [self SystemAlert:@"No Result Found"];
-    }
-    [self performSelector:@selector(stoploading) withObject:nil afterDelay:2.0];
+//    if (!isSend) {
+//        [self SystemAlert:@"No Result Found"];
+//    }
+    [self performSelector:@selector(stoploading) withObject:nil afterDelay:1.0];
 }
 - (void)stoploading{
     [self.FOSAloadingView stopAnimating];

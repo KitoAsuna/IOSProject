@@ -68,8 +68,11 @@
             NSString *category    = [set stringForColumn:@"category"];
             NSString *location    = [set stringForColumn:@"location"];
             NSString *remindDate  = [set stringForColumn:@"remindDate"];
+            NSString *repeatWay   = [set stringForColumn:@"repeatWay"];
+            NSString *send        = [set stringForColumn:@"send"];
+            NSLog(@"是否已经设置发送:%@",send);
             if (![remindDate isEqualToString:@""]) {
-                FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location];
+                FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location repeatWay:repeatWay send:send];
 
                 [resultArray addObject:model];
 

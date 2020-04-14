@@ -301,7 +301,7 @@
     //stopAnimation = false;
     //[self VerticalScanLineAnimation];
     //闪光灯
-    self.flashBtn.frame = CGRectMake(screen_width/2-20, CGRectGetMaxY(_scanFrame.frame)-45, 40, 40);
+    self.flashBtn.frame = CGRectMake(screen_width/2-20, CGRectGetMaxY(_scanFrame.frame)+imageY/2-20, 40, 40);
     self.flashBtn.layer.cornerRadius = _flashBtn.frame.size.width/2;
     self.flashBtn.clipsToBounds = YES;
     [self.flashBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashOff.png"] forState:UIControlStateNormal];
@@ -374,11 +374,11 @@
     self.flashBtn.clipsToBounds = YES;
     [self.flashBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashOff.png"] forState:UIControlStateNormal];
     [self.flashBtn addTarget:self action:@selector(OpenOrCloseFlash) forControlEvents:UIControlEventTouchUpInside];
-    self.zoomSlider.frame = CGRectMake(imageX-10,screen_height-NavigationBarHeight*2,self.view.frame.size.width*0.5,20);
-    [self.view addSubview:self.zoomSlider];
-    self.zoomSlider.minimumValue = 0;
-    self.zoomSlider.maximumValue = 100;
-    [self.zoomSlider addTarget:self action:@selector(ZoomSliderValueChanged) forControlEvents:UIControlEventValueChanged];
+//    self.zoomSlider.frame = CGRectMake(imageX-10,screen_height-NavigationBarHeight*2,self.view.frame.size.width*0.5,20);
+//    [self.view addSubview:self.zoomSlider];
+//    self.zoomSlider.minimumValue = 0;
+//    self.zoomSlider.maximumValue = 100;
+//    [self.zoomSlider addTarget:self action:@selector(ZoomSliderValueChanged) forControlEvents:UIControlEventValueChanged];
 
     //设置有效扫描区域
     CGRect intertRect = [_previewLayer metadataOutputRectOfInterestForRect:CGRectMake(imageX, imageY,screen_width*0.5,screen_height-NavigationBarHeight*4)];
@@ -598,7 +598,7 @@ NSLog(@"************************************************************************
                         foodAddingViewController *food = [foodAddingViewController new];
                         //分割字符
                         NSArray *infoArray = [result componentsSeparatedByString:@"&"];
-                        FoodModel *model = [FoodModel modelWithName:infoArray[1] DeviceID:infoArray[2] Description:infoArray[3] StrogeDate:infoArray[5] ExpireDate:infoArray[4] remindDate:infoArray[6] foodIcon:infoArray[1] category:infoArray[7] Location:infoArray[8]];
+                        FoodModel *model = [FoodModel modelWithName:infoArray[1] DeviceID:infoArray[2] Description:infoArray[3] StrogeDate:infoArray[5] ExpireDate:infoArray[4] remindDate:infoArray[6] foodIcon:infoArray[1] category:infoArray[7] Location:infoArray[8] repeatWay:infoArray[9]];
                         food.model = model;
                         food.foodStyle = @"Info";
                         food.foodCategoryIconname = @"Biscuit";
@@ -964,7 +964,7 @@ NSLog(@"************************************************************************
             //分割字符串的测试
             NSArray *infoArray = [firstResult componentsSeparatedByString:@"&"];
             
-            FoodModel *model = [FoodModel modelWithName:infoArray[1] DeviceID:infoArray[2] Description:infoArray[3] StrogeDate:infoArray[5] ExpireDate:infoArray[4] remindDate:infoArray[6] foodIcon:infoArray[1] category:infoArray[7] Location:infoArray[8]];
+            FoodModel *model = [FoodModel modelWithName:infoArray[1] DeviceID:infoArray[2] Description:infoArray[3] StrogeDate:infoArray[5] ExpireDate:infoArray[4] remindDate:infoArray[6] foodIcon:infoArray[1] category:infoArray[7] Location:infoArray[8] repeatWay:infoArray[9]];
             food.model = model;
             food.foodStyle = @"Info";
             food.imgOfFood = [self getPartOfImage:image inRect:CGRectMake(0,screen_height/8, screen_width, screen_height/2)];
@@ -1123,8 +1123,9 @@ NSLog(@"************************************************************************
             NSString *location      = [set stringForColumn:@"location"];
             NSString *category      = [set stringForColumn:@"category"];
             NSString *remindDate    = [set stringForColumn:@"remindDate"];
+            NSString *repeat        = [set stringForColumn:@"repeatWay"];
             
-            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category  Location:location];
+            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location repeatWay:repeat];
         }
     }
     return model;

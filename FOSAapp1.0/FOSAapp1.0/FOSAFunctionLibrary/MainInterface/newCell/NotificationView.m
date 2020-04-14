@@ -16,6 +16,7 @@
     Boolean isSelect;
     NSMutableArray<NSString *> *selectArray;
     NSMutableArray<FoodModel *> *remindArray;
+    NSMutableArray<FoodModel *> *cancelArray;
 }
 
 @property (nonatomic,strong) FosaFMDBManager *fmdbManager;
@@ -68,6 +69,7 @@
         //初始化数组
         selectArray = [NSMutableArray new];
         remindArray = [NSMutableArray new];
+        cancelArray = self.dataSource;
         self.fosaNotification = [FosaNotification new];
     }
     return self;
@@ -83,17 +85,17 @@
     self.titleLabel.frame = CGRectMake(width*2/5, CGRectGetMaxY(self.bellBtn.frame), width/5, height/24);
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.text = @"Reminder";
+    self.titleLabel.textColor = FOSAGray;
     self.titleLabel.font = [UIFont systemFontOfSize:font(15)];
-    
+ 
     self.selectbtn.frame = CGRectMake(width*4/5, height/24, width/6, height/24);
     self.selectbtn.tag = 0;
     [self.selectbtn setTitleColor:FOSAGray forState:UIControlStateNormal];
     [self.selectbtn setTitleColor:FOSAgreen forState:UIControlStateHighlighted];
     [self.selectbtn setTitle:@"Select" forState:UIControlStateNormal];
-    
+
     self.notificationList.frame = CGRectMake(0, height/8, width, height*3/4);
     self.notificationList.backgroundColor = FOSAWhite;
-
     
     self.backBtn.frame = CGRectMake(width/3, height*11/12, width/3, height/19);
     self.backBtn.layer.cornerRadius = height/38;
@@ -124,18 +126,22 @@
     cell.foodImgView.image = [self getImage:self.dataSource[indexPath.row].foodPhoto];
     cell.foodNameLabel.text = self.dataSource[indexPath.row].foodName;
     NSArray *ary = [self.dataSource[indexPath.row].remindDate componentsSeparatedByString:@","];
-    cell.timeLabel.text = ary[3];
+    cell.timeLabel.text = [NSString stringWithFormat:@"%@,%@",ary[3],self.dataSource[indexPath.row].repeat];
     cell.dateLabel.text = [NSString stringWithFormat:@"%@,%@ %@",ary[0],ary[1],ary[2]];
     cell.sendSwitch.tag = indexPath.row;
     [cell.sendSwitch addTarget:self action:@selector(openSendNotification:) forControlEvents:UIControlEventValueChanged];
     cell.selectImgView.image = [UIImage imageNamed:@"icon_unselect"];
-    
+
     if (isSelect) {
         cell.sendSwitch.hidden = YES;
         cell.selectImgView.hidden = NO;
     }else{
         cell.sendSwitch.hidden = NO;
         cell.selectImgView.hidden = YES;
+    }
+    NSLog(@"***********%@",self.dataSource[indexPath.row].isSend);
+    if ([self.dataSource[indexPath.row].isSend isEqualToString:@"YES"]) {
+        [cell.sendSwitch setOn:true];
     }
     
    return cell;
@@ -170,18 +176,28 @@
         isSelect = false;
         self.backBtn.hidden = NO;
         self.deleBtn.hidden = YES;
+        [selectArray removeAllObjects];
         [self.notificationList reloadData];
     }
 }
+
 - (void)openSendNotification:(UISwitch *)cellSwitch{
     if ([cellSwitch isOn]) {
         [remindArray addObject:self.dataSource[cellSwitch.tag]];
+        //[self.dataSource removeObjectAtIndex:[cancelArray indexOfObject:self.dataSource[cellSwitch.tag]]];
     }else{
-        [remindArray removeObjectAtIndex:[remindArray indexOfObject:self.dataSource[cellSwitch.tag]]];
+        [self.dataSource addObject:self.dataSource[cellSwitch.tag]];
+        //[remindArray removeObjectAtIndex:[remindArray indexOfObject:self.dataSource[cellSwitch.tag]]];
     }
 }
 
 - (void)closeNotificationView{
+    [self saveReminder];
+    if ([self.closeDelegate respondsToSelector:@selector(closeNotificationList)]) {
+        [self.closeDelegate closeNotificationList];
+    }
+}
+- (void)sendReminderNotification{
     NSLog(@"%@",remindArray);
     NSArray *tempArray;
     NSString *tempStr;
@@ -195,7 +211,7 @@
     NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
     //获取用户设置，是否设定免打扰
     NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
-    if ([autoNotification isEqualToString:@"NO"]) {
+    if ([autoNotification isEqualToString:@"NO"] || autoNotification == nil) {
         //[self.fosaNotification initNotification];
         for (int i = 0; i < remindArray.count; i++) {
             NSString *body = [NSString stringWithFormat:@"FOSA remind you to eat your food %@ in time",remindArray[i].foodName];
@@ -204,18 +220,14 @@
             NSLog(@"%@",image)
             //另存通知图片
             [self Savephoto:image name:remindArray[i].foodName];
-            
+
             tempArray = [remindArray[i].remindDate componentsSeparatedByString:@","];
             tempStr = [NSString stringWithFormat:@"%@/%@ %@",tempArray[1],tempArray[2],tempArray[3]];
             NSDate *date = [format dateFromString:tempStr];
             //NSLog(@"<<<<<<<<<<<<<<<<<<<<<<remindDate :%@",[format2 stringFromDate:date]);
-            
-            
+
             [self.fosaNotification sendNotificationByDate:remindArray[i] body:body date:[format2 stringFromDate:date] foodImg:image];
         }
-    }
-    if ([self.closeDelegate respondsToSelector:@selector(closeNotificationList)]) {
-        [self.closeDelegate closeNotificationList];
     }
 }
 
@@ -224,9 +236,9 @@
 
     if ([self.fmdbManager isFmdbOpen]) {
         for (int i = 0; i < selectArray.count; i++) {
-            NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set remindDate = '%@' where foodName = '%@'",@"",selectArray[i]];
+            NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set remindDate = '%@',send = '%@' where foodName = '%@'",@"",@"NO",selectArray[i]];
             if ([self.fmdbManager updateDataWithSql:updateSql]) {
-                NSLog(@"更新成功");
+                NSLog(@"删除reminder，更新成功");
             }
         }
     }
@@ -237,6 +249,26 @@
     self.backBtn.hidden = NO;
     self.deleBtn.hidden = YES;
     [self.notificationList reloadData];
+}
+- (void)saveReminder{
+    if ([self.fmdbManager isFmdbOpen] && remindArray.count > 0) {
+           for (int i = 0; i < remindArray.count; i++) {
+               NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set send = '%@' where foodName = '%@'",@"YES",remindArray[i]];
+               if ([self.fmdbManager updateDataWithSql:updateSql]) {
+                   NSLog(@"设置reminder，更新成功");
+               }
+           }
+    }
+    //取消没有开启的通知
+    NSMutableArray *requestArray = [NSMutableArray new];
+    for (int i = 0; i < cancelArray.count; i++) {
+        NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set send = '%@' where foodName = '%@'",@"NO",cancelArray[i]];
+        if ([self.fmdbManager updateDataWithSql:updateSql]) {
+            NSLog(@"设置reminder为NO，更新成功");
+        }
+        [requestArray addObject:cancelArray[i].foodName];
+    }
+    [self.fosaNotification removeReminder:[requestArray copy]];
 }
 //获取数据库的食物
 - (void)getFoodDataFromSql{
