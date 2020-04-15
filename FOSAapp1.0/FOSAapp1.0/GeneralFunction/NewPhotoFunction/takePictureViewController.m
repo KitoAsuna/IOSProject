@@ -159,8 +159,7 @@
     [self.controlerView addSubview:_shutter];
     [self.shutter setBackgroundImage:[UIImage imageNamed:@"icon_takePhoto"] forState:UIControlStateNormal];
     [self.shutter addTarget:self action:@selector(clickToCapture) forControlEvents:UIControlEventTouchUpInside];
-    //预览
-    self.pictureView = [[UIImageView alloc]initWithFrame:CGRectMake(screen_width/20, self.controlerView.frame.size.height/3-screen_width*4/50, screen_width*4/25, screen_width*4/25)];
+    //预览    self.pictureView = [[UIImageView alloc]initWithFrame:CGRectMake(screen_width/20, self.controlerView.frame.size.height/3-screen_width*4/50, screen_width*4/25, screen_width*4/25)];
     self.pictureView.layer.cornerRadius = self.pictureView.frame.size.width/8;
     self.pictureView.contentMode =  UIViewContentModeScaleAspectFill;
     self.pictureView.clipsToBounds = true;

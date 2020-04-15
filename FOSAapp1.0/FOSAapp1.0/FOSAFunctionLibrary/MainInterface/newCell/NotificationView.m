@@ -69,7 +69,7 @@
         //初始化数组
         selectArray = [NSMutableArray new];
         remindArray = [NSMutableArray new];
-        cancelArray = self.dataSource;
+        cancelArray = [NSMutableArray new];
         self.fosaNotification = [FosaNotification new];
     }
     return self;
@@ -161,6 +161,7 @@
         }
     }
 }
+
 - (void)selectCell{
     if (self.selectbtn.tag == 0) {
         [self.selectbtn setTitle:@"Cancel" forState:UIControlStateNormal];
@@ -169,7 +170,6 @@
         self.backBtn.hidden = YES;
         self.deleBtn.hidden = NO;
         [self.notificationList reloadData];
-        
     }else{
         [self.selectbtn setTitle:@"Select" forState:UIControlStateNormal];
         self.selectbtn.tag = 0;
@@ -180,14 +180,14 @@
         [self.notificationList reloadData];
     }
 }
-
+//UIswitch事件
 - (void)openSendNotification:(UISwitch *)cellSwitch{
     if ([cellSwitch isOn]) {
         [remindArray addObject:self.dataSource[cellSwitch.tag]];
-        //[self.dataSource removeObjectAtIndex:[cancelArray indexOfObject:self.dataSource[cellSwitch.tag]]];
+        [cancelArray removeObjectAtIndex:[cancelArray indexOfObject:self.dataSource[cellSwitch.tag]]];
     }else{
-        [self.dataSource addObject:self.dataSource[cellSwitch.tag]];
-        //[remindArray removeObjectAtIndex:[remindArray indexOfObject:self.dataSource[cellSwitch.tag]]];
+        [cancelArray addObject:self.dataSource[cellSwitch.tag]];
+        [remindArray removeObjectAtIndex:[remindArray indexOfObject:self.dataSource[cellSwitch.tag]]];
     }
 }
 
@@ -251,18 +251,20 @@
     [self.notificationList reloadData];
 }
 - (void)saveReminder{
+    NSLog(@"cancelArray:%@",cancelArray);
+    NSLog(@"remindArray:%@",remindArray);
     if ([self.fmdbManager isFmdbOpen] && remindArray.count > 0) {
            for (int i = 0; i < remindArray.count; i++) {
                NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set send = '%@' where foodName = '%@'",@"YES",remindArray[i]];
                if ([self.fmdbManager updateDataWithSql:updateSql]) {
-                   NSLog(@"设置reminder，更新成功");
+                   NSLog(@"设置reminder为YES，更新成功");
                }
            }
     }
     //取消没有开启的通知
     NSMutableArray *requestArray = [NSMutableArray new];
     for (int i = 0; i < cancelArray.count; i++) {
-        NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set send = '%@' where foodName = '%@'",@"NO",cancelArray[i]];
+        NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set send = '%@' where foodName = '%@'",@"NO",cancelArray[i].foodName];
         if ([self.fmdbManager updateDataWithSql:updateSql]) {
             NSLog(@"设置reminder为NO，更新成功");
         }
@@ -270,6 +272,7 @@
     }
     [self.fosaNotification removeReminder:[requestArray copy]];
 }
+
 //获取数据库的食物
 - (void)getFoodDataFromSql{
     self.fmdbManager = [FosaFMDBManager initFMDBManagerWithdbName:@"FOSA"];

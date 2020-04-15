@@ -57,23 +57,23 @@
     self.squre.layer.borderWidth = 2;
     //self.squre.hidden = YES;
     
-    self.foodNamelabel.frame = CGRectMake(width/30, height*5/6, width*3/5, height/10);
+    self.foodNamelabel.frame = CGRectMake(width/30, CGRectGetMaxY(self.foodImgView.frame)+(height*49/60-width*9/10)/2, width*3/5, (height-width*9/10)/2);
     self.foodNamelabel.adjustsFontSizeToFitWidth = YES;
     self.locationLabel.frame = CGRectMake(width/30, CGRectGetMaxY(self.foodNamelabel.frame), width*3/5, height/15);
     self.locationLabel.font = [UIFont systemFontOfSize:font(10)];
     self.locationLabel.textColor = FOSAGray;
     
-    self.dayLabel.frame = CGRectMake(width*2/3, CGRectGetMaxY(self.foodImgView.frame), width/6, height/7);
+    self.dayLabel.frame = CGRectMake(width*19/30, CGRectGetMaxY(self.foodImgView.frame)+(height*49/60-width*9/10)/2, width/6, height/7);
     self.dayLabel.adjustsFontSizeToFitWidth = YES;//self.dayLabel.backgroundColor = FOSAgreen;
     self.dayLabel.font = [UIFont systemFontOfSize:font(30)];
     self.dayLabel.textColor = FOSAGray;
     
-    self.timelabel.frame = CGRectMake(width*5/6, height*49/60, width/6, height/18);
+    self.timelabel.frame = CGRectMake(width*24/30, height*49/60+(height*49/60-width*9/10)/2, width/6, height/18);
     self.timelabel.font = [UIFont systemFontOfSize:font(10)];
     self.timelabel.textColor = FOSAGray;
     self.timelabel.textAlignment = NSTextAlignmentLeft;
 
-    self.mouthLabel.frame = CGRectMake(width*5/6, CGRectGetMaxY(self.timelabel.frame), width/6, height/18);
+    self.mouthLabel.frame = CGRectMake(width*24/30, CGRectGetMaxY(self.timelabel.frame), width/6, height/18);
     self.mouthLabel.font = [UIFont systemFontOfSize:font(10)];
     self.mouthLabel.textColor = FOSAGray;
     self.mouthLabel.textAlignment = NSTextAlignmentLeft;
@@ -85,7 +85,7 @@
     if ([self getImage:model.foodPhoto] != nil) {
         self.foodImgView.image = [self getImage:model.foodPhoto];
     }
-    
+
     if (![model.device isEqualToString:@"null"]) {
         self.likebtn.hidden = NO;
         self.squre.hidden = NO;
@@ -126,16 +126,13 @@
     UIRectFill(rect);
     int rectHight = (int) self.bounds.size.height;
     int rectWidth = (int) self.bounds.size.width;
-    
+
     CGContextRef context = UIGraphicsGetCurrentContext();
-//    CGContextMoveToPoint(context, self.bounds.size.width, self.bounds.size.height*14/15);
-//    CGContextAddLineToPoint(context, self.bounds.size.width*14/15, self.bounds.size.height);
-//    CGContextAddLineToPoint(context, self.bounds.size.width, self.bounds.size.height);
-    CGContextMoveToPoint(context, rectWidth*2/3, rectHight*39/40);
+    CGContextMoveToPoint(context, rectWidth*19/30, rectHight*39/40);
     CGContextAddLineToPoint(context, rectWidth, rectHight*39/40);
     CGContextAddLineToPoint(context, rectWidth, rectHight);
-    CGContextAddLineToPoint(context, rectWidth*2/3-rectHight/40, rectHight);
-    CGContextAddLineToPoint(context, rectWidth*2/3, rectHight*39/40);
+    CGContextAddLineToPoint(context, rectWidth*19/30-rectHight/40, rectHight);
+    CGContextAddLineToPoint(context, rectWidth*19/30, rectHight*39/40);
     CGContextClosePath(context);
     [[UIColor whiteColor] setStroke];
     [FOSAWhite setFill];
@@ -171,7 +168,6 @@
         }
     }
     CGContextDrawPath(context, kCGPathFillStroke);
-    
 }
 
 @end

@@ -401,7 +401,13 @@
     [self.navigationController.navigationBar addSubview:self.likeBtn];
     //[self.likeBtn addTarget:self action:@selector(selectToLike) forControlEvents:UIControlEventTouchUpInside];
     self.likeBtn.hidden = YES;
+    self.mainImgBtn = [UIButton new];
+    self.mainImgBtn.frame = CGRectMake(screen_width-2*NavigationBarH, NavigationBarH/6, NavigationBarH*2/3, NavigationBarH*2/3);
+    [self.mainImgBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashHL"] forState:UIControlStateNormal];
+    [self.navigationController.navigationBar addSubview:self.mainImgBtn];
+    [self.mainImgBtn addTarget:self action:@selector(setImgAsMainBackground) forControlEvents:UIControlEventTouchUpInside];
 /**help*/
+    
     self.helpBtn.frame = CGRectMake(0, 0, NavigationBarH/2, NavigationBarH/2);
     [self.helpBtn setBackgroundImage:[UIImage imageNamed:@"icon_helpW"]  forState:UIControlStateNormal];
     [self.helpBtn addTarget:self action:@selector(selectToHelp) forControlEvents:UIControlEventTouchUpInside];
@@ -450,16 +456,16 @@
     [self creatPicturePlayer];
     //名称
     if ([self.foodStyle isEqualToString:@"Info"]) {
-        self.showFoodNameLabel.frame = CGRectMake(headerWidth/22, headerHeight*7/10, headerWidth, headerHeight/10);
+        self.showFoodNameLabel.frame = CGRectMake(headerWidth*2/33, headerHeight*7/10, headerWidth*29/33, headerHeight/10);
         self.showFoodNameLabel.font  = [UIFont systemFontOfSize:25*(414.0/screen_width)];
         self.showFoodNameLabel.textColor = [UIColor whiteColor];
         [self.headerView addSubview:self.showFoodNameLabel];
     }
     //日期
-    self.storageView.frame = CGRectMake(headerWidth/22, headerHeight*4/5, headerWidth*6/22, headerHeight/6);
+    self.storageView.frame = CGRectMake(headerWidth*2/33, headerHeight*4/5, headerWidth*9/33, headerHeight/6);
     [self.headerView addSubview:self.storageView];
     
-    self.expireView.frame = CGRectMake(headerWidth*15/22, headerHeight*4/5, headerWidth*6/22, headerHeight/6);
+    self.expireView.frame = CGRectMake(headerWidth*2/3, headerHeight*4/5, headerWidth*9/33, headerHeight/6);
     self.expireView.userInteractionEnabled = YES;
     UITapGestureRecognizer *dateRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectExpireDate)];
     [self.expireView addGestureRecognizer:dateRecognizer];
@@ -492,7 +498,7 @@
     self.storageDateLabel.adjustsFontSizeToFitWidth = YES;
     self.storageDateLabel.textColor = [UIColor whiteColor];
     [self.storageView addSubview:self.storageDateLabel];
-    
+
     self.storageTimeLabel.frame = CGRectMake(0, storageHeight*2/3, storageWidth, storageHeight/3);
     self.storageTimeLabel.text = currentArrray[3];
     self.storageTimeLabel.textColor = [UIColor whiteColor];
@@ -529,7 +535,7 @@
     self.foodNameView.frame = CGRectMake(0, 0, screen_width, contentHeight/5);
     [self.contentView addSubview:self.foodNameView];
 
-    self.foodNameLabel.frame = CGRectMake(screen_width*5/66, contentHeight/30, screen_width/3, contentHeight*2/30);
+    self.foodNameLabel.frame = CGRectMake(screen_width*2/33+Width(10), contentHeight/30, screen_width/3, contentHeight*2/30);
     self.foodNameLabel.text = @"Name";
     self.foodNameLabel.font = [UIFont systemFontOfSize:font(15)];
     self.foodNameLabel.textColor = [UIColor grayColor];
@@ -562,7 +568,7 @@
     //描述
     self.foodDescribedView.frame = CGRectMake(0, CGRectGetMaxY(self.foodNameView.frame), screen_width, contentHeight*2/5);
     [self.contentView addSubview:self.foodDescribedView];
-    self.foodDescribedLabel.frame = CGRectMake(screen_width*5/66, contentHeight/30, screen_width/3, contentHeight/15);
+    self.foodDescribedLabel.frame = CGRectMake(screen_width*2/33+Width(10), contentHeight/30, screen_width/3, contentHeight/15);
     self.foodDescribedLabel.text = @"Description";
     self.foodDescribedLabel.font = [UIFont systemFontOfSize:font(15)];
     self.foodDescribedLabel.textColor = [UIColor grayColor];
@@ -593,7 +599,7 @@
     
     self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.foodDescribedView.frame), screen_width, contentHeight/5);
     [self.contentView addSubview:self.remindView];
-    self.remindLabel.frame = CGRectMake(screen_width*5/66, contentHeight/30, screen_width/3, contentHeight/15);
+    self.remindLabel.frame = CGRectMake(screen_width*2/33+Width(10), contentHeight/30, screen_width/3, contentHeight/15);
     self.remindLabel.text = @"Reminder";
     self.remindLabel.font = [UIFont systemFontOfSize:font(15)];
     self.remindLabel.textColor = [UIColor grayColor];
@@ -614,7 +620,7 @@
     
     self.locationView.frame = CGRectMake(0, CGRectGetMaxY(self.remindView.frame), screen_width, contentHeight/5);
     [self.contentView addSubview:self.locationView];
-    self.locationLabel.frame = CGRectMake(screen_width*5/66, contentHeight/30, screen_width/3, contentHeight/15);
+    self.locationLabel.frame = CGRectMake(screen_width*2/33+Width(10), contentHeight/30, screen_width/3, contentHeight/15);
     self.locationLabel.text = @"Location";
     self.locationLabel.font = [UIFont systemFontOfSize:font(15)];
     self.locationLabel.textColor = [UIColor grayColor];
@@ -698,6 +704,7 @@
     if ([self.foodStyle isEqualToString:@"Info"]) {
         //编辑按钮
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.editBtn];
+        self.mainImgBtn.hidden = YES;
         //禁止界面互动
         self.foodTextView.userInteractionEnabled = NO;
         self.foodDescribedTextView.userInteractionEnabled = NO;
@@ -798,7 +805,7 @@
     self.refreshBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 40, 40)];
     self.refreshBtn.center = self.headerView.center;
     [self.refreshBtn setBackgroundImage:[UIImage imageNamed:@"icon_refreshPicture"] forState:UIControlStateNormal];
-    [self.refreshBtn addTarget:self action:@selector(jumptoPhoto) forControlEvents:UIControlEventTouchUpInside];
+    [self.refreshBtn addTarget:self action:@selector(jumptoPhoto:) forControlEvents:UIControlEventTouchUpInside];
     self.refreshBtn.hidden = YES;
     [self.headerView addSubview:self.refreshBtn];
     
@@ -976,7 +983,7 @@
 #pragma mark - UITextViewDelegate,UITextFiledDelegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
     [UIView animateWithDuration:0.5 animations:^{
-        [self.contentView setContentOffset:CGPointMake(0, self.contentView.frame.size.height/4)];
+        [self.contentView setContentOffset:CGPointMake(0, self.contentView.frame.size.height/5)];
     }];
     return YES;
 }
@@ -1053,6 +1060,14 @@
         self.likeBtn.accessibilityValue = @"0";
     }
 }
+- (void)setImgAsMainBackground{
+    NSLog(@"currentIndex:%ld",(long)currentPictureIndex);
+    if (currentPictureIndex != 0) {
+        UIImage *tempImag =  self.foodImgArray[currentPictureIndex];
+        [self.foodImgArray removeObjectAtIndex:currentPictureIndex];
+        [self.foodImgArray insertObject:tempImag atIndex:0];
+    }
+}
 - (void)EditInfo{
     isEdit = true;
     self.foodStyle = @"edit";
@@ -1074,6 +1089,7 @@
         self.shareBtn.hidden = YES;
         self.foodCell.hidden = YES;
         self.deleteBtn.hidden = YES;
+        self.mainImgBtn.hidden = NO;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.helpBtn];
     }];
     [self.categoryCollection reloadData];
@@ -1088,7 +1104,7 @@
     self.storageView.userInteractionEnabled = NO;
     self.expireView.userInteractionEnabled = NO;
     self.locationView.userInteractionEnabled = NO;
-    
+
     [UIView animateWithDuration:0.5 animations:^{
         self.leftIndex.hidden = YES;
         self.rightIndex.hidden = YES;
@@ -1097,6 +1113,7 @@
         self.foodCell.hidden = NO;
         self.deleteBtn.hidden = NO;
         self.refreshBtn.hidden = YES;
+        self.mainImgBtn.hidden = YES;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.editBtn];
     }];
 }
@@ -1407,10 +1424,9 @@
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     // 保存文件的名称
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
-//    if (img == NULL) {
-//        img = [UIImage imageNamed:@"icon_defaultImg"];
-//    }
-    if (self.imgOfFood != nil) {
+    if (img == NULL) {
+        img = [UIImage imageNamed:@"icon_defaultImg"];
+    }else if (self.imgOfFood != nil) {
         //如果是读取相册二维码或者分享二维码，imeOfFood为图片中食物部分的截取
         img = self.imgOfFood;
         //_imgOfFood = nil;
@@ -1500,9 +1516,14 @@
             tempArray = [self.remindDateTextView.text componentsSeparatedByString:@","];
             tempStr = [NSString stringWithFormat:@"%@/%@ %@",tempArray[1],tempArray[2],tempArray[3]];
             NSDate *date = [format dateFromString:tempStr];
+            NSDate *currentDate = [NSDate new];
+            double dateTime = [date timeIntervalSince1970];
+            double currentDateTime = [currentDate timeIntervalSince1970];
+            NSLog(@"=============%d",(int)(dateTime-currentDateTime));
+            
             FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
-
-            [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image];
+            //[self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image];
+            [self.fosaNotification sendNotification:model body:body image:image time:(int)(dateTime-currentDateTime)];
         }
     }
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];
@@ -1651,6 +1672,7 @@
     [self.db close];
     self.likeBtn.hidden = YES;
     self.backbtn.hidden = YES;
+    self.mainImgBtn.hidden = YES;
 }
 
 /**隐藏底部横条，点击屏幕可显示*/

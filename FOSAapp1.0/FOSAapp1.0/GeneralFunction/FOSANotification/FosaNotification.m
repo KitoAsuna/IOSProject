@@ -158,7 +158,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     foodName = model.foodName;
     NSLog(@"这是分享图片上的食物%@图片:%@",model.foodName,self.image);
 }
-- (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img{
+- (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img time:(long int)timeInterval{
     NSLog(@"我将发送一个系统通知");
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
     content.title = @"FOSA Reminding";
@@ -183,7 +183,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     UNNotificationSound *sound = [UNNotificationSound defaultSound];
     content.sound = sound;
     //设置时间间隔的触发器
-    UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:2 repeats:NO];
+    UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:timeInterval repeats:NO];
     NSString *requestIdentifer = model.foodName;
     content.categoryIdentifier = @"seeCategory";
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifer content:content trigger:time_trigger];

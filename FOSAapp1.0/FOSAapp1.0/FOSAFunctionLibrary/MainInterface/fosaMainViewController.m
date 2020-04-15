@@ -1183,7 +1183,7 @@
             image = [self getImage:self.collectionDataSource[i].foodPhoto];
             //另存通知图片
             [self Savephoto:image name:self.collectionDataSource[i].foodPhoto];
-            [self.notification sendNotification:self.collectionDataSource[i] body:body image:image];
+            [self.notification sendNotification:self.collectionDataSource[i] body:body image:image time:2];
 
         }
     }

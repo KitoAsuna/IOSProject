@@ -160,12 +160,12 @@
     self.AlarView.userInteractionEnabled = YES;
     UITapGestureRecognizer *clickRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openDatePicker)];
     self.AlarView.tag = 0;
-    [self.AlarView addGestureRecognizer:clickRecognizer];
+    //[self.AlarView addGestureRecognizer:clickRecognizer];
 
-    self.Alarm = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width/4, height/10)];
+    self.Alarm = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width/5, height/10)];
     self.Alarm.text = @"Alarm";
 
-    self.rightDatelabel = [[UILabel alloc]initWithFrame:CGRectMake(screen_width/3, 0, screen_width*2/3-font(20), height/10)];
+    self.rightDatelabel = [[UILabel alloc]initWithFrame:CGRectMake(screen_width/3, 0, screen_width*4/5-font(20), height/10)];
     NSDate *current = [NSDate new];
     self.rightDatelabel.text = [self getTimeAndWeekDay:current];
     self.rightDatelabel.textColor = FOSAGray;
@@ -176,7 +176,7 @@
     self.leftDatelabel.textColor = FOSAColor(2, 121, 255);
     self.leftDatelabel.hidden = YES;
     
-    [self.AlarView addSubview:self.leftDatelabel];
+    //[self.AlarView addSubview:self.leftDatelabel];
 
     [self.AlarView addSubview:self.rightDatelabel];
     
@@ -282,10 +282,12 @@
     BOOL isButtonOn = [switchButton isOn];
     if (isButtonOn) {
         [UIView animateWithDuration:0.2 animations:^{
-            self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.pickerView.frame)+10, screen_width, self->height*3/10);
+            //self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.pickerView.frame)+10, screen_width, self->height*3/10);
             self.AlarView.hidden = NO;
             self.repeatView.hidden = NO;
             self.repeatWayLabel.hidden = NO;
+            self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.pickerView.frame)+10, screen_width, self->height*3/5-10);
+            self.remindDatepicker.frame = CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, self->height/4);
         }];
     }else {
         [UIView animateWithDuration:0.2 animations:^{
@@ -357,7 +359,7 @@
     [self.pickerView selectRow:[self.yearArr indexOfObject:self.year] inComponent:2 animated:YES];
     [self.pickerView selectRow:[self.hourArr indexOfObject:self.hour] inComponent:3 animated:YES];
     [self.pickerView selectRow:self.minuteInterval == 1 ? ([self.minuteArr indexOfObject:self.minute]) : (self.minuteArr.count / 2) inComponent:4 animated:YES];
-    
+
     /// 刷新日
     [self refreshDay];
 }
@@ -366,7 +368,6 @@
 /// 保存按钮点击方法
 - (void)saveBtnClick {
     NSLog(@"点击了保存");
-    
     NSString *month = self.month.length == 2 ? [NSString stringWithFormat:@"%ld", self.month.integerValue] : [NSString stringWithFormat:@"0%ld", self.month.integerValue];
     NSString *day = self.day.length == 2 ? [NSString stringWithFormat:@"%ld", self.day.integerValue] : [NSString stringWithFormat:@"0%ld", self.day.integerValue];
     NSString *hour = self.hour.length == 2 ? [NSString stringWithFormat:@"%ld", self.hour.integerValue] : [NSString stringWithFormat:@"0%ld", self.hour.integerValue];

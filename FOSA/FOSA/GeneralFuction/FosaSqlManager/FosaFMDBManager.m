@@ -71,11 +71,13 @@
             NSString *repeatWay   = [set stringForColumn:@"repeatWay"];
             NSString *send        = [set stringForColumn:@"send"];
             NSLog(@"是否已经设置发送:%@",send);
+            NSLog(@"提醒日期:%@",remindDate);
+            
             if (![remindDate isEqualToString:@""]) {
-                FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location repeatWay:repeatWay send:send];
-
-                [resultArray addObject:model];
-
+                if ([self adjustRemindDate:remindDate repeat:repeatWay]) {
+                    FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location repeatWay:repeatWay send:send];
+                    [resultArray addObject:model];
+                }
             }
         }
     }else if([tableName isEqualToString:@"category"]){
@@ -93,6 +95,34 @@
 
 - (BOOL)closeDB{
     return [db close];
+}
+
+- (BOOL)adjustRemindDate:(NSString *)remindDate repeat:(NSString *)repeatWay{
+    /**
+     如果提醒日期还过期则判断是否设置了重复通知，设置了则返回YES，否则返回NO,如果没有过期则返回YES
+     */
+     NSArray *tempArray;
+    NSString *tempStr;
+    NSDateFormatter *format = [NSDateFormatter new];
+    [format setDateFormat:@"dd MM/yyyy hh:mm a"];
+    //[format2 setDateFormat:@"dd/MM/yyyy/HH:mm"];
+    format.AMSymbol = @"AM";
+    format.PMSymbol = @"PM";
+    tempArray = [remindDate componentsSeparatedByString:@","];
+    tempStr = [NSString stringWithFormat:@"%@/%@ %@",tempArray[1],tempArray[2],tempArray[3]];
+    NSDate *date = [format dateFromString:tempStr];
+    NSDate *currentDate = [NSDate new];
+    NSComparisonResult result = [currentDate compare:date];
+    NSLog(@"remindDate:%@",date);
+    if (result == NSOrderedAscending) {
+        return  YES;
+    }else{
+        if (![repeatWay isEqualToString:@"Never"]) {
+            return YES;
+        }else{
+            return NO;
+        }
+    }
 }
 
 @end
