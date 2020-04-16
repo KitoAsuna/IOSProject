@@ -91,9 +91,12 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     }
     completionHandler();
 }
-- (void)removeReminder:(NSArray *)array{
+- (void)removeReminder:(NSMutableArray *)array{
     [self.center removeDeliveredNotificationsWithIdentifiers:array];
-    [self.center removePendingNotificationRequestsWithIdentifiers:array];
+    [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:array];
+    for (int i = 0; i < array.count; i++) {
+        NSLog(@"Identifiers:%@",array[i]);
+    }
 }
 
 - (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(id)image{
@@ -131,25 +134,56 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     NSInteger interval = [zone secondsFromGMTForDate:date];
     NSDate *localeDate = [date  dateByAddingTimeInterval: interval];
     localeDate = [formatter dateFromString:mdate];
+    NSLog(@"==================发送时间：%@",[formatter stringFromDate:localeDate]);
+    /**
+     根据重复方式设置日期选择器
+     */
+    NSDateComponents * components;
+//    if ([model.repeat isEqualToString:@"Never"]) {
+//        components = [[NSCalendar currentCalendar]
+//                      components:NSCalendarUnitYear |
+//                      NSCalendarUnitMonth |
+//                      NSCalendarUnitWeekday |
+//                      NSCalendarUnitDay |
+//                      NSCalendarUnitHour |
+//                      NSCalendarUnitMinute |
+//                      NSCalendarUnitSecond
+//                      fromDate:localeDate];
+//    }else
+    if ([model.repeat isEqualToString:@"Daily"]){
+        components = [[NSCalendar currentCalendar]
+                      components:NSCalendarUnitHour|
+                      NSCalendarUnitMinute|
+                      NSCalendarUnitSecond
+                      fromDate:localeDate];
+    }else if ([model.repeat isEqualToString:@"Weekly"]){
+        components = [[NSCalendar currentCalendar]
+                      components:NSCalendarUnitWeekday |
+                      NSCalendarUnitHour|
+                      NSCalendarUnitMinute|
+                      NSCalendarUnitSecond
+                      fromDate:localeDate];
+    }else if ([model.repeat isEqualToString:@"Months"]){
+        components = [[NSCalendar currentCalendar]
+                     components:NSCalendarUnitDay |
+                     NSCalendarUnitHour|
+                     NSCalendarUnitMinute|
+                     NSCalendarUnitSecond
+                     fromDate:date];
+    }
     
-    NSLog(@"==================发送时间：%@",localeDate);
-    NSDateComponents * components = [[NSCalendar currentCalendar]
-                                                components:NSCalendarUnitYear |
-                                                NSCalendarUnitMonth |
-                                                NSCalendarUnitWeekday |
-                                                NSCalendarUnitDay |
-                                                NSCalendarUnitHour |
-                                                NSCalendarUnitMinute |
-                                                NSCalendarUnitSecond
-                                                fromDate:localeDate];
     UNCalendarNotificationTrigger *date_trigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:components repeats:YES];
     NSString *requestIdentifer = model.foodName;
            //content.categoryIdentifier = @"textCategory";
     content.categoryIdentifier = @"seeCategory";
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifer content:content trigger:date_trigger];
-       
+
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
-           NSLog(@"%@",error);
+        if (error) {
+            NSLog(@"通知添加失败");
+        }else{
+            NSLog(@"通知添加成功");
+        }
     }];
     //生成二维码
     NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@&%@&%@",model.foodName,model.device,model.aboutFood,model.expireDate,model.storageDate,model.category,model.location,model.repeat];
@@ -167,21 +201,23 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     content.badge = @0;
     //获取沙盒中的图片
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodName];
+    NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodPhoto];
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     NSError *error = nil;
     //将本地图片的路径形成一个图片附件，加入到content中
     UNNotificationAttachment *img_attachment = [UNNotificationAttachment attachmentWithIdentifier:@"att1" URL:[NSURL fileURLWithPath:imagePath] options:nil error:&error];
-
     if (error) {
         NSLog(@"%@", error);
     }
     content.attachments = @[img_attachment];
-    
     //设置为@""以后，进入app将没有启动页
     content.launchImageName = @"";
     UNNotificationSound *sound = [UNNotificationSound defaultSound];
     content.sound = sound;
+    BOOL repeat = NO;
+    if (![model.repeat isEqualToString:@"Never"] && timeInterval > 60) {
+        repeat = YES;
+    }
     //设置时间间隔的触发器
     UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:timeInterval repeats:NO];
     NSString *requestIdentifer = model.foodName;

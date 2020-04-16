@@ -68,6 +68,8 @@
 		45514BEB23F2E285000E321E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
 		45514BEC23F2E287000E321E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
 		455F4AC723D157FE00BE3822 /* saoyisao@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 455F4AC623D157FE00BE3822 /* saoyisao@3x.png */; };
+		457EB10124482B260050AEE0 /* categoryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 457EB10024482B260050AEE0 /* categoryModel.m */; };
+		457EB104244839890050AEE0 /* categoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 457EB103244839890050AEE0 /* categoryCell.m */; };
 		45822172243EC841002970EC /* alarmView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45822171243EC841002970EC /* alarmView.m */; };
 		45822175243ECCEC002970EC /* notificationListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45822174243ECCEC002970EC /* notificationListTableViewCell.m */; };
 		45822178243ECD05002970EC /* NotificationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45822177243ECD05002970EC /* NotificationView.m */; };
@@ -117,6 +119,7 @@
 		45D3747E23C075BA00192014 /* AFImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D3747523C075B900192014 /* AFImageDownloader.m */; };
 		45D3748023C075E200192014 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45D3747F23C075E200192014 /* CFNetwork.framework */; };
 		45D3748223C075F600192014 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45D3748123C075F600192014 /* Security.framework */; };
+		45D7CC2E2447EC71009B158D /* editFoodItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D7CC2D2447EC71009B158D /* editFoodItemViewController.m */; };
 		45DC9618242069B90070BD75 /* qrCodeWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DC9617242069B90070BD75 /* qrCodeWebViewController.m */; };
 		45E24A362414AB770089E111 /* foodKindView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E24A352414AB770089E111 /* foodKindView.m */; };
 		45EBE66D2415E8100072843C /* toturialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45EBE66C2415E8100072843C /* toturialViewController.m */; };
@@ -250,6 +253,10 @@
 		4544298423CF05B500662F18 /* CategoryTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryTableViewCell.h; sourceTree = "<group>"; };
 		4544298523CF05B500662F18 /* CategoryTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CategoryTableViewCell.m; sourceTree = "<group>"; };
 		455F4AC623D157FE00BE3822 /* saoyisao@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saoyisao@3x.png"; sourceTree = "<group>"; };
+		457EB0FF24482B260050AEE0 /* categoryModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = categoryModel.h; sourceTree = "<group>"; };
+		457EB10024482B260050AEE0 /* categoryModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = categoryModel.m; sourceTree = "<group>"; };
+		457EB102244839890050AEE0 /* categoryCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = categoryCell.h; sourceTree = "<group>"; };
+		457EB103244839890050AEE0 /* categoryCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = categoryCell.m; sourceTree = "<group>"; };
 		45822170243EC841002970EC /* alarmView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alarmView.h; sourceTree = "<group>"; };
 		45822171243EC841002970EC /* alarmView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = alarmView.m; sourceTree = "<group>"; };
 		45822173243ECCEC002970EC /* notificationListTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = notificationListTableViewCell.h; sourceTree = "<group>"; };
@@ -352,6 +359,8 @@
 		45D3747523C075B900192014 /* AFImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageDownloader.m; sourceTree = "<group>"; };
 		45D3747F23C075E200192014 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		45D3748123C075F600192014 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		45D7CC2C2447EC71009B158D /* editFoodItemViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = editFoodItemViewController.h; sourceTree = "<group>"; };
+		45D7CC2D2447EC71009B158D /* editFoodItemViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = editFoodItemViewController.m; sourceTree = "<group>"; };
 		45DC9616242069B90070BD75 /* qrCodeWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qrCodeWebViewController.h; sourceTree = "<group>"; };
 		45DC9617242069B90070BD75 /* qrCodeWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = qrCodeWebViewController.m; sourceTree = "<group>"; };
 		45E24A342414AB770089E111 /* foodKindView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foodKindView.h; sourceTree = "<group>"; };
@@ -533,6 +542,8 @@
 		451567E22413404E000F33C2 /* newCell */ = {
 			isa = PBXGroup;
 			children = (
+				457EB102244839890050AEE0 /* categoryCell.h */,
+				457EB103244839890050AEE0 /* categoryCell.m */,
 				451567E324134082000F33C2 /* categoryCollectionViewCell.h */,
 				451567E424134082000F33C2 /* categoryCollectionViewCell.m */,
 				451567E624135831000F33C2 /* foodItemCollectionViewCell.h */,
@@ -600,6 +611,8 @@
 			children = (
 				4590C81A23B9A58700691461 /* FoodModel.h */,
 				4590C81B23B9A58700691461 /* FoodModel.m */,
+				457EB0FF24482B260050AEE0 /* categoryModel.h */,
+				457EB10024482B260050AEE0 /* categoryModel.m */,
 				4513DD5723BF38D20005A1E2 /* ScanInfoView.h */,
 				4513DD5823BF38D20005A1E2 /* ScanInfoView.m */,
 				454421E923CBF5A0002FADFE /* FoodInfoView.h */,
@@ -645,6 +658,8 @@
 				4590C85923B9EF8A00691461 /* cell */,
 				458EA2D3241233C700F1FCC7 /* fosaMainViewController.h */,
 				458EA2D4241233C700F1FCC7 /* fosaMainViewController.m */,
+				45D7CC2C2447EC71009B158D /* editFoodItemViewController.h */,
+				45D7CC2D2447EC71009B158D /* editFoodItemViewController.m */,
 				453C88322413DA37006B52A8 /* MainViewController.h */,
 				453C88332413DA37006B52A8 /* MainViewController.m */,
 			);
@@ -1052,6 +1067,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				451567E524134082000F33C2 /* categoryCollectionViewCell.m in Sources */,
+				45D7CC2E2447EC71009B158D /* editFoodItemViewController.m in Sources */,
 				454421EB23CBF5A0002FADFE /* FoodInfoView.m in Sources */,
 				4513DD4823BED82E0005A1E2 /* LoginViewController.m in Sources */,
 				453C88342413DA37006B52A8 /* MainViewController.m in Sources */,
@@ -1089,8 +1105,10 @@
 				4590C84523B9C72800691461 /* SealerAndPoundViewController.m in Sources */,
 				45EBE66D2415E8100072843C /* toturialViewController.m in Sources */,
 				4500E13F23BB248A002EB9FE /* Fosa_NSString_Queue.m in Sources */,
+				457EB104244839890050AEE0 /* categoryCell.m in Sources */,
 				4590C83B23B9C5F500691461 /* FMResultSet.m in Sources */,
 				4513DD3423BED3550005A1E2 /* MainPhotoViewController.m in Sources */,
+				457EB10124482B260050AEE0 /* categoryModel.m in Sources */,
 				454421F223CC6B70002FADFE /* AboutAppsViewController.m in Sources */,
 				4500E11C23BAEB14002EB9FE /* NSArray+AvoidCrash.m in Sources */,
 				4590C84B23B9C74D00691461 /* UserViewController.m in Sources */,

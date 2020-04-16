@@ -15,6 +15,7 @@
 #import "FosaNotification.h"
 #import <UserNotifications/UserNotifications.h>
 #import "NotificationView.h"
+#import "editFoodItemViewController.h"
 
 @interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,fosaDelegate,closeViewDelegate>{
     NSString *categoryID;//种类cell
@@ -714,11 +715,11 @@
         NSLog(@"*********************************************foodName    = %@",foodName);
         //NSLog(@"device      = %@",device);
         //NSLog(@"aboutFood   = %@",aboutFood);
-        NSLog(@"===========storageDate  = %@",storageDate);
-        NSLog(@"===========expireDate  = %@",expireDate);
-        //NSLog(@"foodImg     = %@",foodImg);
+        //NSLog(@"===========storageDate  = %@",storageDate);
+        //NSLog(@"===========expireDate  = %@",expireDate);
+        NSLog(@"foodImg     = %@",foodImg);
         //NSLog(@"category    = %@",category);
-        NSLog(@"===========remindDate  = %@",remindDate);
+        //NSLog(@"===========remindDate  = %@",remindDate);
     }
     
     NSString *currentSortType = [self.userdefault valueForKey:@"sort"];
@@ -989,28 +990,31 @@
     categoryCollectionViewCell *cell = (categoryCollectionViewCell *)longPress.view;
     self.longprogressCell = cell;
     NSLog(@"长按：%@",cell.kind.text);
-    categoryEdit = true;
-    [self.categoryCollection reloadData];
-    [cell.kind becomeFirstResponder];
-    
-    //取消选中状态
-    isSelectCategory = false;
-    self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
-    self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",self.selectedCategoryCell.accessibilityValue]];
-    self.selectedCategoryCell = nil;
-    [self CollectionReload];
-
-    //为退出按钮添加约束
-    [self.cancelBtn.widthAnchor constraintEqualToConstant:NavigationBarH*5/3].active = YES;
-    [self.cancelBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
-    [self.cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
-    //self.cancelBtn.layer.borderWidth = 1;
-    self.cancelBtn.layer.cornerRadius = NavigationBarH/3;
-    self.cancelBtn.backgroundColor = FOSARed;
-    [self.cancelBtn setTitleColor:FOSAWhite forState:UIControlStateNormal];
-    self.cancelBtn.titleLabel.font = [UIFont systemFontOfSize:15 weight:15];
-    [self.cancelBtn addTarget:self action:@selector(cancelEdit) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.cancelBtn];
+    editFoodItemViewController *editFood = [editFoodItemViewController new];
+    editFood.selectCategory = cell.kind.text;
+    [self presentViewController:editFood animated:YES completion:nil];
+//    categoryEdit = true;
+//    [self.categoryCollection reloadData];
+//    [cell.kind becomeFirstResponder];
+//
+//    //取消选中状态
+//    isSelectCategory = false;
+//    self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
+//    self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",self.selectedCategoryCell.accessibilityValue]];
+//    self.selectedCategoryCell = nil;
+//    [self CollectionReload];
+//
+//    //为退出按钮添加约束
+//    [self.cancelBtn.widthAnchor constraintEqualToConstant:NavigationBarH*5/3].active = YES;
+//    [self.cancelBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
+//    [self.cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
+//    //self.cancelBtn.layer.borderWidth = 1;
+//    self.cancelBtn.layer.cornerRadius = NavigationBarH/3;
+//    self.cancelBtn.backgroundColor = FOSARed;
+//    [self.cancelBtn setTitleColor:FOSAWhite forState:UIControlStateNormal];
+//    self.cancelBtn.titleLabel.font = [UIFont systemFontOfSize:15 weight:15];
+//    [self.cancelBtn addTarget:self action:@selector(cancelEdit) forControlEvents:UIControlEventTouchUpInside];
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.cancelBtn];
 }
 
 //取消种类编辑
@@ -1199,7 +1203,7 @@
 //取出保存在本地的图片
 - (UIImage*)getImage:(NSString *)filepath{
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *photopath = [NSString stringWithFormat:@"%@%d.png",filepath,1];
+    NSString *photopath = [NSString stringWithFormat:@"%@.png",filepath];
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     // 保存文件的名称
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];

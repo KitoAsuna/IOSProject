@@ -25,8 +25,8 @@
 }
 - (void)creatRepeatTable{
     self.dataSource = [NSMutableArray new];
-    [self.dataSource addObjectsFromArray:@[@"Never",@"Daily",@"Weekly",@"Monthly"]];
-    self.repeatTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarH*3, screen_width, screen_height/5) style:UITableViewStylePlain];
+    [self.dataSource addObjectsFromArray:@[@"Never",@"Daily",@"Weekly",@"Monthly",@"Every three hours"]];
+    self.repeatTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarH*3, screen_width, screen_height/4) style:UITableViewStylePlain];
     
     self.repeatTable.delegate = self;
     self.repeatTable.dataSource = self;
@@ -86,8 +86,6 @@
     cell.textLabel.text = self.dataSource[row];
     cell.textLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     cell.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    
-    
     //返回cell
     return cell;
 }
@@ -102,15 +100,4 @@
 //    UITableViewCell * cell = (UITableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
 //    cell.accessoryType = UITableViewCellAccessoryNone;
 //}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 @end

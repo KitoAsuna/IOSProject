@@ -24,7 +24,8 @@
     NSInteger currentPictureIndex;//标识图片轮播器当前指向哪张图片
     NSString *device;
     Boolean isEdit;
-    NSString *expireStr,*storageStr,*issend;
+    NSString *expireStr,*storageStr,*issend,*remindStr;
+    int foodPhotoIndex;
     //NSString *selectRemindDate;
 }
 
@@ -329,18 +330,21 @@
     }
     return _foodImgArray;
 }
+
 - (NSMutableArray<NSString *> *)cellDic{
     if (_cellDic == nil) {
         _cellDic = [[NSMutableArray alloc]init];
     }
     return _cellDic;
 }
+
 - (NSMutableDictionary *)cellDictionary{
     if (_cellDictionary == nil) {
         _cellDictionary = [[NSMutableDictionary alloc]init];
     }
     return _cellDictionary;
 }
+
 - (NSMutableArray<NSString *> *)categoryNameArray{
     if (_categoryNameArray == nil) {
         _categoryNameArray = [NSMutableArray new];
@@ -384,6 +388,7 @@
     [self OpenSqlDatabase:@"FOSA"]; //打开数据库
     if (![self.foodStyle isEqualToString:@"Info"]) {
         self.backbtn.hidden = NO;
+        self.mainImgBtn.hidden = NO;
         if (![device isEqualToString:@"null"]) {
             [self SystemAlert:@"Binding device successfully"];
             self.likeBtn.hidden = NO;
@@ -403,7 +408,7 @@
     self.likeBtn.hidden = YES;
     self.mainImgBtn = [UIButton new];
     self.mainImgBtn.frame = CGRectMake(screen_width-2*NavigationBarH, NavigationBarH/6, NavigationBarH*2/3, NavigationBarH*2/3);
-    [self.mainImgBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashHL"] forState:UIControlStateNormal];
+    [self.mainImgBtn setBackgroundImage:[UIImage imageNamed:@"icon_setMainImg"] forState:UIControlStateNormal];
     [self.navigationController.navigationBar addSubview:self.mainImgBtn];
     [self.mainImgBtn addTarget:self action:@selector(setImgAsMainBackground) forControlEvents:UIControlEventTouchUpInside];
 /**help*/
@@ -606,6 +611,7 @@
     [self.remindView addSubview:self.remindLabel];
     
     self.remindDateTextView.frame = CGRectMake(screen_width*2/33, contentHeight/10, screen_width*29/33, contentHeight/10);
+    self.remindDateTextView.adjustsFontSizeToFitWidth = YES;
     self.remindDateTextView.layer.cornerRadius = 5;
     self.remindDateTextView.userInteractionEnabled = NO;
     self.remindDateTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
@@ -733,7 +739,7 @@
             device = self.model.device;
         }
         selectCategory = self.model.category;
-        self.remindDateTextView.text = self.model.remindDate;
+        self.remindDateTextView.text = [NSString stringWithFormat:@"%@ -%@",self.model.remindDate,self.model.repeat];//self.model.remindDate;
         self.storageDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",storageTimeArray[0],storageTimeArray[1],storageTimeArray[2]];
         
         self.storageTimeLabel.text = storageTimeArray[3];
@@ -760,7 +766,7 @@
 
 - (void)creatPicturePlayer{
     self.imageviewArray = [[NSMutableArray alloc]initWithObjects:self.imageview1,self.imageview2,self.imageview3, nil];
-    
+    foodPhotoIndex = 1;
     int headerWidth  = self.headerView.frame.size.width;
     int headerHeight = self.headerView.frame.size.height;
     self.picturePlayer.frame = CGRectMake(0, 0, headerWidth, headerHeight);
@@ -779,20 +785,21 @@
         self.imageviewArray[i].userInteractionEnabled = YES;
         self.imageviewArray[i].contentMode = UIViewContentModeScaleAspectFill;
         self.imageviewArray[i].clipsToBounds = YES;
-        if ([self.foodStyle isEqualToString:@"Info"] && [self getImage:[NSString stringWithFormat:@"%@%ld",self.model.foodPhoto,i+1]] != nil) {
-            NSString *img = [NSString stringWithFormat:@"%@%ld",self.model.foodPhoto,i+1];
+        
+        if ([self.foodStyle isEqualToString:@"Info"] && [self getImage:[NSString stringWithFormat:@"%@%ld",self.model.foodName,i+1]] != nil) {
+            NSString *img = [NSString stringWithFormat:@"%@%ld",self.model.foodName,i+1];
             self.imageviewArray[i].image = [self getImage:img];
             self.foodImgArray[i] = self.imageviewArray[i].image;
         }else{
             NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"picturePlayer",i+1];
             self.imageviewArray[i].image = [UIImage imageNamed:imgName];
         }
-
         UITapGestureRecognizer *clickRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumptoPhoto:)];
                //clickRecognizer.view.tag = i;
         [self.imageviewArray[i] addGestureRecognizer:clickRecognizer];
         [self.picturePlayer addSubview:self.imageviewArray[i]];
     }
+    NSLog(@"====================>>>>>>>>>>:%@",self.foodImgArray);
     [self.headerView addSubview:self.picturePlayer];
         //轮播页面指示器
     self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-15, headerWidth/5, 10)];
@@ -805,7 +812,7 @@
     self.refreshBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 40, 40)];
     self.refreshBtn.center = self.headerView.center;
     [self.refreshBtn setBackgroundImage:[UIImage imageNamed:@"icon_refreshPicture"] forState:UIControlStateNormal];
-    [self.refreshBtn addTarget:self action:@selector(jumptoPhoto:) forControlEvents:UIControlEventTouchUpInside];
+    [self.refreshBtn addTarget:self action:@selector(jumptoPhoto) forControlEvents:UIControlEventTouchUpInside];
     self.refreshBtn.hidden = YES;
     [self.headerView addSubview:self.refreshBtn];
     
@@ -818,6 +825,7 @@
     [self.view addSubview:DatePicker];
     self.fosaDatePicker = DatePicker;
     self.fosaDatePicker.hidden = YES;
+    remindStr = @"";
 }
 #pragma mark -- FosaDatePickerViewDelegate
 /**
@@ -832,15 +840,12 @@
     expireStr = [NSString stringWithFormat:@"%@/%@/%@/%@",array[1],array[0],array[2],array[3]];
     NSLog(@"^^^^^^^^^^^^^^^^^^^^我选择了expireStr:%@",expireStr);
 
-//    NSDateFormatter * formatter = [[NSDateFormatter alloc]init];
-//    [formatter setDateFormat:@"yy/MM/dd/HH:mm"];
-//    NSDate *expDate = [formatter dateFromString:expireStr];
-//    NSLog(@">>>>>>>>>>>>>>>>>>>%@",expDate);
-
     NSString *dateStr = [NSString stringWithFormat:@"%@/%@/%@",array[1],[mouth valueForKey:array[0]],array[2]];
     self.expireDateLabel.text = dateStr;
     self.expireTimeLabel.text= array[3];
-    self.remindDateTextView.text = remindTimer;
+    
+    remindStr = remindTimer;
+    self.remindDateTextView.text = [NSString stringWithFormat:@"%@ -%@",remindTimer,self.fosaDatePicker.repeatWayLabel.text];//remindTimer;
     NSLog(@"%@",dateStr);
     [UIView animateWithDuration:0.3 animations:^{
        self.fosaDatePicker.frame = CGRectMake(0, screen_height, self.view.frame.size.width, screen_height*80/143);
@@ -1062,10 +1067,17 @@
 }
 - (void)setImgAsMainBackground{
     NSLog(@"currentIndex:%ld",(long)currentPictureIndex);
+    [self.mainImgBtn setBackgroundImage:[UIImage imageNamed:@"icon_setMainImgG"] forState:UIControlStateNormal];
     if (currentPictureIndex != 0) {
-        UIImage *tempImag =  self.foodImgArray[currentPictureIndex];
-        [self.foodImgArray removeObjectAtIndex:currentPictureIndex];
-        [self.foodImgArray insertObject:tempImag atIndex:0];
+        foodPhotoIndex = (int)currentPictureIndex+1;
+        NSString *mainImg = [NSString stringWithFormat:@"%@%ld",self.foodTextView.text,currentPictureIndex];
+        NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set foodImg = '%@' where foodName = '%@'",mainImg,self.foodTextView.text];
+        NSLog(@"foodImg:%@",updateSql);
+        if ([self.db open]) {
+            if([self.db executeUpdate:updateSql]){
+                NSLog(@"修改成功");
+            }
+        }
     }
 }
 - (void)EditInfo{
@@ -1097,7 +1109,7 @@
 - (void)recoverEditView{
     self.foodCell.kind.text = selectCategory;
     self.foodCell.categoryPhoto.image = self.selectedCategory.categoryPhoto.image;
-    
+
     //禁止界面互动
     self.foodTextView.userInteractionEnabled = NO;
     self.foodDescribedTextView.userInteractionEnabled = NO;
@@ -1211,7 +1223,22 @@
         }
     }
 }
-
+- (void)jumptoPhoto{
+    if ([self.foodStyle isEqualToString:@"Info"]) {
+        NSLog(@"放大图片");
+        [self EnlargePhoto];
+    }else{
+        takePictureViewController *photo = [[takePictureViewController alloc]init];
+        photo.photoBlock = ^(UIImage *img){
+            //通过block将相机拍摄的图片放置在对应的位置
+        if (img != nil) {
+                self.imageviewArray[self->currentPictureIndex].image = img;
+                self.foodImgArray[self->currentPictureIndex] = img;
+            }
+        };
+        [self.navigationController pushViewController:photo animated:NO];
+    }
+}
 - (void)back{
      UIAlertController *backAlert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"Do you want to leave the page?" preferredStyle:UIAlertControllerStyleAlert];
     [backAlert addAction:[UIAlertAction actionWithTitle:@"YES" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -1310,15 +1337,14 @@
     }else{
         expiredate = [NSString stringWithFormat:@"%@/%@",self.expireDateLabel.text,self.expireTimeLabel.text];
     }
-
     
     if (![self.remindDateTextView.text isEqualToString:@""]) {
         issend = @"YES";
     }else{
         issend = @"NO";
     }
-    
-    NSString *insertSql = [NSString stringWithFormat:@"insert into FoodStorageInfo(foodName,device,aboutFood,storageDate,expireDate,remindDate,location,foodImg,category,repeatWay,send) values('%@','%@','%@','%@','%@','%@','%@','%@','%@','%@','%@')",self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.remindDateTextView.text,self.locationTextView.text,self.foodTextView.text,selectCategory,self.fosaDatePicker.repeatWayLabel.text,issend];
+    NSString *mainImg = [NSString stringWithFormat:@"%@%d",self.foodTextView.text,foodPhotoIndex];
+    NSString *insertSql = [NSString stringWithFormat:@"insert into FoodStorageInfo(foodName,device,aboutFood,storageDate,expireDate,remindDate,location,foodImg,category,repeatWay,send) values('%@','%@','%@','%@','%@','%@','%@','%@','%@','%@','%@')",self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,remindStr,self.locationTextView.text,mainImg,selectCategory,self.fosaDatePicker.repeatWayLabel.text,issend];
     if ([self.foodTextView.text isEqualToString:@""]) {
         [self SystemAlert:@"Please input the name of your food!"];
     }else if(selectCategory == nil){
@@ -1513,9 +1539,10 @@
             //另存通知图片
             [self Savephoto:image name:self.foodTextView.text];
 
-            tempArray = [self.remindDateTextView.text componentsSeparatedByString:@","];
+            tempArray = [remindStr componentsSeparatedByString:@","];
             tempStr = [NSString stringWithFormat:@"%@/%@ %@",tempArray[1],tempArray[2],tempArray[3]];
             NSDate *date = [format dateFromString:tempStr];
+            
             NSDate *currentDate = [NSDate new];
             double dateTime = [date timeIntervalSince1970];
             double currentDateTime = [currentDate timeIntervalSince1970];
@@ -1523,7 +1550,12 @@
             
             FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
             //[self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image];
-            [self.fosaNotification sendNotification:model body:body image:image time:(int)(dateTime-currentDateTime)];
+            if ([self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Every three hours"]||[self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Never"]) {
+                [self.fosaNotification sendNotification:model body:body image:image time:(int)(dateTime-currentDateTime)];
+            }else{
+                [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image];
+            }
+            
         }
     }
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];

@@ -126,12 +126,11 @@
     cell.foodImgView.image = [self getImage:self.dataSource[indexPath.row].foodPhoto];
     cell.foodNameLabel.text = self.dataSource[indexPath.row].foodName;
     NSArray *ary = [self.dataSource[indexPath.row].remindDate componentsSeparatedByString:@","];
-    cell.timeLabel.text = [NSString stringWithFormat:@"%@,%@",ary[3],self.dataSource[indexPath.row].repeat];
+    cell.timeLabel.text = [NSString stringWithFormat:@"%@, %@",ary[3],self.dataSource[indexPath.row].repeat];
     cell.dateLabel.text = [NSString stringWithFormat:@"%@,%@ %@",ary[0],ary[1],ary[2]];
     cell.sendSwitch.tag = indexPath.row;
     [cell.sendSwitch addTarget:self action:@selector(openSendNotification:) forControlEvents:UIControlEventValueChanged];
     cell.selectImgView.image = [UIImage imageNamed:@"icon_unselect"];
-
     if (isSelect) {
         cell.sendSwitch.hidden = YES;
         cell.selectImgView.hidden = NO;
@@ -255,7 +254,7 @@
     NSLog(@"remindArray:%@",remindArray);
     if ([self.fmdbManager isFmdbOpen] && remindArray.count > 0) {
            for (int i = 0; i < remindArray.count; i++) {
-               NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set send = '%@' where foodName = '%@'",@"YES",remindArray[i]];
+               NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set send = '%@' where foodName = '%@'",@"YES",remindArray[i].foodName];
                if ([self.fmdbManager updateDataWithSql:updateSql]) {
                    NSLog(@"设置reminder为YES，更新成功");
                }
@@ -270,7 +269,7 @@
         }
         [requestArray addObject:cancelArray[i].foodName];
     }
-    [self.fosaNotification removeReminder:[requestArray copy]];
+    [self.fosaNotification removeReminder:requestArray];
 }
 
 //获取数据库的食物
@@ -285,7 +284,7 @@
 //取出保存在本地的图片
 - (UIImage*)getImage:(NSString *)filepath{
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *photopath = [NSString stringWithFormat:@"%@%d.png",filepath,1];
+    NSString *photopath = [NSString stringWithFormat:@"%@.png",filepath];
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     // 保存文件的名称
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
