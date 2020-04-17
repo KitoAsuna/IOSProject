@@ -163,7 +163,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
                       NSCalendarUnitMinute|
                       NSCalendarUnitSecond
                       fromDate:localeDate];
-    }else if ([model.repeat isEqualToString:@"Months"]){
+    }else if ([model.repeat isEqualToString:@"Monthly"]){
         components = [[NSCalendar currentCalendar]
                      components:NSCalendarUnitDay |
                      NSCalendarUnitHour|

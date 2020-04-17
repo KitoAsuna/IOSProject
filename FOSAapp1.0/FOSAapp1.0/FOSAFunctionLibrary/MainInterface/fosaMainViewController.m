@@ -925,7 +925,7 @@
     NSComparator compare = ^(FoodModel* obj1,FoodModel* obj2){
         NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
         [formatter setDateFormat:@"MM/dd/yyyy HH:mm"];
-        
+
         NSArray<NSString *> *dateArray1 = [obj1.storageDate componentsSeparatedByString:@"/"];
         NSString *RDate1 = [NSString stringWithFormat:@"%@/%@/%@ %@",dateArray1[1],dateArray1[0],dateArray1[2],dateArray1[3]];
         NSDate *foodDate1 = [formatter dateFromString:RDate1];
@@ -1009,7 +1009,6 @@
     editFood.selectCategory = cell.kind.text;
     editFood.categoryBlock = ^(BOOL reload) {
         if (reload) {
-            //self.smask.hidden = YES;
             self->isSelectCategory = false;
             if (self.selectedCategoryCell != nil) {
                 self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
@@ -1021,7 +1020,6 @@
             });
         }
     };
-    self.smask.hidden = NO;
     [self presentViewController:editFood animated:YES completion:nil];
 //    categoryEdit = true;
 //    [self.categoryCollection reloadData];

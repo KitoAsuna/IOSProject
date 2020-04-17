@@ -74,7 +74,7 @@
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.titleLabel];
     
-    self.doneBtn.frame = CGRectMake(width*3/4-Width(10), height/40, width/4, height/20);
+    self.doneBtn.frame = CGRectMake(width*8/10, height/40, width/6, height/20);
     [self.doneBtn setTitle:@"Done" forState:UIControlStateNormal];
     [self.doneBtn setTitleColor:FOSAColor(0, 155, 250) forState:UIControlStateNormal];
     [self.doneBtn setTitleColor:FOSAColor(0, 180, 255) forState:UIControlStateHighlighted];
@@ -89,7 +89,7 @@
     namelabel.text = @"Name";
     namelabel.textColor = FOSAGray;
     [self.view addSubview:namelabel];
-    self.categoryNameTextView.frame = CGRectMake(screen_width/20, CGRectGetMaxY(namelabel.frame), screen_width*9/10, screen_height/20);
+    self.categoryNameTextView.frame = CGRectMake(width/20, CGRectGetMaxY(namelabel.frame), width*9/10, height/25);
     self.categoryNameTextView.layer.cornerRadius = 10;
     [self.categoryNameTextView setValue:[NSNumber numberWithInt:Width(10)] forKey:@"paddingLeft"];
     self.categoryNameTextView.text = self.selectCategory;
@@ -103,8 +103,8 @@
 
     CGFloat collectWidth = screen_width*9/10;
     UICollectionViewFlowLayout *fosaFlowLayout = [[UICollectionViewFlowLayout alloc] init];
-    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(Height(5),Width(5),0,Width(2));//上、左、下、右
-    fosaFlowLayout.itemSize = CGSizeMake(collectWidth/5-Width(10),collectWidth/6);
+    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(Height(12),Width(10),0,Width(10));//上、左、下、右
+    fosaFlowLayout.itemSize = CGSizeMake(collectWidth/5-Width(10),collectWidth/5-Width(10));
 
        //固定的itemsize
     fosaFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;//滑动的方向 垂直
@@ -113,7 +113,7 @@
     iconlabel.text = @"Icon";
     iconlabel.textColor = FOSAGray;
     [self.view addSubview:iconlabel];
-    
+
     self.categoryIconView = [[UICollectionView alloc]initWithFrame:CGRectMake(screen_width/20, CGRectGetMaxY(iconlabel.frame), collectWidth, height-CGRectGetMaxY(iconlabel.frame)-5*NavigationBarH/2) collectionViewLayout:fosaFlowLayout];
     self.categoryIconView.delegate = self;
     self.categoryIconView.dataSource = self;
@@ -154,6 +154,16 @@
     cell.backgroundColor = FOSAWhite;
     cell.categoryView.image = [UIImage imageNamed:cell.imgName];
 }
+// 两列cell之间的间距
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+    return Height(8);
+}
+
+// 两行cell之间的间距
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+    return 0;
+}
+
 //#pragma mark - UISearchBarDelegate
 ////将要开始编辑时的回调，返回为NO，则不能编辑
 //- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar{
