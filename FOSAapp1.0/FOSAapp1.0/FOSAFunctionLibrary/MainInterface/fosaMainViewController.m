@@ -1009,7 +1009,7 @@
     editFood.selectCategory = cell.kind.text;
     editFood.categoryBlock = ^(BOOL reload) {
         if (reload) {
-            self.smask.hidden = YES;
+            //self.smask.hidden = YES;
             self->isSelectCategory = false;
             if (self.selectedCategoryCell != nil) {
                 self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
