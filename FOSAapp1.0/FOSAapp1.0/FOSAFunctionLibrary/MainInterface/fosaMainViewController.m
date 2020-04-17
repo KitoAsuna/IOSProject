@@ -1009,6 +1009,7 @@
     editFood.selectCategory = cell.kind.text;
     editFood.categoryBlock = ^(BOOL reload) {
         if (reload) {
+            self.smask.hidden = YES;
             self->isSelectCategory = false;
             if (self.selectedCategoryCell != nil) {
                 self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
@@ -1020,6 +1021,7 @@
             });
         }
     };
+    self.smask.hidden = NO;
     [self presentViewController:editFood animated:YES completion:nil];
 //    categoryEdit = true;
 //    [self.categoryCollection reloadData];

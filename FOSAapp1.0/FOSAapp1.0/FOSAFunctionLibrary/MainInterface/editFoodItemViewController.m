@@ -90,7 +90,7 @@
     namelabel.textColor = FOSAGray;
     [self.view addSubview:namelabel];
     self.categoryNameTextView.frame = CGRectMake(screen_width/20, CGRectGetMaxY(namelabel.frame), screen_width*9/10, screen_height/20);
-    self.categoryNameTextView.layer.cornerRadius = 5;
+    self.categoryNameTextView.layer.cornerRadius = 10;
     [self.categoryNameTextView setValue:[NSNumber numberWithInt:Width(10)] forKey:@"paddingLeft"];
     self.categoryNameTextView.text = self.selectCategory;
     self.categoryNameTextView.backgroundColor = FOSAColor(245, 245, 245);
@@ -117,6 +117,7 @@
     self.categoryIconView = [[UICollectionView alloc]initWithFrame:CGRectMake(screen_width/20, CGRectGetMaxY(iconlabel.frame), collectWidth, height-CGRectGetMaxY(iconlabel.frame)-5*NavigationBarH/2) collectionViewLayout:fosaFlowLayout];
     self.categoryIconView.delegate = self;
     self.categoryIconView.dataSource = self;
+    self.categoryIconView.layer.cornerRadius = 10;
     self.categoryIconView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
 
     [self.categoryIconView registerClass:[categoryCell class] forCellWithReuseIdentifier:cellIndetifier];
