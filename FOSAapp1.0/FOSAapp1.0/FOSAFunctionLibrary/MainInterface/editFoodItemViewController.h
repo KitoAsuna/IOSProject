@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UICollectionView *categoryIconView;
 @property (nonatomic,strong) UISearchBar *iconSearchBar;
 @property (copy,nonatomic) NSString *selectCategory;
-@property (nonatomic,copy) void(^categoryBlock)(NSString *categoryName,NSString *categoryIconName);
+@property (nonatomic,copy) void(^categoryBlock)(BOOL reload);
 @end
 
 NS_ASSUME_NONNULL_END

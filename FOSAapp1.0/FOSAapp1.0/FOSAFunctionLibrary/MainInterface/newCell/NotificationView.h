@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NotificationView : UIView
 @property (nonatomic,strong) UIButton *bellBtn,*selectbtn,*backBtn,*deleBtn;
+@property (nonatomic,strong) UILabel *styleLabel;
 @property (nonatomic,strong) UITableView *notificationList;
 @property (weak,nonatomic) id<closeViewDelegate> closeDelegate;
 - (void)getFoodDataFromSql;

@@ -13,9 +13,11 @@
 #import "foodAddingViewController.h"
 #import "FMDB.h"
 #import "FosaNotification.h"
+#import "FosaFMDBManager.h"
 #import <UserNotifications/UserNotifications.h>
 #import "NotificationView.h"
 #import "editFoodItemViewController.h"
+
 
 @interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,fosaDelegate,closeViewDelegate>{
     NSString *categoryID;//种类cell
@@ -27,13 +29,13 @@
     Boolean categoryEdit;
     //排序方式数组
     NSArray *sortArray;
-    
+    FosaFMDBManager *fmdbManager;
 }
 
 //存储所有食物的数组
 @property (nonatomic,strong) NSMutableArray *AllFoodArray;
-//种类名-图标名字典
-@property (nonatomic,strong) NSMutableDictionary *categoryDictionary;
+////种类名-图标名字典
+//@property (nonatomic,strong) NSMutableDictionary *categoryDictionary;
 //教学提示相关
 @property (nonatomic,strong) UIView *mask,*smask;
 //数据库
@@ -49,6 +51,7 @@
 @property (nonatomic,strong) NSUserDefaults *userdefault;
 
 @property (nonatomic,strong) NotificationView *notifiView;
+
 @end
 
 @implementation fosaMainViewController
@@ -148,6 +151,12 @@
         _categoryDataSource = [[NSMutableArray alloc]init];
     }
     return _categoryDataSource;
+}
+- (NSMutableArray<categoryModel *> *)categoryData{
+    if (_categoryData == nil) {
+        _categoryData = [NSMutableArray new];
+    }
+    return _categoryData;
 }
 - (NSMutableArray<NSString *> *)categoryNameArray{
     if (_categoryNameArray == nil) {
@@ -371,7 +380,7 @@
          // 4 把创建的refreshControl赋值给scrollView的refreshControl属性
          
          //self.fooditemCollection.refreshControl = refreshControl;
- //    }
+//   }
      //self.foodItemCollection.alwaysBounceVertical = YES;
      self.fooditemCollection.delegate   = self;
      self.fooditemCollection.dataSource = self;
@@ -380,7 +389,6 @@
     [self.fooditemCollection registerClass:[foodItemCollectionViewCell class] forCellWithReuseIdentifier:foodItemID];
      //self.foodItemCollection.bounces = NO;
      [self.foodItemView addSubview:self.fooditemCollection];
-    
     [self creatSortListView];
 }
 
@@ -441,9 +449,11 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return sortArray.count;
 }
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 1;
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return self.sortListTable.frame.size.height/sortArray.count;
 }
@@ -456,6 +466,7 @@
         //创建cell
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
+    
     NSInteger row = indexPath.row;
     //取消点击cell时显示的背景色
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -490,7 +501,7 @@
 //每个section有几个item
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (collectionView == self.categoryCollection) {
-        return self.categoryDictionary.count;
+        return self.categoryData.count;
     }else{
         if (self.collectionDataSource.count <= 4) {
             return 4;
@@ -520,8 +531,8 @@
             [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:identifier];
             }
         categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-        cell.kind.text = self.categoryNameArray[indexPath.row];
-        cell.categoryPhoto.image = [UIImage imageNamed:[self.categoryDictionary valueForKey:self.categoryNameArray[indexPath.row]]];
+        cell.kind.text = self.categoryData[indexPath.row].categoryName;
+        cell.categoryPhoto.image = [UIImage imageNamed:self.categoryData[indexPath.row].categoryIconName];
         
         //为每一个Item添加长按事件
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressCellToEdit:)];
@@ -605,10 +616,10 @@
             isSelectCategory = true;
             cell.rootView.backgroundColor = FOSAYellow;
             cell.kind.textColor = FOSAYellow;
-            NSString *imgName = [NSString stringWithFormat:@"%@W",[self.categoryDictionary valueForKey:self.categoryNameArray[indexPath.row]]];
+            NSString *imgName = [NSString stringWithFormat:@"%@W",self.categoryData[indexPath.row].categoryIconName];
             cell.categoryPhoto.image = [UIImage imageNamed:imgName];
             self.selectedCategoryCell = cell;
-            self.selectedCategoryCell.accessibilityValue = [self.categoryDictionary valueForKey:self.categoryNameArray[indexPath.row]];
+            self.selectedCategoryCell.accessibilityValue =self.categoryData[indexPath.row].categoryIconName;
             [self CollectionReload];
         }
 
@@ -660,9 +671,9 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     NSLog(@"%ld",(long)textField.tag);
     [textField resignFirstResponder];
-    if (textField.tag >= 0 && textField.tag < 10) {
-        [self updateCategoryWithName:textField.text number:textField.tag];
-    }
+//    if (textField.tag >= 0 && textField.tag < 10) {
+//        [self updateCategoryWithName:textField.text number:textField.tag];
+//    }
     return YES;
 }
 
@@ -739,40 +750,43 @@
         [self SendExpiryNotification];
         isFirst = false;
     }
-    
 }
 - (void)getCategoryArray{
     [self OpenSqlDatabase:@"FOSA"];
     NSString *selSql = @"select * from category";
     FMResultSet *set = [self.db executeQuery:selSql];
-    [self.categoryNameArray removeAllObjects];
+    [self.categoryData removeAllObjects];
     while ([set next]) {
         NSString *kind = [set stringForColumn:@"categoryName"];
+        NSString *icon = [set stringForColumn:@"categoryIcon"];
         NSLog(@"%@",kind);
-        [self.categoryNameArray addObject:kind];
-    }
-    //初始化种类数据
-    NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie"];
-    self.categoryDictionary = [NSMutableDictionary new];
-    for (int i = 0; i < self.categoryNameArray.count; i++) {
-        [self.categoryDictionary setValue:array[i] forKey:self.categoryNameArray[i]];
-    }
-    NSLog(@"所有种类:%@",self.categoryDictionary);
-}
-- (void)updateCategoryWithName:(NSString *)newCategory number:(NSInteger)num{
-    if ([self.db open]) {
-        NSString *updateSql = [NSString stringWithFormat:@"update category set categoryName = '%@' where categoryName = '%@'",newCategory,self.categoryNameArray[num]];
-        BOOL result = [self.db executeUpdate:updateSql];
-        if (result) {
-            NSLog(@"修改种类成功");
-        }
-        NSString *updateFoodSql = [NSString stringWithFormat:@"update FoodStorageInfo set category = '%@' where category = '%@'",newCategory,self.categoryNameArray[num]];
-        result = [self.db executeUpdate:updateFoodSql];
-        if (result) {
-            NSLog(@"修改食物项种类完成");
-        }
+        categoryModel *model = [categoryModel modelWithName:kind iconName:icon];
+        //[self.categoryNameArray addObject:kind];
+        [self.categoryData addObject:model];
     }
 }
+//
+//- (void)updateCategoryWithName:(NSString *)newCategory categoryIcon:(NSString *)newIcon oldCategory:(NSString *)oldcategory{
+//    NSString *categoryStr = oldcategory;
+//    if (![oldcategory isEqualToString:newCategory]) {
+//        categoryStr = newCategory;
+//        NSString *updateSql = [NSString stringWithFormat:@"update category set categoryName = '%@' where categoryName = '%@'",categoryStr,oldcategory];
+//        if ([fmdbManager updateDataWithSql:updateSql]) {
+//            NSLog(@"修改食物种类名称成功");
+//        }
+//        NSString *updateFoodSql = [NSString stringWithFormat:@"update FoodStorageInfo set category = '%@' where category = '%@'",categoryStr,oldcategory];
+//        if ([fmdbManager updateDataWithSql:updateFoodSql]) {
+//            NSLog(@"修改食物项种类完成");
+//        }
+//    }
+//    if (newIcon) {
+//        NSString *updateIconSql = [NSString stringWithFormat:@"update category set categoryIcon = '%@' where categoryName = '%@'",newIcon,categoryStr];
+//        if ([fmdbManager updateDataWithSql:updateIconSql]) {
+//            NSLog(@"修改食物种类名称图标成功");
+//        }
+//    }
+//    [self categoryReLoad];
+//}
 
 - (FoodModel *)CheckFoodInfoWithName:(NSString *)foodName{
     [self OpenSqlDatabase:@"FOSA"];
@@ -824,6 +838,7 @@
     [self SelectDataFromFoodTable];
 }
 - (void)categoryReLoad{
+    [self getCategoryArray];
     [self.categoryCellDictionary removeAllObjects];
     //种类排序
     [self categorySortByNumber];
@@ -992,6 +1007,19 @@
     NSLog(@"长按：%@",cell.kind.text);
     editFoodItemViewController *editFood = [editFoodItemViewController new];
     editFood.selectCategory = cell.kind.text;
+    editFood.categoryBlock = ^(BOOL reload) {
+        if (reload) {
+            self->isSelectCategory = false;
+            if (self.selectedCategoryCell != nil) {
+                self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
+                self.selectedCategoryCell.kind.textColor = [UIColor grayColor];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self CollectionReload];
+                [self categoryReLoad];
+            });
+        }
+    };
     [self presentViewController:editFood animated:YES completion:nil];
 //    categoryEdit = true;
 //    [self.categoryCollection reloadData];
@@ -1056,7 +1084,13 @@
         add.model = cell.model;
     }
     add.hidesBottomBarWhenPushed = YES;
-    add.foodCategoryIconname = [self.categoryDictionary valueForKey:cell.model.category];
+    //查找种类图标名
+    for(int i = 0;i < self.categoryData.count;i++){
+        if ([self.categoryData[i].categoryName isEqualToString:cell.model.category]) {
+            add.foodCategoryIconname = self.categoryData[i].categoryIconName;
+            break;
+        }
+    }
     NSLog(@"<<<<<<<<<<<<<<<<<%@",add.foodCategoryIconname);
     [self.navigationController pushViewController:add animated:YES];
 }
@@ -1139,6 +1173,10 @@
         if (self->_notifiView == nil) {
             self->_notifiView = [[NotificationView alloc]initWithFrame:CGRectMake(5, NavigationBarH, screen_width-10, screen_height*127/143)];
         }
+        NSString *isDisdurb = [[NSUserDefaults standardUserDefaults] valueForKey:@"autonotification"];
+        if (![isDisdurb isEqualToString:@"YES"]) {
+            self.notifiView.styleLabel.hidden = YES;
+        }
         [self.notifiView getFoodDataFromSql];
         self.notifiView.closeDelegate = self;
         self.notifiView.layer.cornerRadius = 15;
@@ -1186,7 +1224,7 @@
             //获取通知的图片
             image = [self getImage:self.collectionDataSource[i].foodPhoto];
             //另存通知图片
-            [self Savephoto:image name:self.collectionDataSource[i].foodPhoto];
+            [self Savephoto:image name:self.collectionDataSource[i].foodName];
             [self.notification sendNotification:self.collectionDataSource[i] body:body image:image time:2];
 
         }

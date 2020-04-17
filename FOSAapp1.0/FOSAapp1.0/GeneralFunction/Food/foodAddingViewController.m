@@ -15,7 +15,7 @@
 #import "FosaNotification.h"
 #import "QRCodeScanViewController.h"
 #import "repeatWayViewController.h"
-
+#import "categoryModel.h"
 
 @interface foodAddingViewController ()<UIScrollViewDelegate,UITextViewDelegate,UITextFieldDelegate, UICollectionViewDelegate,FosaDatePickerViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UNUserNotificationCenterDelegate>{
     NSString *kindID;
@@ -47,6 +47,7 @@
 @property (nonatomic,strong) FosaNotification *fosaNotification;
 
 @property (nonatomic,strong) UIButton *refreshBtn;
+@property (nonatomic,strong) NSMutableArray<categoryModel *> *categoryData;
 @end
 
 @implementation foodAddingViewController
@@ -344,13 +345,13 @@
     }
     return _cellDictionary;
 }
-
-- (NSMutableArray<NSString *> *)categoryNameArray{
-    if (_categoryNameArray == nil) {
-        _categoryNameArray = [NSMutableArray new];
+- (NSMutableArray<categoryModel *> *)categoryData{
+    if (_categoryData == nil) {
+        _categoryData = [NSMutableArray new];
     }
-    return _categoryNameArray;
+    return _categoryData;
 }
+
 //食物信息展示视图相关
 - (UIButton *)editBtn{
     if (_editBtn == nil) {
@@ -739,7 +740,9 @@
             device = self.model.device;
         }
         selectCategory = self.model.category;
-        self.remindDateTextView.text = [NSString stringWithFormat:@"%@ -%@",self.model.remindDate,self.model.repeat];//self.model.remindDate;
+        if (self.model.remindDate.length > 0) {
+            self.remindDateTextView.text = [NSString stringWithFormat:@"%@ -%@",self.model.remindDate,self.model.repeat];
+        }
         self.storageDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",storageTimeArray[0],storageTimeArray[1],storageTimeArray[2]];
         
         self.storageTimeLabel.text = storageTimeArray[3];
@@ -815,7 +818,6 @@
     [self.refreshBtn addTarget:self action:@selector(jumptoPhoto) forControlEvents:UIControlEventTouchUpInside];
     self.refreshBtn.hidden = YES;
     [self.headerView addSubview:self.refreshBtn];
-    
 }
 #pragma mark - 初始化日期选择器
 -(void)InitialDatePicker{
@@ -843,9 +845,10 @@
     NSString *dateStr = [NSString stringWithFormat:@"%@/%@/%@",array[1],[mouth valueForKey:array[0]],array[2]];
     self.expireDateLabel.text = dateStr;
     self.expireTimeLabel.text= array[3];
-    
-    remindStr = remindTimer;
-    self.remindDateTextView.text = [NSString stringWithFormat:@"%@ -%@",remindTimer,self.fosaDatePicker.repeatWayLabel.text];//remindTimer;
+    if (remindTimer.length > 0) {
+        remindStr = remindTimer;
+        self.remindDateTextView.text = [NSString stringWithFormat:@"%@ -%@",remindTimer,self.fosaDatePicker.repeatWayLabel.text];//remindTimer;
+    }
     NSLog(@"%@",dateStr);
     [UIView animateWithDuration:0.3 animations:^{
        self.fosaDatePicker.frame = CGRectMake(0, screen_height, self.view.frame.size.width, screen_height*80/143);
@@ -950,15 +953,15 @@
 //    }
     
     foodKindCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:kindID forIndexPath:indexPath];
-    cell.kind.text = self.categoryNameArray[indexPath.row];
-    if ([self.foodStyle isEqualToString:@"edit"] && [self.categoryNameArray indexOfObject:self.model.category] == indexPath.row) {
+    cell.kind.text = self.categoryData[indexPath.row].categoryName;
+    if ([self.foodStyle isEqualToString:@"edit"] && [self.categoryData[indexPath.row].categoryName isEqualToString:self.model.category]) {
         cell.rootView.backgroundColor = FOSAYellow;
-        cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]]];
-        selectCategory = self.categoryArray[indexPath.row];
+        cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryData[indexPath.row].categoryIconName]];
+        selectCategory = self.categoryData[indexPath.row].categoryName;
         self.selectedCategory = cell;
     }else{
         cell.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-        cell.categoryPhoto.image = [UIImage imageNamed:self.categoryArray[indexPath.row]];
+        cell.categoryPhoto.image = [UIImage imageNamed:self.categoryData[indexPath.row].categoryIconName];
     }
     return cell;
 }
@@ -973,8 +976,8 @@
     }
     cell.rootView.backgroundColor = FOSAYellow;
     cell.kind.textColor = FOSAYellow;
-    cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryArray[indexPath.row]]];
-    selectCategory = self.categoryNameArray[indexPath.row];
+    cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryData[indexPath.row].categoryIconName]];
+    selectCategory = self.categoryData[indexPath.row].categoryName;
     self.selectedCategory = cell;
     NSLog(@"Selectd:%@",selectCategory);
 }
@@ -1191,10 +1194,10 @@
 }
 
 - (void)selectExpireDate{
-    NSDate *date = [NSDate date];
+    
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:@"dd/MM/yyyy/HH:mm"];
-    date = [dateFormatter dateFromString:expireStr];
+    NSDate *date = [dateFormatter dateFromString:expireStr];
     self.fosaDatePicker.hidden = NO;
     [UIView animateWithDuration:0.3 animations:^{
         self.fosaDatePicker.center = CGPointMake(screen_width/2, screen_height*103/143);
@@ -1368,13 +1371,14 @@
     [self OpenSqlDatabase:@"FOSA"];
     NSString *selSql = @"select * from category";
     FMResultSet *set = [self.db executeQuery:selSql];
-    [self.categoryNameArray removeAllObjects];
+    [self.categoryData removeAllObjects];
     while ([set next]) {
         NSString *kind = [set stringForColumn:@"categoryName"];
+        NSString *icon = [set stringForColumn:@"categoryIcon"];
         NSLog(@"%@",kind);
-        [self.categoryNameArray addObject:kind];
+        categoryModel *model = [categoryModel modelWithName:kind iconName:icon];
+        [self.categoryData addObject:model];
     }
-    NSLog(@"所有种类:%@",self.categoryNameArray);
 }
 
 #pragma mark - 图片
@@ -1513,8 +1517,10 @@
 }
 #pragma mark - 发送通知
 - (void)sendReminderNotification{
+    //保存成功之后，检查是否设置了提醒日期，若是，则准备注册通知
     NSLog(@"-----------------------发送提醒通知------------------------");
-    if (![self.foodStyle isEqualToString:@"edit"] && ![self.remindDateTextView.text isEqualToString:@""] ) {
+    //![self.foodStyle isEqualToString:@"edit"] &&
+    if (self.remindDateTextView.text.length>0) {
         self.fosaNotification = [[FosaNotification alloc]init];
         [self.fosaNotification initNotification];
         NSArray *tempArray;
@@ -1525,7 +1531,7 @@
         [format2 setDateFormat:@"dd/MM/yyyy/HH:mm"];
         format.AMSymbol = @"AM";
         format.PMSymbol = @"PM";
-        
+
         //设定通知
         NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
         //获取用户设置，是否设定免打扰
@@ -1535,7 +1541,7 @@
             NSString *body = [NSString stringWithFormat:@"FOSA remind you to eat your food %@ in time",self.foodTextView.text];
              //获取通知的图片
             UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
-            NSLog(@"%@",image)
+           // NSLog(@"%@",image)
             //另存通知图片
             [self Savephoto:image name:self.foodTextView.text];
 
@@ -1547,13 +1553,15 @@
             double dateTime = [date timeIntervalSince1970];
             double currentDateTime = [currentDate timeIntervalSince1970];
             NSLog(@"=============%d",(int)(dateTime-currentDateTime));
-            
-            FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
-            //[self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image];
-            if ([self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Every three hours"]||[self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Never"]) {
-                [self.fosaNotification sendNotification:model body:body image:image time:(int)(dateTime-currentDateTime)];
-            }else{
-                [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image];
+            if (dateTime-currentDateTime > 0) {
+                FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
+                //[self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image];
+                if ([self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Every three hours"]||[self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Never"]) {
+                    NSLog(@"******************");
+                    [self.fosaNotification sendNotification:model body:body image:image time:(int)(dateTime-currentDateTime)];
+                }else{
+                    [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image];
+                }
             }
             
         }
@@ -1574,7 +1582,7 @@
             FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
             NSString *body = [NSString stringWithFormat:@"Your food %@ has expired",self.foodTextView.text];
             //获取通知的图片
-            UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
+            UIImage *image = [self getImage:[NSString stringWithFormat:@"%@",self.foodTextView.text]];
             NSLog(@"%@",image)
             //另存通知图片
             [self Savephoto:image name:self.foodTextView.text];

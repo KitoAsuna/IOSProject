@@ -158,14 +158,11 @@
     self.AlarView = [[fosaView alloc]initWithFrame:CGRectMake(0, height/5, screen_width, height/10)];
     self.AlarView.backgroundColor = FOSAWhite;
     self.AlarView.userInteractionEnabled = YES;
-    UITapGestureRecognizer *clickRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openDatePicker)];
-    self.AlarView.tag = 0;
-    //[self.AlarView addGestureRecognizer:clickRecognizer];
 
     self.Alarm = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width/5, height/10)];
     self.Alarm.text = @"Alarm";
 
-    self.rightDatelabel = [[UILabel alloc]initWithFrame:CGRectMake(screen_width/3, 0, screen_width*4/5-font(20), height/10)];
+    self.rightDatelabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.Alarm.frame), 0, screen_width*4/5-font(20), height/10)];
     NSDate *current = [NSDate new];
     self.rightDatelabel.text = [self getTimeAndWeekDay:current];
     self.rightDatelabel.textColor = FOSAGray;
@@ -742,7 +739,7 @@
 //获取当前时间日期星期
 - (NSString *)getTimeAndWeekDay:(NSDate *)date{
     
-    NSArray * arrWeek=[NSArray arrayWithObjects:@"Sun",@"Mon",@"Tue",@"Wed",@"Thu",@"Fri",@"Sat", nil];
+//    NSArray * arrWeek=[NSArray arrayWithObjects:@"Sun",@"Mon",@"Tue",@"Wed",@"Thu",@"Fri",@"Sat", nil];
     NSArray * arrWeekDay=[NSArray arrayWithObjects:@"Sunday",@"Monday",@"Tuesday",@"Wednesday",@"Thursday",@"Friday",@"Saturday", nil];
 
     NSDateFormatter *format = [NSDateFormatter new];
@@ -768,12 +765,12 @@
     NSInteger month = [comps month];
     NSInteger day   = [comps day];
     NSInteger minute    = [comps minute];
-    NSString *minu;
-    if (minute < 10) {
-        minu = [NSString stringWithFormat:@"0%ld",minute];
-    }else{
-        minu = [NSString stringWithFormat:@"%ld",minute];
-    }
+//    NSString *minu;
+//    if (minute < 10) {
+//        minu = [NSString stringWithFormat:@"0%ld",minute];
+//    }else{
+//        minu = [NSString stringWithFormat:@"%ld",minute];
+//    }
    // NSString *weekStr = [NSString stringWithFormat:@"%@,%ld/%ld/%ld,%@",[arrWeek objectAtIndex:week],(long)month,(long)day,(long)year%100,timeStr];
     NSString *weekdayStr = [NSString stringWithFormat:@"%@, %ld  %@, %ld ,%@",[arrWeekDay objectAtIndex:week],day,[self getMouthByindex:(int)month],year,timeStr];
    // NSArray *arrStr = @[weekStr,weekdayStr];

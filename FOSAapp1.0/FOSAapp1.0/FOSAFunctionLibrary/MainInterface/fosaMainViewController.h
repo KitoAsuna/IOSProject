@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "foodModel.h"
+#import "categoryModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface fosaMainViewController : UIViewController
@@ -28,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong,nonatomic) NSMutableArray<NSString *> *categoryDataSource;
 @property (strong,nonatomic) NSMutableArray<FoodModel *> *collectionDataSource;
-
+@property (nonatomic,strong) NSMutableArray<categoryModel *> *categoryData;
 //排序列表
 @property (nonatomic,strong) UIView *sortListView;
 @property (nonatomic,strong) UITableView *sortListTable;

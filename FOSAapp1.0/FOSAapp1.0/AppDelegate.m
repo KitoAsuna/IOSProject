@@ -46,7 +46,7 @@
            //      newVc.view.backgroundColor = [UIColor redColor];
            //      self.window.rootViewController = newVc;
                    [self CreatSqlDatabase:@"FOSA"];
-                   [self CreatDataTable];
+                   //[self CreatDataTable];
                    [self CreatCategoryTable];
                    [userDefault setObject:currentVersion forKey:@"localVersion"];
                }
@@ -68,15 +68,7 @@
         [self.window makeKeyAndVisible];
         [NSThread sleepForTimeInterval:1];
     }
-    [self JumpToFoodVIew:launchOptions];
     return YES;
-}
-
-- (void)JumpToFoodVIew:(NSDictionary *)launchOptions{
-    if (launchOptions != nil) {
-         NSDictionary *remoteNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-        
-    }
 }
 
 - (void)dealwithCrashMessage:(NSNotification *)note {
@@ -118,25 +110,25 @@
         NSLog(@"打开数据库失败");
     }
 }
-- (void)CreatDataTable{
-    NSString *categoryTableSql = @"CREATE TABLE IF NOT EXISTS FoodCategory(id integer PRIMARY KEY AUTOINCREMENT, CategoryName text NOT NULL, CategoryImg text,UNIQUE(CategoryName));";
-    NSString *nutrientTableSql = @"create table if not exists Nutrient(id integer primary key,foodName text,Category text,Calorie text,Protein text,Fat text,Carbohydrate text,DietaryFiber text,Cholesterin text,Ca text,Mg text,Fe text,Zn text,K text,VitaminC text,VitaminE text,VitaminA text,Carotene text)";
-    BOOL categoryResult = [db executeUpdate:categoryTableSql];
-    if(categoryResult)
-    {
-        NSLog(@"创建食物种类表成功");
-    }else{
-        NSLog(@"创建食物种类表失败");
-    }
-    BOOL nutrientResult = [db executeUpdate:nutrientTableSql];
-    if (nutrientResult) {
-        NSLog(@"创建营养成分表成功");
-    }else{
-        NSLog(@"创建营养成分表失败");
-    }
-}
+//- (void)CreatDataTable{
+//    NSString *categoryTableSql = @"CREATE TABLE IF NOT EXISTS FoodCategory(id integer PRIMARY KEY AUTOINCREMENT, CategoryName text NOT NULL, CategoryImg text,UNIQUE(CategoryName));";
+//    //NSString *nutrientTableSql = @"create table if not exists Nutrient(id integer primary key,foodName text,Category text,Calorie text,Protein text,Fat text,Carbohydrate text,DietaryFiber text,Cholesterin text,Ca text,Mg text,Fe text,Zn text,K text,VitaminC text,VitaminE text,VitaminA text,Carotene text)";
+//    BOOL categoryResult = [db executeUpdate:categoryTableSql];
+//    if(categoryResult)
+//    {
+//        NSLog(@"创建食物种类表成功");
+//    }else{
+//        NSLog(@"创建食物种类表失败");
+//    }
+//    BOOL nutrientResult = [db executeUpdate:nutrientTableSql];
+//    if (nutrientResult) {
+//        NSLog(@"创建营养成分表成功");
+//    }else{
+//        NSLog(@"创建营养成分表失败");
+//    }
+//}
 - (void)CreatCategoryTable{
-    NSString *categoryTableSql = @"create table if not exists category(id integer primary key,categoryName text)";
+    NSString *categoryTableSql = @"create table if not exists category(id integer primary key,categoryName text,categoryIcon text)";
     BOOL categoryResult = [db executeUpdate:categoryTableSql];
     if (categoryResult) {
         NSLog(@"创建种类表成功");
@@ -145,12 +137,14 @@
         NSLog(@"创建种类表失败");
     }
 }
+
 - (void)InsertCategory{
      NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie"];
-    NSString *insertSql = @"insert into category(categoryName) values(?)";
+    NSString *insertSql = @"insert into category(categoryName,categoryIcon) values(?,?);";
     if ([db open]) {
         for (int i = 0; i < array.count; i++) {
-            BOOL result = [db executeUpdate:insertSql,array[i]];
+            
+            BOOL result = [db executeUpdate:insertSql,array[i],array[i]];
             if (result) {
                 NSLog(@"插入数据成功");
             }else{
@@ -159,7 +153,6 @@
         }
     }
 }
-
 
 
 #pragma mark - UISceneSession lifecycle

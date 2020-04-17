@@ -39,6 +39,14 @@
     if (self) {
         self.backgroundColor = FOSAWhite;
         isSelect = false;
+        
+        self.styleLabel = [UILabel new];
+        self.styleLabel.text = @"Do Not Disturb";
+        self.styleLabel.adjustsFontSizeToFitWidth = YES;
+        self.styleLabel.textColor = FOSAGray;
+        self.styleLabel.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:self.styleLabel];
+        
         self.bellBtn = [UIButton new];
         [self addSubview:self.bellBtn];
         self.titleLabel = [UILabel new];
@@ -78,6 +86,8 @@
     [super layoutSubviews];
     CGFloat height = self.bounds.size.height;
     CGFloat width  = self.bounds.size.width;
+    self.styleLabel.frame = CGRectMake(width/30, height/24, width/4, height/24);
+    
     self.bellBtn.frame = CGRectMake(0, 0, width/12, width/12);
     self.bellBtn.center = CGPointMake(width/2, height/24);
     [self.bellBtn setBackgroundImage:[UIImage imageNamed:@"icon_bell"] forState:UIControlStateNormal];

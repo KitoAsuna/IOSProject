@@ -38,7 +38,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UIView *footerView;
 @property (nonatomic,strong) UICollectionView *categoryCollection;
 @property (nonatomic,strong) NSMutableArray<NSString *> *cellDic;
-@property(nonatomic,strong) NSMutableArray<NSString *> *categoryNameArray;
 @property (nonatomic, strong) NSMutableDictionary *cellDictionary;
 @property (nonatomic,strong) UIButton *leftIndex,*rightIndex;
 

@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface categoryCell : UICollectionViewCell
 @property (nonatomic,strong) UIImageView *categoryView;
+@property (nonatomic,copy) NSString *imgName;
 @end
 
 NS_ASSUME_NONNULL_END

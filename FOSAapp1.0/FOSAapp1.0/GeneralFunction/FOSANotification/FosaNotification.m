@@ -108,7 +108,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     content.badge = @0;
     //获取沙盒中的图片
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodPhoto];
+    NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodName];
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
     self.image = img;
@@ -201,7 +201,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     content.badge = @0;
     //获取沙盒中的图片
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodPhoto];
+    NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodName];
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     NSError *error = nil;
     //将本地图片的路径形成一个图片附件，加入到content中
@@ -219,7 +219,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
         repeat = YES;
     }
     //设置时间间隔的触发器
-    UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:timeInterval repeats:NO];
+    UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:timeInterval repeats:repeat];
     NSString *requestIdentifer = model.foodName;
     content.categoryIdentifier = @"seeCategory";
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifer content:content trigger:time_trigger];
@@ -381,7 +381,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
 //取出保存在本地的图片
 - (void)getImage:(NSString *)filepath{
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *photopath = [NSString stringWithFormat:@"%@%d.png",filepath,1];
+    NSString *photopath = [NSString stringWithFormat:@"%@.png",filepath];
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     // 保存文件的名称
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
