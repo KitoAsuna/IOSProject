@@ -17,7 +17,7 @@
 #import <UserNotifications/UserNotifications.h>
 #import "NotificationView.h"
 #import "editFoodItemViewController.h"
-
+#import "notificationViewController.h"
 
 @interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,fosaDelegate,closeViewDelegate>{
     NSString *categoryID;//种类cell
@@ -1165,7 +1165,9 @@
 }
 
 - (void)openNotificationList{
-    
+//    notificationViewController *notify = [notificationViewController new];
+//    notify.hidesBottomBarWhenPushed = YES;
+//    [self presentViewController:notify animated:YES completion:nil];
     [UIView animateWithDuration:0.5 animations:^{
         self.smask.hidden = NO;
         self.tabBarController.tabBar.hidden = YES;

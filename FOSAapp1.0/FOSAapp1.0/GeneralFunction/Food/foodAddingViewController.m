@@ -408,7 +408,7 @@
     //[self.likeBtn addTarget:self action:@selector(selectToLike) forControlEvents:UIControlEventTouchUpInside];
     self.likeBtn.hidden = YES;
     self.mainImgBtn = [UIButton new];
-    self.mainImgBtn.frame = CGRectMake(screen_width-2*NavigationBarH, NavigationBarH/6, NavigationBarH*2/3, NavigationBarH*2/3);
+    self.mainImgBtn.frame = CGRectMake(screen_width-NavigationBarH*5/2, NavigationBarH/6, NavigationBarH*2/3, NavigationBarH*2/3);
     [self.mainImgBtn setBackgroundImage:[UIImage imageNamed:@"icon_setMainImg"] forState:UIControlStateNormal];
     [self.navigationController.navigationBar addSubview:self.mainImgBtn];
     [self.mainImgBtn addTarget:self action:@selector(setImgAsMainBackground) forControlEvents:UIControlEventTouchUpInside];

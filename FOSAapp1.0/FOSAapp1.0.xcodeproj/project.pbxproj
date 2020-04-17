@@ -67,6 +67,7 @@
 		4544298623CF05B500662F18 /* CategoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4544298523CF05B500662F18 /* CategoryTableViewCell.m */; };
 		45514BEB23F2E285000E321E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
 		45514BEC23F2E287000E321E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
+		4557596724498D2F00E325AC /* notificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4557596624498D2F00E325AC /* notificationViewController.m */; };
 		455F4AC723D157FE00BE3822 /* saoyisao@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 455F4AC623D157FE00BE3822 /* saoyisao@3x.png */; };
 		457EB10124482B260050AEE0 /* categoryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 457EB10024482B260050AEE0 /* categoryModel.m */; };
 		457EB104244839890050AEE0 /* categoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 457EB103244839890050AEE0 /* categoryCell.m */; };
@@ -252,6 +253,8 @@
 		454421F123CC6B70002FADFE /* AboutAppsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AboutAppsViewController.m; sourceTree = "<group>"; };
 		4544298423CF05B500662F18 /* CategoryTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryTableViewCell.h; sourceTree = "<group>"; };
 		4544298523CF05B500662F18 /* CategoryTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CategoryTableViewCell.m; sourceTree = "<group>"; };
+		4557596524498D2F00E325AC /* notificationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = notificationViewController.h; sourceTree = "<group>"; };
+		4557596624498D2F00E325AC /* notificationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = notificationViewController.m; sourceTree = "<group>"; };
 		455F4AC623D157FE00BE3822 /* saoyisao@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saoyisao@3x.png"; sourceTree = "<group>"; };
 		457EB0FF24482B260050AEE0 /* categoryModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = categoryModel.h; sourceTree = "<group>"; };
 		457EB10024482B260050AEE0 /* categoryModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = categoryModel.m; sourceTree = "<group>"; };
@@ -658,6 +661,8 @@
 				4590C85923B9EF8A00691461 /* cell */,
 				458EA2D3241233C700F1FCC7 /* fosaMainViewController.h */,
 				458EA2D4241233C700F1FCC7 /* fosaMainViewController.m */,
+				4557596524498D2F00E325AC /* notificationViewController.h */,
+				4557596624498D2F00E325AC /* notificationViewController.m */,
 				45D7CC2C2447EC71009B158D /* editFoodItemViewController.h */,
 				45D7CC2D2447EC71009B158D /* editFoodItemViewController.m */,
 				453C88322413DA37006B52A8 /* MainViewController.h */,
@@ -1073,6 +1078,7 @@
 				453C88342413DA37006B52A8 /* MainViewController.m in Sources */,
 				4500E12D23BB1DCE002EB9FE /* QRCodeScanViewController.m in Sources */,
 				45172FEB240F74F300408A75 /* foodAddingViewController.m in Sources */,
+				4557596724498D2F00E325AC /* notificationViewController.m in Sources */,
 				451567E124133F51000F33C2 /* foodInfoViewController.m in Sources */,
 				4500E11D23BAEB14002EB9FE /* NSString+AvoidCrash.m in Sources */,
 				45DC9618242069B90070BD75 /* qrCodeWebViewController.m in Sources */,

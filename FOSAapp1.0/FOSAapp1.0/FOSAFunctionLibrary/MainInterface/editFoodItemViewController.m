@@ -103,10 +103,11 @@
 
     CGFloat collectWidth = screen_width*9/10;
     UICollectionViewFlowLayout *fosaFlowLayout = [[UICollectionViewFlowLayout alloc] init];
-    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(Height(5),Width(7),0,Width(7));//上、左、下、右
-       fosaFlowLayout.itemSize = CGSizeMake(collectWidth/5-Width(14),collectWidth/6);
+    fosaFlowLayout.sectionInset = UIEdgeInsetsMake(Height(5),Width(5),0,Width(2));//上、左、下、右
+    fosaFlowLayout.itemSize = CGSizeMake(collectWidth/5-Width(10),collectWidth/6);
+
        //固定的itemsize
-       fosaFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;//滑动的方向 垂直
+    fosaFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;//滑动的方向 垂直
     
     UILabel *iconlabel = [[UILabel alloc]initWithFrame:CGRectMake(width/20+Width(10), CGRectGetMaxY(self.categoryNameTextView.frame)+Height(10), width/4, height/40)];
     iconlabel.text = @"Icon";
