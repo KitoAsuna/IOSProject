@@ -151,12 +151,14 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
 //                      fromDate:localeDate];
 //    }else
     if ([model.repeat isEqualToString:@"Daily"]){
+        NSLog(@"repeat:Daily");
         components = [[NSCalendar currentCalendar]
                       components:NSCalendarUnitHour|
                       NSCalendarUnitMinute|
                       NSCalendarUnitSecond
                       fromDate:localeDate];
     }else if ([model.repeat isEqualToString:@"Weekly"]){
+        NSLog(@"repeat:Weekly");
         components = [[NSCalendar currentCalendar]
                       components:NSCalendarUnitWeekday |
                       NSCalendarUnitHour|
@@ -164,6 +166,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
                       NSCalendarUnitSecond
                       fromDate:localeDate];
     }else if ([model.repeat isEqualToString:@"Monthly"]){
+        NSLog(@"repeat:Monthly");
         components = [[NSCalendar currentCalendar]
                      components:NSCalendarUnitDay |
                      NSCalendarUnitHour|
@@ -171,7 +174,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
                      NSCalendarUnitSecond
                      fromDate:date];
     }
-    
+
     UNCalendarNotificationTrigger *date_trigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:components repeats:YES];
     NSString *requestIdentifer = model.foodName;
            //content.categoryIdentifier = @"textCategory";

@@ -72,7 +72,6 @@
             NSString *send        = [set stringForColumn:@"send"];
             NSLog(@"是否已经设置发送:%@",send);
             NSLog(@"提醒日期:%@",remindDate);
-            
             if (![remindDate isEqualToString:@""]) {
                 if ([self adjustRemindDate:remindDate repeat:repeatWay]) {
                     FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location repeatWay:repeatWay send:send];

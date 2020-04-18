@@ -17,16 +17,18 @@
 #import "repeatWayViewController.h"
 #import "categoryModel.h"
 
+#import "FosaIMGManager.h"
+
 @interface foodAddingViewController ()<UIScrollViewDelegate,UITextViewDelegate,UITextFieldDelegate, UICollectionViewDelegate,FosaDatePickerViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UNUserNotificationCenterDelegate>{
     NSString *kindID;
-    NSString *selectCategory;
+    NSString *selectCategory,*selectCategoryIcon;
     NSString *docPath;
     NSInteger currentPictureIndex;//标识图片轮播器当前指向哪张图片
     NSString *device;
     Boolean isEdit;
     NSString *expireStr,*storageStr,*issend,*remindStr;
     int foodPhotoIndex;
-    //NSString *selectRemindDate;
+    FosaIMGManager *imgManager;
 }
 
 @property (nonatomic,weak)   FosaDatePickerView *fosaDatePicker;//日期选择器
@@ -768,6 +770,10 @@
 #pragma mark - 图片轮播器
 
 - (void)creatPicturePlayer{
+    //初始化图片管理者对象
+    imgManager = [FosaIMGManager new];
+    [imgManager InitImgManager];
+    
     self.imageviewArray = [[NSMutableArray alloc]initWithObjects:self.imageview1,self.imageview2,self.imageview3, nil];
     foodPhotoIndex = 1;
     int headerWidth  = self.headerView.frame.size.width;
@@ -788,9 +794,9 @@
         self.imageviewArray[i].userInteractionEnabled = YES;
         self.imageviewArray[i].contentMode = UIViewContentModeScaleAspectFill;
         self.imageviewArray[i].clipsToBounds = YES;
-        
-        if ([self.foodStyle isEqualToString:@"Info"] && [self getImage:[NSString stringWithFormat:@"%@%ld",self.model.foodName,i+1]] != nil) {
-            NSString *img = [NSString stringWithFormat:@"%@%ld",self.model.foodName,i+1];
+        NSString *img = [NSString stringWithFormat:@"%@%ld",self.model.foodName,i+1];
+        if ([self.foodStyle isEqualToString:@"Info"] && [self getImage:img] != nil) {
+            
             self.imageviewArray[i].image = [self getImage:img];
             self.foodImgArray[i] = self.imageviewArray[i].image;
         }else{
@@ -845,7 +851,7 @@
     NSString *dateStr = [NSString stringWithFormat:@"%@/%@/%@",array[1],[mouth valueForKey:array[0]],array[2]];
     self.expireDateLabel.text = dateStr;
     self.expireTimeLabel.text= array[3];
-    if (remindTimer.length > 0) {
+    if (remindTimer) {
         remindStr = remindTimer;
         self.remindDateTextView.text = [NSString stringWithFormat:@"%@ -%@",remindTimer,self.fosaDatePicker.repeatWayLabel.text];//remindTimer;
     }
@@ -956,8 +962,9 @@
     cell.kind.text = self.categoryData[indexPath.row].categoryName;
     if ([self.foodStyle isEqualToString:@"edit"] && [self.categoryData[indexPath.row].categoryName isEqualToString:self.model.category]) {
         cell.rootView.backgroundColor = FOSAYellow;
-        cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryData[indexPath.row].categoryIconName]];
         selectCategory = self.categoryData[indexPath.row].categoryName;
+        selectCategoryIcon = self.categoryData[indexPath.row].categoryIconName;
+        cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",selectCategoryIcon]];
         self.selectedCategory = cell;
     }else{
         cell.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
@@ -970,21 +977,23 @@
     foodKindCollectionViewCell *cell = (foodKindCollectionViewCell *)[self.categoryCollection cellForItemAtIndexPath:indexPath];
     if (![cell.kind.text isEqualToString:selectCategory]) {
         self.selectedCategory.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-        self.selectedCategory.categoryPhoto.image = [UIImage imageNamed:selectCategory];
+        self.selectedCategory.categoryPhoto.image = [UIImage imageNamed:selectCategoryIcon];
         self.selectedCategory.categoryPhoto.backgroundColor = [UIColor clearColor];
         self.selectedCategory.kind.textColor = [UIColor grayColor];
     }
     cell.rootView.backgroundColor = FOSAYellow;
     cell.kind.textColor = FOSAYellow;
-    cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryData[indexPath.row].categoryIconName]];
     selectCategory = self.categoryData[indexPath.row].categoryName;
+    selectCategoryIcon  = self.categoryData[indexPath.row].categoryIconName;
+    
+    cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",selectCategoryIcon]];
     self.selectedCategory = cell;
     NSLog(@"Selectd:%@",selectCategory);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
         self.selectedCategory.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-        self.selectedCategory.categoryPhoto.image = [UIImage imageNamed:selectCategory];
+        self.selectedCategory.categoryPhoto.image = [UIImage imageNamed:selectCategoryIcon];
         self.selectedCategory.categoryPhoto.backgroundColor = [UIColor clearColor];
 }
 
@@ -1268,8 +1277,9 @@
     NSLog(@"点击了分享");
     NSString *body = [NSString stringWithFormat:@"This is my food %@,you can scan the QRCode check it",self.foodTextView.text];
     UIView *view = [self CreatNotificatonViewWithContent:body];
-    UIImage *sharephoto1 = [self SaveViewAsPicture:view];
+    UIImage *sharephoto1 = [imgManager saveViewAsPictureWithView:view];
     NSArray *activityItems = @[sharephoto1];
+    
     UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
     [self presentViewController:activityVC animated:TRUE completion:nil];
 }
@@ -1277,7 +1287,9 @@
     //if ([self.foodStyle isEqualToString:@"edit"]) {
             [self DeleteRecord];
     //}else{
-        [self SavephotosInSanBox:self.foodImgArray];
+    //    [self SavephotosInSanBox:self.foodImgArray];
+    [imgManager savePhotosWithImages:self.foodImgArray name:self.foodTextView.text];
+    
     //}
     [self CreatDataTable];
 }
@@ -1419,23 +1431,6 @@
     [self.view addSubview:self.backGround];
 }
 
-- (void)SavephotosInSanBox:(NSMutableArray *)images{
-    NSLog(@"************%@",images);
-    if (images.count > 0) {
-        NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-        for (int i = 0; i < images.count; i++) {
-            NSString *photoName = [NSString stringWithFormat:@"%@%d.png",self.foodTextView.text,i+1];
-            NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent: photoName];// 保存文件的路径
-            NSLog(@"这个是照片的保存地址:%@",filePath);
-            UIImage *img = images[i];//[self fixOrientation:images[i]];
-            
-            BOOL result =[UIImagePNGRepresentation(img) writeToFile:filePath  atomically:YES];// 保存成功会返回YES
-            if(result == YES) {
-                NSLog(@"保存成功");
-            }
-        }
-    }
-}
 //保存图片到沙盒
 -(void)Savephoto:(UIImage *)image name:(NSString *)foodname{
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
@@ -1459,7 +1454,6 @@
     }else if (self.imgOfFood != nil) {
         //如果是读取相册二维码或者分享二维码，imeOfFood为图片中食物部分的截取
         img = self.imgOfFood;
-        //_imgOfFood = nil;
     }
     NSLog(@"===%@", img);
     return img;
@@ -1543,7 +1537,8 @@
             UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
            // NSLog(@"%@",image)
             //另存通知图片
-            [self Savephoto:image name:self.foodTextView.text];
+            //[self Savephoto:image name:self.foodTextView.text];
+            [imgManager savePhotoWithImage:image name:self.foodTextView.text];
 
             tempArray = [remindStr componentsSeparatedByString:@","];
             tempStr = [NSString stringWithFormat:@"%@/%@ %@",tempArray[1],tempArray[2],tempArray[3]];
@@ -1600,8 +1595,15 @@
 //分享视图与食物二维码
 //仿照系统通知绘制UIview
 - (UIView *)CreatNotificatonViewWithContent:(NSString *)body{
+    NSString *storagedate = [NSString stringWithFormat:@"%@/%@",self.storageDateLabel.text,self.storageTimeLabel.text];
+    NSString *expiredate;
+    if ([self.expireDateLabel.text isEqualToString:@"Tap to add"]) {
+        expiredate = @"";
+    }else{
+        expiredate = [NSString stringWithFormat:@"%@/%@",self.expireDateLabel.text,self.expireTimeLabel.text];
+    }
     //分享二维码食物信息
-    NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@&%@&%@",self.foodTextView.text,device,self.foodDescribedTextView.text,self.expireDateLabel.text,self.storageDateLabel.text,self.remindDateTextView.text,selectCategory,self.fosaDatePicker.repeatWayLabel.text];
+    NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@&%@&%@",self.foodTextView.text,device,self.foodDescribedTextView.text,expiredate,storagedate,remindStr,selectCategory,self.fosaDatePicker.repeatWayLabel.text];
     NSLog(@"begin creating");
     int mainwidth = screen_width;
     int mainHeight = screen_height;
@@ -1613,16 +1615,16 @@
     UIImageView *image = [[UIImageView alloc]initWithFrame:CGRectMake(0,mainHeight/8, mainwidth, mainHeight/2)];
     
     //FOSA的logo
-    UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*2/5, mainHeight-mainwidth/5, mainwidth/10, mainwidth/10)];
+    UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*2/5, mainHeight-mainwidth/5, mainwidth/5, mainwidth/5)];
     
     //FOSA
-    UILabel *brand = [[UILabel alloc]initWithFrame:CGRectMake(mainwidth/15, mainHeight*5/8, mainwidth/4, mainHeight/16)];
+    UILabel *brand = [[UILabel alloc]initWithFrame:CGRectMake(mainwidth/3, NavigationBarH, mainwidth/3, mainHeight/16)];
 
     //食物信息二维码
     UIImageView *InfoCodeView = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*4/5-20, mainHeight*5/8+5, mainwidth/5, mainwidth/5)];
 
     //提醒内容
-    UITextView *Nbody = [[UITextView alloc]initWithFrame:CGRectMake(mainwidth/15, mainHeight*11/16, mainwidth*3/5, mainwidth/5)];
+    UITextView *Nbody = [[UITextView alloc]initWithFrame:CGRectMake(mainwidth/15, CGRectGetMaxY(image.frame), mainwidth*3/5, mainwidth/5)];
     Nbody.userInteractionEnabled = NO;
 
     [notification addSubview:logo];
@@ -1632,8 +1634,8 @@
     [notification addSubview:Nbody];
 
     logo.image  = [UIImage imageNamed:@"icon_ntificationBrand"];
-    if (self.imageviewArray.count > 0) {
-        image.image = self.imageviewArray[0].image;
+    if (self.foodImgArray.count > 0) {
+        image.image = self.foodImgArray[currentPictureIndex];
     }else{
         image.image = [UIImage imageNamed:@"icon_defaultImg"];
     }
@@ -1645,7 +1647,7 @@
     InfoCodeView.contentMode = UIViewContentModeScaleAspectFill;
     InfoCodeView.clipsToBounds = YES;
     
-    brand.font  = [UIFont systemFontOfSize:15];
+    brand.font  = [UIFont systemFontOfSize:font(20)];
     brand.textAlignment = NSTextAlignmentCenter;
     brand.text  = @"FOSA";
     

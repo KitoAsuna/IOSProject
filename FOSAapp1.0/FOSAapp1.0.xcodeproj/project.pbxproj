@@ -31,6 +31,7 @@
 		4502FF7623CFF0140013AB31 /* IMG_OtherSealer.png in Resources */ = {isa = PBXBuildFile; fileRef = 4502FF7523CFF0140013AB31 /* IMG_OtherSealer.png */; };
 		4502FF7E23D033380013AB31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4502FF7D23D033380013AB31 /* Assets.xcassets */; };
 		4503BD81243BF9E100B1E555 /* ding.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4503BD80243BF9E100B1E555 /* ding.wav */; };
+		450A1FB0244AC45D00370FE2 /* FosaIMGManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 450A1FAE244AC45D00370FE2 /* FosaIMGManager.m */; };
 		450A3C2723C4687E000D55C8 /* ResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 450A3C2523C4687E000D55C8 /* ResultViewController.m */; };
 		450D586623C9B7D70032E905 /* LoadCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 450D586523C9B7D70032E905 /* LoadCircleView.m */; };
 		4513DD2523BECB3B0005A1E2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4513DD2423BECB3B0005A1E2 /* SystemConfiguration.framework */; };
@@ -191,6 +192,8 @@
 		4502FF7523CFF0140013AB31 /* IMG_OtherSealer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_OtherSealer.png; sourceTree = "<group>"; };
 		4502FF7D23D033380013AB31 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4503BD80243BF9E100B1E555 /* ding.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = ding.wav; path = ../../../../FOSA/FOSA/GeneralFuction/QrcodeScanner/ding.wav; sourceTree = "<group>"; };
+		450A1FAE244AC45D00370FE2 /* FosaIMGManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FosaIMGManager.m; sourceTree = "<group>"; };
+		450A1FAF244AC45D00370FE2 /* FosaIMGManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FosaIMGManager.h; sourceTree = "<group>"; };
 		450A3C2523C4687E000D55C8 /* ResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResultViewController.m; sourceTree = "<group>"; };
 		450A3C2623C4687E000D55C8 /* ResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResultViewController.h; sourceTree = "<group>"; };
 		450D586423C9B7D70032E905 /* LoadCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadCircleView.h; sourceTree = "<group>"; };
@@ -480,6 +483,16 @@
 			path = DataStruct;
 			sourceTree = "<group>";
 		};
+		450A1FAD244AC45D00370FE2 /* FosaImageManager */ = {
+			isa = PBXGroup;
+			children = (
+				450A1FAE244AC45D00370FE2 /* FosaIMGManager.m */,
+				450A1FAF244AC45D00370FE2 /* FosaIMGManager.h */,
+			);
+			name = FosaImageManager;
+			path = ../../../FOSA/FOSA/GeneralFuction/FosaImageManager;
+			sourceTree = "<group>";
+		};
 		4513DD2823BED3550005A1E2 /* PhotoFuction */ = {
 			isa = PBXGroup;
 			children = (
@@ -633,6 +646,7 @@
 		4590C82423B9C53000691461 /* FOSAFunctionLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				450A1FAD244AC45D00370FE2 /* FosaImageManager */,
 				45822179243EE827002970EC /* FosaSqlManager */,
 				4590C82923B9C5C100691461 /* UserInterface */,
 				4590C82823B9C59F00691461 /* ProductInterface */,
@@ -1145,6 +1159,7 @@
 				453938D123C00F7B0006474E /* CategoryViewController.m in Sources */,
 				45184AB523CDBEAE005E987B /* FosaDatePickerView.m in Sources */,
 				4500E12323BAEB14002EB9FE /* NSMutableAttributedString+AvoidCrash.m in Sources */,
+				450A1FB0244AC45D00370FE2 /* FosaIMGManager.m in Sources */,
 				4500E12123BAEB14002EB9FE /* NSObject+AvoidCrash.m in Sources */,
 				45D3747B23C075BA00192014 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				45EBE6732415F4AA0072843C /* languageViewController.m in Sources */,

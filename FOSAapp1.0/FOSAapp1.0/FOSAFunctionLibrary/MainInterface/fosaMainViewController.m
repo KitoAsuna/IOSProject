@@ -19,6 +19,8 @@
 #import "editFoodItemViewController.h"
 #import "notificationViewController.h"
 
+#import "FosaIMGManager.h"
+
 @interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,fosaDelegate,closeViewDelegate>{
     NSString *categoryID;//种类cell
     NSString *foodItemID;//食物cell
@@ -533,10 +535,11 @@
         categoryCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
         cell.kind.text = self.categoryData[indexPath.row].categoryName;
         cell.categoryPhoto.image = [UIImage imageNamed:self.categoryData[indexPath.row].categoryIconName];
+        cell.accessibilityValue = self.categoryData[indexPath.row].categoryIconName;
         
         //为每一个Item添加长按事件
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressCellToEdit:)];
-        longPress.minimumPressDuration = 0.75;
+        longPress.minimumPressDuration = 0.5;
         [cell addGestureRecognizer:longPress];
         cell.userInteractionEnabled = YES;
         [cell addGestureRecognizer:longPress];
@@ -696,8 +699,6 @@
 
 - (void)SelectDataFromFoodTable{
     [self.collectionDataSource removeAllObjects];
-    //[self.cellDictionary removeAllObjects];
-    
     NSString *sql ;
     if (isSelectCategory) {
         sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where category = '%@'",self.selectedCategoryCell.kind.text];
@@ -765,28 +766,6 @@
         [self.categoryData addObject:model];
     }
 }
-//
-//- (void)updateCategoryWithName:(NSString *)newCategory categoryIcon:(NSString *)newIcon oldCategory:(NSString *)oldcategory{
-//    NSString *categoryStr = oldcategory;
-//    if (![oldcategory isEqualToString:newCategory]) {
-//        categoryStr = newCategory;
-//        NSString *updateSql = [NSString stringWithFormat:@"update category set categoryName = '%@' where categoryName = '%@'",categoryStr,oldcategory];
-//        if ([fmdbManager updateDataWithSql:updateSql]) {
-//            NSLog(@"修改食物种类名称成功");
-//        }
-//        NSString *updateFoodSql = [NSString stringWithFormat:@"update FoodStorageInfo set category = '%@' where category = '%@'",categoryStr,oldcategory];
-//        if ([fmdbManager updateDataWithSql:updateFoodSql]) {
-//            NSLog(@"修改食物项种类完成");
-//        }
-//    }
-//    if (newIcon) {
-//        NSString *updateIconSql = [NSString stringWithFormat:@"update category set categoryIcon = '%@' where categoryName = '%@'",newIcon,categoryStr];
-//        if ([fmdbManager updateDataWithSql:updateIconSql]) {
-//            NSLog(@"修改食物种类名称图标成功");
-//        }
-//    }
-//    [self categoryReLoad];
-//}
 
 - (FoodModel *)CheckFoodInfoWithName:(NSString *)foodName{
     [self OpenSqlDatabase:@"FOSA"];
@@ -823,10 +802,7 @@
             num++;
         }
     }
-    //NSLog(@"-----------------%lu",(unsigned long)self.AllFoodArray.count);
-   // NSLog(@"%@的数量：%d",category,num);
     return num;
-
 }
 #pragma mark - 响应事件
 
@@ -983,21 +959,20 @@
 
 //种类排序事件，按照食物数量排序
 - (void)categorySortByNumber{
-    NSComparator comparator = ^(NSString* str1,NSString* str2){
-        if ([self caculateCategoryNumber:str2] > [self caculateCategoryNumber:str1]) {
+    NSComparator comparator = ^(categoryModel* obj1,categoryModel* obj2){
+        if ([self caculateCategoryNumber:obj1.categoryName] < [self caculateCategoryNumber:obj2.categoryName]) {
             return (NSComparisonResult)NSOrderedDescending;
         }
-        if([self caculateCategoryNumber:str2] < [self caculateCategoryNumber:str1]){
+        if([self caculateCategoryNumber:obj2.categoryName] > [self caculateCategoryNumber:obj1.categoryName]){
             return (NSComparisonResult)NSOrderedAscending;
         }
         return (NSComparisonResult)NSOrderedSame;
     };
-    NSArray *sortArray = [self.categoryNameArray copy];
+    NSArray *sortArray = [self.categoryData copy];
 
     NSArray *resultArray = [sortArray sortedArrayUsingComparator:comparator];
-    [self.categoryNameArray removeAllObjects];
-    self.categoryNameArray = [[NSMutableArray alloc]initWithArray:resultArray];
-    NSLog(@"%@",self.categoryNameArray);
+    [self.categoryData removeAllObjects];
+    self.categoryData = [[NSMutableArray alloc]initWithArray:resultArray];
 }
 
 //种类按钮长按事件
@@ -1007,6 +982,8 @@
     NSLog(@"长按：%@",cell.kind.text);
     editFoodItemViewController *editFood = [editFoodItemViewController new];
     editFood.selectCategory = cell.kind.text;
+    editFood.selectCategoryIcon = cell.accessibilityValue;
+    NSLog(@"selectCategoryIcon:%@",cell.accessibilityValue);
     editFood.categoryBlock = ^(BOOL reload) {
         if (reload) {
             self->isSelectCategory = false;
@@ -1200,8 +1177,10 @@
     [self CreatLoadView];
     [self.notification initNotification];
     self.notification.fosadelegate = self;
-    //day = [self getNotificationSetting];
-    //Boolean isSend = false;
+    
+    FosaIMGManager *imgManager = [FosaIMGManager new];
+    [imgManager InitImgManager];
+    
     UIImage *image;
     //获取用户设定的提醒方式
     //获取当前日期
@@ -1224,9 +1203,9 @@
             NSString *body = [NSString stringWithFormat:@"FOSA remind you :%@ will expir today",self.collectionDataSource[i].foodName];
                 //发送通知
             //获取通知的图片
-            image = [self getImage:self.collectionDataSource[i].foodPhoto];
+            image = [imgManager getImgWithName:self.collectionDataSource[i].foodPhoto];//[self getImage:self.collectionDataSource[i].foodPhoto];
             //另存通知图片
-            [self Savephoto:image name:self.collectionDataSource[i].foodName];
+            [imgManager savePhotoWithImage:image name:self.collectionDataSource[i].foodName]; //[self Savephoto:image name:self.collectionDataSource[i].foodName];
             [self.notification sendNotification:self.collectionDataSource[i] body:body image:image time:2];
 
         }
@@ -1240,27 +1219,6 @@
     [self.FOSAloadingView stopAnimating];
 }
 
-//取出保存在本地的图片
-- (UIImage*)getImage:(NSString *)filepath{
-    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *photopath = [NSString stringWithFormat:@"%@.png",filepath];
-    NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
-    // 保存文件的名称
-    UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
-    NSLog(@">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>%@", img);
-    return img;
-}
-//保存图片到沙盒
--(void)Savephoto:(UIImage *)image name:(NSString *)foodname{
-    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *photoName = [NSString stringWithFormat:@"%@.png",foodname];
-    NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent: photoName];// 保存文件的路径
-    NSLog(@"这个是照片的保存地址:%@",filePath);
-    BOOL result =[UIImagePNGRepresentation(image) writeToFile:filePath  atomically:YES];// 保存成功会返回YES
-    if(result == YES) {
-        NSLog(@"通知界面图片保存成功");
-    }
-}
 #pragma mark -- 教学提示
 - (void)showUsingTips{
     self.mask = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];

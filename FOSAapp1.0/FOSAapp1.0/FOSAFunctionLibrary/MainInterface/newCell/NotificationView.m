@@ -25,13 +25,6 @@
 @property (nonatomic,strong) FosaNotification *fosaNotification;
 @end
 @implementation NotificationView
-//#pragma mark - 延时加载
-//- (UIButton *)bellBtn{
-//    if (_bellBtn == nil) {
-//        _bellBtn = [UIButton new];
-//    }
-//    return _bellBtn;
-//}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -245,7 +238,7 @@
 
     if ([self.fmdbManager isFmdbOpen]) {
         for (int i = 0; i < selectArray.count; i++) {
-            NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set remindDate = '%@',send = '%@' where foodName = '%@'",@"",@"NO",selectArray[i]];
+            NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set send = '%@' where foodName = '%@'",@"NO",selectArray[i]];
             if ([self.fmdbManager updateDataWithSql:updateSql]) {
                 NSLog(@"删除reminder，更新成功");
             }

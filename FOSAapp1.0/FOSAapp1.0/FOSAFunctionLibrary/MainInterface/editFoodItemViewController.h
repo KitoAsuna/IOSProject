@@ -13,11 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface editFoodItemViewController : UIViewController
 
 @property (nonatomic,strong) UILabel *titleLabel;
-@property (nonatomic,strong) UIButton *doneBtn;
+@property (nonatomic,strong) UIButton *doneBtn,*resetBtn;
 @property (nonatomic,strong) UITextField *categoryNameTextView;
 @property (nonatomic,strong) UICollectionView *categoryIconView;
 @property (nonatomic,strong) UISearchBar *iconSearchBar;
-@property (copy,nonatomic) NSString *selectCategory;
+@property (copy,nonatomic) NSString *selectCategory,*selectCategoryIcon;
 @property (nonatomic,copy) void(^categoryBlock)(BOOL reload);
 @end
 

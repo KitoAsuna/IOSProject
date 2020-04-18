@@ -10,10 +10,11 @@
 #import "categoryCell.h"
 #import "FosaFMDBManager.h"
 
-@interface editFoodItemViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>{
+@interface editFoodItemViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate>{
     NSArray *datasource;
     NSString *cellIndetifier;
     NSString *selectIcon;
+    categoryCell *selectCell;
     FosaFMDBManager *fmdbManager;
 }
 
@@ -25,6 +26,13 @@
         _titleLabel = [UILabel new];
     }
     return _titleLabel;
+}
+
+- (UIButton *)resetBtn{
+    if (_resetBtn == nil) {
+        _resetBtn = [UIButton new];
+    }
+    return _resetBtn;
 }
 
 - (UIButton *)doneBtn{
@@ -55,7 +63,7 @@
 }
 
 - (void)initData{
-    datasource = @[@"Fruit1",@"Fruit2",@"Fruit3",@"Fruit4",@"Fruit5",@"Fruit6",@"Fruit7",@"Fruit8",@"Fruit9",@"Fruit10",@"Fruit11",@"Meat1",@"Meat2",@"Meat3",@"Meat4",@"Meat5",@"Meat6",@"Meat7",@"Meat8",@"Meat9",@"Meat10",@"Meat11",@"Snack1",@"Snack2",@"Snack3",@"Snack4",@"Snack5",@"Snack6",@"Snack7",@"Snack8",@"Snack9",@"Snack10",@"Snack11",@"Snack12",@"Snack13",@"Snack14",@"Snack15",@"Vegetable1",@"Vegetable2",@"Vegetable3",@"Vegetable4",@"Vegetable5",@"Vegetable6",@"Vegetable7",@"Vegetable8",@"Vegetable9",@"Vegetable10",@"Vegetable11",@"Vegetable12",@"Vegetable13"];
+    datasource = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie",@"Fruit1",@"Fruit2",@"Fruit3",@"Fruit4",@"Fruit5",@"Fruit6",@"Fruit7",@"Fruit8",@"Fruit9",@"Fruit10",@"Fruit11",@"Meat1",@"Meat2",@"Meat3",@"Meat4",@"Meat5",@"Meat6",@"Meat7",@"Meat8",@"Meat9",@"Meat10",@"Meat11",@"Snack1",@"Snack2",@"Snack3",@"Snack4",@"Snack5",@"Snack6",@"Snack7",@"Snack8",@"Snack9",@"Snack10",@"Snack11",@"Snack12",@"Snack13",@"Snack14",@"Snack15",@"Vegetable1",@"Vegetable2",@"Vegetable3",@"Vegetable4",@"Vegetable5",@"Vegetable6",@"Vegetable7",@"Vegetable8",@"Vegetable9",@"Vegetable10",@"Vegetable11",@"Vegetable12",@"Vegetable13"];
     cellIndetifier = @"cellIndetifier";
 }
 - (void)creatEditFoodCategoryView{
@@ -74,12 +82,19 @@
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.titleLabel];
     
-    self.doneBtn.frame = CGRectMake(width*8/10, height/40, width/6, height/20);
+    self.doneBtn.frame = CGRectMake(width*4/5, height/40, width/6, height/20);
     [self.doneBtn setTitle:@"Done" forState:UIControlStateNormal];
     [self.doneBtn setTitleColor:FOSAColor(0, 155, 250) forState:UIControlStateNormal];
     [self.doneBtn setTitleColor:FOSAColor(0, 180, 255) forState:UIControlStateHighlighted];
     [self.view addSubview:self.doneBtn];
     [self.doneBtn addTarget:self action:@selector(finish) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.resetBtn.frame = CGRectMake(width/30, height/40, width/6, height/20);
+    [self.resetBtn setTitle:@"Reset" forState:UIControlStateNormal];
+    [self.resetBtn setTitleColor:FOSAColor(0, 155, 250) forState:UIControlStateNormal];
+    [self.resetBtn setTitleColor:FOSAColor(0, 180, 255) forState:UIControlStateHighlighted];
+    [self.view addSubview:self.resetBtn];
+    [self.resetBtn addTarget:self action:@selector(reset) forControlEvents:UIControlEventTouchUpInside];
     
     UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.titleLabel.frame), width, 0.5)];
     line.backgroundColor = FOSAGray;
@@ -92,6 +107,8 @@
     self.categoryNameTextView.frame = CGRectMake(width/20, CGRectGetMaxY(namelabel.frame), width*9/10, height/25);
     self.categoryNameTextView.layer.cornerRadius = 10;
     [self.categoryNameTextView setValue:[NSNumber numberWithInt:Width(10)] forKey:@"paddingLeft"];
+    self.categoryNameTextView.returnKeyType = UIReturnKeyDone;
+    self.categoryNameTextView.delegate = self;
     self.categoryNameTextView.text = self.selectCategory;
     self.categoryNameTextView.backgroundColor = FOSAColor(245, 245, 245);
     [self.view addSubview:self.categoryNameTextView];
@@ -134,20 +151,31 @@
 }
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:( NSIndexPath *)indexPath {
     categoryCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIndetifier forIndexPath:indexPath];
-    long index = indexPath.section*4+indexPath.row;
-    cell.categoryView.image = [UIImage imageNamed:datasource[index]];
+    long index = indexPath.row;
+
+    if ([datasource[index] isEqualToString:self.selectCategoryIcon]) {
+        cell.backgroundColor = FOSAYellow;
+        cell.categoryView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",datasource[index]]];
+        selectCell = cell;
+    }else{
+        cell.categoryView.image = [UIImage imageNamed:datasource[index]];
+        cell.backgroundColor = FOSAWhite;
+    }
     cell.imgName = datasource[index];
     cell.layer.cornerRadius = cell.bounds.size.width/2;
-    cell.backgroundColor = FOSAWhite;
-    //cell.backgroundColor = FOSAColor(153, 153, 153);
     return cell;
 }
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     categoryCell *cell = (categoryCell *) [self.categoryIconView cellForItemAtIndexPath:indexPath];
+    if (![cell.imgName isEqualToString:selectCell.imgName]) {
+        selectCell.backgroundColor = FOSAWhite;
+        selectCell.categoryView.image = [UIImage imageNamed:selectCell.imgName];
+    }
     selectIcon = cell.imgName;
     NSLog(@"%@",cell.imgName);
     cell.backgroundColor = FOSAYellow;
     cell.categoryView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",cell.imgName]];
+    selectCell = cell;
 }
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
     categoryCell *cell = (categoryCell *) [self.categoryIconView cellForItemAtIndexPath:indexPath];
@@ -164,7 +192,11 @@
     return 0;
 }
 
-//#pragma mark - UISearchBarDelegate
+#pragma mark - UItextFiledDelegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    return YES;
+}
 ////将要开始编辑时的回调，返回为NO，则不能编辑
 //- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar{
 //    return YES;
@@ -219,5 +251,8 @@
     self.categoryBlock(YES);
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
+- (void)reset{
+    self.categoryNameTextView.text = self.selectCategory;
+    [self.categoryIconView reloadData];
+}
 @end
