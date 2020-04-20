@@ -7,6 +7,7 @@
 //
 
 #import "FosaFMDBManager.h"
+#import "categoryModel.h"
 
 
 
@@ -70,8 +71,8 @@
             NSString *remindDate  = [set stringForColumn:@"remindDate"];
             NSString *repeatWay   = [set stringForColumn:@"repeatWay"];
             NSString *send        = [set stringForColumn:@"send"];
-            NSLog(@"是否已经设置发送:%@",send);
-            NSLog(@"提醒日期:%@",remindDate);
+//            NSLog(@"是否已经设置发送:%@",send);
+//            NSLog(@"提醒日期:%@",remindDate);
             if (![remindDate isEqualToString:@""]) {
                 if ([self adjustRemindDate:remindDate repeat:repeatWay]) {
                     FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location repeatWay:repeatWay send:send];
@@ -82,7 +83,9 @@
     }else if([tableName isEqualToString:@"category"]){
         while ([set next]) {
             NSString *kind = [set stringForColumn:@"categoryName"];
-            [resultArray addObject:kind];
+            NSString *icon = [set stringForColumn:@"categoryIcon"];
+            categoryModel *model = [categoryModel modelWithName:kind iconName:icon];
+            [resultArray addObject:model];
         }
     }
     return resultArray;

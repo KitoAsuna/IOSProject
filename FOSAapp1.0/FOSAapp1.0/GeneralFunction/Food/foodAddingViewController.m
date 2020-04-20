@@ -18,6 +18,7 @@
 #import "categoryModel.h"
 
 #import "FosaIMGManager.h"
+#import "FosaFMDBManager.h"
 
 @interface foodAddingViewController ()<UIScrollViewDelegate,UITextViewDelegate,UITextFieldDelegate, UICollectionViewDelegate,FosaDatePickerViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UNUserNotificationCenterDelegate>{
     NSString *kindID;
@@ -29,6 +30,7 @@
     NSString *expireStr,*storageStr,*issend,*remindStr;
     int foodPhotoIndex;
     FosaIMGManager *imgManager;
+    FosaFMDBManager *fmdbManager;
 }
 
 @property (nonatomic,weak)   FosaDatePickerView *fosaDatePicker;//日期选择器
@@ -389,6 +391,10 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self OpenSqlDatabase:@"FOSA"]; //打开数据库
+    
+    self.fosaNotification = [[FosaNotification alloc]init];
+    [self.fosaNotification initNotification];
+    
     if (![self.foodStyle isEqualToString:@"Info"]) {
         self.backbtn.hidden = NO;
         self.mainImgBtn.hidden = NO;
@@ -422,10 +428,8 @@
     
     if ([self.foodStyle isEqualToString:@"adding"]) {
         /**显示图片和标题的自定义返回按钮*/
-
         self.backbtn.frame = CGRectMake(10, 0, NavigationBarH*5/3, NavigationBarH*5/9);
         self.backbtn.center = CGPointMake(NavigationBarH*5/6+10, NavigationBarH/2);
-
         [self.backbtn setBackgroundImage:[UIImage imageNamed:@"icon_backW"] forState:UIControlStateNormal];
         [self.backbtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
         [self.navigationController.navigationBar addSubview:self.backbtn];
@@ -646,9 +650,6 @@
 
 - (void)creatFooterView{
     [self getCategoryArray];
-    //初始化种类数据
-    NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie"];
-    self.categoryArray = [[NSMutableArray alloc]initWithArray:array];
     kindID = @"categoryCell";
     
     self.footerView.frame = CGRectMake(0, CGRectGetMaxY(self.contentView.frame)+5, screen_width, screen_width*5/24);
@@ -881,7 +882,6 @@
     [self.navigationController pushViewController:repeat animated:YES];
     
 }
-
 #pragma mark -- UIScrollerView
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     if (scrollView == self.picturePlayer) {
@@ -936,7 +936,7 @@
 #pragma mark - UICollectionViewDataSource
 //每个section有几个item
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.categoryArray.count;
+    return self.categoryData.count;
 }
 //collectionView有几个section
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -960,9 +960,9 @@
     
     foodKindCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:kindID forIndexPath:indexPath];
     cell.kind.text = self.categoryData[indexPath.row].categoryName;
-    if ([self.foodStyle isEqualToString:@"edit"] && [self.categoryData[indexPath.row].categoryName isEqualToString:self.model.category]) {
+    if ([self.foodStyle isEqualToString:@"edit"] && [self.categoryData[indexPath.row].categoryName isEqualToString:selectCategory]) {
         cell.rootView.backgroundColor = FOSAYellow;
-        selectCategory = self.categoryData[indexPath.row].categoryName;
+        //selectCategory = self.categoryData[indexPath.row].categoryName;
         selectCategoryIcon = self.categoryData[indexPath.row].categoryIconName;
         cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",selectCategoryIcon]];
         self.selectedCategory = cell;
@@ -990,12 +990,12 @@
     self.selectedCategory = cell;
     NSLog(@"Selectd:%@",selectCategory);
 }
-
-- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
-        self.selectedCategory.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-        self.selectedCategory.categoryPhoto.image = [UIImage imageNamed:selectCategoryIcon];
-        self.selectedCategory.categoryPhoto.backgroundColor = [UIColor clearColor];
-}
+//
+//- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
+//    self.selectedCategory.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+//    self.selectedCategory.categoryPhoto.image = [UIImage imageNamed:selectCategoryIcon];
+//    self.selectedCategory.categoryPhoto.backgroundColor = [UIColor clearColor];
+//}
 
 #pragma mark - UITextViewDelegate,UITextFiledDelegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
@@ -1318,23 +1318,24 @@
 #pragma mark -- FMDB数据库操作
 
 - (void)OpenSqlDatabase:(NSString *)dataBaseName{
-    //获取数据库地址
-    docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject];
-    NSLog(@"%@",docPath);
-    //设置数据库名
-    NSString *fileName = [docPath stringByAppendingPathComponent:dataBaseName];
-    //创建数据库
-    self.db = [FMDatabase databaseWithPath:fileName];
-    if([self.db open]){
-        NSLog(@"打开数据库成功");
-    }else{
-        NSLog(@"打开数据库失败");
-    }
+    fmdbManager = [FosaFMDBManager initFMDBManagerWithdbName:@"FOSA"];
+//    //获取数据库地址
+//    docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject];
+//    NSLog(@"%@",docPath);
+//    //设置数据库名
+//    NSString *fileName = [docPath stringByAppendingPathComponent:dataBaseName];
+//    //创建数据库
+//    self.db = [FMDatabase databaseWithPath:fileName];
+//    if([self.db open]){
+//        NSLog(@"打开数据库成功");
+//    }else{
+//        NSLog(@"打开数据库失败");
+//    }
 }
 - (void)CreatDataTable{
     NSString *Sql = @"CREATE TABLE IF NOT EXISTS FoodStorageInfo(id integer PRIMARY KEY AUTOINCREMENT, foodName text NOT NULL, device text, aboutFood text,storageDate text NOT NULL,expireDate text NOT NULL,remindDate text,location text,foodImg text NOT NULL,category text NOT NULL,repeatWay text,send text);";
-    BOOL categoryResult = [self.db executeUpdate:Sql];
-    if(categoryResult)
+    //BOOL categoryResult = [self.db executeUpdate:Sql];
+    if([fmdbManager creatTableWithSql:Sql])
     {
         NSLog(@"创建食物存储表成功");
         [self InsertDataIntoFoodTable];
@@ -1365,12 +1366,13 @@
     }else if(selectCategory == nil){
         [self SystemAlert:@"Please select a category for your food"];
     }else{
-        if ([self.db open]) {
+        if ([fmdbManager isFmdbOpen]) {
             
-            BOOL insertResult = [self.db executeUpdate:insertSql];
+            //BOOL insertResult = [self.db executeUpdate:insertSql];
             NSLog(@"~~~~~~~~~~~~~~~~~~~~设备号：%@",device);
-            if (insertResult) {
+            if ([fmdbManager insertDataWithSql:insertSql]) {
                 [self sendReminderNotification];
+                //[self sendNotificationByExpireday];
             }else{
                 [self SystemAlert:@"Error"];
             }
@@ -1380,16 +1382,20 @@
 
 //获取食品种类
 - (void)getCategoryArray{
-    [self OpenSqlDatabase:@"FOSA"];
-    NSString *selSql = @"select * from category";
-    FMResultSet *set = [self.db executeQuery:selSql];
-    [self.categoryData removeAllObjects];
-    while ([set next]) {
-        NSString *kind = [set stringForColumn:@"categoryName"];
-        NSString *icon = [set stringForColumn:@"categoryIcon"];
-        NSLog(@"%@",kind);
-        categoryModel *model = [categoryModel modelWithName:kind iconName:icon];
-        [self.categoryData addObject:model];
+   [self OpenSqlDatabase:@"FOSA"];
+//    NSString *selSql = @"select * from category";
+//    FMResultSet *set = [self.db executeQuery:selSql];
+//    [self.categoryData removeAllObjects];
+//    while ([set next]) {
+//        NSString *kind = [set stringForColumn:@"categoryName"];
+//        NSString *icon = [set stringForColumn:@"categoryIcon"];
+//        NSLog(@"%@",kind);
+//        categoryModel *model = [categoryModel modelWithName:kind iconName:icon];
+//        [self.categoryData addObject:model];
+//    }
+      NSString *selSql = @"select * from category";
+    if ([fmdbManager isFmdbOpen]) {
+        self.categoryData = [fmdbManager selectDataWithTableName:@"category" sql:selSql];
     }
 }
 
@@ -1462,10 +1468,10 @@
 //删除记录
 - (void)DeleteRecord{
     NSString *delSql = [NSString stringWithFormat:@"delete from FoodStorageInfo where foodName = '%@'",self.model.foodName];
-    if ([self.db open]) {
+    if ([fmdbManager isFmdbOpen]) {
         NSLog(@"删除%@",self.model.foodName);
-        BOOL result = [self.db executeUpdate:delSql];
-        if (result) {
+        //BOOL result = [self.db executeUpdate:delSql];
+        if ([fmdbManager deleteDataWithSql:delSql]) {
             if (![self.foodTextView.text isEqualToString:self.model.foodName]) {
                 //[self SavephotosInSanBox:self.foodImgArray];
                 for (int i = 1; i <= 3; i++) {
@@ -1494,8 +1500,7 @@
         BOOL blDele= [fileManager removeItemAtPath:filePath error:nil];
         if (blDele) {
             NSLog(@"dele success");
-        }else {
-            NSLog(@"dele fail");
+        }else {            NSLog(@"dele fail");
         }
     }
 }
@@ -1515,8 +1520,6 @@
     NSLog(@"-----------------------发送提醒通知------------------------");
     //![self.foodStyle isEqualToString:@"edit"] &&
     if (self.remindDateTextView.text.length>0) {
-        self.fosaNotification = [[FosaNotification alloc]init];
-        [self.fosaNotification initNotification];
         NSArray *tempArray;
         NSString *tempStr;
         NSDateFormatter *format = [NSDateFormatter new];
@@ -1550,10 +1553,12 @@
             NSLog(@"=============%d",(int)(dateTime-currentDateTime));
             if (dateTime-currentDateTime > 0) {
                 FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
-                //[self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image];
-                if ([self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Every three hours"]||[self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Never"]) {
-                    NSLog(@"******************");
-                    [self.fosaNotification sendNotification:model body:body image:image time:(int)(dateTime-currentDateTime)];
+                //||[self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Never"]
+                if ([self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Every three hours"]){
+                    for(int i = 0;i < 8;i++){
+                        NSString *identifier = [NSString stringWithFormat:@"%@%d",self.foodTextView.text,i];
+                        [self.fosaNotification sendNotification:model body:body image:image time:(int)(dateTime-currentDateTime)+i*180 identifier:identifier];
+                    }
                 }else{
                     [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image];
                 }
@@ -1573,15 +1578,12 @@
         //获取用户设置，是否自动发送
         NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
         if ([autoNotification isEqualToString:@"NO"] || autoNotification == nil) {
-            //self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,self.locationTextView.text,self.foodTextView.text,selectCategory,self.likeBtn.accessibilityValue
             FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
             NSString *body = [NSString stringWithFormat:@"Your food %@ has expired",self.foodTextView.text];
-            //获取通知的图片
-            UIImage *image = [self getImage:[NSString stringWithFormat:@"%@",self.foodTextView.text]];
-            NSLog(@"%@",image)
+             //获取通知的图片
+            UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
             //另存通知图片
-            [self Savephoto:image name:self.foodTextView.text];
-            
+            [imgManager savePhotoWithImage:image name:self.foodTextView.text];
             NSLog(@">>>=================%@",expireStr);
             [self.fosaNotification sendNotificationByDate:model body:body date:expireStr foodImg:image];
         }

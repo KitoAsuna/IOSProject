@@ -61,7 +61,6 @@
 		4528AAEF23BD7DF100957279 /* scanLine_Horizontal.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAEE23BD7DF100957279 /* scanLine_Horizontal.png */; };
 		4528AAF123BD7DF800957279 /* scanLine_Vertical.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAF023BD7DF800957279 /* scanLine_Vertical.png */; };
 		453938D123C00F7B0006474E /* CategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453938D023C00F7B0006474E /* CategoryViewController.m */; };
-		453AE99B244D487700DFB7F9 /* sortListVIew.m in Sources */ = {isa = PBXBuildFile; fileRef = 453AE99A244D487700DFB7F9 /* sortListVIew.m */; };
 		453C88342413DA37006B52A8 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453C88332413DA37006B52A8 /* MainViewController.m */; };
 		454421EB23CBF5A0002FADFE /* FoodInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421EA23CBF5A0002FADFE /* FoodInfoView.m */; };
 		454421EE23CC1680002FADFE /* FoodMoreInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421EC23CC1680002FADFE /* FoodMoreInfoView.m */; };
@@ -247,8 +246,6 @@
 		4528AAF023BD7DF800957279 /* scanLine_Vertical.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scanLine_Vertical.png; sourceTree = "<group>"; };
 		453938CF23C00F7B0006474E /* CategoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryViewController.h; sourceTree = "<group>"; };
 		453938D023C00F7B0006474E /* CategoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CategoryViewController.m; sourceTree = "<group>"; };
-		453AE999244D487700DFB7F9 /* sortListVIew.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sortListVIew.h; sourceTree = "<group>"; };
-		453AE99A244D487700DFB7F9 /* sortListVIew.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = sortListVIew.m; sourceTree = "<group>"; };
 		453C88322413DA37006B52A8 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		453C88332413DA37006B52A8 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		454421E923CBF5A0002FADFE /* FoodInfoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FoodInfoView.h; sourceTree = "<group>"; };
@@ -574,8 +571,6 @@
 				45822174243ECCEC002970EC /* notificationListTableViewCell.m */,
 				45822176243ECD05002970EC /* NotificationView.h */,
 				45822177243ECD05002970EC /* NotificationView.m */,
-				453AE999244D487700DFB7F9 /* sortListVIew.h */,
-				453AE99A244D487700DFB7F9 /* sortListVIew.m */,
 			);
 			path = newCell;
 			sourceTree = "<group>";
@@ -1153,7 +1148,6 @@
 				4513DD3123BED3550005A1E2 /* PhotoViewController1.m in Sources */,
 				4544298623CF05B500662F18 /* CategoryTableViewCell.m in Sources */,
 				45D3747823C075BA00192014 /* AFNetworkActivityIndicatorManager.m in Sources */,
-				453AE99B244D487700DFB7F9 /* sortListVIew.m in Sources */,
 				45F0C7F423F036DA002F323B /* fosaPhotoViewController.m in Sources */,
 				45A30E1D2429884D0059B8F7 /* resetAccountViewController.m in Sources */,
 				459C5EA2240605050014E8C3 /* FOSATabbar.m in Sources */,

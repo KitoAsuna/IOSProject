@@ -13,12 +13,12 @@
 #import "foodAddingViewController.h"
 #import "FMDB.h"
 #import "FosaNotification.h"
-#import "FosaFMDBManager.h"
 #import <UserNotifications/UserNotifications.h>
 #import "NotificationView.h"
 #import "editFoodItemViewController.h"
 #import "notificationViewController.h"
 
+#import "FosaFMDBManager.h"
 #import "FosaIMGManager.h"
 
 @interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,fosaDelegate,closeViewDelegate>{
@@ -209,6 +209,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     isFirst = true;
+    fmdbManager = [FosaFMDBManager initFMDBManagerWithdbName:@"FOSA"];
     // Do any additional setup after [UIApplication sharedApplication].statusBarFrame.size.heightloading the view.
 //    [self OpenSqlDatabase:@"FOSA"];
 //    [self SelectDataFromFoodTable];
@@ -753,21 +754,25 @@
     }
 }
 - (void)getCategoryArray{
-    [self OpenSqlDatabase:@"FOSA"];
-    NSString *selSql = @"select * from category";
-    FMResultSet *set = [self.db executeQuery:selSql];
-    [self.categoryData removeAllObjects];
-    while ([set next]) {
-        NSString *kind = [set stringForColumn:@"categoryName"];
-        NSString *icon = [set stringForColumn:@"categoryIcon"];
-        NSLog(@"%@",kind);
-        categoryModel *model = [categoryModel modelWithName:kind iconName:icon];
-        //[self.categoryNameArray addObject:kind];
-        [self.categoryData addObject:model];
+//    [self OpenSqlDatabase:@"FOSA"];
+   NSString *selSql = @"select * from category";
+//    FMResultSet *set = [self.db executeQuery:selSql];
+//    [self.categoryData removeAllObjects];
+//    while ([set next]) {
+//        NSString *kind = [set stringForColumn:@"categoryName"];
+//        NSString *icon = [set stringForColumn:@"categoryIcon"];
+//        NSLog(@"%@",kind);
+//        categoryModel *model = [categoryModel modelWithName:kind iconName:icon];
+//        //[self.categoryNameArray addObject:kind];
+//        [self.categoryData addObject:model];
+//    }
+    if ([fmdbManager isFmdbOpen]) {
+        self.categoryData = [fmdbManager selectDataWithTableName:@"category" sql:selSql];
     }
 }
 
 - (FoodModel *)CheckFoodInfoWithName:(NSString *)foodName{
+
     [self OpenSqlDatabase:@"FOSA"];
     NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where foodName = '%@';",foodName];
     NSLog(@"%@",sql);

@@ -79,8 +79,11 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
             UIImageWriteToSavedPhotosAlbum(notificationImage, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
         }else if ([response.actionIdentifier isEqualToString:@"see2"]) {
             //I don't care~
-            NSLog(@"I know");
-            [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[response.notification.request.identifier]];
+//            NSLog(@"I know");
+//            [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[response.notification.request.identifier]];
+            NSMutableArray<NSString *> *array = [NSMutableArray new];
+            [array addObject:title];
+            [self removeReminder:array];
         }else{
             NSLog(@"-----------------我点击了通知，打开特定的界面------------------");
             if ([self.fosadelegate respondsToSelector:@selector(JumpByFoodName:)]) {
@@ -139,18 +142,17 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
      根据重复方式设置日期选择器
      */
     NSDateComponents * components;
-//    if ([model.repeat isEqualToString:@"Never"]) {
-//        components = [[NSCalendar currentCalendar]
-//                      components:NSCalendarUnitYear |
-//                      NSCalendarUnitMonth |
-//                      NSCalendarUnitWeekday |
-//                      NSCalendarUnitDay |
-//                      NSCalendarUnitHour |
-//                      NSCalendarUnitMinute |
-//                      NSCalendarUnitSecond
-//                      fromDate:localeDate];
-//    }else
-    if ([model.repeat isEqualToString:@"Daily"]){
+    if ([model.repeat isEqualToString:@"Never"]) {
+        components = [[NSCalendar currentCalendar]
+                      components:NSCalendarUnitYear |
+                      NSCalendarUnitMonth |
+                      NSCalendarUnitWeekday |
+                      NSCalendarUnitDay |
+                      NSCalendarUnitHour |
+                      NSCalendarUnitMinute |
+                      NSCalendarUnitSecond
+                      fromDate:localeDate];
+    }else if ([model.repeat isEqualToString:@"Daily"]){
         NSLog(@"repeat:Daily");
         components = [[NSCalendar currentCalendar]
                       components:NSCalendarUnitHour|
@@ -195,7 +197,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     foodName = model.foodName;
     NSLog(@"这是分享图片上的食物%@图片:%@",model.foodName,self.image);
 }
-- (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img time:(long int)timeInterval{
+- (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img time:(long)timeInterval identifier:(NSString *)identifier{
     NSLog(@"我将发送一个系统通知");
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
     content.title = @"FOSA Reminding";
@@ -217,12 +219,61 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     content.launchImageName = @"";
     UNNotificationSound *sound = [UNNotificationSound defaultSound];
     content.sound = sound;
-    BOOL repeat = NO;
-    if (![model.repeat isEqualToString:@"Never"] && timeInterval > 60) {
-        repeat = YES;
+    //    BOOL repeat = NO;
+    //    if (![model.repeat isEqualToString:@"Never"] && timeInterval > 60) {
+    //        repeat = YES;
+    //    }
+        //设置时间间隔的触发器
+    UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:timeInterval repeats:NO];
+    NSString *requestIdentifer = identifier;
+    content.categoryIdentifier = @"seeCategory";
+    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifer content:content trigger:time_trigger];
+    [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"通知添加失败");
+        }else{
+            NSLog(@"通知添加成功");
+        }
+    }];
+    //生成二维码
+    NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@&%@",model.foodName,model.device,model.aboutFood,model.expireDate,model.storageDate,model.category,model.location];
+    self.codeImage = [self GenerateQRCodeByMessage:message];
+    self.image = img;
+    foodName = model.foodName;
+    NSLog(@"这是分享图片上的食物%@图片:%@",model.foodName,self.image);
+}
+- (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img time:(long int)timeInterval{
+    NSLog(@"我将发送一个系统通知");
+    UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+    content.title = @"FOSA Reminding";
+    content.subtitle = model.foodName;
+    content.body = body;
+    content.badge = @0;
+    //获取沙盒中的图片
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodName];
+    NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
+    NSError *error = nil;
+    //将本地图片的路径形成一个图片附件，加入到content中
+    UNNotificationAttachment *img_attachment = [UNNotificationAttachment attachmentWithIdentifier:@"att1" URL:[NSURL fileURLWithPath:imagePath] options:nil error:&error];
+    if (error) {
+        if (error) {
+            NSLog(@"通知添加失败");
+        }else{
+            NSLog(@"通知添加成功");
+        }
     }
+    content.attachments = @[img_attachment];
+    //设置为@""以后，进入app将没有启动页
+    content.launchImageName = @"";
+    UNNotificationSound *sound = [UNNotificationSound defaultSound];
+    content.sound = sound;
+//    BOOL repeat = NO;
+//    if (![model.repeat isEqualToString:@"Never"] && timeInterval > 60) {
+//        repeat = YES;
+//    }
     //设置时间间隔的触发器
-    UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:timeInterval repeats:repeat];
+    UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:timeInterval repeats:NO];
     NSString *requestIdentifer = model.foodName;
     content.categoryIdentifier = @"seeCategory";
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifer content:content trigger:time_trigger];
