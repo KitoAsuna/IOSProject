@@ -102,7 +102,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     }
 }
 
-- (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(id)image{
+- (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(id)image identifier:(NSString *)identifier{
     NSLog(@"我将发送一个系统通知");
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
     content.title = @"Notification";
@@ -178,7 +178,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
     }
 
     UNCalendarNotificationTrigger *date_trigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:components repeats:YES];
-    NSString *requestIdentifer = model.foodName;
+    NSString *requestIdentifer = identifier;
            //content.categoryIdentifier = @"textCategory";
     content.categoryIdentifier = @"seeCategory";
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifer content:content trigger:date_trigger];

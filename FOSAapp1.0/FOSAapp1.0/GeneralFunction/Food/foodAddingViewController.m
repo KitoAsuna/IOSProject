@@ -35,7 +35,7 @@
 
 @property (nonatomic,weak)   FosaDatePickerView *fosaDatePicker;//日期选择器
 @property (nonatomic,strong) NSMutableArray<NSString *> *categoryArray;//种类
-@property (nonatomic,strong) FMDatabase *db;//数据库
+//@property (nonatomic,strong) FMDatabase *db;//数据库
 // 当前获取焦点的UITextField
 @property (strong, nonatomic) UITextView *currentResponderTextView;
 //图片轮播器
@@ -1085,8 +1085,8 @@
         NSString *mainImg = [NSString stringWithFormat:@"%@%ld",self.foodTextView.text,currentPictureIndex];
         NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set foodImg = '%@' where foodName = '%@'",mainImg,self.foodTextView.text];
         NSLog(@"foodImg:%@",updateSql);
-        if ([self.db open]) {
-            if([self.db executeUpdate:updateSql]){
+        if ([fmdbManager isFmdbOpen]) {
+            if([fmdbManager updateDataWithSql:updateSql]){
                 NSLog(@"修改成功");
             }
         }
@@ -1504,16 +1504,22 @@
         }
     }
 }
-- (Boolean)CheckFoodInfoWithName:(NSString *)foodName fdevice:(NSString *)device{
-    NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where foodName = '%@' and device = '%@';",foodName,device];
-    FMResultSet *result = [self.db executeQuery:sql];
-    NSLog(@"查询到数据项:%d",result.columnCount);
-    if (result.columnCount == 0) {
-        return true;
-    }else{
-        return false;
-    }
-}
+//- (Boolean)CheckFoodInfoWithName:(NSString *)foodName fdevice:(NSString *)device{
+//    NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where foodName = '%@' and device = '%@';",foodName,device];
+////    FMResultSet *result = [self.db executeQuery:sql];
+////    NSLog(@"查询到数据项:%d",result.columnCount);
+////    if (result.columnCount == 0) {
+////        return true;
+////    }else{
+////        return false;
+////    }
+//    NSMutableArray *result = [fmdbManager selectDataWithTableName:@"FoodStorageInfo" sql:sql];
+//    if (result.count == 0) {
+//        return true;
+//    }else{
+//        return false;
+//    }
+//}
 #pragma mark - 发送通知
 - (void)sendReminderNotification{
     //保存成功之后，检查是否设置了提醒日期，若是，则准备注册通知
@@ -1560,7 +1566,7 @@
                         [self.fosaNotification sendNotification:model body:body image:image time:(int)(dateTime-currentDateTime)+i*180 identifier:identifier];
                     }
                 }else{
-                    [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image];
+                    [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image identifier:self.foodTextView.text];
                 }
             }
             
@@ -1585,7 +1591,7 @@
             //另存通知图片
             [imgManager savePhotoWithImage:image name:self.foodTextView.text];
             NSLog(@">>>=================%@",expireStr);
-            [self.fosaNotification sendNotificationByDate:model body:body date:expireStr foodImg:image];
+            [self.fosaNotification sendNotificationByDate:model body:body date:expireStr foodImg:image identifier:self.foodTextView.text];
         }
     }
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];
@@ -1713,7 +1719,7 @@
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    [self.db close];
+    [fmdbManager closeDB];
     self.likeBtn.hidden = YES;
     self.backbtn.hidden = YES;
     self.mainImgBtn.hidden = YES;

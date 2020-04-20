@@ -285,7 +285,7 @@
     self.mainBackgroundImgPlayer.alwaysBounceVertical = NO;
         // 解决UIscrollerView在导航栏透明的情况下往下偏移的问题
     self.mainBackgroundImgPlayer.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        
+
     self.mainBackgroundImgPlayer.bounces = NO;
     self.mainBackgroundImgPlayer.contentSize = CGSizeMake(headerWidth*3, 0);
     for (NSInteger i = 0; i < 3; i++) {
@@ -294,10 +294,10 @@
             image.userInteractionEnabled = YES;
             image.contentMode = UIViewContentModeScaleAspectFill;
             image.clipsToBounds = YES;
-        //NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"picturePlayer",i+1];
-            image.image = [UIImage imageNamed:@"img_maiBackground"];
+            NSString *imgName = [NSString stringWithFormat:@"%@%ld",@"img_maiBackground",i];
+            image.image = [UIImage imageNamed:imgName];
             [self.mainBackgroundImgPlayer addSubview:image];
-        }
+    }
            [self.headerView addSubview:self.mainBackgroundImgPlayer];
             //轮播页面指示器
            self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(headerWidth*2/5, headerHeight-15, headerWidth/5, 10)];

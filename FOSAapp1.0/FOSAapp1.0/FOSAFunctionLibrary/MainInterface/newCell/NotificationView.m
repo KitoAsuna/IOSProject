@@ -228,7 +228,7 @@
             NSDate *date = [format dateFromString:tempStr];
             //NSLog(@"<<<<<<<<<<<<<<<<<<<<<<remindDate :%@",[format2 stringFromDate:date]);
 
-            [self.fosaNotification sendNotificationByDate:remindArray[i] body:body date:[format2 stringFromDate:date] foodImg:image];
+            [self.fosaNotification sendNotificationByDate:remindArray[i] body:body date:[format2 stringFromDate:date] foodImg:image identifier:remindArray[i].foodName];
         }
     }
 }
