@@ -66,7 +66,7 @@
     selectedCell = [self.settingTable cellForRowAtIndexPath:[self.setDic valueForKey:selectedSetting]];
     [self.settingTable cellForRowAtIndexPath:[self.setDic valueForKey:selectedSetting]].accessoryType = UITableViewCellAccessoryCheckmark;
     
-    UILabel *dailyReminderLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, NavigationBarH*2, screen_width/2, NavigationBarH-0.5)];
+    UILabel *dailyReminderLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, NavigationBarH*2, NavigationBarH*2, NavigationBarH-0.5)];
     dailyReminderLabel.text = @"Daily Reminder";
     dailyReminderLabel.font = [UIFont systemFontOfSize:font(20)];
     //[self.view addSubview:dailyReminderLabel];
@@ -156,10 +156,10 @@
     UISwitch *switchButton = (UISwitch*)sender;
     BOOL isButtonOn = [switchButton isOn];
     if (isButtonOn) {
-        NSLog(@"系统在过期日期自动发送通知");
+        NSLog(@"进入勿扰模式");
         autoNotification = @"YES";
     }else {
-           NSLog(@"系统不会发送通知");
+           NSLog(@"退出勿扰模式");
         autoNotification = @"NO";
     }
 }

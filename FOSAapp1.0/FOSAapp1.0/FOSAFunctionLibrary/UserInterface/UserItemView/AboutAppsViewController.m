@@ -46,10 +46,9 @@
     self.logo.image = [UIImage imageNamed:@"icon_FOSAlogoHL"];
     [self.view addSubview:self.logo];
     
-    
     self.versionLable.frame = CGRectMake(0, CGRectGetMaxY(self.logo.frame)+10, screen_width, 40);
     self.versionLable.text  = @"Current Version 1.0.0";
-    self.versionLable.font  = [UIFont systemFontOfSize:20*(screen_width/414)];
+    self.versionLable.font  = [UIFont systemFontOfSize:font(20)];
     self.versionLable.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0];
     //self.versionLable.backgroundColor = [UIColor whiteColor];
     self.versionLable.textAlignment = NSTextAlignmentCenter;

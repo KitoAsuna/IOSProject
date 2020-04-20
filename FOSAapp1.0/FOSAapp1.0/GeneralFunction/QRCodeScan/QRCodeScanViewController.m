@@ -15,6 +15,7 @@
 #import "foodAddingViewController.h"
 #import "qrCodeWebViewController.h"
 #import "AFNetworking.h"
+#import "FosaFMDBManager.h"
 
 @interface QRCodeScanViewController ()<AVCaptureMetadataOutputObjectsDelegate,UINavigationControllerDelegate,AVCaptureVideoDataOutputSampleBufferDelegate,UIImagePickerControllerDelegate,UIScrollViewDelegate>{
     CGPoint scanLineVerticalCenter; //竖屏的扫描线的起始中心点
@@ -1105,30 +1106,34 @@ NSLog(@"************************************************************************
 }
 
 - (FoodModel *)CheckFoodInfoWithName:(NSString *)device{
-    [self OpenSqlDatabase:@"FOSA"];
+    FosaFMDBManager *fmdbmanager = [FosaFMDBManager initFMDBManagerWithdbName:@"FOSA"];
+    
+    
+    //[self OpenSqlDatabase:@"FOSA"];
     NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where device = '%@';",device];
-    NSLog(@"%@",sql);
-    FMResultSet *set = [db executeQuery:sql];
-    FoodModel *model;
-    if (set.columnCount == 0) {
-        return nil;
-    }else{
-        if([set next]) {
-            NSString *foodName       = [set stringForColumn:@"foodName"];
-            NSString *device        = [set stringForColumn:@"device"];
-            NSString *aboutFood     = [set stringForColumn:@"aboutFood"];
-            NSString *storageDate   = [set stringForColumn:@"storageDate"];
-            NSString *expireDate    = [set stringForColumn:@"expireDate"];
-            NSString *foodImg       = [set stringForColumn:@"foodImg"];
-            NSString *location      = [set stringForColumn:@"location"];
-            NSString *category      = [set stringForColumn:@"category"];
-            NSString *remindDate    = [set stringForColumn:@"remindDate"];
-            NSString *repeat        = [set stringForColumn:@"repeatWay"];
-            
-            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location repeatWay:repeat];
-        }
-    }
-    return model;
+    //[fmdbmanager selectDataWithTableName:@"FoodStorageInfo" sql:sql];
+//    NSLog(@"%@",sql);
+//    FMResultSet *set = [db executeQuery:sql];
+//    FoodModel *model;
+//    if (set.columnCount == 0) {
+//        return nil;
+//    }else{
+//        if([set next]) {
+//            NSString *foodName       = [set stringForColumn:@"foodName"];
+//            NSString *device        = [set stringForColumn:@"device"];
+//            NSString *aboutFood     = [set stringForColumn:@"aboutFood"];
+//            NSString *storageDate   = [set stringForColumn:@"storageDate"];
+//            NSString *expireDate    = [set stringForColumn:@"expireDate"];
+//            NSString *foodImg       = [set stringForColumn:@"foodImg"];
+//            NSString *location      = [set stringForColumn:@"location"];
+//            NSString *category      = [set stringForColumn:@"category"];
+//            NSString *remindDate    = [set stringForColumn:@"remindDate"];
+//            NSString *repeat        = [set stringForColumn:@"repeatWay"];
+//
+//            model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location repeatWay:repeat];
+//        }
+//    }
+    return [fmdbmanager selectModelWithSql:sql];
 }
 /**隐藏底部横条，点击屏幕可显示*/
 - (BOOL)prefersHomeIndicatorAutoHidden{
