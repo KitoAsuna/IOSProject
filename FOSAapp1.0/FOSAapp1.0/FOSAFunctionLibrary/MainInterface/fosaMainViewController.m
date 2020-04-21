@@ -30,8 +30,9 @@
     Boolean isSelectCategory;
     Boolean categoryEdit;
     //排序方式数组
-    NSArray *sortArray;
+    NSArray *sortArray,*sortIconArray;
     FosaFMDBManager *fmdbManager;
+    int categoryIndex;
 }
 
 //存储所有食物的数组
@@ -65,18 +66,21 @@
     }
     return _navigationRemindBtn;
 }
+
 - (UIButton *)sortbtn{
     if (_sortbtn == nil) {
         _sortbtn = [[UIButton alloc]init];
     }
     return _sortbtn;
 }
+
 - (UIButton *)scanBtn{
     if (_scanBtn == nil) {
         _scanBtn = [UIButton new];
     }
     return _scanBtn;
 }
+
 - (UIButton *)cancelBtn{
     if (_cancelBtn == nil) {
         _cancelBtn = [UIButton new];
@@ -90,18 +94,21 @@
     }
     return _headerView;
 }
+
 - (UIScrollView *)mainBackgroundImgPlayer{
     if (_mainBackgroundImgPlayer == nil) {
         _mainBackgroundImgPlayer = [UIScrollView new];
     }
     return _mainBackgroundImgPlayer;
 }
+
 - (UIPageControl *)pageControl{
     if (_pageControl == nil) {
         _pageControl = [UIPageControl new];
     }
     return _pageControl;
 }
+
 - (UIView *)categoryView{
     if (_categoryView == nil) {
         _categoryView = [UIView new];
@@ -115,6 +122,7 @@
     }
     return _cellDic;
 }
+
 - (NSMutableDictionary *)cellDictionary{
     if (_cellDictionary == nil) {
         _cellDictionary = [[NSMutableDictionary alloc]init];
@@ -128,6 +136,7 @@
     }
     return _leftBtn;
 }
+
 - (UIButton *)rightBtn{
     if (_rightBtn == nil) {
         _rightBtn = [UIButton new];
@@ -141,6 +150,7 @@
     }
     return _foodItemView;
 }
+
 - (NSMutableArray<FoodModel *> *)collectionDataSource{
     if (_collectionDataSource == nil) {
         _collectionDataSource = [[NSMutableArray alloc]init];
@@ -148,30 +158,35 @@
     }
     return _collectionDataSource;
 }
+
 - (NSMutableArray<NSString *> *)categoryDataSource{
     if (_categoryDataSource == nil) {
         _categoryDataSource = [[NSMutableArray alloc]init];
     }
     return _categoryDataSource;
 }
+
 - (NSMutableArray<categoryModel *> *)categoryData{
     if (_categoryData == nil) {
         _categoryData = [NSMutableArray new];
     }
     return _categoryData;
 }
+
 - (NSMutableArray<NSString *> *)categoryNameArray{
     if (_categoryNameArray == nil) {
         _categoryNameArray = [NSMutableArray new];
     }
     return _categoryNameArray;
 }
+
 - (NSMutableArray *)AllFoodArray{
     if (_AllFoodArray == nil) {
         _AllFoodArray = [NSMutableArray new];
     }
     return _AllFoodArray;
 }
+
 - (NSMutableDictionary *)categoryCellDictionary{
     if (_categoryCellDictionary == nil) {
         _categoryCellDictionary = [NSMutableDictionary new];
@@ -309,6 +324,7 @@
 }
 - (void)creatCategoryView{
     //获取系统数据库中的食物种类categoryNameArray
+    
     [self getCategoryArray];
     //种类排序
     [self categorySortByNumber];
@@ -348,6 +364,7 @@
     self.categoryCollection.dataSource = self;
     self.categoryCollection.showsHorizontalScrollIndicator = NO;
     self.categoryCollection.bounces = NO;
+    self.categoryCollection.pagingEnabled = YES;
     [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:categoryID];
     [self.categoryView addSubview:self.categoryCollection];
 }
@@ -397,8 +414,8 @@
 
 //创建排序列表视图
 - (void)creatSortListView{
-    sortArray = @[@"Most Recent",@"Least Recent",@"Recent Add",@"Least Add"];
-    
+    sortArray = @[@"Early Expiration Date",@"Late Expiration data",@"Early Add",@"Lately Add"];
+    sortIconArray = @[@"icon_earlyExpiry",@"icon_lateExpiry",@"icon_earlyAdd",@"lateAdd"];
     self.smask.frame = [UIScreen mainScreen].bounds;
     self.smask.backgroundColor = [UIColor blackColor];
     self.smask.alpha = 0.5;
@@ -416,8 +433,8 @@
     int sortHeight = self.sortListView.frame.size.height;
 
     //标题
-    UILabel *sortTitle = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width, sortHeight/10-1)];
-    sortTitle.text = @"The Sorting Way";
+    UILabel *sortTitle = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width, sortHeight/8-1)];
+    sortTitle.text = @"Sort";
     sortTitle.textAlignment = NSTextAlignmentCenter;
     [self.sortListView addSubview:sortTitle];
     UIView *line  = [[UIView alloc]initWithFrame:CGRectMake(0, sortHeight/8-1, screen_width, 0.5)];
@@ -431,11 +448,12 @@
     self.sortListTable.showsVerticalScrollIndicator = NO;
     self.sortListTable.showsHorizontalScrollIndicator = NO;
     self.sortListTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.sortListTable.tintColor = FOSAColor(78, 169, 233);
     [self.sortListView addSubview:self.sortListTable];
 
-    self.cancelBtn.frame = CGRectMake(screen_width/3, sortHeight*3/4, screen_width/3, sortHeight/8);
+    self.cancelBtn.frame = CGRectMake(screen_width/3, sortHeight*3/4+Height(2), screen_width/3, sortHeight/8);
     [self.cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
-    [self.cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.cancelBtn setTitleColor:FOSARed forState:UIControlStateNormal];
     [self.cancelBtn setTitleColor:FOSAgreen forState:UIControlStateHighlighted];
     [self.sortListView addSubview:self.cancelBtn];
 
@@ -469,21 +487,28 @@
         //创建cell
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
-    
     NSInteger row = indexPath.row;
     //取消点击cell时显示的背景色
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
     cell.textLabel.text = sortArray[row];
     cell.textLabel.font = [UIFont systemFontOfSize:font(15)];
-    cell.textLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
+    if ([sortArray[row] isEqualToString:[self.userdefault objectForKey:@"sort"]]) {
+        cell.textLabel.textColor = FOSAColor(78, 169, 233);
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@HL",sortIconArray[row]]];
+    }else{
+        cell.textLabel.textColor = FOSAColor(153, 153, 153);
+        cell.accessoryType = UITableViewCellAccessoryNone;
+        cell.imageView.image = [UIImage imageNamed:sortIconArray[row]];
+    }
     cell.backgroundColor = FOSAWhite;
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    //cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    //cell.textLabel.textColor = FOSAColor(11, 206, 255);
     //记录排序方式
     [self.userdefault removeObjectForKey:@"sort"];
     NSString *sortType = cell.textLabel.text;
@@ -666,9 +691,16 @@
 
 #pragma mark -- UIScrollerView
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    CGFloat offset = scrollView.contentOffset.x;
-    NSInteger index = offset/self.headerView.frame.size.width;
-    self.pageControl.currentPage = index;
+    if (scrollView == self.categoryCollection) {
+        CGFloat offset = scrollView.contentOffset.x;
+        categoryIndex = offset/(screen_width*5/6);
+        NSLog(@"食物种类滚动了,当前位置:%d",categoryIndex);
+    }else{
+        CGFloat offset = scrollView.contentOffset.x;
+        NSInteger index = offset/self.headerView.frame.size.width;
+        self.pageControl.currentPage = index;
+    }
+    
 }
 
 #pragma mark -- UItextFiledView
@@ -736,15 +768,19 @@
     }
     
     NSString *currentSortType = [self.userdefault valueForKey:@"sort"];
-
-    if ([currentSortType isEqualToString:@"Most Recent"]) {
+//@"Early Expiration Date",@"Late Expiration data",@"Early Add",@"Lately Add"
+    if ([currentSortType isEqualToString:@"Early Expiration Date"]) {
+        //过期日期从早到晚排列
         [self sortByMostRecent];
-    }else if([currentSortType isEqualToString:@"Least Recent"]){
+    }else if([currentSortType isEqualToString:@"Late Expiration data"]){
+        //过期日期从晚到早排列
         [self sortByLeastRecent];
-    }else if([currentSortType isEqualToString:@"Recent Add"]){
-        [self sortByRecentAdd];
-    }else if([currentSortType isEqualToString:@"Least Add"]){
+    }else if([currentSortType isEqualToString:@"Early Add"]){
+        //保存日期从早到晚排列
         [self sortByLeastAdd];
+    }else if([currentSortType isEqualToString:@"Lately Add"]){
+        //保存日期从晚到早排列
+        [self sortByRecentAdd];
     }
     [self.fooditemCollection reloadData];
     [self.db close];
@@ -755,7 +791,8 @@
 }
 - (void)getCategoryArray{
 //    [self OpenSqlDatabase:@"FOSA"];
-   NSString *selSql = @"select * from category";
+    categoryIndex = 0;
+    NSString *selSql = @"select * from category";
 //    FMResultSet *set = [self.db executeQuery:selSql];
 //    [self.categoryData removeAllObjects];
 //    while ([set next]) {
@@ -769,6 +806,7 @@
     if ([fmdbManager isFmdbOpen]) {
         self.categoryData = [fmdbManager selectDataWithTableName:@"category" sql:selSql];
     }
+    
 }
 
 - (FoodModel *)CheckFoodInfoWithName:(NSString *)foodName{
@@ -827,17 +865,18 @@
 }
 
 - (void)selectToSort{
-    NSString *currentSortType = [self.userdefault valueForKey:@"sort"];
-    NSInteger selectIndex0 = 0;
-    NSInteger selectIndex1 = 1;
-    NSInteger selectIndex2 = 2;
-    NSInteger selectIndex3 = 3;
-    NSDictionary *sortDic  =  @{ @"Most Recent":[NSIndexPath indexPathForRow:selectIndex0 inSection:0],@"Least Recent":[NSIndexPath indexPathForRow:selectIndex1 inSection:0],@"Recent Add":[NSIndexPath indexPathForRow:selectIndex2 inSection:0],@"Least Add":[NSIndexPath indexPathForRow:selectIndex3 inSection:0]};
-    [self.sortListTable selectRowAtIndexPath:[sortDic valueForKey:currentSortType] animated:NO scrollPosition:UITableViewScrollPositionNone];
-    //selectedCell = [self.sortListView cellForRowAtIndexPath:[self.sortDic valueForKey:select]];
-    [self.sortListTable cellForRowAtIndexPath:[sortDic valueForKey:currentSortType]].accessoryType = UITableViewCellAccessoryCheckmark;
-    
+//    NSString *currentSortType = [self.userdefault valueForKey:@"sort"];
+//    NSInteger selectIndex0 = 0;
+//    NSInteger selectIndex1 = 1;
+//    NSInteger selectIndex2 = 2;
+//    NSInteger selectIndex3 = 3;
+//    NSDictionary *sortDic  =  @{ @"Early Expiration Date":[NSIndexPath indexPathForRow:selectIndex0 inSection:0],@"Late Expiration data":[NSIndexPath indexPathForRow:selectIndex1 inSection:0],@"Early Add":[NSIndexPath indexPathForRow:selectIndex2 inSection:0],@"Lately Add":[NSIndexPath indexPathForRow:selectIndex3 inSection:0]};
+//    [self.sortListTable selectRowAtIndexPath:[sortDic valueForKey:currentSortType] animated:NO scrollPosition:UITableViewScrollPositionNone];
+//    //selectedCell = [self.sortListView cellForRowAtIndexPath:[self.sortDic valueForKey:select]];
+//    [self.sortListTable cellForRowAtIndexPath:[sortDic valueForKey:currentSortType]].accessoryType = UITableViewCellAccessoryCheckmark;
+//    [self.sortListTable cellForRowAtIndexPath:[sortDic valueForKey:currentSortType]].textLabel.textColor = FOSAColor(11, 206, 255);
     [UIView animateWithDuration:0.2 animations:^{
+        [self.sortListTable reloadData];
         self.tabBarController.tabBar.hidden = YES;
         self.sortListView.center = CGPointMake(screen_width/2, screen_height*4/5);
         self.smask.hidden = NO;
@@ -1028,31 +1067,32 @@
 }
 
 //取消种类编辑
-- (void)cancelEdit{
-    categoryEdit = false;
-    [self getCategoryArray];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.sortbtn];
-    //取消选中状态
-    isSelectCategory = false;
-    self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
-    self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",self.selectedCategoryCell.accessibilityValue]];
-    self.selectedCategoryCell = nil;
-    [self CollectionReload];
-    [self.categoryCollection reloadData];
-    //种类排序
-    [self categorySortByNumber];
-}
+//- (void)cancelEdit{
+//    categoryEdit = false;
+//    [self getCategoryArray];
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.sortbtn];
+//    //取消选中状态
+//    isSelectCategory = false;
+//    self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
+//    self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@",self.selectedCategoryCell.accessibilityValue]];
+//    self.selectedCategoryCell = nil;
+//    [self CollectionReload];
+//    [self.categoryCollection reloadData];
+//    //种类排序
+//    [self categorySortByNumber];
+//}
 
-//变换图标事件
-- (void)changeIconOfCategory:(id)sender{
-    
-}
 - (void)offsetToLeft{
-    [self.categoryCollection setContentOffset:CGPointMake(0, 0)];
+    if (categoryIndex-1 >= 0) {
+        [self.categoryCollection setContentOffset:CGPointMake((categoryIndex-1)*screen_width*5/6, 0)];
+        categoryIndex --;
+    }
 }
-
 - (void)offsetToRight{
-    [self.categoryCollection setContentOffset:CGPointMake(screen_width*5/6, 0)];
+    if (categoryIndex+1 < 4) {
+        [self.categoryCollection setContentOffset:CGPointMake((categoryIndex+1)*screen_width*5/6, 0)];
+        categoryIndex ++;
+    }
 }
 
 //食物Item点击事件

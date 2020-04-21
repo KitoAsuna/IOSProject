@@ -24,7 +24,7 @@
     NSString *kindID;
     NSString *selectCategory,*selectCategoryIcon;
     NSString *docPath;
-    NSInteger currentPictureIndex;//标识图片轮播器当前指向哪张图片
+    NSInteger currentPictureIndex,categoryIndex;//标识图片轮播器当前指向哪张图片,当前种类栏在哪一页
     NSString *device;
     Boolean isEdit;
     NSString *expireStr,*storageStr,*issend,*remindStr;
@@ -651,7 +651,7 @@
 - (void)creatFooterView{
     [self getCategoryArray];
     kindID = @"categoryCell";
-    
+    categoryIndex = 0;
     self.footerView.frame = CGRectMake(0, CGRectGetMaxY(self.contentView.frame)+5, screen_width, screen_width*5/24);
     //self.footerView.backgroundColor = [UIColor yellowColor];
     [self.view addSubview:self.footerView];
@@ -683,6 +683,7 @@
     self.categoryCollection.dataSource = self;
     self.categoryCollection.showsHorizontalScrollIndicator = NO;
     self.categoryCollection.bounces = NO;
+    self.categoryCollection.pagingEnabled = YES;
     [self.categoryCollection registerClass:[foodKindCollectionViewCell class] forCellWithReuseIdentifier:kindID];
     [self.footerView addSubview:self.categoryCollection];
     
@@ -852,7 +853,7 @@
     NSString *dateStr = [NSString stringWithFormat:@"%@/%@/%@",array[1],[mouth valueForKey:array[0]],array[2]];
     self.expireDateLabel.text = dateStr;
     self.expireTimeLabel.text= array[3];
-    if (remindTimer) {
+    if (remindTimer.length > 0) {
         remindStr = remindTimer;
         self.remindDateTextView.text = [NSString stringWithFormat:@"%@ -%@",remindTimer,self.fosaDatePicker.repeatWayLabel.text];//remindTimer;
     }
@@ -884,13 +885,15 @@
 }
 #pragma mark -- UIScrollerView
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    CGFloat offset = scrollView.contentOffset.x;
     if (scrollView == self.picturePlayer) {
-        CGFloat offset = scrollView.contentOffset.x;
         NSInteger index = offset/self.headerView.frame.size.width;
         self.pageControl.currentPage = index;
         currentPictureIndex = index;
+    }else if(scrollView == self.categoryCollection){
+        categoryIndex = offset/(self.categoryCollection.frame.size.width);
+        NSLog(@"食物种类滚动了,当前位置:%ld",(long)categoryIndex);
     }else{
-        CGFloat offset = scrollView.contentOffset.x;
         NSInteger index = offset/screen_width;
         self.toturialPageControl.currentPage = index;
         if (index == 16) {
@@ -1060,10 +1063,17 @@
 #pragma mark - 响应事件
 
 - (void)offsetToLeft{
-    [self.categoryCollection setContentOffset:CGPointMake(0, 0)];
+    if (categoryIndex-1 >= 0) {
+        [self.categoryCollection setContentOffset:CGPointMake((categoryIndex-1)*self.categoryCollection.frame.size.width, 0)];
+        categoryIndex --;
+    }
 }
 - (void)offsetToRight{
-    [self.categoryCollection setContentOffset:CGPointMake(self.categoryCollection.frame.size.width, 0)];
+    if (categoryIndex+1 < 4) {
+        [self.categoryCollection setContentOffset:CGPointMake((categoryIndex+1)*self.categoryCollection.frame.size.width, 0)];
+        categoryIndex ++;
+    }
+
 }
 
 - (void)selectToLike{

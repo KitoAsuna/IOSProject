@@ -8,14 +8,16 @@
 
 #import "editFoodItemViewController.h"
 #import "categoryCell.h"
+#import "categoryModel.h"
 #import "FosaFMDBManager.h"
 
 @interface editFoodItemViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate>{
-    NSArray *datasource;
     NSString *cellIndetifier;
     NSString *selectIcon;
     categoryCell *selectCell;
     FosaFMDBManager *fmdbManager;
+    NSMutableArray<categoryModel *> *categoryData;
+    NSMutableArray<NSString *> *datasource;
 }
 
 @end
@@ -63,8 +65,23 @@
 }
 
 - (void)initData{
-    datasource = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie",@"Fruit1",@"Fruit2",@"Fruit3",@"Fruit4",@"Fruit5",@"Fruit6",@"Fruit7",@"Fruit8",@"Fruit9",@"Fruit10",@"Fruit11",@"Meat1",@"Meat2",@"Meat3",@"Meat4",@"Meat5",@"Meat6",@"Meat7",@"Meat8",@"Meat9",@"Meat10",@"Meat11",@"Snack1",@"Snack2",@"Snack3",@"Snack4",@"Snack5",@"Snack6",@"Snack7",@"Snack8",@"Snack9",@"Snack10",@"Snack11",@"Snack12",@"Snack13",@"Snack14",@"Snack15",@"Vegetable1",@"Vegetable2",@"Vegetable3",@"Vegetable4",@"Vegetable5",@"Vegetable6",@"Vegetable7",@"Vegetable8",@"Vegetable9",@"Vegetable10",@"Vegetable11",@"Vegetable12",@"Vegetable13"];
+    [self getCategoryArray];
+    NSArray *dataArray = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie",@"Tonic",@"Nut",@"Drink",@"HighFat",@"Milk",@"Molasses",@"Starch",@"Tea",@"Beans",@"Liquor",@"Fruit1",@"Fruit2",@"Fruit3",@"Fruit4",@"Fruit5",@"Fruit6",@"Fruit7",@"Fruit8",@"Fruit9",@"Fruit10",@"Fruit11",@"Meat1",@"Meat2",@"Meat3",@"Meat4",@"Meat5",@"Meat6",@"Meat7",@"Meat8",@"Meat9",@"Meat10",@"Meat11",@"Snack1",@"Snack2",@"Snack3",@"Snack4",@"Snack5",@"Snack6",@"Snack7",@"Snack8",@"Snack9",@"Snack10",@"Snack11",@"Snack12",@"Snack13",@"Snack14",@"Snack15",@"Vegetable1",@"Vegetable2",@"Vegetable3",@"Vegetable4",@"Vegetable5",@"Vegetable6",@"Vegetable7",@"Vegetable8",@"Vegetable9",@"Vegetable10",@"Vegetable11",@"Vegetable12",@"Vegetable13"];
+    datasource = [[NSMutableArray alloc]initWithArray:dataArray];
+    for (int i = 0; i < categoryData.count; i++) {
+        NSLog(@"已经被选中的图标:%@",categoryData[i].categoryIconName);
+        [datasource removeObject:categoryData[i].categoryIconName];
+    }
+    //把当前种类图标放在第一个
+    [datasource insertObject:self.selectCategoryIcon atIndex:0];
     cellIndetifier = @"cellIndetifier";
+}
+- (void)getCategoryArray{
+    fmdbManager = [FosaFMDBManager initFMDBManagerWithdbName:@"FOSA"];
+    NSString *selSql = @"select * from category";
+    if ([fmdbManager isFmdbOpen]) {
+        categoryData = [fmdbManager selectDataWithTableName:@"category" sql:selSql];
+    }
 }
 - (void)creatEditFoodCategoryView{
     
@@ -227,7 +244,6 @@
 //}
 
 - (void)finish{
-    fmdbManager = [FosaFMDBManager initFMDBManagerWithdbName:@"FOSA"];
     //NSLog(@"categoryName:%@-----selectIcon:%@",self.categoryNameTextView.text,selectIcon);
     NSString *categoryStr = self.selectCategory;
     if (![self.selectCategory isEqualToString:self.categoryNameTextView.text]) {
@@ -241,7 +257,6 @@
             NSLog(@"修改食物项种类完成");
         }
     }
-
     if (selectIcon) {
         NSString *updateIconSql = [NSString stringWithFormat:@"update category set categoryIcon = '%@' where categoryName = '%@'",selectIcon,categoryStr];
         if ([fmdbManager updateDataWithSql:updateIconSql]) {
