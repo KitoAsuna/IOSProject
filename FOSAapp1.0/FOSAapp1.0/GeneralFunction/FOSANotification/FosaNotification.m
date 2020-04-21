@@ -142,7 +142,7 @@ completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentati
      根据重复方式设置日期选择器
      */
     NSDateComponents * components;
-    if ([model.repeat isEqualToString:@"Never"]) {
+    if ([model.repeat isEqualToString:@"Never"] || [identifier containsString:@"Expiry"]) {
         components = [[NSCalendar currentCalendar]
                       components:NSCalendarUnitYear |
                       NSCalendarUnitMonth |

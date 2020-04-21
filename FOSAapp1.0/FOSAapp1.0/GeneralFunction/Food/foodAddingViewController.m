@@ -819,7 +819,7 @@
     self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
     self.pageControl.currentPageIndicatorTintColor = FOSAgreen;
     [self.headerView addSubview:self.pageControl];
-    
+
     self.refreshBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 40, 40)];
     self.refreshBtn.center = self.headerView.center;
     [self.refreshBtn setBackgroundImage:[UIImage imageNamed:@"icon_refreshPicture"] forState:UIControlStateNormal];
@@ -1382,7 +1382,7 @@
             NSLog(@"~~~~~~~~~~~~~~~~~~~~设备号：%@",device);
             if ([fmdbManager insertDataWithSql:insertSql]) {
                 [self sendReminderNotification];
-                //[self sendNotificationByExpireday];
+                [self sendNotificationByExpireday];
             }else{
                 [self SystemAlert:@"Error"];
             }
@@ -1572,8 +1572,12 @@
                 //||[self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Never"]
                 if ([self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Every three hours"]){
                     for(int i = 0;i < 8;i++){
-                        NSString *identifier = [NSString stringWithFormat:@"%@%d",self.foodTextView.text,i];
-                        [self.fosaNotification sendNotification:model body:body image:image time:(int)(dateTime-currentDateTime)+i*180 identifier:identifier];
+                        if ((int)(dateTime-currentDateTime)+i*10800 > 86400) {
+                            break;
+                        }else{
+                            NSString *identifier = [NSString stringWithFormat:@"%@Remind%d",self.foodTextView.text,i];
+                            [self.fosaNotification sendNotification:model body:body image:image time:(int)(dateTime-currentDateTime)+i*10800 identifier:identifier];
+                        }
                     }
                 }else{
                     [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image identifier:self.foodTextView.text];
@@ -1582,9 +1586,9 @@
             
         }
     }
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];
-    [self presentViewController:alert animated:true completion:nil];
-    [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
+//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];
+//    [self presentViewController:alert animated:true completion:nil];
+//    [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
 }
 
 - (void)sendNotificationByExpireday{
@@ -1601,7 +1605,8 @@
             //另存通知图片
             [imgManager savePhotoWithImage:image name:self.foodTextView.text];
             NSLog(@">>>=================%@",expireStr);
-            [self.fosaNotification sendNotificationByDate:model body:body date:expireStr foodImg:image identifier:self.foodTextView.text];
+            NSString *identifier = [NSString stringWithFormat:@"%@Expiry",self.foodTextView.text];
+            [self.fosaNotification sendNotificationByDate:model body:body date:expireStr foodImg:image identifier:identifier];
         }
     }
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];
