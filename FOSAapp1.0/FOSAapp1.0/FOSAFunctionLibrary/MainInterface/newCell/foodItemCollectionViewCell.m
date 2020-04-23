@@ -18,8 +18,7 @@
         self.foodImgView.contentMode = UIViewContentModeScaleAspectFill;
         self.foodImgView.clipsToBounds = YES;
         [self addSubview:self.foodImgView];
-        self.squre = [UIView new];
-        [self.foodImgView addSubview:self.squre];
+
         
         self.likebtn = [UIButton new];
         [self.likebtn setImage:[UIImage imageNamed:@"img_foodCode"] forState:UIControlStateNormal];
@@ -48,14 +47,8 @@
     int height = self.bounds.size.height;
     self.foodImgView.frame = CGRectMake(0, 0, width, width*9/10);
     
-    self.likebtn.frame = CGRectMake(width/30, width*3/4, width/10, width/10);
-    //self.likebtn.hidden = YES;
-    
-    self.squre.frame = CGRectMake(0, 0, width/8, width/8);
-    self.squre.center = self.likebtn.center;
-    self.squre.layer.borderColor = FOSAWhite.CGColor;
-    self.squre.layer.borderWidth = 2;
-    //self.squre.hidden = YES;
+    self.likebtn.frame = CGRectMake(width/30, width*23/30, width/10, width/10);
+
     
     self.foodNamelabel.frame = CGRectMake(width/30, CGRectGetMaxY(self.foodImgView.frame)+(height*49/60-width*9/10)/2, width*3/5, (height-width*9/10)/2);
     self.foodNamelabel.adjustsFontSizeToFitWidth = YES;
@@ -78,20 +71,18 @@
     self.mouthLabel.textColor = FOSAGray;
     self.mouthLabel.textAlignment = NSTextAlignmentLeft;
 }
+
 - (void)setModel:(FoodModel *)model
 {
     NSArray<NSString *> *timeArray;
     _model = model;
-    if ([self getImage:model.foodPhoto] != nil) {
-        self.foodImgView.image = [self getImage:model.foodPhoto];
-    }
+    
+    self.foodImgView.image = [self getImage:model.foodPhoto];
 
     if (![model.device isEqualToString:@"null"]) {
         self.likebtn.hidden = NO;
-        self.squre.hidden = NO;
     }else{
         self.likebtn.hidden = YES;
-        self.squre.hidden = YES;
     }
     
     self.foodNamelabel.text = model.foodName;

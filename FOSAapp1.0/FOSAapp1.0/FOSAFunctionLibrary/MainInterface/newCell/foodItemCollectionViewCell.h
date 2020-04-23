@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UIImageView *foodImgView;
 @property (nonatomic,strong) UILabel  *foodNamelabel,*mouthLabel,*dayLabel,*timelabel,*locationLabel;
 @property (nonatomic,strong) UIButton *likebtn;
-@property (nonatomic,strong) UIView *squre;
+
 @property (nonatomic,strong) FoodModel *model;
 @property (nonatomic,strong) NSString *isDraw;
 @property (nonatomic,assign) long int indexOfImg;

@@ -622,7 +622,7 @@
     self.remindDateTextView.layer.cornerRadius = 5;
     self.remindDateTextView.userInteractionEnabled = NO;
     self.remindDateTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    self.remindDateTextView.font = [UIFont systemFontOfSize:font(15)];
+    self.remindDateTextView.font = [UIFont systemFontOfSize:font(13)];
     [self.remindDateTextView setValue:[NSNumber numberWithInt:font(10)] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.remindDateTextView.userInteractionEnabled = YES;
     UITapGestureRecognizer *dateReconizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectExpireDate)];
@@ -896,7 +896,7 @@
     }else{
         NSInteger index = offset/screen_width;
         self.toturialPageControl.currentPage = index;
-        if (index == 16) {
+        if (index == 14) {
             self.skipBtn.hidden = YES;
             //添加close按钮，功能同skip
         }else{
@@ -1170,8 +1170,8 @@
     self.toturialPicturePlayer.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
             
     self.toturialPicturePlayer.bounces = NO;
-    self.toturialPicturePlayer.contentSize = CGSizeMake(screen_width*17, 0);
-    for (NSInteger i = 0; i < 17; i++) {
+    self.toturialPicturePlayer.contentSize = CGSizeMake(screen_width*15, 0);
+    for (NSInteger i = 0; i < 15; i++) {
         CGRect frame = CGRectMake(i*screen_width, 0, screen_width,screen_height);
         UIImageView *imageview = [[UIImageView alloc]initWithFrame:frame];
         imageview.userInteractionEnabled = YES;
@@ -1181,7 +1181,7 @@
         imageview.image = [UIImage imageNamed:imgName];
         [self.toturialPicturePlayer addSubview:imageview];
         
-        if (i == 16) {
+        if (i == 14) {
             self.closeBtn.frame = CGRectMake(screen_width*12/33, screen_height*116/143, screen_width*3/11, screen_height*7/143);
             self.closeBtn.layer.borderWidth = 1;
             self.closeBtn.layer.cornerRadius = self.closeBtn.frame.size.height/2;
@@ -1196,10 +1196,10 @@
         [self.toturialPicturePlayer addSubview:imageview];
     }
     [self.view addSubview:self.toturialPicturePlayer];
-        //轮播页面指示器
+    //轮播页面指示器
     self.toturialPageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(screen_width*2/5, screen_height-30, screen_width/5, 20)];
     self.toturialPageControl.currentPage = 0;
-    self.toturialPageControl.numberOfPages = 17;
+    self.toturialPageControl.numberOfPages = 15;
     self.toturialPageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
     self.toturialPageControl.currentPageIndicatorTintColor = FOSAgreen;
     [self.view addSubview:self.toturialPageControl];
@@ -1381,7 +1381,7 @@
             //BOOL insertResult = [self.db executeUpdate:insertSql];
             NSLog(@"~~~~~~~~~~~~~~~~~~~~设备号：%@",device);
             if ([fmdbManager insertDataWithSql:insertSql]) {
-                [self sendReminderNotification];
+                //[self sendReminderNotification];
                 [self sendNotificationByExpireday];
             }else{
                 [self SystemAlert:@"Error"];
@@ -1570,25 +1570,18 @@
             if (dateTime-currentDateTime > 0) {
                 FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
                 //||[self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Never"]
+                NSString *identifier = [NSString stringWithFormat:@"%@Remind",self.foodTextView.text];
                 if ([self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Every three hours"]){
-                    for(int i = 0;i < 8;i++){
-                        if ((int)(dateTime-currentDateTime)+i*10800 > 86400) {
-                            break;
-                        }else{
-                            NSString *identifier = [NSString stringWithFormat:@"%@Remind%d",self.foodTextView.text,i];
-                            [self.fosaNotification sendNotification:model body:body image:image time:(int)(dateTime-currentDateTime)+i*10800 identifier:identifier];
-                        }
-                    }
+                    [self.fosaNotification sendNotification:model body:body image:image time:(dateTime-currentDateTime) identifier:identifier];
                 }else{
-                    [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image identifier:self.foodTextView.text];
+                    [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image identifier:identifier];
                 }
             }
-            
         }
     }
-//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];
-//    [self presentViewController:alert animated:true completion:nil];
-//    [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];
+    [self presentViewController:alert animated:true completion:nil];
+    [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:2];
 }
 
 - (void)sendNotificationByExpireday{
@@ -1599,7 +1592,7 @@
         NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
         if ([autoNotification isEqualToString:@"NO"] || autoNotification == nil) {
             FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
-            NSString *body = [NSString stringWithFormat:@"Your food %@ has expired",self.foodTextView.text];
+            NSString *body = [NSString stringWithFormat:@"Your food %@ will expire today",self.foodTextView.text];
              //获取通知的图片
             UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
             //另存通知图片
@@ -1607,6 +1600,18 @@
             NSLog(@">>>=================%@",expireStr);
             NSString *identifier = [NSString stringWithFormat:@"%@Expiry",self.foodTextView.text];
             [self.fosaNotification sendNotificationByDate:model body:body date:expireStr foodImg:image identifier:identifier];
+            //在过期当日的早上9点，12点，下午3点，6点都发一次
+            NSArray *repeatTime = @[@"09:00",@"12:00",@"15:00",@"18:00"];
+            NSArray *expireArray = [expireStr componentsSeparatedByString:@"/"];
+            for (int i = 0; i < 4; i++) {
+                UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
+                //另存通知图片
+                [imgManager savePhotoWithImage:image name:[NSString stringWithFormat:@"%d%@",i,self.foodTextView.text]];
+                NSString *expire = [NSString stringWithFormat:@"%@/%@/%@/%@",expireArray[0],expireArray[1],expireArray[2],repeatTime[i]];
+                NSLog(@"重复发送过期的通知:%@",expire);
+                 NSString *identifier = [NSString stringWithFormat:@"%@Expiry%d",self.foodTextView.text,i];
+                [self.fosaNotification sendNotificationByDate:model body:body date:expire foodImg:image identifier:identifier];
+            }
         }
     }
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];

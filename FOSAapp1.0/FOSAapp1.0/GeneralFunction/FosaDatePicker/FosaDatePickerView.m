@@ -200,7 +200,7 @@
     self.repeatLabel = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width/4, height/10)];
     self.repeatLabel.text = @"Repeat";
     self.repeatView.hidden = YES;
-    self.repeatWayLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width-font(60)-height/13, 0, font(60), height/10)];
+    self.repeatWayLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width/2-height/13, 0, self.frame.size.width/2, height/10)];
     self.repeatWayLabel.textAlignment = NSTextAlignmentRight;
     self.repeatWayLabel.adjustsFontSizeToFitWidth = YES;
     if (self.repeatWay == NULL) {
