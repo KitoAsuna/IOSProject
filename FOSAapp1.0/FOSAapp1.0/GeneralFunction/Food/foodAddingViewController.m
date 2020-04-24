@@ -594,6 +594,7 @@
     self.foodDescribedTextView.returnKeyType = UIReturnKeyDone;
     self.foodDescribedTextView.textContainerInset = UIEdgeInsetsMake(5, 5, 0, 0);//上、左、下、右
     [self.foodDescribedView addSubview:self.foodDescribedTextView];
+
     //输入字数提示
     int aboutFoodInputWidth = self.foodDescribedTextView.frame.size.width;
     int aboutFoodInputHeight = self.foodDescribedTextView.frame.size.height;

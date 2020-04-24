@@ -8,6 +8,7 @@
 
 #import "RegisterViewController.h"
 #import "FMDB.h"
+#import "AFNetworking.h"
 
 @interface RegisterViewController ()<UITextFieldDelegate>{
     FMDatabase *db;
@@ -16,6 +17,8 @@
 // 当前获取焦点的UITextField
 @property (strong, nonatomic) UITextField *currentResponderTextField;
 @property(nonatomic,strong) NSUserDefaults *userDefaults;
+//缓冲图标
+@property (nonatomic,strong) UIActivityIndicatorView *FOSAloadingView;
 @end
 @implementation RegisterViewController
 
@@ -144,7 +147,7 @@
     [self.logoContainer addSubview:self.FOSALogo];
     
     self.userNameInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
-    self.userNameInput.placeholder = @"    Phone Number/email";
+    self.userNameInput.placeholder = @"    Email";
     self.userNameInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     [self.userNameInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.userNameInput.returnKeyType = UIReturnKeyDone;
@@ -152,23 +155,25 @@
     self.userNameInput.layer.cornerRadius = self.userNameInput.frame.size.height/3;
     [self.userContainer addSubview:self.userNameInput];
     
-    self.verificatonInput.frame = CGRectMake(0, 5, self.verificationView.frame.size.width*3/5, screen_height/15-10);
+    self.verificatonInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
     self.verificatonInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
+    [self.verificatonInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.verificatonInput.returnKeyType = UIReturnKeyDone;
+    self.verificatonInput.placeholder = @"    UserName";
     self.verificatonInput.delegate = self;
     self.verificatonInput.layer.cornerRadius = self.verificatonInput.frame.size.height/3;
     self.verificatonInput.returnKeyType = UIReturnKeyDone;;
     [self.verificationView addSubview:self.verificatonInput];
-    self.verificationLabel.frame = CGRectMake(self.verificationView.frame.size.width*3/5, 0, self.verificationView.frame.size.width*2/5, screen_height/15);
-    self.verificationLabel.textAlignment = NSTextAlignmentRight;
-    self.verificationLabel.font = [UIFont systemFontOfSize:14*(screen_width/414)];
-    //文字添加下划线
-    NSDictionary * underAttribtDic  = @{NSUnderlineStyleAttributeName:[NSNumber numberWithInteger:NSUnderlineStyleSingle],NSForegroundColorAttributeName:[UIColor blackColor]};
-    NSMutableAttributedString * underAttr = [[NSMutableAttributedString alloc] initWithString:@"Get SMS code" attributes:underAttribtDic];
-    
-    self.verificationLabel.attributedText = underAttr;
-    self.verificationLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
-    [self.verificationView addSubview:self.verificationLabel];
+//    self.verificationLabel.frame = CGRectMake(self.verificationView.frame.size.width*3/5, 0, self.verificationView.frame.size.width*2/5, screen_height/15);
+//    self.verificationLabel.textAlignment = NSTextAlignmentRight;
+//    self.verificationLabel.font = [UIFont systemFontOfSize:14*(screen_width/414)];
+//    //文字添加下划线
+//    NSDictionary * underAttribtDic  = @{NSUnderlineStyleAttributeName:[NSNumber numberWithInteger:NSUnderlineStyleSingle],NSForegroundColorAttributeName:[UIColor blackColor]};
+//    NSMutableAttributedString * underAttr = [[NSMutableAttributedString alloc] initWithString:@"Get SMS code" attributes:underAttribtDic];
+//
+//    self.verificationLabel.attributedText = underAttr;
+//    self.verificationLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
+    //[self.verificationView addSubview:self.verificationLabel];
     
     self.passwordInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
     self.passwordInput.placeholder = @"    Password";
@@ -199,12 +204,61 @@
 }
 //注册按钮事件
 - (void)SignUpEvent{
-    if ([self.userNameInput.text isEqualToString:@""] || [self.passwordInput.text isEqualToString:@""]) {
+    if ([self.userNameInput.text isEqualToString:@""] || [self.passwordInput.text isEqualToString:@""] || [self.verificatonInput.text isEqualToString:@""]) {
         [self SystemAlert:@"please input your ID or password"];
     }else{
-        [self CreatSqlDatabase:@"FOSA"];
+        [self CreatLoadView];
+        ///1.创建会话管理者
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", nil];
+        //注册账号
+        NSString *categoryAddr = [NSString stringWithFormat:@"https://fosa.care/crmapi/?act=su&lang=en&uname=%@&uemail=%@&upw=%@",self.verificatonInput.text,self.userNameInput.text,self.passwordInput.text];
+         [manager GET:categoryAddr parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+             NSLog(@"success--%@--%@",[responseObject class],responseObject[@"ReturnCode"]);
+             int returnCode = [responseObject[@"ReturnCode"] intValue];
+             if (returnCode == 1) {
+                 [self.FOSAloadingView stopAnimating];
+                 [self SystemAlert:@"Successfully registered"];
+             }else if (returnCode == 5){
+                 [self.FOSAloadingView stopAnimating];
+                 [self SystemAlert:@"Invalid email address!"];
+             }else if (returnCode == 7){
+                 [self.FOSAloadingView stopAnimating];
+                 [self SystemAlert:@"The length of the name or password is less than 6"];
+             }else if (returnCode == 8){
+                 [self.FOSAloadingView stopAnimating];
+                 [self SystemAlert:@"This user is already registered"];
+             }else if (returnCode == 9){
+                 [self.FOSAloadingView stopAnimating];
+                 [self SystemAlert:@"This email is already registered"];
+             }
+         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+             NSLog(@"failure--%@",error);
+         }];
     }
 }
+- (void)CreatLoadView{
+    //self.loadView
+    if (@available(iOS 13.0, *)) {
+        if (_FOSAloadingView == nil) {
+           self.FOSAloadingView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleLarge)];
+        }
+    } else {
+        self.FOSAloadingView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleMedium)];
+    }
+    [self.view addSubview:self.FOSAloadingView];
+    //设置小菊花的frame
+    self.FOSAloadingView.frame= CGRectMake(0, 0, 200, 200);
+    self.FOSAloadingView.center = self.view.center;
+    //设置小菊花颜色
+    self.FOSAloadingView.color = FOSAgreen;
+    //设置背景颜色
+    self.FOSAloadingView.backgroundColor = [UIColor clearColor];
+//刚进入这个界面会显示控件，并且停止旋转也会显示，只是没有在转动而已，没有设置或者设置为YES的时候，刚进入页面不会显示
+    self.FOSAloadingView.hidesWhenStopped = YES;
+    [self.FOSAloadingView startAnimating];
+}
+
 
 //记住用户名和密码
 -(void)switchAction:(id)sender
@@ -227,68 +281,73 @@ if (isButtonOn) {
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:message preferredStyle:UIAlertControllerStyleAlert];
-    if ([message isEqualToString:@"please input your ID or password"]) {
+    if ([message isEqualToString:@"Successfully registered"]) {
+//        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+        [self presentViewController:alert animated:true completion:nil];
+        [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
+    }else{
         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
         [self presentViewController:alert animated:true completion:nil];
-    }else{
-        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
-        [self presentViewController:alert animated:true completion:nil];
     }
 }
-#pragma mark - 数据库操作
-- (void)CreatSqlDatabase:(NSString *)dataBaseName{
-    //获取数据库地址
-    docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject];
-    NSLog(@"%@",docPath);
-    //设置数据库名
-    NSString *fileName = [docPath stringByAppendingPathComponent:dataBaseName];
-    //创建数据库
-    db = [FMDatabase databaseWithPath:fileName];
-    if([db open]){
-        NSLog(@"打开数据库成功");
-        [self CreatUserTable];
-    }else{
-        NSLog(@"打开数据库失败");
-    }
-    [db close];
+- (void)dismissAlertView:(UIAlertController *)alert{
+    [alert dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
-
-- (void)CreatUserTable{
-    NSString *UserTableSql = @"create table if not exists Fosa_User(id integer primary key,userName text,password text)";
-    BOOL result = [db executeUpdate:UserTableSql];
-    if (result) {
-        NSLog(@"打开用户表成功!");
-        [self InsertDataIntoTable];
-    }else{
-        NSLog(@"打开用户表失败");
-    }
-}
-
-- (void)InsertDataIntoTable{
-    NSString *insertTableSql = @"insert into Fosa_User(userName,password) values(?,?)";
-    if ([db open]) {
-        BOOL result = [db executeUpdate:insertTableSql, self.userNameInput.text,self.passwordInput.text];
-        if (result) {
-            NSLog(@"Insert into table successfully");
-            [self SystemAlert:@"注册成功"];
-            [self SelectAllUser];
-        }else{
-            NSLog(@"Insert fail");
-        }
-    }else{
-        NSLog(@"Open failed");
-    }
-}
-
-- (void)SelectAllUser{
-    NSString *sql = @"select * from Fosa_User";
-    FMResultSet *set = [db executeQuery:sql];
-    while ([set next]) {
-        NSString *name = [set stringForColumn:@"userName"];
-        NSString *password = [set stringForColumn:@"password"];
-        NSLog(@"%@=============%@",name,password);
-    }
-}
+//#pragma mark - 数据库操作
+//- (void)CreatSqlDatabase:(NSString *)dataBaseName{
+//    //获取数据库地址
+//    docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject];
+//    NSLog(@"%@",docPath);
+//    //设置数据库名
+//    NSString *fileName = [docPath stringByAppendingPathComponent:dataBaseName];
+//    //创建数据库
+//    db = [FMDatabase databaseWithPath:fileName];
+//    if([db open]){
+//        NSLog(@"打开数据库成功");
+//        [self CreatUserTable];
+//    }else{
+//        NSLog(@"打开数据库失败");
+//    }
+//    [db close];
+//}
+//
+//- (void)CreatUserTable{
+//    NSString *UserTableSql = @"create table if not exists Fosa_User(id integer primary key,userName text,password text)";
+//    BOOL result = [db executeUpdate:UserTableSql];
+//    if (result) {
+//        NSLog(@"打开用户表成功!");
+//        [self InsertDataIntoTable];
+//    }else{
+//        NSLog(@"打开用户表失败");
+//    }
+//}
+//
+//- (void)InsertDataIntoTable{
+//    NSString *insertTableSql = @"insert into Fosa_User(userName,password) values(?,?)";
+//    if ([db open]) {
+//        BOOL result = [db executeUpdate:insertTableSql, self.userNameInput.text,self.passwordInput.text];
+//        if (result) {
+//            NSLog(@"Insert into table successfully");
+//            [self SystemAlert:@"注册成功"];
+//            [self SelectAllUser];
+//        }else{
+//            NSLog(@"Insert fail");
+//        }
+//    }else{
+//        NSLog(@"Open failed");
+//    }
+//}
+//
+//- (void)SelectAllUser{
+//    NSString *sql = @"select * from Fosa_User";
+//    FMResultSet *set = [db executeQuery:sql];
+//    while ([set next]) {
+//        NSString *name = [set stringForColumn:@"userName"];
+//        NSString *password = [set stringForColumn:@"password"];
+//        NSLog(@"%@=============%@",name,password);
+//    }
+//}
 
 //退出键盘
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{

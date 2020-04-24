@@ -10,6 +10,7 @@
 #import "RegisterViewController.h"
 #import "FMDB.h"
 #import "resetAccountViewController.h"
+#import "AFNetworking.h"
 
 @interface LoginViewController ()<UITextFieldDelegate>{
     FMDatabase *db;
@@ -19,6 +20,8 @@
 @property(nonatomic,strong) NSUserDefaults *userDefaults;
 // 当前获取焦点的UITextField
 @property (strong, nonatomic) UITextField *currentResponderTextField;
+//缓冲图标
+@property (nonatomic,strong) UIActivityIndicatorView *FOSAloadingView;
 @end
 
 @implementation LoginViewController
@@ -285,7 +288,58 @@
 }
 //验证用户信息
 - (void)vertifyUser{
-    [self CreatSqlDatabase:@"FOSA"];
+    //[self CreatSqlDatabase:@"FOSA"];
+    //https://fosa.care/crmapi/?lang=cn&uname=demodemo&upw=123456
+    if ([self.userNameInput.text isEqualToString:@""] || [self.passwordInput.text isEqualToString:@""]) {
+        [self SystemAlert:@"please input your ID or password"];
+    }else{
+        [self CreatLoadView];
+        ///1.创建会话管理者
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", nil];
+        //注册账号
+        NSString *categoryAddr = [NSString stringWithFormat:@"https://fosa.care/crmapi/?lang=en&uname=%@&upw=%@",self.userNameInput.text,self.passwordInput.text];
+         [manager GET:categoryAddr parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+             NSLog(@"success--%@--%@",[responseObject class],responseObject[@"ReturnCode"]);
+             int returnCode = [responseObject[@"ReturnCode"] intValue];
+             if (returnCode == 1) {
+                 [self.FOSAloadingView stopAnimating];
+                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                 [defaults setObject:self.userNameInput.text forKey:@"currentUser"];
+                 [defaults synchronize];
+                 [self SystemAlert:@"login Successfully"];
+             }else if (returnCode == 6){
+                 [self.FOSAloadingView stopAnimating];
+                 [self SystemAlert:@"Name and password do not match"];
+             }else if (returnCode == 7){
+                 [self.FOSAloadingView stopAnimating];
+                 [self SystemAlert:@"The length of the name or password is less than 6"];
+             }
+         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+             NSLog(@"failure--%@",error);
+         }];
+    }
+}
+- (void)CreatLoadView{
+    //self.loadView
+    if (@available(iOS 13.0, *)) {
+        if (_FOSAloadingView == nil) {
+           self.FOSAloadingView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleLarge)];
+        }
+    } else {
+        self.FOSAloadingView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleMedium)];
+    }
+    [self.view addSubview:self.FOSAloadingView];
+    //设置小菊花的frame
+    self.FOSAloadingView.frame= CGRectMake(0, 0, 200, 200);
+    self.FOSAloadingView.center = self.view.center;
+    //设置小菊花颜色
+    self.FOSAloadingView.color = FOSAgreen;
+    //设置背景颜色
+    self.FOSAloadingView.backgroundColor = [UIColor clearColor];
+//刚进入这个界面会显示控件，并且停止旋转也会显示，只是没有在转动而已，没有设置或者设置为YES的时候，刚进入页面不会显示
+    self.FOSAloadingView.hidesWhenStopped = YES;
+    [self.FOSAloadingView startAnimating];
 }
 
 #pragma mark - UItextFiled
@@ -358,12 +412,32 @@
                 }
     }
 }
+
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:message preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
-    [self presentViewController:alert animated:true completion:nil];
+        if ([message isEqualToString:@"login Successfully"]) {
+            if ([self.remember isOn]) {
+                NSString *username = self.userNameInput.text;
+                NSString *password = self.passwordInput.text;
+                 NSLog(@"%@======%@",username,password);
+                [self.userDefaults setObject:username forKey:@"username"];
+                [self.userDefaults setObject:password forKey:@"password"];
+                [self.userDefaults setBool:true forKey:@"isOn"];
+                [self.userDefaults synchronize];
+            }
+            [self presentViewController:alert animated:true completion:nil];
+            [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
+        }else{
+            [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+            [self presentViewController:alert animated:true completion:nil];
+        }
 }
+- (void)dismissAlertView:(UIAlertController *)alert{
+    [alert dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self.userNameInput resignFirstResponder];
     [self.passwordInput resignFirstResponder];

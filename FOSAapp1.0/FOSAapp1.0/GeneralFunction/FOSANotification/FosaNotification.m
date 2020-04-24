@@ -74,7 +74,7 @@
         UNNotificationSound *sound = [UNNotificationSound defaultSound];
         rcontent.sound = sound;
         //设置时间间隔的触发器
-        UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:3*60*60 repeats:YES];
+        UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:300 repeats:YES];
         NSString *Identifer = content.subtitle;
         NSLog(@"============%@",content.subtitle);
         rcontent.categoryIdentifier = @"seeCategory";
@@ -90,9 +90,10 @@
    //获取通知相关内容
     UNNotificationRequest *request = response.notification.request; // 原始请求
     UNNotificationContent *content = request.content; // 原始内容
-    NSString *title = content.title;  // 标题
+    NSString *foodName = content.subtitle;  // 标题
     NSString *body = content.body;    // 推送消息体
-//在此，可判断response的种类和request的触发器是什么，可根据远程通知和本地通知分别处理，再根据action进行后续回调
+    
+    //在此，可判断response的种类和request的触发器是什么，可根据远程通知和本地通知分别处理，再根据action进行后续回调
     if ([response isKindOfClass:[UNTextInputNotificationResponse class]]) {
         UNTextInputNotificationResponse * textResponse = (UNTextInputNotificationResponse*)response;
         NSString * text = textResponse.userText;
@@ -100,7 +101,7 @@
     }else{
         if ([response.actionIdentifier isEqualToString:@"see1"]){
             NSLog(@"Save UIView as photo");
-            UIImage *notificationImage = [self SaveViewAsPicture:[self CreatNotificatonView:title body:body]];
+            UIImage *notificationImage = [self SaveViewAsPicture:[self CreatNotificatonView:foodName body:body]];
             UIImageWriteToSavedPhotosAlbum(notificationImage, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
         }else if ([response.actionIdentifier isEqualToString:@"see2"]) {
             //I don't care~
@@ -129,11 +130,11 @@
 - (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(id)image identifier:(NSString *)identifier{
     NSLog(@"我将发送一个系统通知----------按指定日期发送通知");
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-    content.title = @"Notification";
-    content.subtitle = @"By Fosa";
+    content.title = @"FOSA Reminding";
+    content.subtitle = model.foodName;
     content.body = body;
     content.badge = @0;
-    content.userInfo = @{@"repeat":model.repeat,@"request":identifier};
+    content.userInfo = @{@"repeat":model.repeat,@"request":identifier,};
     //获取沙盒中的图片
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
     NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodName];
@@ -167,6 +168,7 @@
      根据重复方式设置日期选择器
      */
     NSDateComponents * components;
+    
     if ([model.repeat isEqualToString:@"Never"] || [identifier containsString:@"Expiry"] || [model.repeat isEqualToString:@"Every three hours"]) {
         components = [[NSCalendar currentCalendar]
                       components:NSCalendarUnitYear |
@@ -199,12 +201,12 @@
                      NSCalendarUnitHour|
                      NSCalendarUnitMinute|
                      NSCalendarUnitSecond
-                     fromDate:date];
+                     fromDate:localeDate];
     }
 
     UNCalendarNotificationTrigger *date_trigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:components repeats:YES];
+
     NSString *requestIdentifer = identifier;
-           //content.categoryIdentifier = @"textCategory";
     content.categoryIdentifier = @"seeCategory";
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifer content:content trigger:date_trigger];
 
@@ -337,17 +339,17 @@
     UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*2/5, mainHeight-mainwidth/5, mainwidth/5, mainwidth/5)];
     
     //FOSA
-    UILabel *brand = [[UILabel alloc]initWithFrame:CGRectMake(mainwidth/15, mainHeight*5/8, mainwidth/4, mainHeight/16)];
+    UILabel *foodName = [[UILabel alloc]initWithFrame:CGRectMake(mainwidth/15, mainHeight*5/8, mainwidth/4, mainHeight/16)];
     
     //食物信息二维码
-    UIImageView *InfoCodeView = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*4/5-20, mainHeight*5/8+5, mainwidth/5, mainwidth/5)];
+    UIImageView *InfoCodeView = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*4/5-Width(15), mainHeight*5/8+Height(15), mainwidth/5, mainwidth/5)];
 
     //提醒内容
     UITextView *Nbody = [[UITextView alloc]initWithFrame:CGRectMake(mainwidth/15, mainHeight*11/16, mainwidth*3/5, mainwidth/5)];
     Nbody.userInteractionEnabled = NO;
 
     [notification addSubview:logo];
-    [notification addSubview:brand];
+    [notification addSubview:foodName];
     [notification addSubview:InfoCodeView];
     [notification addSubview:image];
     [notification addSubview:Nbody];
@@ -362,9 +364,9 @@
     InfoCodeView.contentMode = UIViewContentModeScaleAspectFill;
     InfoCodeView.clipsToBounds = YES;
     
-    brand.font  = [UIFont systemFontOfSize:20];
+    foodName.font  = [UIFont systemFontOfSize:20];
     //brand.textAlignment = NSTextAlignmentCenter;
-    brand.text  = @"FOSA";
+    foodName.text  = title;
     
     Nbody.font   = [UIFont systemFontOfSize:12];
     Nbody.text = body;
