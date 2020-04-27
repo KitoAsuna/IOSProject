@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface settingViewController : UIViewController
 @property (nonatomic,strong) UITableView *settingTable;
 @property (nonatomic,strong) NSMutableArray<NSString *> *dataSource;
-
+@property (nonatomic,strong) UIButton *logOutBtn;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -57,32 +57,31 @@
     //建议将根据Notification进行处理的逻辑统一封装，后期可在Extension中复用~
     completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentationOptionSound|UNNotificationPresentationOptionAlert); // 回调block，将设置传入
     [self deleteFile:content.subtitle];
-
-    //在这里发送重复的通知，每隔三个小时通知一次
-    NSString *repeat = [userInfo objectForKey:@"repeat"]; //获取通知重复方式
-    NSString *requestIdentifier = request.identifier;
-    NSLog(@"重复方式:%@--------requestIdentifier:%@------%@",repeat,requestIdentifier,request.identifier);
-    if ([repeat isEqualToString:@"Every three hours"] && [requestIdentifier containsString:@"Remind"]) {
-        NSLog(@"我将发送一个重复系统通知");
-        UNMutableNotificationContent *rcontent = [[UNMutableNotificationContent alloc] init];
-        rcontent.title = @"FOSA Reminding";
-        rcontent.subtitle = content.subtitle;
-        rcontent.body = content.body;
-        rcontent.badge = @0;
-        //设置为@""以后，进入app将没有启动页
-        rcontent.launchImageName = @"";
-        UNNotificationSound *sound = [UNNotificationSound defaultSound];
-        rcontent.sound = sound;
-        //设置时间间隔的触发器
-        UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:300 repeats:YES];
-        NSString *Identifer = content.subtitle;
-        NSLog(@"============%@",content.subtitle);
-        rcontent.categoryIdentifier = @"seeCategory";
-        UNNotificationRequest *request1 = [UNNotificationRequest requestWithIdentifier:Identifer content:content trigger:time_trigger];
-        [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request1 withCompletionHandler:^(NSError * _Nullable error) {
-            //NSLog(@"通知发送失败:%@",error);
-        }];
-    }
+///    //在这里发送重复的通知，每隔三个小时通知一次
+//    NSString *repeat = [userInfo objectForKey:@"repeat"]; //获取通知重复方式
+//    NSString *requestIdentifier = request.identifier;
+//    NSLog(@"重复方式:%@--------requestIdentifier:%@------%@",repeat,requestIdentifier,request.identifier);
+//    if ([repeat isEqualToString:@"Every three hours"] && [requestIdentifier containsString:@"Remind"]) {
+//        NSLog(@"我将发送一个重复系统通知");
+//        UNMutableNotificationContent *rcontent = [[UNMutableNotificationContent alloc] init];
+//        rcontent.title = @"FOSA Reminding";
+//        rcontent.subtitle = content.subtitle;
+//        rcontent.body = content.body;
+//        rcontent.badge = @0;
+//        //设置为@""以后，进入app将没有启动页
+//        rcontent.launchImageName = @"";
+//        UNNotificationSound *sound = [UNNotificationSound defaultSound];
+//        rcontent.sound = sound;
+//        //设置时间间隔的触发器
+//        UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:300 repeats:YES];
+//        NSString *Identifer = content.subtitle;
+//        NSLog(@"============%@",content.subtitle);
+//        rcontent.categoryIdentifier = @"seeCategory";
+//        UNNotificationRequest *request1 = [UNNotificationRequest requestWithIdentifier:Identifer content:content trigger:time_trigger];
+//        [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request1 withCompletionHandler:^(NSError * _Nullable error) {
+//            //NSLog(@"通知发送失败:%@",error);
+//        }];
+//    }
 }
 
 //用户与通知进行交互后的response，比如说用户直接点开通知打开App、用户点击通知的按钮或者进行输入文本框的文本
@@ -169,7 +168,7 @@
      */
     NSDateComponents * components;
     
-    if ([model.repeat isEqualToString:@"Never"] || [identifier containsString:@"Expiry"] || [model.repeat isEqualToString:@"Every three hours"]) {
+    if ([model.repeat isEqualToString:@"Never"] || [identifier containsString:@"Expiry"] || [model.repeat isEqualToString:@"Custom reminder"]) {
         components = [[NSCalendar currentCalendar]
                       components:NSCalendarUnitYear |
                       NSCalendarUnitMonth |

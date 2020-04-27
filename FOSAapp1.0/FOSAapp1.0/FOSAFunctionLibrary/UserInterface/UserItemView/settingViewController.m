@@ -71,7 +71,7 @@
     dailyReminderLabel.font = [UIFont systemFontOfSize:font(20)];
     //[self.view addSubview:dailyReminderLabel];
     
-    UIView *dailyReminderView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(dailyReminderLabel.frame), screen_width, self.settingTable.frame.size.height/self.dataSource.count)];
+    UIView *dailyReminderView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(dailyReminderLabel.frame), screen_width, NavigationBarH)];
     dailyReminderView.backgroundColor = [UIColor whiteColor];
     UILabel *autoLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, screen_width/3, NavigationBarH)];
     autoLabel.text = @"Do Not Disturb";
@@ -80,17 +80,24 @@
     [dailyReminderView addSubview:autoLabel];
     autoNotification = [self.userDefaults valueForKey:@"autonotification"];
     self.mswitch = [UISwitch new];
-    self.mswitch.frame = CGRectMake(0, 0, 100, 100);
+    //self.mswitch.frame = CGRectMake(0, 0, 100, 100);
     self.mswitch.center = CGPointMake(screen_width-30, NavigationBarH/2);
     if ([autoNotification isEqualToString:@"YES"]) {
         [self.mswitch setOn:YES];
     }
     [dailyReminderView addSubview:self.mswitch];
     [self.mswitch addTarget:self action:@selector(autoSwitch:) forControlEvents:UIControlEventValueChanged];
-    
     [self.view addSubview:dailyReminderView];
     
-
+    //退出登录按钮
+    self.logOutBtn = [[UIButton alloc]initWithFrame:CGRectMake(screen_width/5, screen_height-Height(150), screen_width*3/5, Height(50))];
+    self.logOutBtn.layer.cornerRadius = Height(25);
+    [self.logOutBtn setTitle:@"Log Out" forState:UIControlStateNormal];
+    [self.logOutBtn setTitleColor:FOSAGray forState:UIControlStateNormal];
+    [self.logOutBtn setTitleColor:FOSAgreen forState:UIControlStateHighlighted];
+    self.logOutBtn.backgroundColor = FOSAWhite;
+    [self.logOutBtn addTarget:self action:@selector(logOutFunction) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.logOutBtn];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return self.settingTable.frame.size.height/self.dataSource.count;
@@ -164,10 +171,18 @@
     }
 }
 
-//- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
-//    UITableViewCell * cell = (UITableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-//    cell.accessoryType = UITableViewCellAccessoryNone;
-//}
+-(void)logOutFunction{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"You will exit the current account" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
+        [userdefault removeObjectForKey:@"currentUser"];
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
+    UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:action1];
+    [alert addAction:action2];
+    [self presentViewController:alert animated:true completion:nil];
+}
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];

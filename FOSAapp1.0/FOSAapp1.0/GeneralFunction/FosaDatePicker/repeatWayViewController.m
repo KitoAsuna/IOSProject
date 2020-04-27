@@ -7,9 +7,12 @@
 //
 
 #import "repeatWayViewController.h"
+#import "repeatPickerView.h"
 
-@interface repeatWayViewController ()<UITableViewDelegate,UITableViewDataSource>
-
+@interface repeatWayViewController ()<UITableViewDelegate,UITableViewDataSource,repeatPickerViewDelegate>{
+    NSInteger time,timeInterval;
+}
+@property (nonatomic,strong) repeatPickerView *picker;
 @end
 
 @implementation repeatWayViewController
@@ -25,8 +28,8 @@
 }
 - (void)creatRepeatTable{
     self.dataSource = [NSMutableArray new];
-    [self.dataSource addObjectsFromArray:@[@"Never",@"Daily",@"Weekly",@"Monthly",@"Every three hours"]];
-    self.repeatTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarH*3, screen_width, screen_height/4) style:UITableViewStylePlain];
+    [self.dataSource addObjectsFromArray:@[@"Never",@"Daily",@"Weekly",@"Monthly",@"Custom reminder"]];
+    self.repeatTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarH*3, screen_width, Height(44)*5) style:UITableViewStylePlain];
     
     self.repeatTable.delegate = self;
     self.repeatTable.dataSource = self;
@@ -36,8 +39,7 @@
     [self.repeatTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
     self.repeatTable.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     [self.view addSubview:self.repeatTable];
-    
-    
+
     [self.repeatTable reloadData];
     NSInteger selectedIndex;
     if (self.currentRepeat != nil) {
@@ -45,11 +47,15 @@
     }else{
         selectedIndex = 0;
     }
-    
     NSIndexPath *selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndex inSection:0];
     [self.repeatTable selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     [self.repeatTable cellForRowAtIndexPath:selectedIndexPath].accessoryType = UITableViewCellAccessoryCheckmark;
-//
+    
+    self.picker = [[repeatPickerView alloc]initWithFrame:CGRectMake(0, screen_height, screen_width, screen_height/6)];
+    self.picker.backgroundColor = FOSAWhite;
+    self.picker.repeatDelegate = self;
+    [self.view addSubview:self.picker];
+    
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return self.repeatTable.frame.size.height/self.dataSource.count;
@@ -67,7 +73,7 @@
      cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;//cell的右边有一个小箭头，距离右边有十几像素；
      cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;//cell右边有一个蓝色的圆形button；
      cell.accessoryType = UITableViewCellAccessoryCheckmark;//cell右边的形状是对号;
-     
+
      cell.selectionStyle = UITableViewCellSelectionStyleNone;//无色
      cell.selectionStyle = UITableViewCellSelectionStyleBlue;//蓝色
      cell.selectionStyle = UITableViewCellSelectionStyleGray;//灰色
@@ -89,13 +95,38 @@
     //返回cell
     return cell;
 }
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [self.repeatTable cellForRowAtIndexPath:indexPath];
-    self.repeatBlock(cell.textLabel.text);
-    [self.navigationController popViewControllerAnimated:YES];
+    if ([cell.textLabel.text isEqualToString:@"Custom reminder"]) {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.picker.center = CGPointMake(screen_width/2, screen_height*11/12);
+        }];
+        self.repeatBlock(cell.textLabel.text);
+    }else{
+        self.repeatBlock(cell.textLabel.text);
+        [self.navigationController popViewControllerAnimated:YES];
+    }
     //cell.accessoryType = UITableViewCellAccessoryCheckmark;
 }
+
+#pragma mark - repeatpickerView
+- (void)repeatPickerViewSaveBtnClickDelegate:(NSInteger)times timeIntetval:(NSInteger)interval{
+//    time = times;
+//    timeInterval = interval;
+    NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
+    [userdefault setInteger:times forKey:@"repeatTimes"];
+    [userdefault setInteger:interval forKey:@"repeatTimeInterval"];
+    [userdefault synchronize];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)repeatPickerViewCancelBtnClickDelegate{
+    [UIView animateWithDuration:0.5 animations:^{
+        self.picker.center = CGPointMake(screen_width/2, screen_height*13/12);
+    }];
+}
+
 //- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
 //    UITableViewCell * cell = (UITableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
 //    cell.accessoryType = UITableViewCellAccessoryNone;

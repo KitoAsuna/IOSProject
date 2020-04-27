@@ -29,12 +29,8 @@
 }
 - (void)creatLanguageTable{
     self.dataSource = [NSMutableArray new];
-    [self.dataSource addObjectsFromArray:@[@"Chinese",@"Japanese",@"English"]];
-    if (@available(iOS 13.0, *)) {
-        self.languageTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarH*3, screen_width, screen_height/5) style:UITableViewStylePlain];
-    } else {
-        self.languageTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarH*1.5, screen_width, screen_height/5) style:UITableViewStylePlain];
-    }
+    [self.dataSource addObjectsFromArray:@[@"English"]];
+    self.languageTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarH*1.5, screen_width, Height(70)) style:UITableViewStylePlain];
     self.languageTable.delegate = self;
     self.languageTable.dataSource = self;
     self.languageTable.bounces = NO;
@@ -53,7 +49,7 @@
 //
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    return self.languageTable.frame.size.height/self.dataSource.count;
+    return Height(70);//self.languageTable.frame.size.height/self.dataSource.count;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.dataSource.count;

@@ -60,6 +60,7 @@
 		45229B8024453E710063100D /* icon_flashOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 45229B7F24453E710063100D /* icon_flashOn.png */; };
 		4528AAEF23BD7DF100957279 /* scanLine_Horizontal.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAEE23BD7DF100957279 /* scanLine_Horizontal.png */; };
 		4528AAF123BD7DF800957279 /* scanLine_Vertical.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAF023BD7DF800957279 /* scanLine_Vertical.png */; };
+		452E80652456ABE2004148A5 /* repeatPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 452E80642456ABE2004148A5 /* repeatPickerView.m */; };
 		453938D123C00F7B0006474E /* CategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453938D023C00F7B0006474E /* CategoryViewController.m */; };
 		453C88342413DA37006B52A8 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453C88332413DA37006B52A8 /* MainViewController.m */; };
 		454421EB23CBF5A0002FADFE /* FoodInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421EA23CBF5A0002FADFE /* FoodInfoView.m */; };
@@ -244,6 +245,8 @@
 		45229B7F24453E710063100D /* icon_flashOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_flashOn.png; sourceTree = "<group>"; };
 		4528AAEE23BD7DF100957279 /* scanLine_Horizontal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scanLine_Horizontal.png; sourceTree = "<group>"; };
 		4528AAF023BD7DF800957279 /* scanLine_Vertical.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scanLine_Vertical.png; sourceTree = "<group>"; };
+		452E80632456ABE2004148A5 /* repeatPickerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = repeatPickerView.h; sourceTree = "<group>"; };
+		452E80642456ABE2004148A5 /* repeatPickerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = repeatPickerView.m; sourceTree = "<group>"; };
 		453938CF23C00F7B0006474E /* CategoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryViewController.h; sourceTree = "<group>"; };
 		453938D023C00F7B0006474E /* CategoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CategoryViewController.m; sourceTree = "<group>"; };
 		453C88322413DA37006B52A8 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -591,6 +594,8 @@
 				45184AB423CDBEAE005E987B /* FosaDatePickerView.m */,
 				458778D8244400930097594A /* repeatWayViewController.h */,
 				458778D9244400930097594A /* repeatWayViewController.m */,
+				452E80632456ABE2004148A5 /* repeatPickerView.h */,
+				452E80642456ABE2004148A5 /* repeatPickerView.m */,
 			);
 			path = FosaDatePicker;
 			sourceTree = "<group>";
@@ -1117,6 +1122,7 @@
 				45A506CB23B8402C0046FC09 /* AppDelegate.m in Sources */,
 				4500E11F23BAEB14002EB9FE /* NSMutableDictionary+AvoidCrash.m in Sources */,
 				45D3745F23C075B200192014 /* AFNetworkReachabilityManager.m in Sources */,
+				452E80652456ABE2004148A5 /* repeatPickerView.m in Sources */,
 				45D3745D23C075B200192014 /* AFURLSessionManager.m in Sources */,
 				45A506DC23B8402E0046FC09 /* main.m in Sources */,
 				45A506CE23B8402C0046FC09 /* SceneDelegate.m in Sources */,

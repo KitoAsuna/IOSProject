@@ -20,7 +20,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
-    [self creatWebView];
+    //[self creatWebView];
 }
 - (void)creatWebView{
     //创建网络配置对象

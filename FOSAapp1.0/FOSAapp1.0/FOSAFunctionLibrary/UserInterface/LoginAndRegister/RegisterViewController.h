@@ -15,9 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong,nonatomic) UIView *logoContainer,*userContainer,*verificationView,*passwordContainer,*LoginContainer;
 @property (strong,nonatomic) UIImageView *FOSALogo;
 @property (strong,nonatomic) UITextField *userNameInput,*passwordInput,*verificatonInput;
-@property (strong,nonatomic) UISwitch *remember;
-@property (strong,nonatomic) UILabel *rememberLabel,*verificationLabel;
-@property (strong,nonatomic) UIButton *signUp;
+//@property (strong,nonatomic) UISwitch *remember;
+@property (strong,nonatomic) UILabel *verificationLabel;
+@property (strong,nonatomic) UIButton *signUp,*checkPassword;;
 @property (strong,nonatomic) UILabel *failTips;
 
 @end

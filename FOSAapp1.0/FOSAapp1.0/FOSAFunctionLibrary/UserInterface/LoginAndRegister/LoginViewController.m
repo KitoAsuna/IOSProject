@@ -172,12 +172,12 @@
     [self.passwordInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];//设置输入文本的起始位置
     [self.passwordContainer addSubview:self.passwordInput];
 
-    self.checkPassword.frame = CGRectMake(screen_width*5/6-screen_height/12, screen_height/48, screen_height/12-10, screen_height/24);
-    [self.checkPassword setImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
-    [self.passwordContainer addSubview:self.checkPassword];
-    isSecure = true;
-    [self.checkPassword addTarget:self action:@selector(pwdtextSwitch) forControlEvents:UIControlEventTouchUpInside];
-    
+//    self.checkPassword.frame = CGRectMake(screen_width*5/6-screen_height/12, screen_height/48, screen_height/12-10, screen_height/24);
+//    [self.checkPassword setImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
+//    [self.passwordContainer addSubview:self.checkPassword];
+//    isSecure = true;
+//    [self.checkPassword addTarget:self action:@selector(pwdtextSwitch) forControlEvents:UIControlEventTouchUpInside];
+//    
     
     self.remember.frame = CGRectMake(0, 0, 51, 30);
     self.remember.onTintColor = [UIColor colorWithRed:90/255.0 green:172/255.0 blue:51/255.0 alpha:1];
@@ -260,22 +260,22 @@
         [self.remember setOn:isOn];
     }
 }
-//密码的状态转换
--(void)pwdtextSwitch{
-    if (isSecure) {
-        NSString *pwd = self.passwordInput.text;
-        isSecure = false;
-        self.passwordInput.secureTextEntry = NO;
-        [self.checkPassword setImage:[UIImage imageNamed:@"icon_checkHL"] forState:UIControlStateNormal];
-        self.passwordInput.text = pwd;
-    }else{
-        NSString *pwd = self.passwordInput.text;
-        isSecure = true;
-        self.passwordInput.secureTextEntry = YES;
-        [self.checkPassword setImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
-        self.passwordInput.text = pwd;
-    }
-}
+////密码的状态转换
+//-(void)pwdtextSwitch{
+//    if (isSecure) {
+//        NSString *pwd = self.passwordInput.text;
+//        isSecure = false;
+//        self.passwordInput.secureTextEntry = NO;
+//        [self.checkPassword setImage:[UIImage imageNamed:@"icon_checkHL"] forState:UIControlStateNormal];
+//        self.passwordInput.text = pwd;
+//    }else{
+//        NSString *pwd = self.passwordInput.text;
+//        isSecure = true;
+//        self.passwordInput.secureTextEntry = YES;
+//        [self.checkPassword setImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
+//        self.passwordInput.text = pwd;
+//    }
+//}
 //跳转到注册界面
 - (void)JumpToRegister{
     RegisterViewController *regist = [[RegisterViewController alloc]init];

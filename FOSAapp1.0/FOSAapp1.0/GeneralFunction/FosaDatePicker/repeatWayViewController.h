@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UITableView *repeatTable;
 @property (nonatomic,strong) NSMutableArray<NSString *> *dataSource;
 @property (nonatomic,strong) NSString *currentRepeat;
+
 @end
 
 NS_ASSUME_NONNULL_END

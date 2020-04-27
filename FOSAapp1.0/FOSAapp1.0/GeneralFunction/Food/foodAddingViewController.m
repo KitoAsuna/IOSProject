@@ -1382,7 +1382,7 @@
             //BOOL insertResult = [self.db executeUpdate:insertSql];
             NSLog(@"~~~~~~~~~~~~~~~~~~~~设备号：%@",device);
             if ([fmdbManager insertDataWithSql:insertSql]) {
-                //[self sendReminderNotification];
+                [self sendReminderNotification];
                 [self sendNotificationByExpireday];
             }else{
                 [self SystemAlert:@"Error"];
@@ -1571,18 +1571,22 @@
             if (dateTime-currentDateTime > 0) {
                 FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
                 //||[self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Never"]
-                NSString *identifier = [NSString stringWithFormat:@"%@Remind",self.foodTextView.text];
-                if ([self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Every three hours"]){
-                    [self.fosaNotification sendNotification:model body:body image:image time:(dateTime-currentDateTime) identifier:identifier];
+                NSString *identifier;
+                if ([self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Custom reminder"]){
+                    NSLog(@"重复次数:%d-------重复间隔:%d",[[userdefault valueForKey:@"repeatTimes"] intValue],[[userdefault valueForKey:@"repeatTimeInterval"] intValue]);
+                    for (int i = 0; i < [[userdefault valueForKey:@"repeatTimes"] intValue]; i++) {
+                        identifier = [NSString stringWithFormat:@"%@Remind%d",self.foodTextView.text,i];
+                        [self.fosaNotification sendNotification:model body:body image:image.copy time:(dateTime-currentDateTime)+i*3600*([[userdefault valueForKey:@"repeatTimeInterval"] intValue]) identifier:identifier];
+                    }
                 }else{
                     [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image identifier:identifier];
                 }
             }
         }
     }
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];
-    [self presentViewController:alert animated:true completion:nil];
-    [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:2];
+//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];
+//    [self presentViewController:alert animated:true completion:nil];
+//    [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:2];
 }
 
 - (void)sendNotificationByExpireday{
@@ -1605,13 +1609,13 @@
             NSArray *repeatTime = @[@"09:00",@"12:00",@"15:00",@"18:00"];
             NSArray *expireArray = [expireStr componentsSeparatedByString:@"/"];
             for (int i = 0; i < 4; i++) {
-                UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
-                //另存通知图片
-                [imgManager savePhotoWithImage:image name:[NSString stringWithFormat:@"%d%@",i,self.foodTextView.text]];
+//                UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
+//                //另存通知图片
+//                [imgManager savePhotoWithImage:image name:[NSString stringWithFormat:@"%d%@",i,self.foodTextView.text]];
                 NSString *expire = [NSString stringWithFormat:@"%@/%@/%@/%@",expireArray[0],expireArray[1],expireArray[2],repeatTime[i]];
                 NSLog(@"重复发送过期的通知:%@",expire);
                  NSString *identifier = [NSString stringWithFormat:@"%@Expiry%d",self.foodTextView.text,i];
-                [self.fosaNotification sendNotificationByDate:model body:body date:expire foodImg:image identifier:identifier];
+                [self.fosaNotification sendNotificationByDate:model body:body date:expire foodImg:image.copy identifier:identifier];
             }
         }
     }

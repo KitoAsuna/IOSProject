@@ -80,9 +80,7 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     //UIStatusBarManager *statusBarManager = [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager;
-    
     [UIApplication sharedApplication].statusBarHidden = YES;
-    
     self.navigationController.navigationBar.hidden = YES;
     [self SetCurrentUser];
     [self InitData];

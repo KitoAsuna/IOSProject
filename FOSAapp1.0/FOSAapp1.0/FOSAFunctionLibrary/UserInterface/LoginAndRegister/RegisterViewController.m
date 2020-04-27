@@ -13,6 +13,7 @@
 @interface RegisterViewController ()<UITextFieldDelegate>{
     FMDatabase *db;
     NSString *docPath;
+    Boolean isSecure;
 }
 // 当前获取焦点的UITextField
 @property (strong, nonatomic) UITextField *currentResponderTextField;
@@ -81,18 +82,18 @@
     }
     return _passwordInput;
 }
-- (UISwitch *)remember{
-    if (_remember == nil) {
-        _remember = [[UISwitch alloc]init];
-    }
-    return _remember;
-}
+//- (UISwitch *)remember{
+//    if (_remember == nil) {
+//        _remember = [[UISwitch alloc]init];
+//    }
+//    return _remember;
+//}
 
-- (UILabel *)rememberLabel{
-    if (_rememberLabel == nil) {
-        _rememberLabel = [[UILabel alloc]init];
+- (UIButton *)checkPassword{
+    if (_checkPassword == nil) {
+        _checkPassword = [[UIButton alloc]init];
     }
-    return _rememberLabel;
+    return _checkPassword;
 }
 
 - (UILabel *)verificationLabel{
@@ -183,12 +184,18 @@
     self.passwordInput.delegate = self;
     self.passwordInput.layer.cornerRadius = self.passwordInput.frame.size.height/3;
     [self.passwordContainer addSubview:self.passwordInput];
+    
+    self.checkPassword.frame = CGRectMake(screen_width*5/6-screen_height/12, screen_height/48, screen_height/12-10, screen_height/24);
+       [self.checkPassword setImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
+       [self.passwordContainer addSubview:self.checkPassword];
+       isSecure = true;
+       [self.checkPassword addTarget:self action:@selector(pwdtextSwitch) forControlEvents:UIControlEventTouchUpInside];
 
-    self.remember.frame = CGRectMake(screen_width/12, screen_width+screen_height/5, 51.0, 40);
-    [self.remember addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.remember];
-    self.rememberLabel.frame = CGRectMake(screen_width/12+60, screen_width+screen_height/4, screen_width/2, 40);
-    [self.view addSubview:self.rememberLabel];
+//    self.remember.frame = CGRectMake(screen_width/12, screen_width+screen_height/5, 51.0, 40);
+//    [self.remember addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:self.remember];
+//    self.rememberLabel.frame = CGRectMake(screen_width/12+60, screen_width+screen_height/4, screen_width/2, 40);
+//    [self.view addSubview:self.rememberLabel];
 
     self.signUp.frame = CGRectMake(self.LoginContainer.frame.size.width*5/18, 0, self.LoginContainer.bounds.size.width*4/9, self.LoginContainer.frame.size.height);
     [self.signUp setTitle:@"Sign Up" forState:UIControlStateNormal];
@@ -202,6 +209,24 @@
     [self.LoginContainer addSubview:self.signUp];
 
 }
+
+//密码的状态转换
+-(void)pwdtextSwitch{
+    if (isSecure) {
+        NSString *pwd = self.passwordInput.text;
+        isSecure = false;
+        self.passwordInput.secureTextEntry = NO;
+        [self.checkPassword setImage:[UIImage imageNamed:@"icon_checkHL"] forState:UIControlStateNormal];
+        self.passwordInput.text = pwd;
+    }else{
+        NSString *pwd = self.passwordInput.text;
+        isSecure = true;
+        self.passwordInput.secureTextEntry = YES;
+        [self.checkPassword setImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
+        self.passwordInput.text = pwd;
+    }
+}
+
 //注册按钮事件
 - (void)SignUpEvent{
     if ([self.userNameInput.text isEqualToString:@""] || [self.passwordInput.text isEqualToString:@""] || [self.verificatonInput.text isEqualToString:@""]) {
@@ -259,25 +284,24 @@
     [self.FOSAloadingView startAnimating];
 }
 
-
-//记住用户名和密码
--(void)switchAction:(id)sender
-{
-UISwitch *switchButton = (UISwitch*)sender;
-BOOL isButtonOn = [switchButton isOn];
-if (isButtonOn) {
-    NSLog(@"YES");
-    NSString *username = self.userNameInput.text;
-    NSString *password = self.passwordInput.text;
-     NSLog(@"%@======%@",username,password);
-    [self.userDefaults setObject:username forKey:@"username"];
-    [self.userDefaults setObject:password forKey:@"password"];
-    [self.userDefaults setBool:isButtonOn forKey:@"isOn"];
-    [self.userDefaults synchronize];
-}else {
-    NSLog(@"NO");
-    }
-}
+////记住用户名和密码
+//-(void)switchAction:(id)sender
+//{
+//UISwitch *switchButton = (UISwitch*)sender;
+//BOOL isButtonOn = [switchButton isOn];
+//if (isButtonOn) {
+//    NSLog(@"YES");
+//    NSString *username = self.userNameInput.text;
+//    NSString *password = self.passwordInput.text;
+//     NSLog(@"%@======%@",username,password);
+//    [self.userDefaults setObject:username forKey:@"username"];
+//    [self.userDefaults setObject:password forKey:@"password"];
+//    [self.userDefaults setBool:isButtonOn forKey:@"isOn"];
+//    [self.userDefaults synchronize];
+//}else {
+//    NSLog(@"NO");
+//    }
+//}
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:message preferredStyle:UIAlertControllerStyleAlert];
