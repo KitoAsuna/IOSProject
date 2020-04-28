@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface repeatPickerView : UIView
 @property (nonatomic,strong) UIButton *saveBtn,*cancelBtn;
+@property (nonatomic,strong) UILabel *repeatTimeLabel,*repeatIntevalLabel;
 @property (nonatomic,strong) UIPickerView *picker;
 @property (weak,nonatomic) id<repeatPickerViewDelegate> repeatDelegate;
 @end

@@ -21,14 +21,14 @@
     if (self) {
         self.cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, screen_width/2, Height(50))];
         [self.cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
-        [self.cancelBtn setTitleColor:FOSAgreen forState:UIControlStateHighlighted];
-        [self.cancelBtn setTitleColor:FOSAGray forState:UIControlStateNormal];
+        [self.cancelBtn setTitleColor:FOSARedHL forState:UIControlStateHighlighted];
+        [self.cancelBtn setTitleColor:FOSARed forState:UIControlStateNormal];
         [self.cancelBtn addTarget:self action:@selector(cancelPicker) forControlEvents:UIControlEventTouchUpInside];
         
         self.saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(screen_width/2, 0, screen_width/2, Height(50))];
         [self.saveBtn setTitle:@"save" forState:UIControlStateNormal];
-        [self.saveBtn setTitleColor:FOSAgreen forState:UIControlStateHighlighted];
-        [self.saveBtn setTitleColor:FOSAGray forState:UIControlStateNormal];
+        [self.saveBtn setTitleColor:FOSABlueHL forState:UIControlStateHighlighted];
+        [self.saveBtn setTitleColor:FOSABlue forState:UIControlStateNormal];
         [self.saveBtn addTarget:self action:@selector(savePicker) forControlEvents:UIControlEventTouchUpInside];
         
         self.picker = [[UIPickerView alloc]initWithFrame:CGRectMake(0, Height(50), screen_width, self.bounds.size.height - Height(50))];
@@ -40,7 +40,10 @@
         [self addSubview:self.picker];
         
         self.time = @[@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"11",@"12",@"13",@"14",@"15"];
-        self.timeInterval = @[@"1",@"2",@"3"];
+        self.timeInterval = @[@"1",@"2",@"3",@"4"];
+        selectTime = 3;
+        selectTimeInterval = 1;
+        
         
     }
     return self;
@@ -96,7 +99,7 @@
     if (component == 0) {
         UILabel *text = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width/2, 20)];
         text.textAlignment = NSTextAlignmentCenter;
-        text.text = [self.timeInterval objectAtIndex:row];
+        text.text = [NSString stringWithFormat:@"%@Hours",[self.timeInterval objectAtIndex:row]];//[self.timeInterval objectAtIndex:row];
         [view addSubview:text];
     }else{
         UILabel *text = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width/2, 20)];
@@ -139,11 +142,11 @@
 //被选择的行
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     if (component == 0) {
-        NSLog(@"重复间隔:%@",[self.timeInterval objectAtIndex:row]);
         selectTimeInterval = [[self.timeInterval objectAtIndex:row] integerValue];
+        NSLog(@"重复间隔:%ld",(long)[[self.timeInterval objectAtIndex:row] integerValue]);
     }else{
-        NSLog(@"重复次数:%@",[self.time objectAtIndex:row])
         selectTime = [[self.time objectAtIndex:row] integerValue];
+        NSLog(@"重复次数:%ld",(long)[[self.time objectAtIndex:row] integerValue])
     }
    
 }

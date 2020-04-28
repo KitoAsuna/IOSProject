@@ -71,6 +71,7 @@
 		45514BEC23F2E287000E321E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
 		4557596724498D2F00E325AC /* notificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4557596624498D2F00E325AC /* notificationViewController.m */; };
 		455F4AC723D157FE00BE3822 /* saoyisao@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 455F4AC623D157FE00BE3822 /* saoyisao@3x.png */; };
+		457A143A2457F8F6003E8A8F /* userInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 457A14392457F8F6003E8A8F /* userInfoViewController.m */; };
 		457EB10124482B260050AEE0 /* categoryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 457EB10024482B260050AEE0 /* categoryModel.m */; };
 		457EB104244839890050AEE0 /* categoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 457EB103244839890050AEE0 /* categoryCell.m */; };
 		45822172243EC841002970EC /* alarmView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45822171243EC841002970EC /* alarmView.m */; };
@@ -262,6 +263,8 @@
 		4557596524498D2F00E325AC /* notificationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = notificationViewController.h; sourceTree = "<group>"; };
 		4557596624498D2F00E325AC /* notificationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = notificationViewController.m; sourceTree = "<group>"; };
 		455F4AC623D157FE00BE3822 /* saoyisao@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saoyisao@3x.png"; sourceTree = "<group>"; };
+		457A14382457F8F6003E8A8F /* userInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = userInfoViewController.h; sourceTree = "<group>"; };
+		457A14392457F8F6003E8A8F /* userInfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = userInfoViewController.m; sourceTree = "<group>"; };
 		457EB0FF24482B260050AEE0 /* categoryModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = categoryModel.h; sourceTree = "<group>"; };
 		457EB10024482B260050AEE0 /* categoryModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = categoryModel.m; sourceTree = "<group>"; };
 		457EB102244839890050AEE0 /* categoryCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = categoryCell.h; sourceTree = "<group>"; };
@@ -719,6 +722,8 @@
 				4590C84A23B9C74D00691461 /* UserViewController.m */,
 				45EBE66B2415E8100072843C /* toturialViewController.h */,
 				45EBE66C2415E8100072843C /* toturialViewController.m */,
+				457A14382457F8F6003E8A8F /* userInfoViewController.h */,
+				457A14392457F8F6003E8A8F /* userInfoViewController.m */,
 			);
 			path = UserInterface;
 			sourceTree = "<group>";
@@ -1183,6 +1188,7 @@
 				4590C84823B9C73E00691461 /* ProductViewController.m in Sources */,
 				4590C83723B9C5F500691461 /* FMDatabaseQueue.m in Sources */,
 				4590C83923B9C5F500691461 /* FMDatabase.m in Sources */,
+				457A143A2457F8F6003E8A8F /* userInfoViewController.m in Sources */,
 				45822178243ECD05002970EC /* NotificationView.m in Sources */,
 				4597BD6323C2BCE30031DC4C /* DeviceCollectionViewCell.m in Sources */,
 				45D3747923C075BA00192014 /* UIImageView+AFNetworking.m in Sources */,

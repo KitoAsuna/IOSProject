@@ -107,6 +107,9 @@
     
     self.userIcon.frame = CGRectMake(headerWidth/10, headerHeight*3/10, headerWidth/5, headerWidth/5);
     self.userIcon.image = [UIImage imageNamed:@"icon_User"];
+    self.userIcon.userInteractionEnabled = YES;
+    UITapGestureRecognizer *login1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(JUMP)];
+    [self.userIcon addGestureRecognizer:login1];
     [self.header addSubview:self.userIcon];
     
     self.userName.frame = CGRectMake(headerWidth/30, headerHeight/2, headerWidth/3, headerWidth/5);
@@ -188,6 +191,7 @@
     }
      NSInteger row = indexPath.row;
     //取消点击cell时显示的背景
+    
     cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
     cell.imageView.image = [UIImage imageNamed:ItemLogoArray[row]];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -236,11 +240,16 @@
 }
 
 - (void)JUMP{
-    LoginViewController *login = [[LoginViewController alloc]init];
-    login.hidesBottomBarWhenPushed = YES;
-    RegisterViewController *regist = [[RegisterViewController alloc]init];
-    regist.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:login animated:YES];
+    
+    if ([self.userDefaults valueForKey:@"currentUser"]) {
+        NSLog(@"跳转到用户个人信息界面");
+    }else{
+        LoginViewController *login = [[LoginViewController alloc]init];
+        login.hidesBottomBarWhenPushed = YES;
+        RegisterViewController *regist = [[RegisterViewController alloc]init];
+        regist.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:login animated:YES];
+    }
 }
 
 - (void)jumpToQrCodeGenerator:(UIGestureRecognizer *)sender{

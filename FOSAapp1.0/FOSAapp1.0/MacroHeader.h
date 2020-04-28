@@ -75,6 +75,9 @@
 #define FOSAgreen [UIColor colorWithRed:90/255.0 green:172/255.0 blue:51/255.0 alpha:1.0]
 #define FOSAgreengrad [UIColor colorWithRed:80/255.0 green:200/255.0 blue:84/255.0 alpha:1.0]
 #define FOSARed  [UIColor colorWithRed:252/255.0 green:84/255.0 blue:116/255.0 alpha:1.0]
+#define FOSARedHL [UIColor colorWithRed:252/255.0 green:84/255.0 blue:116/255.0 alpha:0.5]
+#define FOSABlue  [UIColor colorWithRed:2/255.0 green:121/255.0 blue:255/255.0 alpha:1.0]
+#define FOSABlueHL  [UIColor colorWithRed:2/255.0 green:121/255.0 blue:255/255.0 alpha:0.5]
 #define FOSAYellow [UIColor colorWithRed:248/255.0 green:181/255.0 blue:81/255.0 alpha:1.0]
 #define RandomColor ([UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1.0])//随机颜色
 #define FOSAFoodBackgroundColor [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1.0]

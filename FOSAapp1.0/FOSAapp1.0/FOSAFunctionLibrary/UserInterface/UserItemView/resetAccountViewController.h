@@ -12,9 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface resetAccountViewController : UIViewController
 @property (nonatomic,strong) UIImageView *logoImageView;
-@property (nonatomic,strong) UITextField *accountInput,*passwordInput,*passwordConfirm,*smsCodeInput;
+@property (nonatomic,strong) UITextField *accountInput;
 @property (nonatomic,strong) UIButton *doneBtn;
-@property (strong,nonatomic) UILabel *verificationLabel;
+//@property (strong,nonatomic) UILabel *verificationLabel;
 @end
 
 NS_ASSUME_NONNULL_END

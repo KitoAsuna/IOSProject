@@ -104,7 +104,8 @@
     saveBtn.frame = CGRectMake(self.frame.size.width - 90, 0, 80, height/10);
     [saveBtn setTitle:@"Save" forState:UIControlStateNormal];
     saveBtn.titleLabel.font = [UIFont systemFontOfSize:font(18)];
-    [saveBtn setTitleColor:FOSAColor(2, 121, 255) forState:UIControlStateNormal];
+    [saveBtn setTitleColor:FOSABlue forState:UIControlStateNormal];
+    [saveBtn setTitleColor:FOSABlueHL forState:UIControlStateHighlighted];
     //[saveBtn setImage:[UIImage imageNamed:@"icon_select1"] forState:UIControlStateNormal];
     [saveBtn addTarget:self action:@selector(saveBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.toolView addSubview:saveBtn];
@@ -114,6 +115,7 @@
     [cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
     cancelBtn.titleLabel.font = [UIFont systemFontOfSize:font(18)];
     [cancelBtn setTitleColor:FOSARed forState:UIControlStateNormal];
+    [cancelBtn setTitleColor:FOSARedHL forState:UIControlStateHighlighted];
 
     //[cancelBtn setImage:[UIImage imageNamed:@"icon_revocation1"] forState:UIControlStateNormal];
     [cancelBtn addTarget:self action:@selector(cancelBtnClick) forControlEvents:UIControlEventTouchUpInside];

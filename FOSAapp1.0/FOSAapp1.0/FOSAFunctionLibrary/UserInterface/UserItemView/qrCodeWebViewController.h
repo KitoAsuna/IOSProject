@@ -11,7 +11,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface qrCodeWebViewController : UIViewController
+@property (nonatomic,strong) UIView *pagesizeView;
 @property (nonatomic,strong) NSString *urlString;
+@property (nonatomic,strong) UITableView *qrTable;
+@property (nonatomic,strong) UIScrollView *preview;
+@property (nonatomic,strong) UIButton *printBtn;
+
 @end
 
 NS_ASSUME_NONNULL_END

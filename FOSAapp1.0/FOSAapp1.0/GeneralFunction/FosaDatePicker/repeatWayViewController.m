@@ -51,7 +51,7 @@
     [self.repeatTable selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     [self.repeatTable cellForRowAtIndexPath:selectedIndexPath].accessoryType = UITableViewCellAccessoryCheckmark;
     
-    self.picker = [[repeatPickerView alloc]initWithFrame:CGRectMake(0, screen_height, screen_width, screen_height/6)];
+    self.picker = [[repeatPickerView alloc]initWithFrame:CGRectMake(0, screen_height, screen_width, screen_height/5)];
     self.picker.backgroundColor = FOSAWhite;
     self.picker.repeatDelegate = self;
     [self.view addSubview:self.picker];
@@ -83,12 +83,13 @@
     UITableViewCell *cell = [tableView  dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
         //创建cell
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
     }
      NSInteger row = indexPath.row;
     //取消点击cell时显示的背景色
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
+    //cell.detailTextLabel.text = @"1111";
     cell.textLabel.text = self.dataSource[row];
     cell.textLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     cell.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
@@ -100,8 +101,8 @@
 {
     UITableViewCell *cell = [self.repeatTable cellForRowAtIndexPath:indexPath];
     if ([cell.textLabel.text isEqualToString:@"Custom reminder"]) {
-        [UIView animateWithDuration:0.5 animations:^{
-            self.picker.center = CGPointMake(screen_width/2, screen_height*11/12);
+        [UIView animateWithDuration:0.2 animations:^{
+            self.picker.center = CGPointMake(screen_width/2, screen_height*9/10);
         }];
         self.repeatBlock(cell.textLabel.text);
     }else{
@@ -119,11 +120,12 @@
     [userdefault setInteger:times forKey:@"repeatTimes"];
     [userdefault setInteger:interval forKey:@"repeatTimeInterval"];
     [userdefault synchronize];
+//    NSLog(@"重复次数: %@,重复间隔: %@",[userdefault valueForKey:@"repeatTimes"],[userdefault valueForKey:@"repeatTimeInterval"]);
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)repeatPickerViewCancelBtnClickDelegate{
-    [UIView animateWithDuration:0.5 animations:^{
-        self.picker.center = CGPointMake(screen_width/2, screen_height*13/12);
+    [UIView animateWithDuration:0.2 animations:^{
+        self.picker.center = CGPointMake(screen_width/2, screen_height*11/10);
     }];
 }
 

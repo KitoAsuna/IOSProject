@@ -30,14 +30,14 @@
 - (void)creatLanguageTable{
     self.dataSource = [NSMutableArray new];
     [self.dataSource addObjectsFromArray:@[@"English"]];
-    self.languageTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarH*1.5, screen_width, Height(70)) style:UITableViewStylePlain];
+    self.languageTable = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame)+Height(10), screen_width, Height(44)) style:UITableViewStylePlain];
     self.languageTable.delegate = self;
     self.languageTable.dataSource = self;
     self.languageTable.bounces = NO;
-    self.languageTable.layer.cornerRadius = 15;
+//    self.languageTable.layer.cornerRadius = 15;
     self.languageTable.showsVerticalScrollIndicator = NO;
     [self.languageTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
-    self.languageTable.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+    self.languageTable.backgroundColor = FOSAWhite;
     [self.view addSubview:self.languageTable];
     
     
@@ -49,7 +49,7 @@
 //
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    return Height(70);//self.languageTable.frame.size.height/self.dataSource.count;
+    return Height(44);//self.languageTable.frame.size.height/self.dataSource.count;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.dataSource.count;
@@ -82,7 +82,7 @@
     cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
     cell.textLabel.text = self.dataSource[row];
     cell.textLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
-    cell.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+//    cell.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     
     
     //返回cell

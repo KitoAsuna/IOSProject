@@ -351,67 +351,67 @@
     self.currentResponderTextField = textField;
     return YES;
 }
-#pragma mark - 数据库操作
-- (void)CreatSqlDatabase:(NSString *)dataBaseName{
-    //获取数据库地址
-    docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject];
-    NSLog(@"%@",docPath);
-    //设置数据库名
-    NSString *fileName = [docPath stringByAppendingPathComponent:dataBaseName];
-    //创建数据库
-    db = [FMDatabase databaseWithPath:fileName];
-    if([db open]){
-        NSLog(@"打开数据库成功");
-        [self CreatUserTable];
-    }else{
-        NSLog(@"打开数据库失败");
-    }
-    [db close];
-}
-
-- (void)CreatUserTable{
-    NSString *UserTableSql = @"create table if not exists Fosa_User(id integer primary key,userName text,password text)";
-    BOOL result = [db executeUpdate:UserTableSql];
-    if (result) {
-        NSLog(@"打开用户表成功!");
-        [self SelectUserInfoByName:self.userNameInput.text];
-    }else{
-        NSLog(@"打开用户表失败");
-    }
-}
-- (void)SelectUserInfoByName:(NSString *)username{
-    NSString *selSql = [NSString stringWithFormat:@"select * from Fosa_User where userName = '%@'",username];
-    NSLog(@"%@",selSql);
-        FMResultSet *set = [db executeQuery:selSql];
-        if (![set next]) {
-            //[self SystemAlert:@"the user does not exist.Please sign up"];
-            self.failTips.frame = CGRectMake(0, CGRectGetMaxY(self.login.frame), screen_width/2, 40);
-            self.failTips.text = @"Authentication Failed";
-            self.failTips.textColor = [UIColor redColor];
-            [self.LoginContainer addSubview:self.failTips];
-        }else{
-            NSString *sql_userName = [set stringForColumn:@"userName"];
-            NSString *sql_password = [set stringForColumn:@"password"];
-            if ([self.remember isOn]) {
-                NSString *username = self.userNameInput.text;
-                NSString *password = self.passwordInput.text;
-                 NSLog(@"%@======%@",username,password);
-                [self.userDefaults setObject:username forKey:@"username"];
-                [self.userDefaults setObject:password forKey:@"password"];
-                [self.userDefaults setBool:true forKey:@"isOn"];
-                [self.userDefaults synchronize];
-            }
-            NSLog(@"%@-------%@",sql_userName,sql_password);
-                if ([sql_userName isEqualToString:self.userNameInput.text]&&[sql_password isEqualToString:self.passwordInput.text]) {
-                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                    [defaults setObject:self.userNameInput.text forKey:@"currentUser"];
-                    [defaults synchronize];
-                    [self.navigationController popViewControllerAnimated:YES];
-                }else{
-                    [self SystemAlert:@"Incorrect user name or password"];
-                }
-    }
-}
+//#pragma mark - 数据库操作
+//- (void)CreatSqlDatabase:(NSString *)dataBaseName{
+//    //获取数据库地址
+//    docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject];
+//    NSLog(@"%@",docPath);
+//    //设置数据库名
+//    NSString *fileName = [docPath stringByAppendingPathComponent:dataBaseName];
+//    //创建数据库
+//    db = [FMDatabase databaseWithPath:fileName];
+//    if([db open]){
+//        NSLog(@"打开数据库成功");
+//        [self CreatUserTable];
+//    }else{
+//        NSLog(@"打开数据库失败");
+//    }
+//    [db close];
+//}
+//
+//- (void)CreatUserTable{
+//    NSString *UserTableSql = @"create table if not exists Fosa_User(id integer primary key,userName text,password text)";
+//    BOOL result = [db executeUpdate:UserTableSql];
+//    if (result) {
+//        NSLog(@"打开用户表成功!");
+//        [self SelectUserInfoByName:self.userNameInput.text];
+//    }else{
+//        NSLog(@"打开用户表失败");
+//    }
+//}
+//- (void)SelectUserInfoByName:(NSString *)username{
+//    NSString *selSql = [NSString stringWithFormat:@"select * from Fosa_User where userName = '%@'",username];
+//    NSLog(@"%@",selSql);
+//        FMResultSet *set = [db executeQuery:selSql];
+//        if (![set next]) {
+//            //[self SystemAlert:@"the user does not exist.Please sign up"];
+//            self.failTips.frame = CGRectMake(0, CGRectGetMaxY(self.login.frame), screen_width/2, 40);
+//            self.failTips.text = @"Authentication Failed";
+//            self.failTips.textColor = [UIColor redColor];
+//            [self.LoginContainer addSubview:self.failTips];
+//        }else{
+//            NSString *sql_userName = [set stringForColumn:@"userName"];
+//            NSString *sql_password = [set stringForColumn:@"password"];
+//            if ([self.remember isOn]) {
+//                NSString *username = self.userNameInput.text;
+//                NSString *password = self.passwordInput.text;
+//                 NSLog(@"%@======%@",username,password);
+//                [self.userDefaults setObject:username forKey:@"username"];
+//                [self.userDefaults setObject:password forKey:@"password"];
+//                [self.userDefaults setBool:true forKey:@"isOn"];
+//                [self.userDefaults synchronize];
+//            }
+//            NSLog(@"%@-------%@",sql_userName,sql_password);
+//                if ([sql_userName isEqualToString:self.userNameInput.text]&&[sql_password isEqualToString:self.passwordInput.text]) {
+//                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//                    [defaults setObject:self.userNameInput.text forKey:@"currentUser"];
+//                    [defaults synchronize];
+//                    [self.navigationController popViewControllerAnimated:YES];
+//                }else{
+//                    [self SystemAlert:@"Incorrect user name or password"];
+//                }
+//    }
+//}
 
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{

@@ -1548,6 +1548,7 @@
 
         //设定通知
         NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
+        NSLog(@"重复次数: %@,重复间隔: %@",[userdefault valueForKey:@"repeatTimes"],[userdefault valueForKey:@"repeatTimeInterval"]);
         //获取用户设置，是否设定免打扰
         NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
         if ([autoNotification isEqualToString:@"NO"] || autoNotification == nil) {
