@@ -77,9 +77,8 @@
 }
 
 //返回指定列，行的高度，就是自定义行的高度
-
 - (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component{
-    return 20.0f;
+    return Height(40);
 }
 
 //返回指定列的宽度
@@ -97,19 +96,19 @@
         view = [[UIView alloc]init];
     }
     if (component == 0) {
-        UILabel *text = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width/2, 20)];
+        UILabel *text = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width/2, Height(40))];
         text.textAlignment = NSTextAlignmentCenter;
         text.text = [NSString stringWithFormat:@"%@Hours",[self.timeInterval objectAtIndex:row]];//[self.timeInterval objectAtIndex:row];
         [view addSubview:text];
     }else{
-        UILabel *text = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width/2, 20)];
+        UILabel *text = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width/2, Height(40))];
         text.textAlignment = NSTextAlignmentCenter;
         text.text = [self.time objectAtIndex:row];
         [view addSubview:text];
     }
 //    //隐藏上下直线
-//    [self.picker.subviews objectAtIndex:1].backgroundColor = [UIColor clearColor];
-//    [self.picker.subviews objectAtIndex:2].backgroundColor = [UIColor clearColor];
+    [self.picker.subviews objectAtIndex:1].backgroundColor = [UIColor clearColor];
+    [self.picker.subviews objectAtIndex:2].backgroundColor = [UIColor clearColor];
     return view;
 }
 

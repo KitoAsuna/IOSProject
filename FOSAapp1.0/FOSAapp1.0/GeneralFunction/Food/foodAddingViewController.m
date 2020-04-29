@@ -792,7 +792,7 @@
     self.picturePlayer.bounces = NO;
     self.picturePlayer.contentSize = CGSizeMake(headerWidth*3, 0);
     for (NSInteger i = 0; i < 3; i++) {
-            CGRect frame = CGRectMake(i*headerWidth, 0, headerWidth, self.headerView.frame.size.height);
+        CGRect frame = CGRectMake(i*headerWidth, 0, headerWidth, self.headerView.frame.size.height);
         self.imageviewArray[i].frame = frame;
         self.imageviewArray[i].userInteractionEnabled = YES;
         self.imageviewArray[i].contentMode = UIViewContentModeScaleAspectFill;
