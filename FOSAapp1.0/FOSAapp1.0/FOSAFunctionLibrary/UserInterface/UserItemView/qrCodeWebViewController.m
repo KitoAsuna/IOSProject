@@ -141,13 +141,19 @@
     }
 }
 - (void)downLoadImg:(NSString *)imgAddr{
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 100.0f, 100.0f, 100.0f)];
-
-    [imageView setImageWithURL:[NSURL URLWithString:imgAddr] placeholderImage:[UIImage imageNamed:@"qrcode"]];
-    UIImage *image = imageView.image;
+//    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 100.0f, 100.0f, 100.0f)];
+//
+//    [imageView setImageWithURL:[NSURL URLWithString:imgAddr] placeholderImage:[UIImage imageNamed:@"qrcode"]];
+//    UIImage *image = [UIImage imageNamed:@"qrcode"];
+//
+//    NSLog(@"%@",image);
+//    UIImageWriteToSavedPhotosAlbum(image, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
+//[self.view addSubview:imageView];
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imgAddr]];
+    UIImage *image = [UIImage imageWithData:data]; // 取得图片
     NSLog(@"%@",image);
     UIImageWriteToSavedPhotosAlbum(image, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
-[self.view addSubview:imageView];
+
 }
 #pragma mark - <保存到相册>
 -(void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
