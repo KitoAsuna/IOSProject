@@ -112,11 +112,11 @@
     }
     return _signUp;
 }
-- (UILabel *)failTips{
-    if (_failTips == nil) {
-        _failTips = [UILabel new];
+- (UILabel *)guestMode{
+    if (_guestMode == nil) {
+        _guestMode = [UILabel new];
     }
-    return _failTips;
+    return _guestMode;
 }
 
 - (void)viewDidLoad {
@@ -154,7 +154,7 @@
     [self.logoContainer addSubview:self.FOSALogo];
     
     self.userNameInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
-    self.userNameInput.placeholder = @"    Phone Number/email";
+    self.userNameInput.placeholder = @"    User ID/Email";
     self.userNameInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     self.userNameInput.returnKeyType = UIReturnKeyDone;
     self.userNameInput.delegate = self;
@@ -177,8 +177,7 @@
 //    [self.passwordContainer addSubview:self.checkPassword];
 //    isSecure = true;
 //    [self.checkPassword addTarget:self action:@selector(pwdtextSwitch) forControlEvents:UIControlEventTouchUpInside];
-//    
-    
+
     self.remember.frame = CGRectMake(0, 0, 51, 30);
     self.remember.onTintColor = [UIColor colorWithRed:90/255.0 green:172/255.0 blue:51/255.0 alpha:1];
     //self.remember.thumbTintColor = FOSAAlertBlue;
@@ -195,7 +194,7 @@
     self.forgetPassword.font = [UIFont systemFontOfSize:13*(screen_width/414.0)];
     //文字添加下划线
     NSDictionary * underAttribtDic  = @{NSUnderlineStyleAttributeName:[NSNumber numberWithInteger:NSUnderlineStyleSingle],NSForegroundColorAttributeName:[UIColor blackColor]};
-    NSMutableAttributedString * underAttr = [[NSMutableAttributedString alloc] initWithString:@"forget password" attributes:underAttribtDic];
+    NSMutableAttributedString * underAttr = [[NSMutableAttributedString alloc] initWithString:@"Forget password" attributes:underAttribtDic];
     self.forgetPassword.attributedText = underAttr;
     self.forgetPassword.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     UITapGestureRecognizer *forgetrecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(JumpToReset)];
@@ -204,7 +203,7 @@
     [self.rememberContainer addSubview:self.forgetPassword];
     
     self.login.frame = CGRectMake(0, 0, self.LoginContainer.frame.size.width*4/9, self.LoginContainer.frame.size.height);
-    [self.login setTitle:@"Login" forState:UIControlStateNormal];
+    [self.login setTitle:@"Log In" forState:UIControlStateNormal];
     self.login.backgroundColor = FOSAgreen;
 
     self.login.titleLabel.adjustsFontSizeToFitWidth = YES;
@@ -226,7 +225,24 @@
     [self.signUp addTarget:self action:@selector(JumpToRegister) forControlEvents:UIControlEventTouchUpInside];
     [self.LoginContainer addSubview:self.login];
     [self.LoginContainer addSubview:self.signUp];
+    
+    self.guestMode.frame = CGRectMake(screen_width/12, CGRectGetMaxY(self.LoginContainer.frame), self.LoginContainer.frame.size.width*4/9, self.LoginContainer.frame.size.height);
+    self.guestMode.text = @"Guest Mode";
+    self.guestMode.textColor = FOSAgreen;
+    self.guestMode.textAlignment = NSTextAlignmentCenter;
+    UITapGestureRecognizer *guestRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(startGuestMode)];
+    self.guestMode.userInteractionEnabled = YES;
+    [self.guestMode addGestureRecognizer:guestRecognizer];
+    [self.view addSubview:self.guestMode];
+}
 
+//进入游客模式
+- (void)startGuestMode{
+    NSString *guestID = [NSString stringWithFormat:@"Guest"];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:guestID forKey:@"currentUser"];
+    [defaults synchronize];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 //记住用户名和密码
@@ -238,7 +254,7 @@
     NSLog(@"YES");
     NSString *username = self.userNameInput.text;
     NSString *password = self.passwordInput.text;
-     NSLog(@"%@======%@",username,password);
+    NSLog(@"%@======%@",username,password);
     [self.userDefaults setObject:username forKey:@"username"];
     [self.userDefaults setObject:password forKey:@"password"];
     [self.userDefaults setBool:isButtonOn forKey:@"isOn"];

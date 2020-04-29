@@ -1548,7 +1548,6 @@
 
         //设定通知
         NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
-        NSLog(@"重复次数: %@,重复间隔: %@",[userdefault valueForKey:@"repeatTimes"],[userdefault valueForKey:@"repeatTimeInterval"]);
         //获取用户设置，是否设定免打扰
         NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
         if ([autoNotification isEqualToString:@"NO"] || autoNotification == nil) {
@@ -1577,7 +1576,7 @@
                     NSLog(@"重复次数:%d-------重复间隔:%d",[[userdefault valueForKey:@"repeatTimes"] intValue],[[userdefault valueForKey:@"repeatTimeInterval"] intValue]);
                     for (int i = 0; i < [[userdefault valueForKey:@"repeatTimes"] intValue]; i++) {
                         identifier = [NSString stringWithFormat:@"%@Remind%d",self.foodTextView.text,i];
-                        [self.fosaNotification sendNotification:model body:body image:image.copy time:(dateTime-currentDateTime)+i*3600*([[userdefault valueForKey:@"repeatTimeInterval"] intValue]) identifier:identifier];
+                        [self.fosaNotification sendNotification:model body:body image:image time:(dateTime-currentDateTime)+i*3600*([[userdefault valueForKey:@"repeatTimeInterval"] intValue]) identifier:identifier];
                     }
                 }else{
                     [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image identifier:identifier];

@@ -78,9 +78,9 @@
     self.printBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.qrTable.frame)+Height(25), screen_width/3, Height(40));
     self.printBtn.layer.cornerRadius = Height(20);
     [self.printBtn setTitle:@"Download" forState:UIControlStateNormal];
-    [self.printBtn setTitleColor:FOSABlue forState:UIControlStateNormal];
+    [self.printBtn setTitleColor:FOSAWhite forState:UIControlStateNormal];
     [self.printBtn setTitleColor:FOSABlueHL forState:UIControlStateHighlighted];
-    self.printBtn.backgroundColor = FOSAGray;
+    self.printBtn.backgroundColor = FOSAgreen;
     [self.printBtn addTarget:self action:@selector(getPhotoFromServer) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.printBtn];
 }
@@ -91,18 +91,18 @@
     self.preview.showsHorizontalScrollIndicator = NO;
     self.preview.showsVerticalScrollIndicator = NO;
     self.preview.alwaysBounceVertical = NO;
-    self.preview.contentSize = CGSizeMake(screen_width*3, 0);
-    
+    self.preview.contentSize = CGSizeMake(screen_width*5, 0);
+
     [self.view addSubview:self.preview];
     for (int i = 0; i < 5; i++) {
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(i*screen_width, 0, self.preview.frame.size.width, self.preview.frame.size.height)];
-        imageView.image = [UIImage imageNamed:@"IMG_qrPreview"];
+        imageView.image = [UIImage imageNamed:@"IMG_A4colour"];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         [self.preview addSubview:imageView];
     }
     self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(screen_width*2/5, CGRectGetMaxY(self.preview.frame)-Height(15), screen_width/5, 10)];
     self.pageControl.currentPage = 0;
-    self.pageControl.numberOfPages = 3;
+    self.pageControl.numberOfPages = 5;
     self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
     self.pageControl.currentPageIndicatorTintColor = FOSAgreen;
     [self.view addSubview:self.pageControl];
@@ -132,8 +132,6 @@
              [self.FOSAloadingView stopAnimating];
              NSString *imgPath = responseObject[@"file"];
              [self downLoadImg:imgPath];
-             
-
          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
              NSLog(@"failure--%@",error);
              [self.FOSAloadingView stopAnimating];
@@ -153,17 +151,19 @@
     UIImage *image = [UIImage imageWithData:data]; // 取得图片
     NSLog(@"%@",image);
     UIImageWriteToSavedPhotosAlbum(image, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
-
 }
+
 #pragma mark - <保存到相册>
 -(void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
-    NSString *msg = nil ;
-    if(error){
-        msg = @"保存图片失败" ;
-        NSLog(@"%@",msg);
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    if(error || image == nil){
+        alert.message = @"Error";
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
     }else{
-        msg = @"保存图片成功" ;
-        NSLog(@"%@",msg);
+        alert.message = @"Save QRode image into photo album successfully";
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
     }
 }
 

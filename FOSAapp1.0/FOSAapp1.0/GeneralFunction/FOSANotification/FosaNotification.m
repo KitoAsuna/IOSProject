@@ -52,36 +52,12 @@
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler{
     NSLog(@"即将展示通知");
     UNNotificationRequest *request = notification.request; // 原始请求
-    NSDictionary * userInfo = notification.request.content.userInfo;//userInfo数据
+    //NSDictionary * userInfo = notification.request.content.userInfo;//userInfo数据
     UNNotificationContent *content = request.content; // 原始内容
     //建议将根据Notification进行处理的逻辑统一封装，后期可在Extension中复用~
     completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentationOptionSound|UNNotificationPresentationOptionAlert); // 回调block，将设置传入
     [self deleteFile:content.subtitle];
-///    //在这里发送重复的通知，每隔三个小时通知一次
-//    NSString *repeat = [userInfo objectForKey:@"repeat"]; //获取通知重复方式
-//    NSString *requestIdentifier = request.identifier;
-//    NSLog(@"重复方式:%@--------requestIdentifier:%@------%@",repeat,requestIdentifier,request.identifier);
-//    if ([repeat isEqualToString:@"Every three hours"] && [requestIdentifier containsString:@"Remind"]) {
-//        NSLog(@"我将发送一个重复系统通知");
-//        UNMutableNotificationContent *rcontent = [[UNMutableNotificationContent alloc] init];
-//        rcontent.title = @"FOSA Reminding";
-//        rcontent.subtitle = content.subtitle;
-//        rcontent.body = content.body;
-//        rcontent.badge = @0;
-//        //设置为@""以后，进入app将没有启动页
-//        rcontent.launchImageName = @"";
-//        UNNotificationSound *sound = [UNNotificationSound defaultSound];
-//        rcontent.sound = sound;
-//        //设置时间间隔的触发器
-//        UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:300 repeats:YES];
-//        NSString *Identifer = content.subtitle;
-//        NSLog(@"============%@",content.subtitle);
-//        rcontent.categoryIdentifier = @"seeCategory";
-//        UNNotificationRequest *request1 = [UNNotificationRequest requestWithIdentifier:Identifer content:content trigger:time_trigger];
-//        [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request1 withCompletionHandler:^(NSError * _Nullable error) {
-//            //NSLog(@"通知发送失败:%@",error);
-//        }];
-//    }
+
 }
 
 //用户与通知进行交互后的response，比如说用户直接点开通知打开App、用户点击通知的按钮或者进行输入文本框的文本
@@ -100,7 +76,8 @@
     }else{
         if ([response.actionIdentifier isEqualToString:@"see1"]){
             NSLog(@"Save UIView as photo");
-            UIImage *notificationImage = [self SaveViewAsPicture:[self CreatNotificatonView:foodName body:body]];
+            UIImage *shareImage = [UIImage imageNamed:[NSString stringWithFormat:@"%@1",foodName]];
+            UIImage *notificationImage = [self SaveViewAsPicture:[self CreatNotificatonView:foodName body:body image:shareImage]];
             UIImageWriteToSavedPhotosAlbum(notificationImage, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
         }else if ([response.actionIdentifier isEqualToString:@"see2"]) {
             //I don't care~
@@ -126,14 +103,14 @@
     }
 }
 
-- (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(id)image identifier:(NSString *)identifier{
+- (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(UIImage *)image identifier:(NSString *)identifier{
     NSLog(@"我将发送一个系统通知----------按指定日期发送通知");
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
     content.title = @"FOSA Reminding";
     content.subtitle = model.foodName;
     content.body = body;
     content.badge = @0;
-    content.userInfo = @{@"repeat":model.repeat,@"request":identifier,};
+    content.userInfo = @{@"repeat":model.repeat,@"request":identifier};
     //获取沙盒中的图片
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
     NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodName];
@@ -157,11 +134,7 @@
     NSDateFormatter* formatter = [[NSDateFormatter alloc]init];
     [formatter setDateFormat:@"dd/MM/yy/HH:mm"];
     [formatter setTimeZone:[NSTimeZone localTimeZone]];
-    NSDate *date = [NSDate date];
-    NSTimeZone *zone = [NSTimeZone systemTimeZone];
-    NSInteger interval = [zone secondsFromGMTForDate:date];
-    NSDate *localeDate = [date  dateByAddingTimeInterval: interval];
-    localeDate = [formatter dateFromString:mdate];
+    NSDate *localeDate = [formatter dateFromString:mdate];
     NSLog(@"==================发送时间：%@",[formatter stringFromDate:localeDate]);
     /**
      根据重复方式设置日期选择器
@@ -211,7 +184,7 @@
 
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
         if (error) {
-            NSLog(@"通知添加失败");
+            NSLog(@"通知添加失败:%@",error);
         }else{
             NSLog(@"通知添加成功");
         }
@@ -239,7 +212,7 @@
     //将本地图片的路径形成一个图片附件，加入到content中
     UNNotificationAttachment *img_attachment = [UNNotificationAttachment attachmentWithIdentifier:@"att1" URL:[NSURL fileURLWithPath:imagePath] options:nil error:&error];
     if (error) {
-        NSLog(@"%@", error);
+        NSLog(@"Error:%@", error);
     }
     content.attachments = @[img_attachment];
     //设置为@""以后，进入app将没有启动页
@@ -254,7 +227,7 @@
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifer content:content trigger:time_trigger];
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
         if (error) {
-            NSLog(@"通知添加失败");
+            NSLog(@"通知添加失败:%@",error);
         }else{
             NSLog(@"通知添加成功");
         }
@@ -282,7 +255,7 @@
     //将本地图片的路径形成一个图片附件，加入到content中
     UNNotificationAttachment *img_attachment = [UNNotificationAttachment attachmentWithIdentifier:@"att1" URL:[NSURL fileURLWithPath:imagePath] options:nil error:&error];
     if (error) {
-        NSLog(@"通知添加失败");
+        NSLog(@"通知添加失败:%@",error);
     }else{
         NSLog(@"通知添加成功");
     }
@@ -322,7 +295,7 @@
 
 #pragma mark - 分享图片
 //仿照系统通知绘制UIview
-- (UIView *)CreatNotificatonView:(NSString *)title body:(NSString *)body{
+- (UIView *)CreatNotificatonView:(NSString *)title body:(NSString *)body image:(UIImage *)img{
     NSLog(@"begin creating");
     
     int mainwidth = screen_width;
@@ -354,8 +327,7 @@
     [notification addSubview:Nbody];
 
     logo.image  = [UIImage imageNamed:@"icon_ntificationBrand"];
-    NSLog(@"食物图片被添加到分享视图上:%@",self.image);
-    image.image = self.image;
+    image.image = img;
     image.contentMode = UIViewContentModeScaleAspectFill;
     image.clipsToBounds = YES;
     InfoCodeView.image = self.codeImage;

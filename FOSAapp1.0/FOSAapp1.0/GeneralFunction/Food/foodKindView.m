@@ -40,7 +40,7 @@
     self.categoryPhoto.frame = CGRectMake(self.rootView.frame.size.width/5, self.rootView.frame.size.width/5, self.rootView.frame.size.width*3/5, self.rootView.frame.size.width*3/5);
     self.categoryPhoto.backgroundColor = [UIColor clearColor];
     //self.categoryPhoto.layer.cornerRadius = width/2;
-    
+
 }
 
 @end

@@ -165,6 +165,7 @@
     self.verificatonInput.layer.cornerRadius = self.verificatonInput.frame.size.height/3;
     self.verificatonInput.returnKeyType = UIReturnKeyDone;;
     [self.verificationView addSubview:self.verificatonInput];
+
 //    self.verificationLabel.frame = CGRectMake(self.verificationView.frame.size.width*3/5, 0, self.verificationView.frame.size.width*2/5, screen_height/15);
 //    self.verificationLabel.textAlignment = NSTextAlignmentRight;
 //    self.verificationLabel.font = [UIFont systemFontOfSize:14*(screen_width/414)];
@@ -175,7 +176,7 @@
 //    self.verificationLabel.attributedText = underAttr;
 //    self.verificationLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     //[self.verificationView addSubview:self.verificationLabel];
-    
+
     self.passwordInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
     self.passwordInput.placeholder = @"    Password";
     [self.passwordInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];//设置输入文本的起始位置
@@ -184,8 +185,9 @@
     self.passwordInput.delegate = self;
     self.passwordInput.layer.cornerRadius = self.passwordInput.frame.size.height/3;
     [self.passwordContainer addSubview:self.passwordInput];
-    
+
     self.checkPassword.frame = CGRectMake(screen_width*5/6-screen_height/12, screen_height/48, screen_height/12-10, screen_height/24);
+//    self.checkPassword.center = CGPointMake(screen_width*5/6-screen_height/12, self.passwordContainer.frame.size.height/2);
        [self.checkPassword setImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
        [self.passwordContainer addSubview:self.checkPassword];
        isSecure = true;

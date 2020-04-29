@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong,nonatomic) UILabel *rememberLabel,*forgetPassword;
 @property (strong,nonatomic) UIButton *login,*signUp,*checkPassword;
 
-@property (strong,nonatomic) UILabel *failTips;
+@property (strong,nonatomic) UILabel *guestMode;
 
 @end
 

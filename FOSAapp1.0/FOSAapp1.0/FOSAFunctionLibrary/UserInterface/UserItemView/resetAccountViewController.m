@@ -73,23 +73,23 @@
     self.navigationItem.title = @"Reset password";
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0],NSForegroundColorAttributeName, nil]];
     self.logoImageView.frame = CGRectMake(screen_width/4, screen_width*5/12, screen_width/2, screen_width/2);
-    self.logoImageView.image = [UIImage imageNamed:@"icon_FOSAlogoHL"];
+    self.logoImageView.image = [UIImage imageNamed:@"icon_fosalogo"];
     [self.view addSubview:self.logoImageView];
 
     self.accountInput.frame = CGRectMake(screen_width/12, CGRectGetMaxY(self.logoImageView.frame)+10, screen_width*5/6, screen_height/15-10);
-    self.accountInput.placeholder = @"    Input username or Email";
+    self.accountInput.placeholder = @"    Username/Email";
     self.accountInput.layer.cornerRadius = self.accountInput.frame.size.height/3;
     [self.accountInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];
     self.accountInput.backgroundColor =  [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     [self.view addSubview:self.accountInput];
-    
+
 //    self.passwordInput.frame = CGRectMake(screen_width/12, CGRectGetMaxY(self.accountInput.frame)+10, screen_width*5/6, screen_height/15-10);
 //    self.passwordInput.placeholder = @"    New password";
 //    self.passwordInput.layer.cornerRadius = self.passwordInput.frame.size.height/3;
 //    [self.passwordInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];
 //    self.passwordInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
 //    [self.view addSubview:self.passwordInput];
-//
+
 //    self.passwordConfirm.frame = CGRectMake(screen_width/12, CGRectGetMaxY(self.passwordInput.frame)+10, screen_width*5/6, screen_height/15-10);
 //    self.passwordConfirm.placeholder = @"    Confirm password";
 //    self.passwordConfirm.layer.cornerRadius = self.passwordInput.frame.size.height/3;
