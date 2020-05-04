@@ -104,7 +104,6 @@
         [UIView animateWithDuration:0.2 animations:^{
             self.picker.center = CGPointMake(screen_width/2, screen_height*9/10);
         }];
-        self.repeatBlock(cell.textLabel.text);
     }else{
         self.repeatBlock(cell.textLabel.text);
         [self.navigationController popViewControllerAnimated:YES];
@@ -120,6 +119,7 @@
     [userdefault setInteger:times forKey:@"repeatTimes"];
     [userdefault setInteger:interval forKey:@"repeatTimeInterval"];
     [userdefault synchronize];
+    self.repeatBlock(@"Custom reminder");
 //    NSLog(@"重复次数: %@,重复间隔: %@",[userdefault valueForKey:@"repeatTimes"],[userdefault valueForKey:@"repeatTimeInterval"]);
     [self.navigationController popViewControllerAnimated:YES];
 }

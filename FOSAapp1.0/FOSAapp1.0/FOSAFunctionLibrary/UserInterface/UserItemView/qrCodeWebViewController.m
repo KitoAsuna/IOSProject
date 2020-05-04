@@ -52,9 +52,11 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.qrTable reloadData];
+
 }
 
 - (void)InitData{
+
     NSArray *array = @[@"3R(5x6)",@"Black & White",@"0",@"0",@"0",@"0"];
     NSArray *array2 = @[@"Page size",@"Color",@"L1",@"L2",@"L3",@"L4"];
     NSArray *array3   = @[@"3R(5x6)",@"4R(6x8)",@"5R(7x9)",@"6R(9x10)",@"A4(12x15)",@"LETTER(12x15)"];
@@ -64,6 +66,7 @@
     sizeData = [NSMutableArray arrayWithArray:array3];
     colorData = [NSMutableArray arrayWithArray:array4];
     qrkind = 0;
+
 }
 - (void)creatQrGenerator{
     [self creatPreview];
@@ -74,7 +77,7 @@
     self.qrTable.bounces = NO;
     self.qrTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     [self.view addSubview:self.qrTable];
-    
+
     self.printBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.qrTable.frame)+Height(25), screen_width/3, Height(40));
     self.printBtn.layer.cornerRadius = Height(20);
     [self.printBtn setTitle:@"Download" forState:UIControlStateNormal];
@@ -84,6 +87,7 @@
     [self.printBtn addTarget:self action:@selector(getPhotoFromServer) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.printBtn];
 }
+
 - (void)creatPreview{
     self.preview.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), screen_width, screen_height*2/7);
     self.preview.pagingEnabled = YES;
@@ -92,20 +96,22 @@
     self.preview.showsVerticalScrollIndicator = NO;
     self.preview.alwaysBounceVertical = NO;
     self.preview.contentSize = CGSizeMake(screen_width*5, 0);
-
     [self.view addSubview:self.preview];
+
     for (int i = 0; i < 5; i++) {
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(i*screen_width, 0, self.preview.frame.size.width, self.preview.frame.size.height)];
         imageView.image = [UIImage imageNamed:@"IMG_A4colour"];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         [self.preview addSubview:imageView];
     }
+
     self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(screen_width*2/5, CGRectGetMaxY(self.preview.frame)-Height(15), screen_width/5, 10)];
     self.pageControl.currentPage = 0;
     self.pageControl.numberOfPages = 5;
     self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
     self.pageControl.currentPageIndicatorTintColor = FOSAgreen;
     [self.view addSubview:self.pageControl];
+
 }
 
 - (void)getPhotoFromServer{

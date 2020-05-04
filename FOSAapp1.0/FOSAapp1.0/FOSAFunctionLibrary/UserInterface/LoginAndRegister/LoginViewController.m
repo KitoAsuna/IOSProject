@@ -47,14 +47,14 @@
 
 - (UIView *)rememberContainer{
     if (_rememberContainer == nil) {
-        _rememberContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.passwordContainer.frame), screen_width*5/6, screen_height/20)];
+        _rememberContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.passwordContainer.frame)+Height(10), screen_width*5/6, screen_height/20)];
     }
     return _rememberContainer;
 }
 
 - (UIView *)LoginContainer{
     if (_LoginContainer == nil) {
-        _LoginContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.rememberContainer.frame), screen_width*5/6, screen_height/20)];
+        _LoginContainer = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.rememberContainer.frame)+Height(10), screen_width*5/6, screen_height/20)];
     }
     return _LoginContainer;
 }
@@ -150,7 +150,7 @@
     CGFloat logoH = self.logoContainer.frame.size.height;
     CGFloat logoX = (logoW - logoH)/2;
     self.FOSALogo.frame = CGRectMake(logoX, 0, logoH, logoH);
-    self.FOSALogo.image = [UIImage imageNamed:@"icon_FOSAlogoHL"];
+    self.FOSALogo.image = [UIImage imageNamed:@"icon_fosalogo"];
     [self.logoContainer addSubview:self.FOSALogo];
     
     self.userNameInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);

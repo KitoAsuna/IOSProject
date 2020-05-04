@@ -98,7 +98,7 @@
     if (component == 0) {
         UILabel *text = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width/2, Height(40))];
         text.textAlignment = NSTextAlignmentCenter;
-        text.text = [NSString stringWithFormat:@"%@Hours",[self.timeInterval objectAtIndex:row]];//[self.timeInterval objectAtIndex:row];
+        text.text = [NSString stringWithFormat:@"%@ Hours",[self.timeInterval objectAtIndex:row]];//[self.timeInterval objectAtIndex:row];
         [view addSubview:text];
     }else{
         UILabel *text = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, screen_width/2, Height(40))];

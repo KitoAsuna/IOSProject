@@ -12,11 +12,14 @@
 #import "settingViewController.h"
 #import "languageViewController.h"
 #import "qrCodeWebViewController.h"
+#import "userInfoViewController.h"
+#import "FosaIMGManager.h"
 
 @interface UserViewController ()<UITableViewDelegate,UITableViewDataSource>{
     NSArray *ItemLogoArray,*ItemArray;
 }
 @property(nonatomic,strong) NSUserDefaults *userDefaults;
+
 @end
 
 @implementation UserViewController
@@ -79,16 +82,19 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    //UIStatusBarManager *statusBarManager = [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager;
-    [UIApplication sharedApplication].statusBarHidden = YES;
+//    UIStatusBarManager *statusBarManager = [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager;
+//    statusBarManager.statusBarHidden = YES;
+    //[UIApplication sharedApplication].statusBarHidden = YES;
+
     self.navigationController.navigationBar.hidden = YES;
     [self SetCurrentUser];
     [self InitData];
+
 }
 
 - (void)InitData{
     ItemArray = @[@"Tutorial",@"Language/Location",@"Setting",@"About FOSA",@"About Apps"];
-    ItemLogoArray = @[@"icon_tutorial",@"icon_language",@"icon_setting",@"icon_fosalogo",@"icon_app"];
+    ItemLogoArray = @[@"icon_tutorial",@"icon_language",@"icon_setting",@"icon_logo",@"icon_app"];
 }
 
 - (void)CreatHeader{
@@ -106,10 +112,13 @@
     [self.header addSubview:self.headerBackgroundImgView];
     
     self.userIcon.frame = CGRectMake(headerWidth/10, headerHeight*3/10, headerWidth/5, headerWidth/5);
-    self.userIcon.image = [UIImage imageNamed:@"icon_User"];
+    self.userIcon.contentMode = UIViewContentModeScaleAspectFill;
+    self.userIcon.clipsToBounds = YES;
+    self.userIcon.layer.cornerRadius = 10;
     self.userIcon.userInteractionEnabled = YES;
     UITapGestureRecognizer *login1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(JUMP)];
     [self.userIcon addGestureRecognizer:login1];
+    
     [self.header addSubview:self.userIcon];
     
     self.userName.frame = CGRectMake(headerWidth/30, headerHeight/2, headerWidth/3, headerWidth/5);
@@ -146,12 +155,20 @@
 
 //取出用户名和密码
 - (void)SetCurrentUser{
+    FosaIMGManager *imgManeger = [FosaIMGManager new];
+    [imgManeger InitImgManager];
     NSLog(@"确认当前登录用户");
     NSString *currentUser= [self.userDefaults valueForKey:@"currentUser"];
     if (currentUser != NULL) {
         self.userName.text = currentUser;
+        if ([imgManeger getImgWithName:currentUser]) {
+            self.userIcon.image = [imgManeger getImgWithName:currentUser];
+        }else{
+            self.userIcon.image = [UIImage imageNamed:@"icon_User"];
+        }
     }else{
         self.userName.text = @"Login/Sign Up";
+        self.userIcon.image = [UIImage imageNamed:@"icon_User"];
     }
 }
 
@@ -243,6 +260,9 @@
     
     if ([self.userDefaults valueForKey:@"currentUser"]) {
         NSLog(@"跳转到用户个人信息界面");
+        userInfoViewController *userInfo = [userInfoViewController new];
+        userInfo.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:userInfo animated:YES];
     }else{
         LoginViewController *login = [[LoginViewController alloc]init];
         login.hidesBottomBarWhenPushed = YES;

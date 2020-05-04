@@ -144,11 +144,11 @@
     CGFloat logoH = self.logoContainer.frame.size.height;
     CGFloat logoX = (logoW - logoH)/2;
     self.FOSALogo.frame = CGRectMake(logoX, 0, logoH, logoH);
-    self.FOSALogo.image = [UIImage imageNamed:@"icon_FOSAlogoHL"];
+    self.FOSALogo.image = [UIImage imageNamed:@"icon_fosalogo"];
     [self.logoContainer addSubview:self.FOSALogo];
     
     self.userNameInput.frame = CGRectMake(0, 5, screen_width*5/6, screen_height/15-10);
-    self.userNameInput.placeholder = @"    Email";
+    self.userNameInput.placeholder = @"    Username";
     self.userNameInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     [self.userNameInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.userNameInput.returnKeyType = UIReturnKeyDone;
@@ -160,7 +160,7 @@
     self.verificatonInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     [self.verificatonInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.verificatonInput.returnKeyType = UIReturnKeyDone;
-    self.verificatonInput.placeholder = @"    UserName";
+    self.verificatonInput.placeholder = @"    Email";
     self.verificatonInput.delegate = self;
     self.verificatonInput.layer.cornerRadius = self.verificatonInput.frame.size.height/3;
     self.verificatonInput.returnKeyType = UIReturnKeyDone;;
@@ -183,15 +183,16 @@
     self.passwordInput.backgroundColor = [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
     self.passwordInput.returnKeyType = UIReturnKeyDone;
     self.passwordInput.delegate = self;
+    self.passwordInput.secureTextEntry = YES;
     self.passwordInput.layer.cornerRadius = self.passwordInput.frame.size.height/3;
     [self.passwordContainer addSubview:self.passwordInput];
 
-    self.checkPassword.frame = CGRectMake(screen_width*5/6-screen_height/12, screen_height/48, screen_height/12-10, screen_height/24);
-//    self.checkPassword.center = CGPointMake(screen_width*5/6-screen_height/12, self.passwordContainer.frame.size.height/2);
-       [self.checkPassword setImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
-       [self.passwordContainer addSubview:self.checkPassword];
-       isSecure = true;
-       [self.checkPassword addTarget:self action:@selector(pwdtextSwitch) forControlEvents:UIControlEventTouchUpInside];
+//    self.checkPassword.frame = CGRectMake(screen_width*5/6-screen_height/12, self.passwordContainer.frame.size.height*2/5, screen_height/12-10, self.passwordContainer.frame.size.height/5);
+////    self.checkPassword.center = CGPointMake(screen_width*5/6-screen_height/12, self.passwordContainer.frame.size.height/2);
+//    [self.checkPassword setBackgroundImage:[UIImage imageNamed:@"icon_check"] forState:UIControlStateNormal];
+//    [self.passwordContainer addSubview:self.checkPassword];
+//    isSecure = true;
+//    [self.checkPassword addTarget:self action:@selector(pwdtextSwitch) forControlEvents:UIControlEventTouchUpInside];
 
 //    self.remember.frame = CGRectMake(screen_width/12, screen_width+screen_height/5, 51.0, 40);
 //    [self.remember addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -239,7 +240,7 @@
         AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", nil];
         //注册账号
-        NSString *categoryAddr = [NSString stringWithFormat:@"https://fosa.care/crmapi/?act=su&lang=en&uname=%@&uemail=%@&upw=%@",self.verificatonInput.text,self.userNameInput.text,self.passwordInput.text];
+        NSString *categoryAddr = [NSString stringWithFormat:@"https://fosa.care/crmapi/?act=su&lang=en&uname=%@&uemail=%@&upw=%@",self.userNameInput.text,self.verificatonInput.text,self.passwordInput.text];
          [manager GET:categoryAddr parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
              NSLog(@"success--%@--%@",[responseObject class],responseObject[@"ReturnCode"]);
              int returnCode = [responseObject[@"ReturnCode"] intValue];

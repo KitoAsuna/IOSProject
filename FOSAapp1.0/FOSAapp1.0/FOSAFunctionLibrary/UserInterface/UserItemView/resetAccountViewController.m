@@ -76,7 +76,7 @@
     self.logoImageView.image = [UIImage imageNamed:@"icon_fosalogo"];
     [self.view addSubview:self.logoImageView];
 
-    self.accountInput.frame = CGRectMake(screen_width/12, CGRectGetMaxY(self.logoImageView.frame)+10, screen_width*5/6, screen_height/15-10);
+    self.accountInput.frame = CGRectMake(screen_width/12, screen_width, screen_width*5/6, screen_height/15-10);
     self.accountInput.placeholder = @"    Username/Email";
     self.accountInput.layer.cornerRadius = self.accountInput.frame.size.height/3;
     [self.accountInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];

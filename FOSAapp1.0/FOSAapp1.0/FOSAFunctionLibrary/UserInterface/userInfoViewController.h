@@ -11,7 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface userInfoViewController : UIViewController
-
+@property (nonatomic,strong) UITableView *userInfoTable;
+@property (nonatomic,strong) UIImageView *headIconView;
 @end
 
 NS_ASSUME_NONNULL_END
