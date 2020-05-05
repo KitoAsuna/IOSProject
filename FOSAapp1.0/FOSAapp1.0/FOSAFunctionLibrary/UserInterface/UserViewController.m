@@ -106,7 +106,8 @@
     [self.view addSubview:self.header];
     self.header.backgroundColor = [UIColor colorWithRed:208/255.0 green:208/255.0 blue:208/255.0 alpha:1.0];
     self.headerBackgroundImgView.frame = self.header.frame;
-    self.headerBackgroundImgView.image = [UIImage imageNamed:@"img_UserBackground"];
+    self.headerBackgroundImgView.backgroundColor = FOSAColor(242,242,242);
+    //self.headerBackgroundImgView.image = [UIImage imageNamed:@"img_UserBackground"];
     self.headerBackgroundImgView.contentMode = UIViewContentModeScaleAspectFill;
     self.headerBackgroundImgView.clipsToBounds = YES;
     [self.header addSubview:self.headerBackgroundImgView];
@@ -127,7 +128,7 @@
     self.userName.layer.cornerRadius = 5;
     self.userName.textAlignment = NSTextAlignmentCenter;
     self.userName.font = [UIFont systemFontOfSize:20*(screen_width/414.0)];
-    self.userName.textColor = [UIColor whiteColor];
+    self.userName.textColor = [UIColor blackColor];
     UITapGestureRecognizer *login = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(JUMP)];
     [self.userName addGestureRecognizer:login];
     [self.header addSubview:self.userName];

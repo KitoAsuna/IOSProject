@@ -97,7 +97,6 @@
         case 0:
             [self changeHeaderIcon];
             break;
-            
         default:
             break;
     }
@@ -107,10 +106,12 @@
     UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:@"Take A Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSLog(@"take a photo");
         takePictureViewController *takePhoto = [takePictureViewController new];
-        takePhoto.photoBlock = ^(UIImage * _Nonnull img) {
-            self.headIconView.image = img;
-            [self->imgManager deleteImgWithName:self->currentUser];
-            [self->imgManager savePhotoWithImage:img name:self->currentUser];
+        takePhoto.photoBlock = ^(UIImage * img) {
+            if (img != nil) {
+                self.headIconView.image = img;
+                [self->imgManager deleteImgWithName:self->currentUser];
+                [self->imgManager savePhotoWithImage:img name:self->currentUser];
+            }
         };
         [self.navigationController pushViewController:takePhoto animated:NO];
     }];

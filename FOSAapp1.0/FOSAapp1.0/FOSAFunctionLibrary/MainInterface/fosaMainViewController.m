@@ -1264,7 +1264,7 @@
                         [self.notification sendNotification:model body:body image:image time:(dateTime-currentDateTime) identifier:identifier];
                     }else{
                             [self.notification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image identifier:identifier];
-                        }
+                    }
                 }
             }
         }

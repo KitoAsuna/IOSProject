@@ -31,6 +31,7 @@
 		4502FF7623CFF0140013AB31 /* IMG_OtherSealer.png in Resources */ = {isa = PBXBuildFile; fileRef = 4502FF7523CFF0140013AB31 /* IMG_OtherSealer.png */; };
 		4502FF7E23D033380013AB31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4502FF7D23D033380013AB31 /* Assets.xcassets */; };
 		4503BD81243BF9E100B1E555 /* ding.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4503BD80243BF9E100B1E555 /* ding.wav */; };
+		4509412E2460E749001F12EE /* qrTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4509412D2460E749001F12EE /* qrTypeView.m */; };
 		450A1FB0244AC45D00370FE2 /* FosaIMGManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 450A1FAE244AC45D00370FE2 /* FosaIMGManager.m */; };
 		450A3C2723C4687E000D55C8 /* ResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 450A3C2523C4687E000D55C8 /* ResultViewController.m */; };
 		450D586623C9B7D70032E905 /* LoadCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 450D586523C9B7D70032E905 /* LoadCircleView.m */; };
@@ -195,6 +196,8 @@
 		4502FF7523CFF0140013AB31 /* IMG_OtherSealer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_OtherSealer.png; sourceTree = "<group>"; };
 		4502FF7D23D033380013AB31 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4503BD80243BF9E100B1E555 /* ding.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = ding.wav; path = ../../../../FOSA/FOSA/GeneralFuction/QrcodeScanner/ding.wav; sourceTree = "<group>"; };
+		4509412C2460E749001F12EE /* qrTypeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qrTypeView.h; sourceTree = "<group>"; };
+		4509412D2460E749001F12EE /* qrTypeView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = qrTypeView.m; sourceTree = "<group>"; };
 		450A1FAE244AC45D00370FE2 /* FosaIMGManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FosaIMGManager.m; sourceTree = "<group>"; };
 		450A1FAF244AC45D00370FE2 /* FosaIMGManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FosaIMGManager.h; sourceTree = "<group>"; };
 		450A3C2523C4687E000D55C8 /* ResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResultViewController.m; sourceTree = "<group>"; };
@@ -836,6 +839,8 @@
 		4597BD6C23C311100031DC4C /* userCell */ = {
 			isa = PBXGroup;
 			children = (
+				4509412C2460E749001F12EE /* qrTypeView.h */,
+				4509412D2460E749001F12EE /* qrTypeView.m */,
 			);
 			path = userCell;
 			sourceTree = "<group>";
@@ -1139,6 +1144,7 @@
 				45A506CE23B8402C0046FC09 /* SceneDelegate.m in Sources */,
 				4513DD5923BF38D20005A1E2 /* ScanInfoView.m in Sources */,
 				458EA2D5241233C700F1FCC7 /* fosaMainViewController.m in Sources */,
+				4509412E2460E749001F12EE /* qrTypeView.m in Sources */,
 				4590C84523B9C72800691461 /* SealerAndPoundViewController.m in Sources */,
 				45EBE66D2415E8100072843C /* toturialViewController.m in Sources */,
 				4500E13F23BB248A002EB9FE /* Fosa_NSString_Queue.m in Sources */,
