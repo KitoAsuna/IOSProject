@@ -86,13 +86,13 @@
     
     int typeHeight = screen_height-CGRectGetMaxY(self.qrTable.frame);
     self.type1 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.qrTable.frame)+Height(5), screen_width*19/48, typeHeight/3)];
-    self.type1.qrTypeImgView.image = [UIImage imageNamed:@"icon_defaultImg1"];
+    self.type1.qrTypeImgView.image = [UIImage imageNamed:@"type1"];
     self.type1.backgroundColor = FOSAColor(242, 242, 242);
     self.type2 = [[qrTypeView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.type1.frame)+screen_width/24, CGRectGetMaxY(self.qrTable.frame)+Height(5), screen_width*19/48, typeHeight/3)];
     self.type2.backgroundColor = FOSAColor(242, 242, 242);
-    self.type2.qrTypeImgView.image = [UIImage imageNamed:@"icon_defaultImg2"];
+    self.type2.qrTypeImgView.image = [UIImage imageNamed:@"type2"];
     self.type3 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.type1.frame)+5, screen_width*19/48, typeHeight/3)];
-    self.type3.qrTypeImgView.image = [UIImage imageNamed:@"icon_defaultImg3"];
+    self.type3.qrTypeImgView.image = [UIImage imageNamed:@"type3"];
     self.type3.backgroundColor = FOSAColor(242, 242, 242);
     self.type4 = [[qrTypeView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.type3.frame)+screen_width/24, CGRectGetMaxY(self.type2.frame)+5, screen_width*19/48, typeHeight/3)];
     self.type4.qrTypeImgView.image = [UIImage imageNamed:@"icon_defaultImg4"];

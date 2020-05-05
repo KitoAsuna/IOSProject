@@ -1579,6 +1579,7 @@
                         [self.fosaNotification sendNotification:model body:body image:image time:(dateTime-currentDateTime)+i*3600*([[userdefault valueForKey:@"repeatTimeInterval"] intValue]) identifier:identifier];
                     }
                 }else{
+                    identifier = [NSString stringWithFormat:@"%@Remind",self.foodTextView.text];
                     [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image identifier:identifier];
                 }
             }

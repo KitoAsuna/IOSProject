@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UIButton *bellBtn,*selectbtn,*backBtn,*deleBtn;
 @property (nonatomic,strong) UILabel *styleLabel;
 @property (nonatomic,strong) UITableView *notificationList;
+@property (nonatomic,strong) UISwitch *closeSwitch;
 @property (weak,nonatomic) id<closeViewDelegate> closeDelegate;
 - (void)getFoodDataFromSql;
 
