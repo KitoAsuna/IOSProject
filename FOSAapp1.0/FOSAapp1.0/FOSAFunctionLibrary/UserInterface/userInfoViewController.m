@@ -42,7 +42,7 @@
     if ([imgManager getImgWithName:currentUser]) {
         self.headIconView.image = [imgManager getImgWithName:currentUser];
     }else{
-        self.headIconView.image = [UIImage imageNamed:@"icon_User"];
+        self.headIconView.image = [UIImage imageNamed:@"icon_UserDefault"];
     }
     self.headIconView.layer.cornerRadius = 10;
     self.headIconView.contentMode = UIViewContentModeScaleAspectFill;
@@ -84,7 +84,7 @@
             cell.detailTextLabel.text = [[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"];
             break;
         case 2:
-            cell.textLabel.text = @"FOSA ID";
+            cell.textLabel.text = @"Email";
             break;
         default:
             break;

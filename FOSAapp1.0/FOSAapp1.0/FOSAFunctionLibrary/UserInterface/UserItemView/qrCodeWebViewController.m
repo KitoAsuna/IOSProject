@@ -85,6 +85,7 @@
     [self.view addSubview:self.qrTable];
     
     int typeHeight = screen_height-CGRectGetMaxY(self.qrTable.frame);
+    
     self.type1 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.qrTable.frame)+Height(5), screen_width*19/48, typeHeight/3)];
     self.type1.qrTypeImgView.image = [UIImage imageNamed:@"type1"];
     self.type1.backgroundColor = FOSAColor(242, 242, 242);
@@ -97,7 +98,7 @@
     self.type4 = [[qrTypeView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.type3.frame)+screen_width/24, CGRectGetMaxY(self.type2.frame)+5, screen_width*19/48, typeHeight/3)];
     self.type4.qrTypeImgView.image = [UIImage imageNamed:@"type4"];
     self.type4.backgroundColor = FOSAColor(242, 242, 242);
-    
+
     UITapGestureRecognizer *selectRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectType1)];
 
     self.type1.userInteractionEnabled = YES;
@@ -374,6 +375,7 @@
         selector.selectData = colorData;
         selector.current = cell.detailTextLabel.text;
         selector.navigationItem.title = @"Color";
+       
         selector.seletBlock = ^(NSString * _Nonnull selector) {
             self->defaultArray[row] = selector;
         };

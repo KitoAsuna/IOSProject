@@ -93,8 +93,10 @@
 }
 
 - (void)InitData{
-    ItemArray = @[@"Tutorial",@"Language/Location",@"Setting",@"About FOSA",@"About Apps"];
-    ItemLogoArray = @[@"icon_tutorial",@"icon_language",@"icon_setting",@"icon_logo",@"icon_app"];
+//    ItemArray = @[@"Tutorial",@"Language/Location",@"Setting",@"About FOSA",@"About Apps"];
+//    ItemLogoArray = @[@"icon_tutorial",@"icon_language",@"icon_setting",@"icon_logo",@"icon_app"];
+    ItemArray = @[@"Tutorial",@"Setting",@"About FOSA",@"About Apps"];
+    ItemLogoArray = @[@"icon_tutorial",@"icon_setting",@"icon_logo",@"icon_app"];
 }
 
 - (void)CreatHeader{
@@ -165,11 +167,11 @@
         if ([imgManeger getImgWithName:currentUser]) {
             self.userIcon.image = [imgManeger getImgWithName:currentUser];
         }else{
-            self.userIcon.image = [UIImage imageNamed:@"icon_User"];
+            self.userIcon.image = [UIImage imageNamed:@"icon_UserDefault"];
         }
     }else{
         self.userName.text = @"Login/Sign Up";
-        self.userIcon.image = [UIImage imageNamed:@"icon_User"];
+        self.userIcon.image = [UIImage imageNamed:@"icon_UserDefault"];
     }
 }
 
@@ -226,23 +228,23 @@
     cell.backgroundColor = [UIColor grayColor];
     AboutAppsViewController *about = [AboutAppsViewController new];
     toturialViewController *tutorial = [toturialViewController new];
-    languageViewController *language = [languageViewController new];
+    //languageViewController *language = [languageViewController new];
     settingViewController *setting = [settingViewController new];
     switch (index) {
         case 0:
             tutorial.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:tutorial animated:YES];
             break;
+//        case 1:
+//            language.hidesBottomBarWhenPushed = YES;
+//            [self.navigationController pushViewController:language animated:YES];
+//
+//            break;
         case 1:
-            language.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:language animated:YES];
-            
-            break;
-        case 2:
             setting.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:setting animated:YES];
             break;
-        case 4:
+        case 3:
             about.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:about animated:YES];
             break;

@@ -316,7 +316,7 @@
         //注册账号
         NSString *categoryAddr = [NSString stringWithFormat:@"https://fosa.care/crmapi/?lang=en&uname=%@&upw=%@",self.userNameInput.text,self.passwordInput.text];
          [manager GET:categoryAddr parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-             NSLog(@"success--%@--%@",[responseObject class],responseObject[@"ReturnCode"]);
+             NSLog(@"success--%@--%@",[responseObject class],responseObject);
              int returnCode = [responseObject[@"ReturnCode"] intValue];
              if (returnCode == 1) {
                  [self.FOSAloadingView stopAnimating];

@@ -33,7 +33,7 @@
 
     self.kind.frame = CGRectMake(0, 0, width, (height-width));
     //self.kind.adjustsFontSizeToFitWidth = YES;
-    self.kind.font = [UIFont systemFontOfSize:font(15)];
+    self.kind.font = [UIFont systemFontOfSize:font(12)];
     self.rootView.frame = CGRectMake(0, height-width, width, width);
     self.rootView.layer.cornerRadius = self.rootView.frame.size.width/2;
     //self.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];

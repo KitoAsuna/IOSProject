@@ -17,7 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = FOSAWhite;
+    self.view.backgroundColor = FOSAColor(241, 241, 241);
     NSLog(@"%@",self.selectData);
     [self creatSelector];
 }
@@ -25,6 +25,7 @@
     [super viewWillAppear:animated];
 }
 - (void)creatSelector{
+     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor],NSForegroundColorAttributeName, nil]];
     self.selectorTable = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame)+Height(20), screen_width, Height(50)*self.selectData.count) style:UITableViewStylePlain];
     self.selectorTable.delegate = self;
     self.selectorTable.dataSource = self;
@@ -72,7 +73,7 @@
     cell.textLabel.text = self.selectData[row];
     NSLog(@"----%@",self.selectData[row]);
     cell.textLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
-    cell.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+    cell.backgroundColor = FOSAWhite;//[UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     //返回cell
     return cell;
 }
