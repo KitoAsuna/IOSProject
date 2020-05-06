@@ -131,23 +131,23 @@
     }else{
         AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", nil];
-        NSString *addr;
-        if ([self.accountInput.text containsString:@"@"]) {
-            addr = [NSString stringWithFormat:@"https://fosa.care/crmapi/?act=forgot&lang=en&uname=%@",self.accountInput.text];
-        }else{
-            addr = [NSString stringWithFormat:@"https://fosa.care/crmapi/?act=forgot&lang=en&uname=%@",self.accountInput.text];
-        }
+        NSString *addr = [NSString stringWithFormat:@"https://fosa.care/uapi/?act=forgot&lang=en&uname=%@",self.accountInput.text];
+        
         [self CreatLoadView];
         [manager GET:addr parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             NSLog(@"success--%@--%@",[responseObject class],responseObject[@"ReturnCode"]);
             int returnCode = [responseObject[@"ReturnCode"] intValue];
-            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:nil preferredStyle:UIAlertControllerStyleAlert];
             if (returnCode == 2) {
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"We have send a authentication email to you.Please receive and comfirm!" preferredStyle:UIAlertControllerStyleAlert];
+                alert.message = @"We have send a authentication email to you.Please receive and comfirm!";
                 [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
                 [self presentViewController:alert animated:YES completion:nil];
             }else if(returnCode == 5){
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"The username or email is not found!" preferredStyle:UIAlertControllerStyleAlert];
+                alert.message = @"The username or email is not found!";
+                [alert addAction:[UIAlertAction actionWithTitle:@"Get it" style:UIAlertActionStyleDefault handler:nil]];
+                [self presentViewController:alert animated:YES completion:nil];
+            }else if(returnCode == 10){
+                alert.message = @"Sending vetification email fail";
                 [alert addAction:[UIAlertAction actionWithTitle:@"Get it" style:UIAlertActionStyleDefault handler:nil]];
                 [self presentViewController:alert animated:YES completion:nil];
             }

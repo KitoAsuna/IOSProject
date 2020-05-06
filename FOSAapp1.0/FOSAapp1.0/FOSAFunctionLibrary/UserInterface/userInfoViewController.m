@@ -85,6 +85,7 @@
             break;
         case 2:
             cell.textLabel.text = @"Email";
+            cell.detailTextLabel.text = [[NSUserDefaults standardUserDefaults] valueForKey:@"currentUserEmail"];
             break;
         default:
             break;

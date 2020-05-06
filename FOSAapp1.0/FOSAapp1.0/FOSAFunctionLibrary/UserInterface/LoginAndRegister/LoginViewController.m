@@ -314,14 +314,15 @@
         AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", nil];
         //注册账号
-        NSString *categoryAddr = [NSString stringWithFormat:@"https://fosa.care/crmapi/?lang=en&uname=%@&upw=%@",self.userNameInput.text,self.passwordInput.text];
+        NSString *categoryAddr = [NSString stringWithFormat:@"https://fosa.care/uapi/?lang=en&uname=%@&upw=%@",self.userNameInput.text,self.passwordInput.text];
          [manager GET:categoryAddr parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
              NSLog(@"success--%@--%@",[responseObject class],responseObject);
              int returnCode = [responseObject[@"ReturnCode"] intValue];
              if (returnCode == 1) {
                  [self.FOSAloadingView stopAnimating];
                  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                 [defaults setObject:self.userNameInput.text forKey:@"currentUser"];
+                 [defaults setObject:responseObject[@"id"] forKey:@"currentUser"];
+                 [defaults setObject:responseObject[@"email"] forKey:@"currentUserEmail"];
                  [defaults synchronize];
                  [self SystemAlert:@"login Successfully"];
              }else if (returnCode == 6){
@@ -330,6 +331,9 @@
              }else if (returnCode == 7){
                  [self.FOSAloadingView stopAnimating];
                  [self SystemAlert:@"The length of the name or password is less than 6"];
+             }else if (returnCode == 11){
+                 [self.FOSAloadingView stopAnimating];
+                 [self SystemAlert:@"This account has not verified the email!"];
              }
          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
              NSLog(@"failure--%@",error);

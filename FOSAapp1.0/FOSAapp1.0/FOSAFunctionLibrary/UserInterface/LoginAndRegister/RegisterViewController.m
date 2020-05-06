@@ -240,25 +240,28 @@
         AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", nil];
         //注册账号
-        NSString *categoryAddr = [NSString stringWithFormat:@"https://fosa.care/crmapi/?act=su&lang=en&uname=%@&uemail=%@&upw=%@",self.userNameInput.text,self.verificatonInput.text,self.passwordInput.text];
+        NSString *categoryAddr = [NSString stringWithFormat:@"https://fosa.care/uapi/?act=su&lang=en&uname=%@&uemail=%@&upw=%@",self.userNameInput.text,self.verificatonInput.text,self.passwordInput.text];
          [manager GET:categoryAddr parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
              NSLog(@"success--%@--%@",[responseObject class],responseObject[@"ReturnCode"]);
              int returnCode = [responseObject[@"ReturnCode"] intValue];
-             if (returnCode == 1) {
+             if (returnCode == 2) {
                  [self.FOSAloadingView stopAnimating];
-                 [self SystemAlert:@"Successfully registered"];
+                 [self SystemAlert:@"The vetification email has benn send to your box!"];
              }else if (returnCode == 5){
                  [self.FOSAloadingView stopAnimating];
                  [self SystemAlert:@"Invalid email address!"];
              }else if (returnCode == 7){
                  [self.FOSAloadingView stopAnimating];
-                 [self SystemAlert:@"The length of the name or password is less than 6"];
+                 [self SystemAlert:@"The length of the name or password is less than 6!"];
              }else if (returnCode == 8){
                  [self.FOSAloadingView stopAnimating];
-                 [self SystemAlert:@"This user is already registered"];
+                 [self SystemAlert:@"This user is already registered!"];
              }else if (returnCode == 9){
                  [self.FOSAloadingView stopAnimating];
-                 [self SystemAlert:@"This email is already registered"];
+                 [self SystemAlert:@"This email is already registered!"];
+             }else if (returnCode == 10){
+                 [self.FOSAloadingView stopAnimating];
+                 [self SystemAlert:@"Sending vertification email fail!"];
              }
          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
              NSLog(@"failure--%@",error);
