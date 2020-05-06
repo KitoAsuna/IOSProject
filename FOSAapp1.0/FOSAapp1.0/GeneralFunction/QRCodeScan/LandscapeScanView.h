@@ -12,7 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LandscapeScanView : UIView
 
-
 @end
 
 NS_ASSUME_NONNULL_END

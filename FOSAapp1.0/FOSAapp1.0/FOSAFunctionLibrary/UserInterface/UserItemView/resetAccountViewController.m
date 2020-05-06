@@ -9,7 +9,7 @@
 #import "resetAccountViewController.h"
 #import "AFNetworking.h"
 
-@interface resetAccountViewController ()
+@interface resetAccountViewController ()<UITextFieldDelegate>
 //缓冲图标
 @property (nonatomic,strong) UIActivityIndicatorView *FOSAloadingView;
 @end
@@ -69,6 +69,10 @@
 }
 
 - (void)creatView{
+    //
+    UITapGestureRecognizer *closeKeyboard = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeKeyBoard)];
+    self.view.userInteractionEnabled = YES;
+    [self.view addGestureRecognizer:closeKeyboard];
     //设置导航栏标题
     self.navigationItem.title = @"Reset password";
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0],NSForegroundColorAttributeName, nil]];
@@ -78,6 +82,8 @@
 
     self.accountInput.frame = CGRectMake(screen_width/12, screen_width, screen_width*5/6, screen_height/15-10);
     self.accountInput.placeholder = @"    Username/Email";
+    self.accountInput.returnKeyType = UIReturnKeyDone;
+    self.accountInput.delegate = self;
     self.accountInput.layer.cornerRadius = self.accountInput.frame.size.height/3;
     [self.accountInput setValue:[NSNumber numberWithInt:20] forKey:@"paddingLeft"];
     self.accountInput.backgroundColor =  [UIColor colorWithRed:240/255.0 green:240/255.0 blue:240/255.0 alpha:1.0];
@@ -132,7 +138,7 @@
         AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", nil];
         NSString *addr = [NSString stringWithFormat:@"https://fosa.care/uapi/?act=forgot&lang=en&uname=%@",self.accountInput.text];
-        
+
         [self CreatLoadView];
         [manager GET:addr parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             NSLog(@"success--%@--%@",[responseObject class],responseObject[@"ReturnCode"]);
@@ -183,4 +189,15 @@
     [self.FOSAloadingView startAnimating];
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    return YES;
+}
+- (void)textFieldDidEndEditing:(UITextField *)textField{
+    textField.text =[textField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
+}
+
+- (void)closeKeyBoard{
+    [self.accountInput resignFirstResponder];
+}
 @end

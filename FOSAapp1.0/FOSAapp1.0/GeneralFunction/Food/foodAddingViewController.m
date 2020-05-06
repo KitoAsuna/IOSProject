@@ -678,7 +678,7 @@
     flowLayout.sectionInset = UIEdgeInsetsMake(0, 3, 0, 2);
 
     self.categoryCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(screen_width/12, 0, screen_width*5/6, footerHeight) collectionViewLayout:flowLayout];
-    
+
     self.categoryCollection.backgroundColor = [UIColor whiteColor];
     self.categoryCollection.delegate = self;
     self.categoryCollection.dataSource = self;
