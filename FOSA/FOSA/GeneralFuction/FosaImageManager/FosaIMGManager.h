@@ -21,7 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)deleteImgWithName:(NSString *)imgName;
 
 - (UIImage *)saveViewAsPictureWithView:(UIView *)view;
+- (UIImage *)GenerateQrcodeWithLogo:(UIImage *)logo Message:(NSString *)message;
 - (UIImage *)GenerateQRCodeByMessage:(NSString *)message;
++ (UIImage *)GenerateQRCodeWithIcon:(UIImage *)centerIcon Message:(NSString *)message;
 - (UIImage *)fixOrientation:(UIImage *)aImage;
 @end
 

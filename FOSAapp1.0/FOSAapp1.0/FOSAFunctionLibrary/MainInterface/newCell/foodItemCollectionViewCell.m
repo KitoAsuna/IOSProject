@@ -49,24 +49,24 @@
     
     self.likebtn.frame = CGRectMake(width/30, width*23/30, width/10, width/10);
 
-    
-    self.foodNamelabel.frame = CGRectMake(width/30, CGRectGetMaxY(self.foodImgView.frame)+(height*49/60-width*9/10)/2, width*3/5, (height-width*9/10)/2);
+    self.foodNamelabel.frame = CGRectMake(width/30, CGRectGetMaxY(self.foodImgView.frame)+(height*49/60-width*9/10)/2, width*3/5, (height-width*9/10)*7/12);
+    //self.foodNamelabel.font = [UIFont systemFontOfSize:font(31)];
     self.foodNamelabel.adjustsFontSizeToFitWidth = YES;
-    self.locationLabel.frame = CGRectMake(width/30, CGRectGetMaxY(self.foodNamelabel.frame), width*3/5, height/15);
+    self.locationLabel.frame = CGRectMake(width/30, CGRectGetMaxY(self.foodNamelabel.frame), width*3/5, (height-width*9/10)/3);
     self.locationLabel.font = [UIFont systemFontOfSize:font(10)];
     self.locationLabel.textColor = FOSAGray;
     
-    self.dayLabel.frame = CGRectMake(width*19/30, CGRectGetMaxY(self.foodImgView.frame)+(height*49/60-width*9/10)/2, width/6, height/7);
+    self.dayLabel.frame = CGRectMake(CGRectGetMaxX(self.foodNamelabel.frame), CGRectGetMaxY(self.foodImgView.frame)+(height*49/60-width*9/10)/2, width/5, (height-width*9/10)*2/3);
     self.dayLabel.adjustsFontSizeToFitWidth = YES;//self.dayLabel.backgroundColor = FOSAgreen;
-    self.dayLabel.font = [UIFont systemFontOfSize:font(30)];
+    self.dayLabel.font = [UIFont systemFontOfSize:font(31)];
     self.dayLabel.textColor = FOSAGray;
     
-    self.timelabel.frame = CGRectMake(width*24/30, height*49/60+(height*49/60-width*9/10)/2, width/6, height/18);
+    self.timelabel.frame = CGRectMake(CGRectGetMaxX(self.dayLabel.frame), height*49/60+(height*48/60-width*9/10)/2, width/6, height/18);
     self.timelabel.font = [UIFont systemFontOfSize:font(10)];
     self.timelabel.textColor = FOSAGray;
     self.timelabel.textAlignment = NSTextAlignmentLeft;
 
-    self.mouthLabel.frame = CGRectMake(width*24/30, CGRectGetMaxY(self.timelabel.frame), width/6, height/18);
+    self.mouthLabel.frame = CGRectMake(CGRectGetMaxX(self.dayLabel.frame), CGRectGetMaxY(self.timelabel.frame), width/6, height/18);
     self.mouthLabel.font = [UIFont systemFontOfSize:font(10)];
     self.mouthLabel.textColor = FOSAGray;
     self.mouthLabel.textAlignment = NSTextAlignmentLeft;

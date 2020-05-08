@@ -10,14 +10,15 @@
 #import <WebKit/WebKit.h>
 #import "qrSelectorViewController.h"
 #import "AFNetworking.h"
-#import "UIImageView+AFNetworking.h"
 #import "qrTypeView.h"
+#import "FosaIMGManager.h"
 
 @interface qrCodeWebViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate>{
-    NSMutableArray<NSString *> *defaultArray,*qrData,*sizeData,*colorData,*counter;
-    NSInteger currentIndex;
+    NSMutableArray<NSString *> *qrData,*sizeData,*colorData,*counter,*previewData;
+    NSInteger currentIndex,selectColor;
     int qrkind;
-    
+    FosaIMGManager *imgManager;
+
 }
 //@property(nonatomic,strong) WKWebView *qrWebView;
 //@property (nonatomic,strong) UIProgressView *progressView;
@@ -26,10 +27,48 @@
 
 //qrcode种类view
 @property (nonatomic,strong) qrTypeView *type1,*type2,*type3,*type4;
+//图片轮播器
+@property (nonatomic,strong) UIImageView *imageview1,*imageview2,*imageview3,*imageview4,*imageview5;
+@property (nonatomic,strong) NSMutableArray<UIImageView *> *imageviewArray;
 @end
 
 @implementation qrCodeWebViewController
 #pragma mark - 延迟加载
+- (UIImageView *)imageview1{
+    if (_imageview1 == nil) {
+        _imageview1 = [UIImageView new];
+    }
+    return _imageview1;
+}
+
+- (UIImageView *)imageview2{
+    if (_imageview2 == nil) {
+        _imageview2 = [UIImageView new];
+    }
+    return _imageview2;
+}
+
+
+- (UIImageView *)imageview3{
+    if (_imageview3 == nil) {
+        _imageview3 = [UIImageView new];
+    }
+    return _imageview3;
+}
+
+- (UIImageView *)imageview4{
+    if (_imageview4 == nil) {
+        _imageview4 = [UIImageView new];
+    }
+    return _imageview4;
+}
+
+- (UIImageView *)imageview5{
+    if (_imageview5 == nil) {
+        _imageview5 = [UIImageView new];
+    }
+    return _imageview5;
+}
 
 - (UIScrollView *)preview{
     if (_preview == nil) {
@@ -56,46 +95,51 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.qrTable reloadData];
-
 }
 
 - (void)InitData{
 
-    NSArray *array = @[@"3R(5x6)",@"Black & White",@"0",@"0",@"0",@"0"];
+    //NSArray *array = @[@"3R(5x6)",@"Black & White",@"0",@"0",@"0",@"0"];
     NSArray *array2 = @[@"Page size",@"Color",@"L1",@"L2",@"L3",@"L4"];
     NSArray *array3   = @[@"3R(5x6)",@"4R(6x8)",@"5R(7x9)",@"6R(9x10)",@"A4(12x15)",@"LETTER(12x15)"];
     NSArray *array4  = @[@"Black & White",@"Colours"];
     NSArray *array5  = @[@"0",@"0",@"0",@"0"];
-    defaultArray = [NSMutableArray arrayWithArray:array];
+    NSArray *array6  = @[@"IMG_A4",@"IMG_A4",@"IMG_A4",@"IMG_A4",@"IMG_A4"];
+    //defaultArray = [NSMutableArray arrayWithArray:array];
     qrData = [NSMutableArray arrayWithArray:array2];
     sizeData = [NSMutableArray arrayWithArray:array3];
     colorData = [NSMutableArray arrayWithArray:array4];
     counter = [NSMutableArray arrayWithArray:array5];
+    previewData = [NSMutableArray arrayWithArray:array6];
     qrkind = 0;
+    selectColor = 0;
+    currentIndex = 0;
+    self.imageviewArray = [[NSMutableArray alloc]initWithObjects:self.imageview1,self.imageview2,self.imageview3,self.imageview4,self.imageview5,nil];
     
 }
 - (void)creatQrGenerator{
     [self creatPreview];
 
-    self.qrTable = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.preview.frame)+Height(10), screen_width, Height(50)*2) style:UITableViewStylePlain];
+    self.qrTable = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.preview.frame)+Height(10), screen_width, Height(50)) style:UITableViewStylePlain];
     self.qrTable.delegate = self;
     self.qrTable.dataSource = self;
     self.qrTable.bounces = NO;
     self.qrTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     [self.view addSubview:self.qrTable];
     
+    
     int typeHeight = screen_height-CGRectGetMaxY(self.qrTable.frame);
     
-    self.type1 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.qrTable.frame)+Height(5), screen_width*19/48, typeHeight/3)];
+    self.type1 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.qrTable.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
     self.type1.qrTypeImgView.image = [UIImage imageNamed:@"type1"];
     self.type1.backgroundColor = FOSAColor(242, 242, 242);
-    self.type2 = [[qrTypeView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.type1.frame)+screen_width/24, CGRectGetMaxY(self.qrTable.frame)+Height(5), screen_width*19/48, typeHeight/3)];
+    self.type2 = [[qrTypeView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.type1.frame)+screen_width/24, CGRectGetMaxY(self.qrTable.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
     self.type2.backgroundColor = FOSAColor(242, 242, 242);
     self.type2.qrTypeImgView.image = [UIImage imageNamed:@"type2"];
-    self.type3 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.type1.frame)+5, screen_width*19/48, typeHeight/3)];
+    self.type3 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.type1.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
     self.type3.qrTypeImgView.image = [UIImage imageNamed:@"type3"];
     self.type3.backgroundColor = FOSAColor(242, 242, 242);
-    self.type4 = [[qrTypeView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.type3.frame)+screen_width/24, CGRectGetMaxY(self.type2.frame)+5, screen_width*19/48, typeHeight/3)];
+    self.type4 = [[qrTypeView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.type3.frame)+screen_width/24, CGRectGetMaxY(self.type2.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
     self.type4.qrTypeImgView.image = [UIImage imageNamed:@"type4"];
     self.type4.backgroundColor = FOSAColor(242, 242, 242);
 
@@ -116,47 +160,49 @@
     self.type4.userInteractionEnabled = YES;
     [self.type4 addGestureRecognizer:selectRecognizer3];
 
-    
     [self.view addSubview:self.type1];
     [self.view addSubview:self.type2];
     [self.view addSubview:self.type3];
     [self.view addSubview:self.type4];
-    
+
     self.printBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.type3.frame)+Height(25), screen_width/3, Height(40));
        self.printBtn.layer.cornerRadius = Height(20);
-       [self.printBtn setTitle:@"Download" forState:UIControlStateNormal];
+       [self.printBtn setTitle:@"Generate" forState:UIControlStateNormal];
        [self.printBtn setTitleColor:FOSAWhite forState:UIControlStateNormal];
        [self.printBtn setTitleColor:FOSABlueHL forState:UIControlStateHighlighted];
        self.printBtn.backgroundColor = FOSAgreen;
-       [self.printBtn addTarget:self action:@selector(getPhotoFromServer) forControlEvents:UIControlEventTouchUpInside];
+       [self.printBtn addTarget:self action:@selector(generateQrCodeImageOfA4) forControlEvents:UIControlEventTouchUpInside];
        [self.view addSubview:self.printBtn];
-
 }
 
 - (void)creatPreview{
-    self.preview.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), screen_width, screen_width/2);
-    self.preview.pagingEnabled = YES;
-    self.preview.delegate = self;
-    self.preview.showsHorizontalScrollIndicator = NO;
-    self.preview.showsVerticalScrollIndicator = NO;
-    self.preview.alwaysBounceVertical = NO;
-    self.preview.contentSize = CGSizeMake(screen_width*5, 0);
-    [self.view addSubview:self.preview];
-
-    for (int i = 0; i < 5; i++) {
-        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(i*screen_width, 0, self.preview.frame.size.width, self.preview.frame.size.height)];
-        imageView.image = [UIImage imageNamed:@"IMG_A4colour"];
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
-        [self.preview addSubview:imageView];
+    if (_preview == nil) {
+        self.preview.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), screen_width, screen_width*3/4);
+        self.preview.pagingEnabled = YES;
+        self.preview.delegate = self;
+        self.preview.showsHorizontalScrollIndicator = NO;
+        self.preview.showsVerticalScrollIndicator = NO;
+        self.preview.alwaysBounceVertical = NO;
+        self.preview.contentSize = CGSizeMake(screen_width*5, 0);
+        [self.view addSubview:self.preview];
     }
-
-    self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(screen_width*2/5, CGRectGetMaxY(self.preview.frame)-Height(15), screen_width/5, 10)];
+    for (int i = 0; i < 5; i++) {
+        self.imageviewArray[i].frame = CGRectMake(i*screen_width, 0, self.preview.frame.size.width, self.preview.frame.size.height);
+        if (selectColor == 1) {
+            self.imageviewArray[i].image = [UIImage imageNamed:[NSString stringWithFormat:@"%@Colour",previewData[i]]];
+        }else{
+            self.imageviewArray[i].image = [UIImage imageNamed:previewData[i]];
+        }
+        self.imageviewArray[i].contentMode = UIViewContentModeScaleAspectFit;
+        [self.preview addSubview:self.imageviewArray[i]];
+    }
+    
+    self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(screen_width*2/5, CGRectGetMaxY(self.preview.frame)-Height(10), screen_width/5, 5)];
     self.pageControl.currentPage = 0;
     self.pageControl.numberOfPages = 5;
     self.pageControl.pageIndicatorTintColor = FOSAFoodBackgroundColor;
     self.pageControl.currentPageIndicatorTintColor = FOSAgreen;
     [self.view addSubview:self.pageControl];
-
 }
 
 - (void)getPhotoFromServer{
@@ -171,8 +217,8 @@
         AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", nil];
         //下载图片
-        NSString *cc = [NSString stringWithFormat:@"%ld",[colorData indexOfObject:defaultArray[1]]];
-        NSString *s  = [NSString stringWithFormat:@"%ld",[sizeData indexOfObject:defaultArray[0]]];
+        NSString *cc = [NSString stringWithFormat:@"%ld",selectColor];
+        NSString *s  = [NSString stringWithFormat:@"%ld",currentIndex];
         
         
         NSString *Addr = [NSString stringWithFormat:@"https://fosahome.com/qrlabel/?cc=%@&s=%@&l1=%@&l2=%@&l3=%@&l4=%@&l9=0&g=2&j=1",cc,s,counter[0],counter[1],counter[2],counter[3]];
@@ -259,13 +305,45 @@
             counter[i] = [NSString stringWithFormat:@"%d",24/qrkind];
         }
     }
-    self.type1.qrCountLabel.text = counter[0];
-    self.type2.qrCountLabel.text = counter[1];
-    self.type3.qrCountLabel.text = counter[2];
-    self.type4.qrCountLabel.text = counter[3];
+    self.type1.qrCountLabel.text = [NSString stringWithFormat:@"x%@",counter[0]];
+    self.type2.qrCountLabel.text = [NSString stringWithFormat:@"x%@",counter[1]];
+    self.type3.qrCountLabel.text = [NSString stringWithFormat:@"x%@",counter[2]];
+    self.type4.qrCountLabel.text = [NSString stringWithFormat:@"x%@",counter[3]];
 }
+
+/*
+ 生成二维码图片
+ */
+- (void)generateQrCodeImageOfA4{
+    [self CreatLoadView];
+    imgManager = [FosaIMGManager new];
+    [imgManager InitImgManager];
+   
+    UIImageView *qrcodeImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, NavigationBarH*3, screen_width, screen_width*(297.0/210))];
+    qrcodeImage.backgroundColor = [UIColor blackColor];
+    qrcodeImage.image = [UIImage imageNamed:@"IMG_usletterColour"];
+    qrcodeImage.contentMode = UIViewContentModeScaleAspectFill;
+    CGFloat height = qrcodeImage.frame.size.height;
+    CGFloat width  = qrcodeImage.frame.size.width;
+    for (int i = 0; i < 20; i++) {
+        NSString *message = [NSString stringWithFormat:@"FS91000000000000000%d",i+1];
+        UIImageView *qrview = [[UIImageView alloc]initWithFrame:CGRectMake(width*(25.5/210.0+(i%5)*34.95/210.0), height*(138.876/297.0+(i/5)*32.252/297.0), width*(19.5/210.0), height*(19.5/297.0))];
+        //qrview.backgroundColor = FOSARed;
+        qrview.image = [FosaIMGManager GenerateQRCodeWithIcon:[UIImage imageNamed:@"type1"] Message:message];
+        //qrview.image = [imgManager GenerateQrcodeWithLogo:[UIImage imageNamed:@"type1"] Message:message];
+        //qrview.contentMode = UIViewContentModeScaleAspectFit;
+        [qrcodeImage addSubview:qrview];
+    }
+    UIImage *qrLabelImg = [imgManager saveViewAsPictureWithView:qrcodeImage];
+    
+    UIImageWriteToSavedPhotosAlbum(qrLabelImg, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
+    
+}
+
+
 #pragma mark - <保存到相册>
 -(void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    [self.FOSAloadingView stopAnimating];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:nil preferredStyle:UIAlertControllerStyleAlert];
     if(error || image == nil){
         alert.message = @"Error";
@@ -319,7 +397,7 @@
     return Height(50);
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 2;
+    return 1;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *cellIdentifier = @"qrcell";
@@ -329,80 +407,86 @@
         //创建cell
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
     }
-    NSInteger row = indexPath.row;
     //取消点击cell时显示的背景
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
-    cell.textLabel.text = qrData[row];
     cell.backgroundColor = FOSAWhite;
-    switch (row) {
-        case 0:
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            break;
-        case 1:
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            break;
-//        case 2:
-//        case 3:
-//        case 4:
-//        case 5:
-//            if (![defaultArray[row] isEqualToString:@"0"]) {
-//                defaultArray[row] = [NSString stringWithFormat:@"%d",24/qrkind];
-//            }
-//            break;
-        default:
-            break;
+    cell.textLabel.text = colorData[selectColor];
+    if (_colorSwitch == nil) {
+        self.colorSwitch = [UISwitch new];
+        self.colorSwitch.center = CGPointMake(screen_width-Width(40), cell.frame.size.height/2);
+        [cell.contentView addSubview:self.colorSwitch];
+        [self.colorSwitch addTarget:self action:@selector(changeColor:) forControlEvents:UIControlEventValueChanged];
     }
-    cell.detailTextLabel.text = defaultArray[row];
     return cell;
 }
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    NSInteger row = indexPath.row;
-    //cell.backgroundColor = [UIColor grayColor];
-    NSLog(@"%ld",row);
-    if (row == 0) {
-        qrSelectorViewController *selector = [qrSelectorViewController new];
-        selector.selectData = sizeData;
-        selector.current = cell.detailTextLabel.text;
-        selector.navigationItem.title = @"Page Size";
-        selector.seletBlock = ^(NSString * _Nonnull selector) {
-            self->defaultArray[row] = selector;
-        };
-        [self.navigationController pushViewController:selector animated:YES];
-    }else if (row == 1){
-        qrSelectorViewController *selector = [qrSelectorViewController new];
-        selector.selectData = colorData;
-        selector.current = cell.detailTextLabel.text;
-        selector.navigationItem.title = @"Color";
-       
-        selector.seletBlock = ^(NSString * _Nonnull selector) {
-            self->defaultArray[row] = selector;
-        };
-        [self.navigationController pushViewController:selector animated:YES];
+- (void)changeColor:(UISwitch *)sender{
+    BOOL isButtonOn = [self.colorSwitch isOn];
+    if (isButtonOn) {
+        selectColor = 1;
     }else{
-        switch (row) {
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-                if ([defaultArray[row] isEqualToString:@"0"]) {
-                    qrkind ++;
-                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
-                    defaultArray[row] = [NSString stringWithFormat:@"%d",24/qrkind];
-                }else{
-                    cell.accessoryType = UITableViewCellAccessoryNone;
-                    qrkind --;
-                    defaultArray[row] = @"0";
-                }
-                    break;
-            default:
-                break;
-        }
-        [self.qrTable reloadData];
+        selectColor = 0;
     }
-    
+    [self.qrTable reloadData];
+    [self refreshPreview];
 }
+- (void)refreshPreview{
+    for (int i = 0; i < 5; i++) {
+        self.imageviewArray[i].frame = CGRectMake(i*screen_width, 0, self.preview.frame.size.width, self.preview.frame.size.height);
+        if (selectColor == 1) {
+            self.imageviewArray[i].image = [UIImage imageNamed:[NSString stringWithFormat:@"%@Colour",previewData[i]]];
+        }else{
+            self.imageviewArray[i].image = [UIImage imageNamed:previewData[i]];
+        }
+          
+    }
+}
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+//    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//    NSInteger row = indexPath.row;
+//    //cell.backgroundColor = [UIColor grayColor];
+//    NSLog(@"%ld",row);
+//    if (row == 0) {
+//        qrSelectorViewController *selector = [qrSelectorViewController new];
+//        selector.selectData = sizeData;
+//        selector.current = cell.detailTextLabel.text;
+//        selector.navigationItem.title = @"Page Size";
+//        selector.seletBlock = ^(NSString * _Nonnull selector) {
+//            self->defaultArray[row] = selector;
+//        };
+//        [self.navigationController pushViewController:selector animated:YES];
+//    }else if (row == 1){
+//        qrSelectorViewController *selector = [qrSelectorViewController new];
+//        selector.selectData = colorData;
+//        selector.current = cell.detailTextLabel.text;
+//        selector.navigationItem.title = @"Color";
+//
+//        selector.seletBlock = ^(NSString * _Nonnull selector) {
+//            self->defaultArray[row] = selector;
+//        };
+//        [self.navigationController pushViewController:selector animated:YES];
+//    }else{
+//        switch (row) {
+//            case 2:
+//            case 3:
+//            case 4:
+//            case 5:
+//                if ([defaultArray[row] isEqualToString:@"0"]) {
+//                    qrkind ++;
+//                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+//                    defaultArray[row] = [NSString stringWithFormat:@"%d",24/qrkind];
+//                }else{
+//                    cell.accessoryType = UITableViewCellAccessoryNone;
+//                    qrkind --;
+//                    defaultArray[row] = @"0";
+//                }
+//                    break;
+//            default:
+//                break;
+//        }
+//        [self.qrTable reloadData];
+//    }
+//}
 //
 //- (void)creatWebView{
 //    //创建网络配置对象

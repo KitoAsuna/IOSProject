@@ -26,9 +26,8 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    self.navigationItem.title = @"Setting";
-    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0],NSForegroundColorAttributeName, nil]];
+    self.navigationItem.title = @"Settings";
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor],NSForegroundColorAttributeName, nil]];
 }
 - (void)creatTable{
 
@@ -42,9 +41,9 @@
     
     self.userDefaults = [NSUserDefaults standardUserDefaults];// 初始化
     self.dataSource = [NSMutableArray new];
-    [self.dataSource addObjectsFromArray:@[@"Language",@"Do Not Disturb",@"Log Out"]];
+    [self.dataSource addObjectsFromArray:@[@"Language",@"Do Not Disturb"]];
     self.setDic = [[NSDictionary alloc]init];
-    self.settingTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarHeight*3, screen_width, screen_height/6) style:UITableViewStylePlain];
+    self.settingTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarHeight*3, screen_width, screen_height/8) style:UITableViewStylePlain];
     self.settingTable.delegate = self;
     self.settingTable.dataSource = self;
     self.settingTable.bounces = NO;
@@ -133,7 +132,7 @@
     cell.textLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     cell.backgroundColor = FOSAWhite;//[UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     cell.textLabel.text = self.dataSource[row];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    //cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     switch (row) {
         case 0:
             cell.detailTextLabel.text = @"English";
@@ -143,7 +142,7 @@
                 autoNotification = [self.userDefaults valueForKey:@"autonotification"];
                 self.mswitch = [UISwitch new];
                 self.mswitch.frame = CGRectMake(0, 0, 100, 100);
-                self.mswitch.center = CGPointMake(screen_width-Width(60), cell.contentView.center.y);
+                self.mswitch.center = CGPointMake(screen_width-Width(40), cell.frame.size.height/2);
                 if ([autoNotification isEqualToString:@"YES"]) {
                     [self.mswitch setOn:YES];
                 }
@@ -155,27 +154,15 @@
         default:
             break;
     }
-//    if (row == 3) {
-//        autoNotification = [self.userDefaults valueForKey:@"autonotification"];
-//        self.mswitch = [UISwitch new];
-//        self.mswitch.frame = CGRectMake(0, 0, 100, 100);
-//        self.mswitch.center = CGPointMake(screen_width-30, cell.contentView.center.y);
-//        cell.backgroundView.userInteractionEnabled = NO;
-//        if ([autoNotification isEqualToString:@"YES"]) {
-//            [self.mswitch setOn:YES];
-//        }
-//        [cell.contentView addSubview:self.mswitch];
-//        [self.mswitch addTarget:self action:@selector(autoSwitch:) forControlEvents:UIControlEventValueChanged];
-//    }
     //返回cell
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if (indexPath.row == 2) {
-        [self logOutFunction];
-    }
+//    if (indexPath.row == 2) {
+//        [self logOutFunction];
+//    }
 }
 - (void)autoSwitch:(id)sender{
     UISwitch *switchButton = (UISwitch*)sender;
@@ -188,28 +175,28 @@
         autoNotification = @"NO";
     }
 }
-
--(void)logOutFunction{
-    
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    if ([self.userDefaults valueForKey:@"currentUser"]) {
-        alert.message = @"You will exit the current account";
-        UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
-            [userdefault removeObjectForKey:@"currentUser"];
-            [self.navigationController popViewControllerAnimated:YES];
-        }];
-        UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:nil];
-        [alert addAction:action1];
-        [alert addAction:action2];
-    }else{
-        alert.message = @"Please log in your account first";
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Get it" style:UIAlertActionStyleDefault handler:nil];
-        [alert addAction:action];
-    }
-    
-    [self presentViewController:alert animated:true completion:nil];
-}
+//
+//-(void)logOutFunction{
+//
+//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:nil preferredStyle:UIAlertControllerStyleAlert];
+//    if ([self.userDefaults valueForKey:@"currentUser"]) {
+//        alert.message = @"You will exit the current account";
+//        UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//            NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
+//            [userdefault removeObjectForKey:@"currentUser"];
+//            [self.navigationController popViewControllerAnimated:YES];
+//        }];
+//        UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:nil];
+//        [alert addAction:action1];
+//        [alert addAction:action2];
+//    }else{
+//        alert.message = @"Please log in your account first";
+//        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Get it" style:UIAlertActionStyleDefault handler:nil];
+//        [alert addAction:action];
+//    }
+//
+//    [self presentViewController:alert animated:true completion:nil];
+//}
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];

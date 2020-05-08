@@ -7,6 +7,7 @@
 //
 
 #import "FosaIMGManager.h"
+#import <CoreImage/CoreImage.h>
 
 @interface FosaIMGManager(){
     NSArray *paths;
@@ -88,6 +89,176 @@
     return [UIImage imageWithCIImage:image];
 }
 
+//- (UIImage *)GenerateQrcodeWithLogo:(UIImage *)logo Message:(NSString *)message{
+//    // 1. 创建一个二维码滤镜实例(CIFilter)
+//    CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+//    // 滤镜恢复默认设置
+//    [filter setDefaults];
+//    // 2. 给滤镜添加数据
+//    NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
+//    [filter setValue:data forKeyPath:@"inputMessage"];
+//    // 3. 生成二维码
+//    CIImage *image = [filter outputImage];
+//   // 转成高清格式
+//    UIImage *qrcode = [self createNonInterpolatedUIImageFormCIImage:image withSize:200];
+//    // 添加logo
+//    qrcode = [self drawImage:logo inImage:qrcode];
+//
+//    return qrcode;
+//}
+
+// 将二维码转成高清的格式
+- (UIImage *)createNonInterpolatedUIImageFormCIImage:(CIImage *)image withSize:(CGFloat) size {
+    
+    CGRect extent = CGRectIntegral(image.extent);
+    CGFloat scale = MIN(size/CGRectGetWidth(extent), size/CGRectGetHeight(extent));
+    // 1.创建bitmap;
+    size_t width = CGRectGetWidth(extent) * scale;
+    size_t height = CGRectGetHeight(extent) * scale;
+    CGColorSpaceRef cs = CGColorSpaceCreateDeviceGray();
+    CGContextRef bitmapRef = CGBitmapContextCreate(nil, width, height, 8, 0, cs, (CGBitmapInfo)kCGImageAlphaNone);
+    CIContext *context = [CIContext contextWithOptions:nil];
+    CGImageRef bitmapImage = [context createCGImage:image fromRect:extent];
+    CGContextSetInterpolationQuality(bitmapRef, kCGInterpolationNone);
+    CGContextScaleCTM(bitmapRef, scale, scale);
+    CGContextDrawImage(bitmapRef, extent, bitmapImage);
+    
+    // 2.保存bitmap到图片
+    CGImageRef scaledImage = CGBitmapContextCreateImage(bitmapRef);
+    CGContextRelease(bitmapRef);
+    CGImageRelease(bitmapImage);
+    return [UIImage imageWithCGImage:scaledImage];
+}
+// 添加logo
+//- (UIImage *)drawImage:(UIImage *)newImage inImage:(UIImage *)sourceImage {
+//    CGSize imageSize; //画的背景 大小
+//    imageSize = [sourceImage size];
+//    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0.0);
+//    [sourceImage drawAtPoint:CGPointMake(0, 0)];
+//    //获得 图形上下文
+//    CGContextRef context=UIGraphicsGetCurrentContext();
+//    //画 自己想要画的内容(添加的图片)
+//    CGContextDrawPath(context, kCGPathStroke);
+//    // 注意logo的尺寸不要太大,否则可能无法识别
+//    CGRect rect = CGRectMake(imageSize.width / 2 - 25, imageSize.height / 2 - 25, 50, 50);
+////    CGContextAddEllipseInRect(context, rect);
+//    CGContextClip(context);
+//    [newImage drawInRect:rect];
+//    //返回绘制的新图形
+//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    return image;
+//}
+
+
+
+
+
+typedef NS_OPTIONS(NSUInteger, QRCodeLogoType) {
+    QRCodeLogoType_Default = 0,//默认无圆角logo
+    QRCodeLogoType_Round   = 1,//正圆logo
+    QRCodeLogoType_Radius  = 2 //圆角的logo
+};
+
++ (UIImage *)createNewImage:(UIImage *)theImage logoImage:(UIImage *)logoImage logoType:(QRCodeLogoType)logoType{
+    float width = 400;
+    float height = width * (theImage.size.height / theImage.size.width);
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, width,height)];
+    view.backgroundColor = [UIColor whiteColor];
+    UIImageView *bacImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, width,height)];
+    bacImageView.image = theImage;
+    bacImageView.backgroundColor = [UIColor whiteColor];
+    [view addSubview:bacImageView];
+    //logoImage.size.width;
+    float width_logo = width / 4;
+    UIView *logoBacView = [[UIView alloc]initWithFrame:CGRectMake((width - width_logo)/2 , (height - width_logo)/2, width_logo + 10,width_logo + 10)];
+    logoBacView.backgroundColor = [UIColor whiteColor];
+    logoBacView.layer.masksToBounds = YES;
+    [bacImageView addSubview:logoBacView];
+    UIImageView *centerImgView = [[UIImageView alloc]initWithFrame:CGRectMake(5,5, width_logo,width_logo)];
+    centerImgView.image = logoImage;
+    centerImgView.layer.masksToBounds = YES;
+    centerImgView.backgroundColor = [UIColor whiteColor];
+    [logoBacView addSubview:centerImgView];
+    //设置圆角
+    float radius = 0;
+    float radius_img = 0;
+    if (logoType == QRCodeLogoType_Round) {
+        radius = (width_logo + 10)/2;
+        radius_img = width_logo/2;
+    }else if (logoType == QRCodeLogoType_Radius){
+        radius = 15;
+        radius_img = 15;
+    }else {
+        radius = 0;
+        radius_img = 0;
+    }
+    logoBacView.layer.cornerRadius = radius;
+centerImgView.layer.cornerRadius = radius_img;
+ //生成图片
+    UIImage *img = [self snapshotViewFromRect:CGRectMake(0, 0, view.frame.size.width, view.frame.size.height) withCapInsets:UIEdgeInsetsZero layer:view.layer];
+    return img;
+}
+//生成的图片
+
++ (UIImage *)snapshotViewFromRect:(CGRect)rect withCapInsets:(UIEdgeInsets)capInsets layer:(CALayer *)theLayer{
+
+    UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
+
+    CGContextRef currentContext = UIGraphicsGetCurrentContext();
+
+    [theLayer renderInContext:currentContext];
+    UIImage *snapshotImage = UIGraphicsGetImageFromCurrentImageContext();
+
+    NSData * data = UIImageJPEGRepresentation(snapshotImage, 1);
+    UIGraphicsEndImageContext();
+    UIImage *img = [UIImage imageWithData:data];
+    return img;
+}
+
++ (UIImage *)GenerateQRCodeWithIcon:(UIImage *)centerIcon Message:(NSString *)message{
+    // 1. 创建一个二维码滤镜实例(CIFilter)
+    CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    // 滤镜恢复默认设置
+    [filter setDefaults];
+    // 2. 给滤镜添加数据
+    NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
+    [filter setValue:data forKeyPath:@"inputMessage"];
+    // 3. 生成二维码
+    CIImage *image = [filter outputImage];
+    //放大图片
+    image = [image imageByApplyingTransform:CGAffineTransformMakeScale(20, 20)];
+    //将CIImage类型转换成UIImage类型
+    // 转成高清格式
+    UIImage *qrcode = [self createNonInterpolatedUIImageFormCIImage:image withSize:200];
+    //生成图片，并获取上下文，得到一个带头像的二维码图片
+    qrcode = [self createNewImage:qrcode logoImage:centerIcon logoType:1];
+    //返回二维码图像
+    return qrcode;
+}
+
+// 将二维码转成高清的格式
++ (UIImage *)createNonInterpolatedUIImageFormCIImage:(CIImage *)image withSize:(CGFloat) size {
+    
+    CGRect extent = CGRectIntegral(image.extent);
+    CGFloat scale = MIN(size/CGRectGetWidth(extent), size/CGRectGetHeight(extent));
+    // 1.创建bitmap;
+    size_t width = CGRectGetWidth(extent) * scale;
+    size_t height = CGRectGetHeight(extent) * scale;
+    CGColorSpaceRef cs = CGColorSpaceCreateDeviceGray();
+    CGContextRef bitmapRef = CGBitmapContextCreate(nil, width, height, 8, 0, cs, (CGBitmapInfo)kCGImageAlphaNone);
+    CIContext *context = [CIContext contextWithOptions:nil];
+    CGImageRef bitmapImage = [context createCGImage:image fromRect:extent];
+    CGContextSetInterpolationQuality(bitmapRef, kCGInterpolationNone);
+    CGContextScaleCTM(bitmapRef, scale, scale);
+    CGContextDrawImage(bitmapRef, extent, bitmapImage);
+    
+    // 2.保存bitmap到图片
+    CGImageRef scaledImage = CGBitmapContextCreateImage(bitmapRef);
+    CGContextRelease(bitmapRef);
+    CGImageRelease(bitmapImage);
+    return [UIImage imageWithCGImage:scaledImage];
+}
 //纠正图片的方向
 - (UIImage *)fixOrientation:(UIImage *)aImage {
 // No-op if the orientation is already correct

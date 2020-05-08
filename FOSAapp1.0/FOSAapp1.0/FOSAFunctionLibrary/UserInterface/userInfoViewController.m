@@ -26,8 +26,8 @@
 }
 - (void)creatUserInfoTable{
     self.navigationItem.title = @"Personal Infomation";
-    self.view.backgroundColor = FOSAWhite;
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0],NSForegroundColorAttributeName, nil]];
+    self.view.backgroundColor = FOSAColor(242, 242, 242);
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor],NSForegroundColorAttributeName, nil]];
     
     self.userInfoTable = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame)+Height(10), screen_width, screen_height/4) style:UITableViewStylePlain];
     self.userInfoTable.delegate = self;
@@ -36,8 +36,8 @@
     
     imgManager = [FosaIMGManager new];
     [imgManager InitImgManager];
-    self.headIconView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.userInfoTable.frame.size.height/3, self.userInfoTable.frame.size.height/3)];
-    self.headIconView.center = CGPointMake(screen_width-self.userInfoTable.frame.size.height/3, self.userInfoTable.frame.size.height/5);
+    self.headIconView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.userInfoTable.frame.size.height/4, self.userInfoTable.frame.size.height/4)];
+    self.headIconView.center = CGPointMake(screen_width-self.userInfoTable.frame.size.height/5, self.userInfoTable.frame.size.height/5);
     currentUser = [[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"];
     if ([imgManager getImgWithName:currentUser]) {
         self.headIconView.image = [imgManager getImgWithName:currentUser];
@@ -48,6 +48,12 @@
     self.headIconView.contentMode = UIViewContentModeScaleAspectFill;
     self.headIconView.clipsToBounds = YES;
     
+    self.logOutBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.userInfoTable.frame)+Height(10), screen_width, self.userInfoTable.frame.size.height/5)];
+    [self.logOutBtn setTitle:@"Log Out" forState:UIControlStateNormal];
+    [self.logOutBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    self.logOutBtn.backgroundColor = FOSAWhite;
+    [self.logOutBtn addTarget:self action:@selector(logOutFunction) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.logOutBtn];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -60,6 +66,7 @@
         return self.userInfoTable.frame.size.height*3/10;
     }
 }
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 1;
 }
@@ -72,7 +79,6 @@
         //创建cell
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
     }
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     switch (indexPath.row) {
         case 0:
@@ -131,14 +137,38 @@
     [self presentViewController:alert animated:YES completion:nil];
     
 }
-#pragma mark - 扫描相册中的二维码-UIImagePickerControllerDelegate
+#pragma mark - 选择中的照片
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     // 对选取照片的处理，如果选取的图片尺寸过大，则压缩选取图片，否则不作处理
     UIImage *image = info[UIImagePickerControllerOriginalImage];
     NSLog(@"%@",image);
-    self.headIconView.image = image;
+    self.headIconView.image = [imgManager fixOrientation:image];
     [self->imgManager deleteImgWithName:currentUser];
     [self->imgManager savePhotoWithImage:image name:currentUser];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+//退出登录
+-(void)logOutFunction{
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"]) {
+        alert.message = @"You will exit the current account";
+        UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
+            [userdefault removeObjectForKey:@"currentUser"];
+            [self.navigationController popViewControllerAnimated:YES];
+        }];
+        UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:nil];
+        [alert addAction:action1];
+        [alert addAction:action2];
+    }else{
+        alert.message = @"Please log in your account first";
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Get it" style:UIAlertActionStyleDefault handler:nil];
+        [alert addAction:action];
+    }
+    
+    [self presentViewController:alert animated:true completion:nil];
+}
+
 @end

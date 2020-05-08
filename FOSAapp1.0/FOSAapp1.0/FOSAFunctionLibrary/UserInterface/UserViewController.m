@@ -95,7 +95,7 @@
 - (void)InitData{
 //    ItemArray = @[@"Tutorial",@"Language/Location",@"Setting",@"About FOSA",@"About Apps"];
 //    ItemLogoArray = @[@"icon_tutorial",@"icon_language",@"icon_setting",@"icon_logo",@"icon_app"];
-    ItemArray = @[@"Tutorial",@"Setting",@"About FOSA",@"About Apps"];
+    ItemArray = @[@"Tutorial",@"Settings",@"About FOSA",@"About Apps"];
     ItemLogoArray = @[@"icon_tutorial",@"icon_setting",@"icon_logo",@"icon_app"];
 }
 
@@ -124,8 +124,9 @@
     
     [self.header addSubview:self.userIcon];
     
-    self.userName.frame = CGRectMake(headerWidth/30, headerHeight/2, headerWidth/3, headerWidth/5);
+    self.userName.frame = CGRectMake(headerWidth/30, CGRectGetMaxY(self.userIcon.frame), headerWidth/3, headerHeight/10);
     self.userName.userInteractionEnabled = YES;
+    self.userName.adjustsFontSizeToFitWidth = YES;
     //self.userName.layer.borderWidth = 0.5;
     self.userName.layer.cornerRadius = 5;
     self.userName.textAlignment = NSTextAlignmentCenter;
@@ -162,7 +163,7 @@
     [imgManeger InitImgManager];
     NSLog(@"确认当前登录用户");
     NSString *currentUser= [self.userDefaults valueForKey:@"currentUser"];
-    if (currentUser != NULL) {
+    if (currentUser) {
         self.userName.text = currentUser;
         if ([imgManeger getImgWithName:currentUser]) {
             self.userIcon.image = [imgManeger getImgWithName:currentUser];

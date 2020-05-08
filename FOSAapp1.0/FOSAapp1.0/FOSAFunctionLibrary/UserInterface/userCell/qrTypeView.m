@@ -38,7 +38,7 @@
     self.qrTypeImgView.contentMode = UIViewContentModeScaleAspectFill;
     self.qrTypeImgView.clipsToBounds = YES;
     
-    self.qrCountLabel.frame = CGRectMake(width/2, CGRectGetMaxY(self.qrTypeImgView.frame), width/2, width/10);
+    self.qrCountLabel.frame = CGRectMake(width*2/3, CGRectGetMaxY(self.qrTypeImgView.frame), width/3, width/10);
     self.qrCountLabel.text = @"0";
     
 }

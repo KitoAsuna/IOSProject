@@ -226,7 +226,7 @@
     [self.LoginContainer addSubview:self.login];
     [self.LoginContainer addSubview:self.signUp];
     
-    self.guestMode.frame = CGRectMake(screen_width/12, CGRectGetMaxY(self.LoginContainer.frame), self.LoginContainer.frame.size.width*4/9, self.LoginContainer.frame.size.height);
+    self.guestMode.frame = CGRectMake(screen_width*5/18, CGRectGetMaxY(self.LoginContainer.frame), screen_width*4/9, self.LoginContainer.frame.size.height);
     self.guestMode.text = @"Guest Mode";
     self.guestMode.textColor = FOSAgreen;
     self.guestMode.textAlignment = NSTextAlignmentCenter;

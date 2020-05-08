@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface userInfoViewController : UIViewController
 @property (nonatomic,strong) UITableView *userInfoTable;
 @property (nonatomic,strong) UIImageView *headIconView;
+@property (nonatomic,strong) UIButton *logOutBtn;
 @end
 
 NS_ASSUME_NONNULL_END

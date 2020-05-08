@@ -58,7 +58,7 @@
  }
  /**** 设置中间的发布按钮的frame ****/
  self.addFoodItemBtn.frame = CGRectMake(0, 0, buttonH*4/5, buttonH*4/5);
- self.addFoodItemBtn.center = CGPointMake(self.frame.size.width * 0.5, 0);
+    self.addFoodItemBtn.center = CGPointMake(self.frame.size.width/2, self.frame.size.height/6);
 }
 
 //重写系统的hitTest方法让处于tabbar外部的按钮部分也可以被点击
