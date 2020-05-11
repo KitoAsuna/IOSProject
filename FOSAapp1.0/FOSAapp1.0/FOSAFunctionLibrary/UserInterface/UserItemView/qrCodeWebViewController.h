@@ -15,8 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) NSString *urlString;
 @property (nonatomic,strong) UITableView *qrTable;
 @property (nonatomic,strong) UIScrollView *preview;
+@property (nonatomic,strong) UITableView *sizeTableView;
 @property (nonatomic,strong) UIButton *printBtn;
 @property (nonatomic,strong) UISwitch *colorSwitch;
+@property (nonatomic,strong) UILabel *colorLabel;
 @property (nonatomic,strong) UIPageControl *pageControl;
 
 @end

@@ -149,11 +149,6 @@
 //    UIGraphicsEndImageContext();
 //    return image;
 //}
-
-
-
-
-
 typedef NS_OPTIONS(NSUInteger, QRCodeLogoType) {
     QRCodeLogoType_Default = 0,//默认无圆角logo
     QRCodeLogoType_Round   = 1,//正圆logo

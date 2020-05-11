@@ -52,19 +52,21 @@
     }
     return _userName;
 }
-- (UITableView *)userItemTable{
-    if (_userItemTable == nil) {
-        _userItemTable = [[UITableView alloc]initWithFrame:CGRectMake(0, screen_height*15/48, screen_width, screen_height/3) style:UITableViewStylePlain];
-        //_userItemTable = [[UITableView alloc]init];
-    }
-    return _userItemTable;
-}
 - (UIImageView *)qrCodeGenerateView{
     if (_qrCodeGenerateView == nil) {
         _qrCodeGenerateView = [UIImageView new];
     }
     return _qrCodeGenerateView;
 }
+
+- (UITableView *)userItemTable{
+    if (_userItemTable == nil) {
+        _userItemTable = [[UITableView alloc]initWithFrame:CGRectMake(0, screen_width*15/33, screen_width, screen_height/4) style:UITableViewStylePlain];
+        //_userItemTable = [[UITableView alloc]init];
+    }
+    return _userItemTable;
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -109,12 +111,12 @@
     self.header.backgroundColor = [UIColor colorWithRed:208/255.0 green:208/255.0 blue:208/255.0 alpha:1.0];
     self.headerBackgroundImgView.frame = self.header.frame;
     self.headerBackgroundImgView.backgroundColor = FOSAColor(242,242,242);
-    //self.headerBackgroundImgView.image = [UIImage imageNamed:@"img_UserBackground"];
+    self.headerBackgroundImgView.image = [UIImage imageNamed:@"IMG_userBackground"];
     self.headerBackgroundImgView.contentMode = UIViewContentModeScaleAspectFill;
     self.headerBackgroundImgView.clipsToBounds = YES;
     [self.header addSubview:self.headerBackgroundImgView];
     
-    self.userIcon.frame = CGRectMake(headerWidth/10, headerHeight*3/10, headerWidth/5, headerWidth/5);
+    self.userIcon.frame = CGRectMake(headerWidth/10, headerHeight*2/5, headerWidth/5, headerWidth/5);
     self.userIcon.contentMode = UIViewContentModeScaleAspectFill;
     self.userIcon.clipsToBounds = YES;
     self.userIcon.layer.cornerRadius = 10;
@@ -131,30 +133,41 @@
     self.userName.layer.cornerRadius = 5;
     self.userName.textAlignment = NSTextAlignmentCenter;
     self.userName.font = [UIFont systemFontOfSize:20*(screen_width/414.0)];
-    self.userName.textColor = [UIColor blackColor];
+    self.userName.textColor = FOSAWhite;
     UITapGestureRecognizer *login = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(JUMP)];
     [self.userName addGestureRecognizer:login];
     [self.header addSubview:self.userName];
 }
 
 - (void)CreatUserItemTable{
-    [self.view addSubview:self.userItemTable];
+    UIView *background = [[UIView alloc]initWithFrame:CGRectMake(0, screen_height*15/48, screen_width, screen_height*33/48)];
+    background.backgroundColor = FOSAWhite;
+    background.layer.cornerRadius = Width(15);
+    [self.view addSubview:background];
     
-    self.userItemTable.delegate = self;
-    self.userItemTable.dataSource = self;
-    self.userItemTable.bounces = NO;
-    self.userItemTable.layer.cornerRadius = 15;
-    self.userItemTable.showsVerticalScrollIndicator = NO;
-    [self.userItemTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
-    
-    self.qrCodeGenerateView.frame = CGRectMake(screen_width*5/66, CGRectGetMaxY(self.userItemTable.frame)+screen_height*3/143, screen_width*28/33, screen_width*14/33);
-    self.qrCodeGenerateView.image = [UIImage imageNamed:@"img_qrcodegenerator"];
-    
-    //UIGestureRecognizer 不适用
+    self.qrCodeGenerateView.frame = CGRectMake(screen_width/66, screen_width/33, screen_width*32/33, screen_width*12/33);
+    self.qrCodeGenerateView.contentMode = UIViewContentModeScaleAspectFit;
+    self.qrCodeGenerateView.image = [UIImage imageNamed:@"IMG_qrGenerateBk"];
+       
     UITapGestureRecognizer *qrrecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumpToQrCodeGenerator:)];
     self.qrCodeGenerateView.userInteractionEnabled = YES;
     [self.qrCodeGenerateView addGestureRecognizer:qrrecognizer];
-    [self.view addSubview:self.qrCodeGenerateView];
+    [background addSubview:self.qrCodeGenerateView];
+    
+    UIView *separatLine = [[UIView alloc]initWithFrame:CGRectMake(screen_width/20, screen_width*14/33, screen_width*9/10, 2)];
+    //separatLine.layer.borderWidth = 10;
+    separatLine.backgroundColor = FOSAColor(240, 240, 240);
+    [background addSubview:separatLine];
+    
+    [background addSubview:self.userItemTable];
+    self.userItemTable.delegate = self;
+    self.userItemTable.dataSource = self;
+    self.userItemTable.bounces = NO;
+    //self.userItemTable.layer.cornerRadius = 15;
+    self.userItemTable.showsVerticalScrollIndicator = NO;
+    [self.userItemTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+    
+   
 }
 
 //取出用户名和密码
