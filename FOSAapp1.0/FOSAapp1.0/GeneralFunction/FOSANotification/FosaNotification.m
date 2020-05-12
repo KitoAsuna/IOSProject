@@ -120,7 +120,7 @@
     NSLog(@"%@",imagePath);
     NSError *error = nil;
     //将本地图片的路径形成一个图片附件，加入到content中
-    UNNotificationAttachment *img_attachment = [UNNotificationAttachment attachmentWithIdentifier:@"att1" URL:[NSURL fileURLWithPath:imagePath] options:nil error:&error];
+    UNNotificationAttachment *img_attachment = [UNNotificationAttachment attachmentWithIdentifier:imagePath URL:[NSURL fileURLWithPath:imagePath] options:nil error:&error];
     if (error) {
         NSLog(@"%@", error);
     }

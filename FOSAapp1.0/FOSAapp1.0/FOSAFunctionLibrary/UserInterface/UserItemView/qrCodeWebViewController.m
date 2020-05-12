@@ -217,6 +217,7 @@
        [self.printBtn setTitleColor:FOSABlueHL forState:UIControlStateHighlighted];
        self.printBtn.backgroundColor = FOSAgreen;
        [self.printBtn addTarget:self action:@selector(generateQrCodeImage) forControlEvents:UIControlEventTouchUpInside];
+    //[self.printBtn addTarget:self action:@selector(getPhotoFromServer) forControlEvents:UIControlEventTouchUpInside];
        [self.view addSubview:self.printBtn];
 }
 
@@ -270,42 +271,42 @@
 //    [self.view addSubview:self.pageControl];
 }
 
-//- (void)getPhotoFromServer{
-//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:nil preferredStyle:UIAlertControllerStyleAlert];
-//    if (qrkind == 0) {
-//        alert.message = @"Please choose print quantity first!";
-//        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
-//        [self presentViewController:alert animated:YES completion:nil];
-//    }else{
-//        [self CreatLoadView];
-//        ///1.创建会话管理者
-//        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-//        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", nil];
-//        //下载图片
-//        NSString *cc = [NSString stringWithFormat:@"%ld",selectColor];
-//        NSString *s  = [NSString stringWithFormat:@"%ld",currentIndex];
-//
-//
-//        NSString *Addr = [NSString stringWithFormat:@"https://fosahome.com/qrlabel/?cc=%@&s=%@&l1=%@&l2=%@&l3=%@&l4=%@&l9=0&g=2&j=1",cc,s,counter[0],counter[1],counter[2],counter[3]];
-//        NSLog(@"API:%@",Addr);
-//
-//         [manager GET:Addr parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-//             NSLog(@"success--%@--%@",[responseObject class],responseObject);
-//             [self.FOSAloadingView stopAnimating];
-//             NSString *imgPath = responseObject[@"file"];
-//             [self downLoadImg:imgPath];
-//         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-//             NSLog(@"failure--%@",error);
-//             [self.FOSAloadingView stopAnimating];
-//         }];
-//    }
-//}
-//- (void)downLoadImg:(NSString *)imgAddr{
-//    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imgAddr]];
-//    UIImage *image = [UIImage imageWithData:data]; // 取得图片
-//    NSLog(@"%@",image);
-//    UIImageWriteToSavedPhotosAlbum(image, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
-//}
+- (void)getPhotoFromServer{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    if (qrkind == 0) {
+        alert.message = @"Please choose print quantity first!";
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }else{
+        [self CreatLoadView];
+        ///1.创建会话管理者
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", nil];
+        //下载图片
+        NSString *cc = [NSString stringWithFormat:@"%ld",selectColor];
+        NSString *s  = [NSString stringWithFormat:@"%ld",selectSize];
+
+
+        NSString *Addr = [NSString stringWithFormat:@"https://fosahome.com/qrlabel/?cc=%@&s=%@&l1=%@&l2=%@&l3=%@&l4=%@&l9=0&g=2&j=1",cc,s,counter[0],counter[1],counter[2],counter[3]];
+        NSLog(@"API:%@",Addr);
+
+         [manager GET:Addr parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+             NSLog(@"success--%@--%@",[responseObject class],responseObject);
+             [self.FOSAloadingView stopAnimating];
+             NSString *imgPath = responseObject[@"file"];
+             [self downLoadImg:imgPath];
+         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+             NSLog(@"failure--%@",error);
+             [self.FOSAloadingView stopAnimating];
+         }];
+    }
+}
+- (void)downLoadImg:(NSString *)imgAddr{
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imgAddr]];
+    UIImage *image = [UIImage imageWithData:data]; // 取得图片
+    NSLog(@"%@",image);
+    UIImageWriteToSavedPhotosAlbum(image, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
+}
 
 - (void)selectType1{
     if ([counter[0] isEqualToString:@"0"]) {
