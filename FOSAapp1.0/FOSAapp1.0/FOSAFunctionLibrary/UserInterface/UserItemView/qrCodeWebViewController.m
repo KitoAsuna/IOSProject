@@ -145,11 +145,11 @@
 - (void)creatQrGenerator{
     [self creatPreview];
     
-    UIView *separatLine = [[UIView alloc]initWithFrame:CGRectMake(screen_width/20, CGRectGetMaxY(self.preview.frame)+Height(10), screen_width*19/20, 2)];
+    UIView *separatLine = [[UIView alloc]initWithFrame:CGRectMake(screen_width/20, CGRectGetMaxY(self.preview.frame)-Height(1), screen_width*19/20, 2)];
     separatLine.backgroundColor = FOSAColor(240, 240, 240);
     [self.view addSubview:separatLine];
 
-    UIView *colorView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.preview.frame)+Height(20), screen_width, Height(50))];
+    UIView *colorView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.preview.frame), screen_width, Height(50))];
     [self.view addSubview:colorView];
 //    self.qrTable = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.preview.frame)+Height(20), screen_width, Height(50)) style:UITableViewStylePlain];
 //    self.qrTable.delegate = self;
@@ -211,14 +211,17 @@
     [self.view addSubview:separatLine2];
 
     self.printBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.type3.frame)+Height(45), screen_width/3, Height(40));
-       self.printBtn.layer.cornerRadius = Height(20);
-       [self.printBtn setTitle:@"Generate" forState:UIControlStateNormal];
-       [self.printBtn setTitleColor:FOSAWhite forState:UIControlStateNormal];
-       [self.printBtn setTitleColor:FOSABlueHL forState:UIControlStateHighlighted];
-       self.printBtn.backgroundColor = FOSAgreen;
-       [self.printBtn addTarget:self action:@selector(generateQrCodeImage) forControlEvents:UIControlEventTouchUpInside];
+    self.printBtn.layer.cornerRadius = Height(20);
+    [self.printBtn setTitle:@"Generate" forState:UIControlStateNormal];
+    [self.printBtn setTitleColor:FOSAWhite forState:UIControlStateNormal];
+    [self.printBtn setTitleColor:FOSABlueHL forState:UIControlStateHighlighted];
+    self.printBtn.backgroundColor = FOSAgreen;
+    //在本地生成
+    [self.printBtn addTarget:self action:@selector(generateQrCodeImage) forControlEvents:UIControlEventTouchUpInside];
+
+    //从服务器获取
     //[self.printBtn addTarget:self action:@selector(getPhotoFromServer) forControlEvents:UIControlEventTouchUpInside];
-       [self.view addSubview:self.printBtn];
+    [self.view addSubview:self.printBtn];
 }
 
 - (void)creatPreview{
@@ -250,8 +253,7 @@
     [self.sizeTableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition: UITableViewScrollPositionNone];
     [self.sizeTableView cellForRowAtIndexPath:selectedIndexPath].backgroundColor = FOSAColor(240, 240, 240);
     [self.sizeTableView cellForRowAtIndexPath:selectedIndexPath].accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    
-    
+
 //    for (int i = 0; i < 5; i++) {
 //        self.imageviewArray[i].frame = CGRectMake(i*screen_width, 0, self.preview.frame.size.width, self.preview.frame.size.height);
 //        if (selectColor == 1) {
@@ -530,14 +532,14 @@
  */
 - (void)generateQrCodeImageOfA4WithImg:(UIImage *)backImg{
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"]) {
-        
+
         UIImageView *qrcodeImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, NavigationBarH*3, screen_width, screen_width*(297.0/210))];
         qrcodeImage.backgroundColor = [UIColor blackColor];
         qrcodeImage.image = backImg;
         qrcodeImage.contentMode = UIViewContentModeScaleAspectFill;
         CGFloat height = qrcodeImage.frame.size.height;
         CGFloat width  = qrcodeImage.frame.size.width;
-        
+
         int kind1 = [counter[0] intValue];
         int kind2 = [counter[1] intValue];
         int kind3 = [counter[2] intValue];
@@ -716,6 +718,7 @@
         self.FOSAloadingView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleMedium)];
     }
     [self.view addSubview:self.FOSAloadingView];
+    
     //设置小菊花的frame
     self.FOSAloadingView.frame= CGRectMake(0, 0, 200, 200);
     self.FOSAloadingView.center = self.view.center;
@@ -723,12 +726,13 @@
     self.FOSAloadingView.color = FOSAgreen;
     //设置背景颜色
     self.FOSAloadingView.backgroundColor = [UIColor clearColor];
-//刚进入这个界面会显示控件，并且停止旋转也会显示，只是没有在转动而已，没有设置或者设置为YES的时候，刚进入页面不会显示
+    //刚进入这个界面会显示控件，并且停止旋转也会显示，只是没有在转动而已，没有设置或者设置为YES的时候，刚进入页面不会显示
     self.FOSAloadingView.hidesWhenStopped = YES;
     [self.FOSAloadingView startAnimating];
+
 }
 
-#pragma mark -UIScrollerViewDelegate
+//#pragma mark -UIScrollerViewDelegate
 //- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
 //    CGFloat offset = scrollView.contentOffset.x;
 //    currentIndex = offset/screen_width;
@@ -745,12 +749,14 @@
     
     return self.sizeTableView.frame.size.height/sizeData.count;
 }
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return sizeData.count;
 }
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *cellIdentifier = @"qrcell";
-       //初始化cell，并指定其类型
+    //初始化cell，并指定其类型
     UITableViewCell *cell = [tableView  dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
         //创建cell
@@ -758,12 +764,15 @@
     }
     //取消点击cell时显示的背景
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.accessoryType  = UITableViewCellAccessoryNone;
     cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
     cell.backgroundColor = FOSAWhite;
     cell.textLabel.text = sizeData[indexPath.row];
     return cell;
 }
+
 - (void)changeColor:(UISwitch *)sender{
+
     BOOL isButtonOn = [self.colorSwitch isOn];
     if (isButtonOn) {
         selectColor = 1;
@@ -772,17 +781,43 @@
         selectColor = 0;
         dataSource = previewData;
     }
+
     self.colorLabel.text = colorData[selectColor];
     self.previewImgView.image = [UIImage imageNamed:dataSource[0]];
     [self.sizeTableView reloadData];
+    
+    
+    //
+    NSIndexPath *selectedIndexPath = [NSIndexPath indexPathForRow:selectSize inSection:0];
+    [self.sizeTableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition: UITableViewScrollPositionNone];
+    [self.sizeTableView cellForRowAtIndexPath:selectedIndexPath].backgroundColor = FOSAColor(240, 240, 240);
+    [self.sizeTableView cellForRowAtIndexPath:selectedIndexPath].accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.backgroundColor = FOSAColor(240, 240, 240);
-    cell.accessoryType  = UITableViewCellAccessoryDisclosureIndicator;
+    cell.backgroundColor  = FOSAColor(240, 240, 240);
+    cell.accessoryType    = UITableViewCellAccessoryDisclosureIndicator;
     self.previewImgView.image = [UIImage imageNamed:dataSource[indexPath.row]];
     selectSize = indexPath.row;
+
+    counter[0] = @"0";
+    counter[1] = @"0";
+    counter[2] = @"0";
+    counter[3] = @"0";
+
+    self.type1.qrCountLabel.text = [NSString stringWithFormat:@"x%@",counter[0]];
+    self.type2.qrCountLabel.text = [NSString stringWithFormat:@"x%@",counter[1]];
+    self.type3.qrCountLabel.text = [NSString stringWithFormat:@"x%@",counter[2]];
+    self.type4.qrCountLabel.text = [NSString stringWithFormat:@"x%@",counter[3]];
+
+    self.type1.selectBox.image   = [UIImage imageNamed:@"icon_unselect"];
+    self.type2.selectBox.image   = [UIImage imageNamed:@"icon_unselect"];
+    self.type3.selectBox.image   = [UIImage imageNamed:@"icon_unselect"];
+    self.type4.selectBox.image   = [UIImage imageNamed:@"icon_unselect"];
+    qrkind = 0;
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -790,7 +825,7 @@
     cell.backgroundColor = [UIColor whiteColor];
     cell.accessoryType  = UITableViewCellAccessoryNone;
 }
-//
+
 //- (void)creatWebView{
 //    //创建网络配置对象
 //    WKWebViewConfiguration *config = [WKWebViewConfiguration new];

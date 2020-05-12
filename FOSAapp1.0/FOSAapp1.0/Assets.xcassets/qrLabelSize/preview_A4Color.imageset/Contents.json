@@ -1,11 +1,11 @@
 {
   "images" : [
     {
+      "filename" : "preview_A4Color.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "preview_A4Color.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
