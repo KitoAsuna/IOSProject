@@ -375,7 +375,6 @@
  生成二维码图片
  */
 - (void)generateQrCodeImage{
-     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"]) {
          [self CreatLoadView];
          imgManager = [FosaIMGManager new];
          [imgManager InitImgManager];
@@ -419,7 +418,6 @@
         default:
             break;
     }
-     }
 }
 /**
  3R
