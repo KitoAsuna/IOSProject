@@ -109,7 +109,7 @@
     self.header.frame = CGRectMake(0, 0, headerWidth, headerHeight);
     [self.view addSubview:self.header];
     self.header.backgroundColor = [UIColor colorWithRed:208/255.0 green:208/255.0 blue:208/255.0 alpha:1.0];
-    self.headerBackgroundImgView.frame = self.header.frame;
+    self.headerBackgroundImgView.frame = CGRectMake(0, 0, headerWidth, headerHeight);
     self.headerBackgroundImgView.backgroundColor = FOSAColor(242,242,242);
     self.headerBackgroundImgView.image = [UIImage imageNamed:@"IMG_UserBackground"];
     self.headerBackgroundImgView.contentMode = UIViewContentModeScaleAspectFill;

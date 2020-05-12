@@ -171,17 +171,17 @@
     
     int typeHeight = screen_height-CGRectGetMaxY(colorView.frame);
     self.type1 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(colorView.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
-    self.type1.qrTypeImgView.image = [UIImage imageNamed:@"icon_type1"];
+    self.type1.qrTypeImgView.image = [UIImage imageNamed:@"type1C"];
     self.type1.contentMode = UIViewContentModeScaleAspectFit;
     self.type1.backgroundColor = FOSAColor(242, 242, 242);
     self.type2 = [[qrTypeView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.type1.frame)+screen_width/24, CGRectGetMaxY(colorView.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
     self.type2.backgroundColor = FOSAColor(242, 242, 242);
-    self.type2.qrTypeImgView.image = [UIImage imageNamed:@"icon_type2"];
+    self.type2.qrTypeImgView.image = [UIImage imageNamed:@"type2C"];
     self.type3 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.type1.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
-    self.type3.qrTypeImgView.image = [UIImage imageNamed:@"icon_type3"];
+    self.type3.qrTypeImgView.image = [UIImage imageNamed:@"type3C"];
     self.type3.backgroundColor = FOSAColor(242, 242, 242);
     self.type4 = [[qrTypeView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.type3.frame)+screen_width/24, CGRectGetMaxY(self.type2.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
-    self.type4.qrTypeImgView.image = [UIImage imageNamed:@"icon_type4"];
+    self.type4.qrTypeImgView.image = [UIImage imageNamed:@"type4C"];
     self.type4.backgroundColor = FOSAColor(242, 242, 242);
 
     UITapGestureRecognizer *selectRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectType1)];
@@ -243,7 +243,7 @@
     self.sizeTableView.dataSource = self;
     [self.preview addSubview:self.sizeTableView];
     
-    self.previewImgView.frame = CGRectMake(sizeWidth*2/5, 0, sizeWidth*3/5, sizeHeight);
+    self.previewImgView.frame = CGRectMake(sizeWidth*2/5, 0, sizeWidth*3/5, sizeHeight-Height(5));
     self.previewImgView.image = [UIImage imageNamed:dataSource[0]];
     self.previewImgView.contentMode = UIViewContentModeScaleAspectFit;
     [self.preview addSubview:self.previewImgView];
@@ -375,17 +375,18 @@
  生成二维码图片
  */
 - (void)generateQrCodeImage{
-    [self CreatLoadView];
-    imgManager = [FosaIMGManager new];
-    [imgManager InitImgManager];
-    switch (selectSize) {
-        case 0:
-            if (selectColor == 0) {
-                [self generateQrCodeImageOf3RWithImg:[UIImage imageNamed:@"IMG_3RBackground"]];
-            }else{
-                [self generateQrCodeImageOf3RWithImg:[UIImage imageNamed:@"IMG_3RBackgroundColor"]];
-            }
-            break;
+     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"]) {
+         [self CreatLoadView];
+         imgManager = [FosaIMGManager new];
+         [imgManager InitImgManager];
+         switch (selectSize) {
+             case 0:
+                 if (selectColor == 0) {
+                     [self generateQrCodeImageOf3RWithImg:[UIImage imageNamed:@"IMG_3RBackground"]];
+                 }else{
+                     [self generateQrCodeImageOf3RWithImg:[UIImage imageNamed:@"IMG_3RBackgroundColor"]];
+                 }
+                 break;
         case 1:
             if (selectColor == 0) {
                 [self generateQrCodeImageOf4RWithImg:[UIImage imageNamed:@"IMG_4RBackground"]];
@@ -418,6 +419,7 @@
         default:
             break;
     }
+     }
 }
 /**
  3R
@@ -785,8 +787,7 @@
     self.colorLabel.text = colorData[selectColor];
     self.previewImgView.image = [UIImage imageNamed:dataSource[0]];
     [self.sizeTableView reloadData];
-    
-    
+
     //
     NSIndexPath *selectedIndexPath = [NSIndexPath indexPathForRow:selectSize inSection:0];
     [self.sizeTableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition: UITableViewScrollPositionNone];
@@ -907,4 +908,7 @@
 //    //[self.qrWebView removeObserver:self forKeyPath:NSStringFromSelector(@selector(estimatedProgress))];
 //    [self.progressView removeFromSuperview];
 //}
+- (void)viewWillDisappear:(BOOL)animated{
+    [self.FOSAloadingView stopAnimating];
+}
 @end
