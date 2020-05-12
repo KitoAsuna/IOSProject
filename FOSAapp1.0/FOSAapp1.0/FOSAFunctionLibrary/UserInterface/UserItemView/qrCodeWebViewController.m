@@ -173,16 +173,16 @@
     self.type1 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(colorView.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
     self.type1.qrTypeImgView.image = [UIImage imageNamed:@"type1C"];
     self.type1.contentMode = UIViewContentModeScaleAspectFit;
-    self.type1.backgroundColor = FOSAColor(242, 242, 242);
+    //self.type1.backgroundColor = FOSAColor(242, 242, 242);
     self.type2 = [[qrTypeView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.type1.frame)+screen_width/24, CGRectGetMaxY(colorView.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
-    self.type2.backgroundColor = FOSAColor(242, 242, 242);
+    //self.type2.backgroundColor = FOSAColor(242, 242, 242);
     self.type2.qrTypeImgView.image = [UIImage imageNamed:@"type2C"];
     self.type3 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.type1.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
     self.type3.qrTypeImgView.image = [UIImage imageNamed:@"type3C"];
-    self.type3.backgroundColor = FOSAColor(242, 242, 242);
+    //self.type3.backgroundColor = FOSAColor(242, 242, 242);
     self.type4 = [[qrTypeView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.type3.frame)+screen_width/24, CGRectGetMaxY(self.type2.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
     self.type4.qrTypeImgView.image = [UIImage imageNamed:@"type4C"];
-    self.type4.backgroundColor = FOSAColor(242, 242, 242);
+    //self.type4.backgroundColor = FOSAColor(242, 242, 242);
 
     UITapGestureRecognizer *selectRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectType1)];
 
