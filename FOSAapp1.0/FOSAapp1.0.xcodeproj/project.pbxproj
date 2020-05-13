@@ -627,6 +627,8 @@
 				45A30E1C2429884D0059B8F7 /* resetAccountViewController.m */,
 				4580513D245911CE00A2D6D2 /* qrSelectorViewController.h */,
 				4580513E245911CE00A2D6D2 /* qrSelectorViewController.m */,
+				4521C186246B9A2F003E378F /* qrSizeTableViewCell.h */,
+				4521C187246B9A2F003E378F /* qrSizeTableViewCell.m */,
 			);
 			path = UserItemView;
 			sourceTree = "<group>";
@@ -844,8 +846,6 @@
 			children = (
 				4509412C2460E749001F12EE /* qrTypeView.h */,
 				4509412D2460E749001F12EE /* qrTypeView.m */,
-				4521C186246B9A2F003E378F /* qrSizeTableViewCell.h */,
-				4521C187246B9A2F003E378F /* qrSizeTableViewCell.m */,
 			);
 			path = userCell;
 			sourceTree = "<group>";

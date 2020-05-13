@@ -800,14 +800,13 @@
     }
 
     self.colorLabel.text = colorData[selectColor];
-    self.previewImgView.image = [UIImage imageNamed:dataSource[0]];
+    self.previewImgView.image = [UIImage imageNamed:dataSource[selectSize]];
     [self.sizeTableView reloadData];
 
     //
     NSIndexPath *selectedIndexPath = [NSIndexPath indexPathForRow:selectSize inSection:0];
     [self.sizeTableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition: UITableViewScrollPositionNone];
-    [self.sizeTableView cellForRowAtIndexPath:selectedIndexPath].backgroundColor = FOSAColor(240, 240, 240);
-    [self.sizeTableView cellForRowAtIndexPath:selectedIndexPath].accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    [self.sizeTableView cellForRowAtIndexPath:selectedIndexPath].backgroundColor = FOSAgreen;
 
 }
 
