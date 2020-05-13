@@ -61,7 +61,7 @@
 
 - (UITableView *)userItemTable{
     if (_userItemTable == nil) {
-        _userItemTable = [[UITableView alloc]initWithFrame:CGRectMake(0, screen_width*15/33, screen_width, screen_height/4) style:UITableViewStylePlain];
+        _userItemTable = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.qrCodeGenerateView.frame), screen_width, screen_height/4) style:UITableViewStylePlain];
         //_userItemTable = [[UITableView alloc]init];
     }
     return _userItemTable;
@@ -116,7 +116,7 @@
     self.headerBackgroundImgView.clipsToBounds = YES;
     [self.header addSubview:self.headerBackgroundImgView];
     
-    self.userIcon.frame = CGRectMake(headerWidth/10, headerHeight*2/5, headerWidth/5, headerWidth/5);
+    self.userIcon.frame = CGRectMake(headerWidth/10, headerHeight/2, headerWidth/5, headerWidth/5);
     self.userIcon.contentMode = UIViewContentModeScaleAspectFill;
     self.userIcon.clipsToBounds = YES;
     self.userIcon.layer.cornerRadius = 10;
@@ -157,7 +157,7 @@
     UIView *separatLine = [[UIView alloc]initWithFrame:CGRectMake(screen_width/20, screen_width*14/33, screen_width*9/10, 2)];
     //separatLine.layer.borderWidth = 10;
     separatLine.backgroundColor = FOSAColor(240, 240, 240);
-    [background addSubview:separatLine];
+    //[background addSubview:separatLine];
     
     [background addSubview:self.userItemTable];
     self.userItemTable.delegate = self;

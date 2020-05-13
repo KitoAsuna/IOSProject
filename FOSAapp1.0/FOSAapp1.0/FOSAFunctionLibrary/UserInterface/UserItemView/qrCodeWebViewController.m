@@ -159,6 +159,7 @@
 //    [self.view addSubview:self.qrTable];
     self.colorLabel.frame = CGRectMake(screen_width/20, Height(10), screen_width/2, Height(30));
     self.colorLabel.text  = colorData[selectColor];
+    self.colorLabel.font  = [UIFont systemFontOfSize:font(15)];
     [colorView addSubview:self.colorLabel];
     
     self.colorSwitch.center = CGPointMake(screen_width-Width(40), Height(25));
@@ -770,6 +771,7 @@
     cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
     cell.backgroundColor = FOSAWhite;
     cell.textLabel.text = sizeData[indexPath.row];
+    cell.textLabel.font = [UIFont systemFontOfSize:font(15)];
     return cell;
 }
 
