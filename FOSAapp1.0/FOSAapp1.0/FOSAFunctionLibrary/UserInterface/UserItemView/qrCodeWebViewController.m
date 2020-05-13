@@ -368,7 +368,6 @@
     if (![counter[0] isEqualToString:@"0"]) {
         counter[0] = [NSString stringWithFormat:@"%d",[numberOfCode[selectSize] intValue]-[counter[0] intValue]*(qrkind-1)];
     }
-    
     self.type1.qrCountLabel.text = [NSString stringWithFormat:@"x%@",counter[0]];
     self.type2.qrCountLabel.text = [NSString stringWithFormat:@"x%@",counter[1]];
     self.type3.qrCountLabel.text = [NSString stringWithFormat:@"x%@",counter[2]];

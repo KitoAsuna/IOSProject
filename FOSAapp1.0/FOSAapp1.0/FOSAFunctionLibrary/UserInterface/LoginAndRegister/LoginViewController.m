@@ -178,14 +178,15 @@
 //    isSecure = true;
 //    [self.checkPassword addTarget:self action:@selector(pwdtextSwitch) forControlEvents:UIControlEventTouchUpInside];
 
-    self.remember.frame = CGRectMake(0, 0, 51, 30);
+    //self.remember.frame = CGRectMake(0, 0, 51, 30);
     self.remember.onTintColor = [UIColor colorWithRed:90/255.0 green:172/255.0 blue:51/255.0 alpha:1];
+    self.remember.center = CGPointMake(30, self.rememberContainer.frame.size.height/2);
     //self.remember.thumbTintColor = FOSAAlertBlue;
     [self.remember addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
     [self.rememberContainer addSubview:self.remember];
     self.rememberLabel.frame = CGRectMake(60, 0, self.rememberContainer.frame.size.width/2, 40);
     self.rememberLabel.text = @"Remember Account";
-    self.rememberLabel.font = [UIFont systemFontOfSize:13*(screen_width/414.0)];
+    self.rememberLabel.font = [UIFont systemFontOfSize:14*(screen_width/414.0)];
     self.rememberLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     [self.rememberContainer addSubview:self.rememberLabel];
     
@@ -226,24 +227,24 @@
     [self.LoginContainer addSubview:self.login];
     [self.LoginContainer addSubview:self.signUp];
     
-    self.guestMode.frame = CGRectMake(screen_width*5/18, CGRectGetMaxY(self.LoginContainer.frame), screen_width*4/9, self.LoginContainer.frame.size.height);
-    self.guestMode.text = @"Guest Mode";
-    self.guestMode.textColor = FOSAgreen;
-    self.guestMode.textAlignment = NSTextAlignmentCenter;
-    UITapGestureRecognizer *guestRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(startGuestMode)];
-    self.guestMode.userInteractionEnabled = YES;
-    [self.guestMode addGestureRecognizer:guestRecognizer];
-    [self.view addSubview:self.guestMode];
+//    self.guestMode.frame = CGRectMake(screen_width*5/18, CGRectGetMaxY(self.LoginContainer.frame), screen_width*4/9, self.LoginContainer.frame.size.height);
+//    self.guestMode.text = @"Guest Mode";
+//    self.guestMode.textColor = FOSAgreen;
+//    self.guestMode.textAlignment = NSTextAlignmentCenter;
+//    UITapGestureRecognizer *guestRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(startGuestMode)];
+//    self.guestMode.userInteractionEnabled = YES;
+//    [self.guestMode addGestureRecognizer:guestRecognizer];
+//    [self.view addSubview:self.guestMode];
 }
 
-//进入游客模式
-- (void)startGuestMode{
-    NSString *guestID = [NSString stringWithFormat:@"Guest"];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:guestID forKey:@"currentUser"];
-    [defaults synchronize];
-    [self.navigationController popViewControllerAnimated:YES];
-}
+////进入游客模式
+//- (void)startGuestMode{
+//    NSString *guestID = [NSString stringWithFormat:@"Guest"];
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    [defaults setObject:guestID forKey:@"currentUser"];
+//    [defaults synchronize];
+//    [self.navigationController popViewControllerAnimated:YES];
+//}
 
 //记住用户名和密码
 -(void)switchAction:(id)sender
