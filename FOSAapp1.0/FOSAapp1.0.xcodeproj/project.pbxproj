@@ -57,6 +57,7 @@
 		45172FE8240F5EAB00408A75 /* takePictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45172FE7240F5EAB00408A75 /* takePictureViewController.m */; };
 		45172FEB240F74F300408A75 /* foodAddingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45172FEA240F74F300408A75 /* foodAddingViewController.m */; };
 		45184AB523CDBEAE005E987B /* FosaDatePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45184AB423CDBEAE005E987B /* FosaDatePickerView.m */; };
+		4521C188246B9A2F003E378F /* qrSizeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4521C187246B9A2F003E378F /* qrSizeTableViewCell.m */; };
 		45229B7E24453E520063100D /* icon_flashOff.png in Resources */ = {isa = PBXBuildFile; fileRef = 45229B7D24453E520063100D /* icon_flashOff.png */; };
 		45229B8024453E710063100D /* icon_flashOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 45229B7F24453E710063100D /* icon_flashOn.png */; };
 		4528AAEF23BD7DF100957279 /* scanLine_Horizontal.png in Resources */ = {isa = PBXBuildFile; fileRef = 4528AAEE23BD7DF100957279 /* scanLine_Horizontal.png */; };
@@ -246,6 +247,8 @@
 		45172FEA240F74F300408A75 /* foodAddingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = foodAddingViewController.m; sourceTree = "<group>"; };
 		45184AB323CDBEAE005E987B /* FosaDatePickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FosaDatePickerView.h; sourceTree = "<group>"; };
 		45184AB423CDBEAE005E987B /* FosaDatePickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FosaDatePickerView.m; sourceTree = "<group>"; };
+		4521C186246B9A2F003E378F /* qrSizeTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qrSizeTableViewCell.h; sourceTree = "<group>"; };
+		4521C187246B9A2F003E378F /* qrSizeTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = qrSizeTableViewCell.m; sourceTree = "<group>"; };
 		45229B7D24453E520063100D /* icon_flashOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_flashOff.png; sourceTree = "<group>"; };
 		45229B7F24453E710063100D /* icon_flashOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_flashOn.png; sourceTree = "<group>"; };
 		4528AAEE23BD7DF100957279 /* scanLine_Horizontal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scanLine_Horizontal.png; sourceTree = "<group>"; };
@@ -841,6 +844,8 @@
 			children = (
 				4509412C2460E749001F12EE /* qrTypeView.h */,
 				4509412D2460E749001F12EE /* qrTypeView.m */,
+				4521C186246B9A2F003E378F /* qrSizeTableViewCell.h */,
+				4521C187246B9A2F003E378F /* qrSizeTableViewCell.m */,
 			);
 			path = userCell;
 			sourceTree = "<group>";
@@ -1183,6 +1188,7 @@
 				45184AB523CDBEAE005E987B /* FosaDatePickerView.m in Sources */,
 				4500E12323BAEB14002EB9FE /* NSMutableAttributedString+AvoidCrash.m in Sources */,
 				450A1FB0244AC45D00370FE2 /* FosaIMGManager.m in Sources */,
+				4521C188246B9A2F003E378F /* qrSizeTableViewCell.m in Sources */,
 				4500E12123BAEB14002EB9FE /* NSObject+AvoidCrash.m in Sources */,
 				45D3747B23C075BA00192014 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				45EBE6732415F4AA0072843C /* languageViewController.m in Sources */,

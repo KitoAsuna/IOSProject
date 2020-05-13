@@ -34,7 +34,7 @@
     self.selectBox.frame = CGRectMake(5, 5, width/10, width/10);
     self.selectBox.image = [UIImage imageNamed:@"icon_unselect"];
     
-    self.qrTypeImgView.frame = CGRectMake(width/4, height/2-width/4, width/2, width/2);
+    self.qrTypeImgView.frame = CGRectMake(width*7/24, height/2-width*6/24, width*5/12, width*5/12);
 
     self.qrTypeImgView.contentMode = UIViewContentModeScaleAspectFill;
     self.qrTypeImgView.clipsToBounds = YES;

@@ -13,6 +13,7 @@
 #import "AFNetworking.h"
 #import "qrTypeView.h"
 #import "FosaIMGManager.h"
+#import "qrSizeTableViewCell.h"
 
 @interface qrCodeWebViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate>{
     NSMutableArray<NSString *> *sizeData,*colorData,*counter,*previewData,*previewColorData,*dataSource;
@@ -145,11 +146,11 @@
 - (void)creatQrGenerator{
     [self creatPreview];
     
-    UIView *separatLine = [[UIView alloc]initWithFrame:CGRectMake(screen_width/20, CGRectGetMaxY(self.preview.frame)-Height(1), screen_width*19/20, 2)];
+    UIView *separatLine = [[UIView alloc]initWithFrame:CGRectMake(screen_width/20, CGRectGetMaxY(self.preview.frame)-Height(1), screen_width*18/20, 2)];
     separatLine.backgroundColor = FOSAColor(240, 240, 240);
-    [self.view addSubview:separatLine];
+    //[self.view addSubview:separatLine];
 
-    UIView *colorView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.preview.frame), screen_width, Height(50))];
+    UIView *colorView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.preview.frame), screen_width, self.sizeTableView.frame.size.height/sizeData.count)];
     [self.view addSubview:colorView];
 //    self.qrTable = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.preview.frame)+Height(20), screen_width, Height(50)) style:UITableViewStylePlain];
 //    self.qrTable.delegate = self;
@@ -157,31 +158,38 @@
 //    self.qrTable.bounces = NO;
 //    self.qrTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 //    [self.view addSubview:self.qrTable];
-    self.colorLabel.frame = CGRectMake(screen_width/20, Height(10), screen_width/2, Height(30));
+    CGFloat colorHeight = colorView.frame.size.height;
+    self.colorLabel.frame = CGRectMake(screen_width/15, 0, self.preview.frame.size.width/3, colorHeight);
     self.colorLabel.text  = colorData[selectColor];
     self.colorLabel.font  = [UIFont systemFontOfSize:font(15)];
     [colorView addSubview:self.colorLabel];
     
-    self.colorSwitch.center = CGPointMake(screen_width-Width(40), Height(25));
+    self.colorSwitch.center = CGPointMake(screen_width*5/6, colorHeight/2);
     [self.colorSwitch addTarget:self action:@selector(changeColor:) forControlEvents:UIControlEventValueChanged];
     [colorView addSubview:self.colorSwitch];
 
-    UIView *separatLine1 = [[UIView alloc]initWithFrame:CGRectMake(screen_width/20, CGRectGetMaxY(colorView.frame), screen_width*19/20, 2)];
+    UIView *separatLine1 = [[UIView alloc]initWithFrame:CGRectMake(screen_width/20, CGRectGetMaxY(colorView.frame), screen_width*18/20, 2)];
     separatLine1.backgroundColor = FOSAColor(240, 240, 240);
     [self.view addSubview:separatLine1];
     
     int typeHeight = screen_height-CGRectGetMaxY(colorView.frame);
-    self.type1 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(colorView.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
+    
+    UIView *typeBackground = [[UIView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(colorView.frame)+screen_width/24, screen_width*5/6, typeHeight/2+screen_width/24)];
+    typeBackground.backgroundColor = FOSAColor(242, 242, 242);
+    typeBackground.layer.cornerRadius = Height(10);
+    [self.view addSubview:typeBackground];
+    
+    self.type1 = [[qrTypeView alloc]initWithFrame:CGRectMake(0, 0, screen_width*19/48, typeHeight/4)];
     self.type1.qrTypeImgView.image = [UIImage imageNamed:@"type1C"];
     self.type1.contentMode = UIViewContentModeScaleAspectFit;
     //self.type1.backgroundColor = FOSAColor(242, 242, 242);
-    self.type2 = [[qrTypeView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.type1.frame)+screen_width/24, CGRectGetMaxY(colorView.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
+    self.type2 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width*21/48, 0, screen_width*19/48, typeHeight/4)];
     //self.type2.backgroundColor = FOSAColor(242, 242, 242);
     self.type2.qrTypeImgView.image = [UIImage imageNamed:@"type2C"];
-    self.type3 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width/12, CGRectGetMaxY(self.type1.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
+    self.type3 = [[qrTypeView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.type1.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
     self.type3.qrTypeImgView.image = [UIImage imageNamed:@"type3C"];
     //self.type3.backgroundColor = FOSAColor(242, 242, 242);
-    self.type4 = [[qrTypeView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.type3.frame)+screen_width/24, CGRectGetMaxY(self.type2.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
+    self.type4 = [[qrTypeView alloc]initWithFrame:CGRectMake(screen_width*21/48, CGRectGetMaxY(self.type1.frame)+screen_width/24, screen_width*19/48, typeHeight/4)];
     self.type4.qrTypeImgView.image = [UIImage imageNamed:@"type4C"];
     //self.type4.backgroundColor = FOSAColor(242, 242, 242);
 
@@ -202,16 +210,16 @@
     self.type4.userInteractionEnabled = YES;
     [self.type4 addGestureRecognizer:selectRecognizer3];
 
-    [self.view addSubview:self.type1];
-    [self.view addSubview:self.type2];
-    [self.view addSubview:self.type3];
-    [self.view addSubview:self.type4];
+    [typeBackground addSubview:self.type1];
+    [typeBackground addSubview:self.type2];
+    [typeBackground addSubview:self.type3];
+    [typeBackground addSubview:self.type4];
     
-    UIView *separatLine2 = [[UIView alloc]initWithFrame:CGRectMake(screen_width/20, CGRectGetMaxY(self.type3.frame)+Height(10), screen_width*19/20, 2)];
+    UIView *separatLine2 = [[UIView alloc]initWithFrame:CGRectMake(screen_width/20, CGRectGetMaxY(typeBackground.frame)+screen_width/24, screen_width*18/20, 2)];
     separatLine2.backgroundColor = FOSAColor(240, 240, 240);
     [self.view addSubview:separatLine2];
 
-    self.printBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(self.type3.frame)+Height(45), screen_width/3, Height(40));
+    self.printBtn.frame = CGRectMake(screen_width/3, CGRectGetMaxY(typeBackground.frame)+Height(45), screen_width/3, Height(40));
     self.printBtn.layer.cornerRadius = Height(20);
     [self.printBtn setTitle:@"Generate" forState:UIControlStateNormal];
     [self.printBtn setTitleColor:FOSAWhite forState:UIControlStateNormal];
@@ -227,7 +235,7 @@
 
 - (void)creatPreview{
     if (_preview == nil) {
-        self.preview.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), screen_width, screen_width*3/4);
+        self.preview.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), screen_width, screen_width*4/5);
         self.preview.pagingEnabled = YES;
         self.preview.delegate = self;
         self.preview.showsHorizontalScrollIndicator = NO;
@@ -239,12 +247,13 @@
     }
     int sizeHeight = self.preview.frame.size.height;
     int sizeWidth  = self.preview.frame.size.width;
-    self.sizeTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, sizeWidth*2/5, sizeHeight) style:UITableViewStylePlain];
+    self.sizeTableView = [[UITableView alloc]initWithFrame:CGRectMake(sizeWidth*2/3, 0, sizeWidth/3, sizeHeight) style:UITableViewStylePlain];
     self.sizeTableView.delegate = self;
     self.sizeTableView.dataSource = self;
+    self.sizeTableView.bounces = NO;
     [self.preview addSubview:self.sizeTableView];
     
-    self.previewImgView.frame = CGRectMake(sizeWidth*2/5, 0, sizeWidth*3/5, sizeHeight-Height(5));
+    self.previewImgView.frame = CGRectMake(0, 0, sizeWidth*2/3, sizeHeight-Height(5));
     self.previewImgView.image = [UIImage imageNamed:dataSource[0]];
     self.previewImgView.contentMode = UIViewContentModeScaleAspectFit;
     [self.preview addSubview:self.previewImgView];
@@ -252,8 +261,8 @@
     //其实默认选中
     NSIndexPath *selectedIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.sizeTableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition: UITableViewScrollPositionNone];
-    [self.sizeTableView cellForRowAtIndexPath:selectedIndexPath].backgroundColor = FOSAColor(240, 240, 240);
-    [self.sizeTableView cellForRowAtIndexPath:selectedIndexPath].accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    [self.sizeTableView cellForRowAtIndexPath:selectedIndexPath].backgroundColor = FOSAgreen;
+    //[self.sizeTableView cellForRowAtIndexPath:selectedIndexPath].accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 //    for (int i = 0; i < 5; i++) {
 //        self.imageviewArray[i].frame = CGRectMake(i*screen_width, 0, self.preview.frame.size.width, self.preview.frame.size.height);
@@ -760,18 +769,22 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *cellIdentifier = @"qrcell";
     //初始化cell，并指定其类型
-    UITableViewCell *cell = [tableView  dequeueReusableCellWithIdentifier:cellIdentifier];
+    qrSizeTableViewCell *cell = [tableView  dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
         //创建cell
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
+        cell = [[qrSizeTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
     }
     //取消点击cell时显示的背景
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.accessoryType  = UITableViewCellAccessoryNone;
-    cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
+//    cell.accessoryType  = UITableViewCellAccessoryNone;
+//    cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
     cell.backgroundColor = FOSAWhite;
-    cell.textLabel.text = sizeData[indexPath.row];
-    cell.textLabel.font = [UIFont systemFontOfSize:font(15)];
+    cell.sizeLabel.text = sizeData[indexPath.row];
+    cell.sizeLabel.font = [UIFont systemFontOfSize:font(15)];
+    
+    if (indexPath.row == 4) {
+        [cell setSeparatorInset:UIEdgeInsetsMake(0, 0, 0, MAXFLOAT)];
+    }
     return cell;
 }
 
@@ -800,9 +813,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.backgroundColor  = FOSAColor(240, 240, 240);
-    cell.accessoryType    = UITableViewCellAccessoryDisclosureIndicator;
+    qrSizeTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.backgroundColor  = FOSAgreen;
+    //cell.accessoryType    = UITableViewCellAccessoryDisclosureIndicator;
     self.previewImgView.image = [UIImage imageNamed:dataSource[indexPath.row]];
     selectSize = indexPath.row;
 
