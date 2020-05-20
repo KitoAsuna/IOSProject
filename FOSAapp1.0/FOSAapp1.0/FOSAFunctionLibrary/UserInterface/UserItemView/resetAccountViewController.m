@@ -129,7 +129,7 @@
     [self.view addSubview:self.doneBtn];
 }
 - (void)findPassword{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:nil preferredStyle:UIAlertControllerStyleAlert];
     if (self.accountInput.text.length == 0) {
         alert.message = @"The username or email can't be empty";
         [alert addAction:[UIAlertAction actionWithTitle:@"Get it" style:UIAlertActionStyleDefault handler:nil]];
@@ -143,7 +143,7 @@
         [manager GET:addr parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             NSLog(@"success--%@--%@",[responseObject class],responseObject[@"ReturnCode"]);
             int returnCode = [responseObject[@"ReturnCode"] intValue];
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:nil preferredStyle:UIAlertControllerStyleAlert];
             if (returnCode == 2) {
                 alert.message = @"We have send a authentication email to you.Please receive and comfirm!";
                 [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
@@ -159,7 +159,7 @@
             }
             [self.FOSAloadingView stopAnimating];
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"Failed connection,please check the network!" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"Failed connection,please check the network!" preferredStyle:UIAlertControllerStyleAlert];
             [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
             [self presentViewController:alert animated:YES completion:nil];
             [self.FOSAloadingView stopAnimating];

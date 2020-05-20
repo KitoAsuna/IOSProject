@@ -284,7 +284,7 @@
 }
 
 - (void)getPhotoFromServer{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:nil preferredStyle:UIAlertControllerStyleAlert];
     if (qrkind == 0) {
         alert.message = @"Please choose print quantity first!";
         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
@@ -476,7 +476,7 @@
         UIImage *qrLabelImg = [imgManager saveViewAsPictureWithView:qrcodeImage];
         UIImageWriteToSavedPhotosAlbum(qrLabelImg, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
     }else{
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"Go to Login" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                LoginViewController *login = [LoginViewController new];
                [self.navigationController pushViewController:login animated:YES];
@@ -530,7 +530,7 @@
         UIImage *qrLabelImg = [imgManager saveViewAsPictureWithView:qrcodeImage];
         UIImageWriteToSavedPhotosAlbum(qrLabelImg, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
     }else{
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"Go to Login" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                LoginViewController *login = [LoginViewController new];
                [self.navigationController pushViewController:login animated:YES];
@@ -585,7 +585,7 @@
         UIImage *qrLabelImg = [imgManager saveViewAsPictureWithView:qrcodeImage];
         UIImageWriteToSavedPhotosAlbum(qrLabelImg, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
     }else{
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"Go to Login" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             LoginViewController *login = [LoginViewController new];
             [self.navigationController pushViewController:login animated:YES];
@@ -640,7 +640,7 @@
         UIImage *qrLabelImg = [imgManager saveViewAsPictureWithView:qrcodeImage];
         UIImageWriteToSavedPhotosAlbum(qrLabelImg, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
     }else{
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"Go to Login" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             LoginViewController *login = [LoginViewController new];
             [self.navigationController pushViewController:login animated:YES];
@@ -695,7 +695,7 @@
         UIImage *qrLabelImg = [imgManager saveViewAsPictureWithView:qrcodeImage];
         UIImageWriteToSavedPhotosAlbum(qrLabelImg, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
     }else{
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"Go to Login" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             LoginViewController *login = [LoginViewController new];
             [self.navigationController pushViewController:login animated:YES];
@@ -798,7 +798,6 @@
         selectColor = 0;
         dataSource = previewData;
     }
-
     self.colorLabel.text = colorData[selectColor];
     self.previewImgView.image = [UIImage imageNamed:dataSource[selectSize]];
     [self.sizeTableView reloadData];

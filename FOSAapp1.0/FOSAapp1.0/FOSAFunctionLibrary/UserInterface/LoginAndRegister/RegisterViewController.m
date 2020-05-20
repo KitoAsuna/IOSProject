@@ -310,7 +310,7 @@
 //}
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:message preferredStyle:UIAlertControllerStyleAlert];
     if ([message isEqualToString:@"Successfully registered"]) {
 //        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
         [self presentViewController:alert animated:true completion:nil];

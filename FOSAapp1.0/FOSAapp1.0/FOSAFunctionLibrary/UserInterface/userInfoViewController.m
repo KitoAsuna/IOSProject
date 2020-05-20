@@ -82,7 +82,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     switch (indexPath.row) {
         case 0:
-            cell.textLabel.text = @"Profile Homepage";
+            cell.textLabel.text = @"Profile";
             [cell addSubview:self.headIconView];
             break;
         case 1:
@@ -151,7 +151,7 @@
 //退出登录
 -(void)logOutFunction{
     
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:nil preferredStyle:UIAlertControllerStyleAlert];
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"]) {
         alert.message = @"You will exit the current account";
         UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

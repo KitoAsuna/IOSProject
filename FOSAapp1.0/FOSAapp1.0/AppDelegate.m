@@ -139,11 +139,10 @@
 }
 
 - (void)InsertCategory{
-    NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie",@"Tonic",@"Nut",@"Drink",@"HighFat",@"Milk",@"Molasses",@"Starch",@"Tea",@"Beans",@"Liquor"];
+    NSArray *array = @[@"Biscuit",@"Bread",@"Cake",@"Grain",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veg",@"Herbs",@"Nuts",@"Drink",@"Power",@"Milk",@"Sweet",@"Starch",@"Seafood",@"Beans",@"Sauce"];
     NSString *insertSql = @"insert into category(categoryName,categoryIcon) values(?,?);";
     if ([db open]) {
         for (int i = 0; i < array.count; i++) {
-            
             BOOL result = [db executeUpdate:insertSql,array[i],array[i]];
             if (result) {
                 NSLog(@"插入数据成功");

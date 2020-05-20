@@ -477,7 +477,7 @@
     self.storageView.frame = CGRectMake(headerWidth*2/33, headerHeight*4/5, headerWidth*9/33, headerHeight/6);
     [self.headerView addSubview:self.storageView];
     
-    self.expireView.frame = CGRectMake(headerWidth*2/3, headerHeight*4/5, headerWidth*9/33, headerHeight/6);
+    self.expireView.frame = CGRectMake(headerWidth*2/3, headerHeight*4/5, headerWidth/3, headerHeight/6);
     self.expireView.userInteractionEnabled = YES;
     UITapGestureRecognizer *dateRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectExpireDate)];
     [self.expireView addGestureRecognizer:dateRecognizer];
@@ -485,13 +485,13 @@
 
     int storageWidth = self.storageView.frame.size.width;
     int storageHeight = self.storageView.frame.size.height;
- 
+
     self.storageLabel.frame = CGRectMake(0, 0, storageWidth, storageHeight/3);
-    self.storageLabel.text = @"Storage Date";
+    self.storageLabel.text = @"Store Date";
     self.storageLabel.font = [UIFont systemFontOfSize:15];
     self.storageLabel.textColor = [UIColor whiteColor];
     [self.storageView addSubview:self.storageLabel];
-    
+
     self.storageDateLabel.frame = CGRectMake(0, storageHeight/3, storageWidth, storageHeight/3);
     //获取当天的时间并进行处理
     NSDate *currentDate = [NSDate new];
@@ -520,7 +520,7 @@
     int expireHeight = self.expireView.frame.size.height;
 
     self.expireLabel.frame = CGRectMake(0, 0, expireWidth, expireHeight/3);
-    self.expireLabel.text = @"Expiration Date";
+    self.expireLabel.text = @"Best Before Date";
     self.expireLabel.font = [UIFont systemFontOfSize:15];
     self.expireLabel.textColor = [UIColor whiteColor];
     //self.expireLabel.textAlignment = NSTextAlignmentRight;
@@ -555,6 +555,7 @@
     self.foodTextView.frame = CGRectMake(screen_width*2/33, contentHeight/10, screen_width*51/66, contentHeight/10);
     self.foodTextView.layer.cornerRadius = 5;
     self.foodTextView.font = [UIFont systemFontOfSize:font(15)];
+    [self.foodTextView addTarget:self action:@selector(textFieldEditChange:) forControlEvents:UIControlEventEditingChanged];
     //self.foodTextView.
     [self.foodTextView setValue:[NSNumber numberWithInt:Width(10)] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.foodTextView.delegate = self;
@@ -1061,6 +1062,11 @@
     return YES;
 }
 
+//textFiled额外的点击方法
+- (void)textFieldEditChange:(UITextField*)textField{
+    self.showFoodNameLabel.text = textField.text;
+}
+
 #pragma mark - 响应事件
 
 - (void)offsetToLeft{
@@ -1263,7 +1269,7 @@
     }
 }
 - (void)back{
-     UIAlertController *backAlert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"Do you want to leave the page?" preferredStyle:UIAlertControllerStyleAlert];
+     UIAlertController *backAlert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"Do you want to leave the page?" preferredStyle:UIAlertControllerStyleAlert];
     [backAlert addAction:[UIAlertAction actionWithTitle:@"YES" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self dismissViewControllerAnimated:YES completion:nil];
         [self.navigationController popViewControllerAnimated:YES];
@@ -1296,17 +1302,17 @@
 }
 - (void)saveInfoAndFinish{
     //if ([self.foodStyle isEqualToString:@"edit"]) {
-            [self DeleteRecord];
+            
     //}else{
     //    [self SavephotosInSanBox:self.foodImgArray];
     [imgManager savePhotosWithImages:self.foodImgArray name:self.foodTextView.text];
-    
+    [self DeleteRecord];
     //}
     [self CreatDataTable];
 }
 - (void)deleteFoodRecord{
     //功能有待完善，添加点击放大图片的功能
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:@"You will delete this food record" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You will delete this food record" preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self DeleteRecord];
     }]];
@@ -1717,7 +1723,7 @@
 }
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:message preferredStyle:UIAlertControllerStyleAlert];
     
     if ([message isEqualToString:@"Delete data successfully"] ) {
         [self presentViewController:alert animated:true completion:nil];

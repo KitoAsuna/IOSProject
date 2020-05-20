@@ -25,6 +25,7 @@
     return result;
 }
 - (void)savePhotosWithImages:(NSMutableArray<UIImage *> *)imgs name:(nonnull NSString *)imgName{
+    NSLog(@"%@",imgs);
     if (imgs.count > 0) {
         NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
         for (int i = 0; i < imgs.count; i++) {
@@ -32,7 +33,6 @@
             NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent: photoName];// 保存文件的路径
             NSLog(@"这个是照片的保存地址:%@",filePath);
             UIImage *img = imgs[i];//[self fixOrientation:images[i]];
-            
             BOOL result =[UIImagePNGRepresentation(img) writeToFile:filePath  atomically:YES];// 保存成功会返回YES
             if(result == YES) {
                 NSLog(@"保存成功");

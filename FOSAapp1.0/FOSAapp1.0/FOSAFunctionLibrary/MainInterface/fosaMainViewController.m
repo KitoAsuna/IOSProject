@@ -378,7 +378,7 @@
     
     UICollectionViewFlowLayout *fosaFlowLayout = [[UICollectionViewFlowLayout alloc] init];
     fosaFlowLayout.sectionInset = UIEdgeInsetsMake(screen_height/135, font(6), 0, font(6));//上、左、下、右
-    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-font(18))/2,(collectionWidth-font(18))*41/72);
+    fosaFlowLayout.itemSize = CGSizeMake((collectionWidth-font(18))/2,(collectionWidth-font(15))*41/72);
     //固定的itemsize
     fosaFlowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;//滑动的方向 垂直
     
@@ -414,7 +414,7 @@
 
 //创建排序列表视图
 - (void)creatSortListView{
-    sortArray = @[@"Early Expiration Date",@"Late Expiration data",@"Early Add",@"Lately Add"];
+    sortArray = @[@"Best Before Date (Closest)",@"Best Before Date (Furthest )",@"Early Input Date",@"Lately Input Date"];
     sortIconArray = @[@"icon_earlyExpiry",@"icon_lateExpiry",@"icon_earlyAdd",@"lateAdd"];
     self.smask.frame = [UIScreen mainScreen].bounds;
     self.smask.backgroundColor = [UIColor blackColor];
@@ -424,7 +424,7 @@
     [self.smask addGestureRecognizer:cancelRecognizer];
     [self.tabBarController.view addSubview:self.smask];
     self.smask.hidden = YES;
-    
+
     self.sortListView = [[UIView alloc]initWithFrame:CGRectMake(0, screen_height, screen_width, screen_height*2/5)];
     self.sortListView.backgroundColor = [UIColor whiteColor];
     //self.sortListView.backgroundColor = FOSAgreen;
@@ -768,16 +768,16 @@
     
     NSString *currentSortType = [self.userdefault valueForKey:@"sort"];
 //@"Early Expiration Date",@"Late Expiration data",@"Early Add",@"Lately Add"
-    if ([currentSortType isEqualToString:@"Early Expiration Date"]) {
+    if ([currentSortType isEqualToString:@"Best Before Date (Closest)"]) {
         //过期日期从早到晚排列
         [self sortByMostRecent];
-    }else if([currentSortType isEqualToString:@"Late Expiration data"]){
+    }else if([currentSortType isEqualToString:@"Best Before Date (Furthest )"]){
         //过期日期从晚到早排列
         [self sortByLeastRecent];
-    }else if([currentSortType isEqualToString:@"Early Add"]){
+    }else if([currentSortType isEqualToString:@"Early Input Date"]){
         //保存日期从早到晚排列
         [self sortByLeastAdd];
-    }else if([currentSortType isEqualToString:@"Lately Add"]){
+    }else if([currentSortType isEqualToString:@"Lately Input Date"]){
         //保存日期从晚到早排列
         [self sortByRecentAdd];
     }
@@ -1143,7 +1143,7 @@
     [self.navigationController pushViewController:add animated:YES];
 }
 - (void)SystemAlert:(NSString *)message{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning" message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:message preferredStyle:UIAlertControllerStyleAlert];
     [self presentViewController:alert animated:true completion:nil];
     [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
 }
