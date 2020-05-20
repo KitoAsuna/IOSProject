@@ -1285,6 +1285,8 @@
     NSDate *currentDate = [[NSDate alloc]init];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yy/MM/dd"];
+    NSDateFormatter *formatter1 = [[NSDateFormatter alloc]init];
+    [formatter1 setDateFormat:@"yyyy-MM-dd"];
     NSLog(@"currentDate:%@",currentDate);
     NSDate *foodDate;
     for(int i = 0;i < self.collectionDataSource.count; i++){
@@ -1307,7 +1309,7 @@
             //[self Savephoto:image name:self.collectionDataSource[i].foodName];
             [self.notification sendNotification:self.collectionDataSource[i] body:body image:image time:2];
         }else if(result == NSOrderedDescending){
-            NSString *body = [NSString stringWithFormat:@"FOSA remind you :%@ has expired on %@",self.collectionDataSource[i].foodName,foodDate];
+            NSString *body = [NSString stringWithFormat:@"FOSA remind you :%@ has expired on %@",self.collectionDataSource[i].foodName,[formatter1 stringFromDate:foodDate]];
             //发送通知
             //获取通知的图片
             image = [imgManager getImgWithName:self.collectionDataSource[i].foodPhoto];//[self getImage:self.collectionDataSource[i].foodPhoto];
