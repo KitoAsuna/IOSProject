@@ -651,6 +651,7 @@
 }
 
 - (void)creatFooterView{
+    selectCategory = self.model.category;
     [self getCategoryArray];
     kindID = @"categoryCell";
     categoryIndex = 0;
@@ -745,7 +746,7 @@
             self.likeBtn.hidden = NO;
             device = self.model.device;
         }
-        selectCategory = self.model.category;
+        
         if (self.model.remindDate.length > 0) {
             self.remindDateTextView.text = [NSString stringWithFormat:@"%@ -%@",self.model.remindDate,self.model.repeat];
         }
@@ -967,6 +968,7 @@
     cell.kind.text = self.categoryData[indexPath.row].categoryName;
     if ([self.foodStyle isEqualToString:@"edit"] && [self.categoryData[indexPath.row].categoryName isEqualToString:selectCategory]) {
         cell.rootView.backgroundColor = FOSAYellow;
+        cell.kind.textColor = FOSAYellow;
         //selectCategory = self.categoryData[indexPath.row].categoryName;
         selectCategoryIcon = self.categoryData[indexPath.row].categoryIconName;
         cell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",selectCategoryIcon]];
@@ -974,6 +976,7 @@
     }else{
         cell.rootView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
         cell.categoryPhoto.image = [UIImage imageNamed:self.categoryData[indexPath.row].categoryIconName];
+        cell.kind.textColor = [UIColor grayColor];
     }
     return cell;
 }
@@ -1413,6 +1416,14 @@
       NSString *selSql = @"select * from category";
     if ([fmdbManager isFmdbOpen]) {
         self.categoryData = [fmdbManager selectDataWithTableName:@"category" sql:selSql];
+    }
+    if ([self.foodStyle isEqualToString:@"Info"]) {
+        for (int i = 0; i < self.categoryData.count; i++) {
+            if ([self.categoryData[i].categoryName isEqualToString:selectCategory]) {
+                [self.categoryData exchangeObjectAtIndex:i withObjectAtIndex:0];
+                break;
+            }
+        }
     }
 }
 

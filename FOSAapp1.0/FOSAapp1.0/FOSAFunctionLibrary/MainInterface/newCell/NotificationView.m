@@ -110,7 +110,7 @@
     [self.deleBtn setImage:[UIImage imageNamed:@"icon_dele"] forState:UIControlStateNormal];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return self.notificationList.frame.size.height/6;
+    return self.notificationList.frame.size.height/5;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.dataSource.count;

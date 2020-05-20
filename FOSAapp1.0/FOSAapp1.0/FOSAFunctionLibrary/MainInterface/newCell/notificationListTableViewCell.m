@@ -52,15 +52,15 @@
     [super layoutSubviews];
     int cellWidth = self.bounds.size.width;
     int cellHeight = self.bounds.size.height;
-    
-    self.foodImgView.frame = CGRectMake(cellWidth/20, cellHeight*2/16, cellHeight*10/16, cellHeight*10/16);
-    
-    self.foodNameLabel.frame = CGRectMake(CGRectGetMaxX(self.foodImgView.frame)+font(10), cellHeight/8, cellWidth*2/3, cellHeight/4);
+
+    self.foodImgView.frame = CGRectMake(cellWidth/20, cellHeight/15, cellHeight*13/15, cellHeight*13/15);
+
+    self.foodNameLabel.frame = CGRectMake(CGRectGetMaxX(self.foodImgView.frame)+font(15), cellHeight/8, cellWidth*2/3, cellHeight/4);
     self.foodNameLabel.font = [UIFont systemFontOfSize:font(20)];
-    self.timeLabel.frame = CGRectMake(CGRectGetMaxX(self.foodImgView.frame)+font(10), CGRectGetMaxY(self.foodNameLabel.frame), cellWidth*2/3, cellHeight/5);
+    self.timeLabel.frame = CGRectMake(CGRectGetMaxX(self.foodImgView.frame)+font(15), CGRectGetMaxY(self.foodNameLabel.frame), cellWidth*2/3, cellHeight/4);
     self.timeLabel.textColor = FOSAColor(255, 193, 96);
     self.timeLabel.font = [UIFont systemFontOfSize:font(15)];
-    self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.foodImgView.frame)+font(10), CGRectGetMaxY(self.timeLabel.frame), cellWidth*2/3, cellHeight/5);
+    self.dateLabel.frame = CGRectMake(CGRectGetMaxX(self.foodImgView.frame)+font(15), CGRectGetMaxY(self.timeLabel.frame), cellWidth*2/3, cellHeight/4);
     self.dateLabel.textColor = FOSAGray;
     self.dateLabel.font = [UIFont systemFontOfSize:font(15)];
     self.sendSwitch.center = CGPointMake(cellWidth*19/20-25, cellHeight/2);
@@ -70,7 +70,7 @@
     self.selectImgView.tag  = 0;
 //    UITapGestureRecognizer *selectRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectItem:)];
 //    [self.selectImgView addGestureRecognizer:selectRecognizer];
-    
+
 }
 
 //- (void)selectItem:(UIImageView *)imageview{

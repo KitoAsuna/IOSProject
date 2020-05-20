@@ -1307,7 +1307,7 @@
             //[self Savephoto:image name:self.collectionDataSource[i].foodName];
             [self.notification sendNotification:self.collectionDataSource[i] body:body image:image time:2];
         }else if(result == NSOrderedDescending){
-            NSString *body = [NSString stringWithFormat:@"FOSA remind you :%@ has expired at %@",self.collectionDataSource[i].foodName,RDate];
+            NSString *body = [NSString stringWithFormat:@"FOSA remind you :%@ has expired on %@",self.collectionDataSource[i].foodName,foodDate];
             //发送通知
             //获取通知的图片
             image = [imgManager getImgWithName:self.collectionDataSource[i].foodPhoto];//[self getImage:self.collectionDataSource[i].foodPhoto];
