@@ -1273,22 +1273,22 @@
         }
     }
 }
-//- (void)jumptoPhoto{
-//    if ([self.foodStyle isEqualToString:@"Info"]) {
-//        NSLog(@"放大图片");
-//        [self EnlargePhoto];
-//    }else{
-//        takePictureViewController *photo = [[takePictureViewController alloc]init];
-//        photo.photoBlock = ^(UIImage *img){
-//            //通过block将相机拍摄的图片放置在对应的位置
-//        if (img != nil) {
-//                self.imageviewArray[self->currentPictureIndex].image = img;
-//                self.foodImgArray[self->currentPictureIndex] = img;
-//            }
-//        };
-//        [self.navigationController pushViewController:photo animated:NO];
-//    }
-//}
+- (void)jumptoPhoto{
+    if ([self.foodStyle isEqualToString:@"Info"]) {
+        NSLog(@"放大图片");
+        [self EnlargePhoto];
+    }else{
+        takePictureViewController *photo = [[takePictureViewController alloc]init];
+        photo.photoBlock = ^(UIImage *img){
+            //通过block将相机拍摄的图片放置在对应的位置
+        if (img != nil) {
+                self.imageviewArray[self->currentPictureIndex].image = img;
+                self.foodImgArray[self->currentPictureIndex] = img;
+            }
+        };
+        [self.navigationController pushViewController:photo animated:NO];
+    }
+}
 - (void)back{
      UIAlertController *backAlert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"Do you want to leave the page?" preferredStyle:UIAlertControllerStyleAlert];
     [backAlert addAction:[UIAlertAction actionWithTitle:@"YES" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
