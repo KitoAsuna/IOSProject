@@ -49,7 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UILabel *showFoodNameLabel;
 @property (nonatomic,strong) UIButton *editBtn,*shareBtn,*deleteBtn;
 @property (nonatomic,strong) foodKindView *foodCell;
-@property (nonatomic,strong) NSString *foodCategoryIconname;
 
 //相片二维码截图图片
 @property (nonatomic,strong) UIImage *imgOfFood;

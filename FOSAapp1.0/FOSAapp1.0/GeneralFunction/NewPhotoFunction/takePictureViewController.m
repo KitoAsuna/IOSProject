@@ -139,7 +139,6 @@
     self.containerView.userInteractionEnabled = YES;
     [self.containerView addGestureRecognizer:pinchGestureRecognizer];
 
-    
     self.preview = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
     [self.preview setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [self.preview setFrame:CGRectMake(0, 0, screen_width, self.containerView.frame.size.height)];
@@ -159,6 +158,18 @@
     [self.controlerView addSubview:_shutter];
     [self.shutter setBackgroundImage:[UIImage imageNamed:@"icon_takePhoto"] forState:UIControlStateNormal];
     [self.shutter addTarget:self action:@selector(clickToCapture) forControlEvents:UIControlEventTouchUpInside];
+    
+    //分割线
+    UIView *line1 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), screen_width, self.containerView.frame.size.height/5)];
+    line1.backgroundColor = FOSAGray;
+    line1.alpha = 0.7;
+    [self.view addSubview:line1];
+    
+    UIView *line2 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame)+self.containerView.frame.size.height*5/6, screen_width, self.containerView.frame.size.height/6)];
+    line2.backgroundColor = FOSAGray;
+    line2.alpha = 0.7;
+    [self.view addSubview:line2];
+    
     //预览
     self.pictureView = [[UIImageView alloc]initWithFrame:CGRectMake(screen_width/20, self.controlerView.frame.size.height/3-screen_width*4/50, screen_width*4/25, screen_width*4/25)];
     self.pictureView.layer.cornerRadius = self.pictureView.frame.size.width/8;

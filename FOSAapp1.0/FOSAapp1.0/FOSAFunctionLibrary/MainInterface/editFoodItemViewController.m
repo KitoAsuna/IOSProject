@@ -66,7 +66,7 @@
 
 - (void)initData{
     [self getCategoryArray];
-    NSArray *dataArray = @[@"Biscuit",@"Bread",@"Cake",@"Cereal",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veggie",@"Tonic",@"Nut",@"Drink",@"HighFat",@"Milk",@"Molasses",@"Starch",@"Tea",@"Beans",@"Liquor",@"Fruit1",@"Fruit2",@"Fruit3",@"Fruit4",@"Fruit5",@"Fruit6",@"Fruit7",@"Fruit8",@"Fruit9",@"Fruit10",@"Fruit11",@"Meat1",@"Meat2",@"Meat3",@"Meat4",@"Meat5",@"Meat6",@"Meat7",@"Meat8",@"Meat9",@"Meat10",@"Meat11",@"Snack1",@"Snack2",@"Snack3",@"Snack4",@"Snack5",@"Snack6",@"Snack7",@"Snack8",@"Snack9",@"Snack10",@"Snack11",@"Snack12",@"Snack13",@"Snack14",@"Snack15",@"Vegetable1",@"Vegetable2",@"Vegetable3",@"Vegetable4",@"Vegetable5",@"Vegetable6",@"Vegetable7",@"Vegetable8",@"Vegetable9",@"Vegetable10",@"Vegetable11",@"Vegetable12",@"Vegetable13"];
+    NSArray *dataArray = @[@"Biscuit",@"Bread",@"Cake",@"Grain",@"Dairy",@"Fruit",@"Meat",@"Snacks",@"Spice",@"Veg",@"Herbs",@"Nuts",@"Drink",@"Power",@"Milk",@"Sweet",@"Starch",@"Seafood",@"Beans",@"Sauce",@"Fruit1",@"Fruit2",@"Fruit3",@"Fruit4",@"Fruit5",@"Fruit6",@"Fruit7",@"Fruit8",@"Fruit9",@"Fruit10",@"Fruit11",@"Meat1",@"Meat2",@"Meat3",@"Meat4",@"Meat5",@"Meat6",@"Meat7",@"Meat8",@"Meat9",@"Meat10",@"Meat11",@"Snack1",@"Snack2",@"Snack3",@"Snack4",@"Snack5",@"Snack6",@"Snack7",@"Snack8",@"Snack9",@"Snack10",@"Snack11",@"Snack12",@"Snack13",@"Snack14",@"Snack15",@"Vegetable1",@"Vegetable2",@"Vegetable3",@"Vegetable4",@"Vegetable5",@"Vegetable6",@"Vegetable7",@"Vegetable8",@"Vegetable9",@"Vegetable10",@"Vegetable11",@"Vegetable12",@"Vegetable13"];
     datasource = [[NSMutableArray alloc]initWithArray:dataArray];
     for (int i = 0; i < categoryData.count; i++) {
         NSLog(@"已经被选中的图标:%@",categoryData[i].categoryIconName);

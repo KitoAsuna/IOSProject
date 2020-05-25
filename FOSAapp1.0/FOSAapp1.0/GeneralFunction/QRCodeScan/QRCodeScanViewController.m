@@ -602,7 +602,7 @@ NSLog(@"************************************************************************
                         FoodModel *model = [FoodModel modelWithName:infoArray[1] DeviceID:infoArray[2] Description:infoArray[3] StrogeDate:infoArray[5] ExpireDate:infoArray[4] remindDate:infoArray[6] foodIcon:infoArray[1] category:infoArray[7] Location:infoArray[8] repeatWay:infoArray[9]];
                         food.model = model;
                         food.foodStyle = @"Info";
-                        food.foodCategoryIconname = @"Biscuit";
+                        //food.foodCategoryIconname = model.category;
                         [self.navigationController pushViewController:food animated:YES];
                     }else{
                         if (!isJump) {//当前还没有发生跳转
@@ -699,13 +699,13 @@ NSLog(@"************************************************************************
     //判断这个码的信息是否存储过
     FoodModel *model = [self CheckFoodInfoWithName:result];
     if (model == nil) {
-        [self SystemAlert:@"NO Record"];
+        [self SystemAlert:@"NO record found"];
     }else{
         foodAddingViewController *add = [foodAddingViewController new];
         add.foodStyle = @"Info";
         add.hidesBottomBarWhenPushed = YES;
         add.model = model;
-        add.foodCategoryIconname = @"Biscuit";
+        //add.foodCategoryIconname = @"Biscuit";
         [self.navigationController pushViewController:add animated:YES];
     }
 //    NSLog(@"%@",result);

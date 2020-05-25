@@ -324,7 +324,6 @@
 }
 - (void)creatCategoryView{
     //获取系统数据库中的食物种类categoryNameArray
-    
     [self getCategoryArray];
     //种类排序
     [self categorySortByNumber];
@@ -352,13 +351,11 @@
     //食物种类选择栏 可滚动
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    
-    flowLayout.itemSize = CGSizeMake((categoryViewWidth*5/6-font(37))/5,categoeyViewHeight);
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 1, 0, 0);
+    flowLayout.itemSize = CGSizeMake((categoryViewWidth*5/6-font(40))/5,categoeyViewHeight);
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 3, 0, 3);//上、左、下、右
 
     self.categoryCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, categoryViewWidth*5/6, categoeyViewHeight) collectionViewLayout:flowLayout];
     self.categoryCollection.center = CGPointMake(categoryViewWidth/2, categoeyViewHeight*7/12);
-       
     self.categoryCollection.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     self.categoryCollection.delegate = self;
     self.categoryCollection.dataSource = self;
@@ -367,6 +364,7 @@
     self.categoryCollection.pagingEnabled = YES;
     [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:categoryID];
     [self.categoryView addSubview:self.categoryCollection];
+    
 }
 - (void)creatFoodItemCategoryView{
     foodItemID = @"foodItemCell";
@@ -414,7 +412,7 @@
 
 //创建排序列表视图
 - (void)creatSortListView{
-    sortArray = @[@"Best Before Date (Closest)",@"Best Before Date (Furthest )",@"Early Input Date",@"Lately Input Date"];
+    sortArray = @[@"Best Before Date Soon",@"Best Before Date Far",@"Early Input Date",@"Lately Input Date"];
     sortIconArray = @[@"icon_earlyExpiry",@"icon_lateExpiry",@"icon_earlyAdd",@"lateAdd"];
     self.smask.frame = [UIScreen mainScreen].bounds;
     self.smask.backgroundColor = [UIColor blackColor];
@@ -768,10 +766,10 @@
     
     NSString *currentSortType = [self.userdefault valueForKey:@"sort"];
 //@"Early Expiration Date",@"Late Expiration data",@"Early Add",@"Lately Add"
-    if ([currentSortType isEqualToString:@"Best Before Date (Closest)"]) {
+    if ([currentSortType isEqualToString:@"Best Before Date Soon"]) {
         //过期日期从早到晚排列
         [self sortByMostRecent];
-    }else if([currentSortType isEqualToString:@"Best Before Date (Furthest )"]){
+    }else if([currentSortType isEqualToString:@"Best Before Date Far"]){
         //过期日期从晚到早排列
         [self sortByLeastRecent];
     }else if([currentSortType isEqualToString:@"Early Input Date"]){
@@ -785,7 +783,7 @@
     [self.db close];
     if (isFirst) {
         [self SendExpiryNotification];
-        [self sendReminderNotification];
+        //[self sendReminderNotification];
         isFirst = false;
     }
 }
@@ -988,14 +986,11 @@
             return (NSComparisonResult)NSOrderedDescending;
         }else if(result == NSOrderedAscending){//foodDate1 在 foodDate2 之前
             return (NSComparisonResult)NSOrderedAscending;
-
         }
         return (NSComparisonResult)NSOrderedSame;
     };
     NSArray *sortArray = [self.collectionDataSource copy];
-
     NSArray *resultArray = [sortArray sortedArrayUsingComparator:compare];
-    
     self.collectionDataSource = [resultArray mutableCopy];
     [self.fooditemCollection reloadData];
 }
@@ -1013,7 +1008,6 @@
         return (NSComparisonResult)NSOrderedSame;
     };
     NSArray *sortArray = [self.categoryData copy];
-
     NSArray *resultArray = [sortArray sortedArrayUsingComparator:comparator];
     [self.categoryData removeAllObjects];
     self.categoryData = [[NSMutableArray alloc]initWithArray:resultArray];
@@ -1084,13 +1078,13 @@
 
 - (void)offsetToLeft{
     if (categoryIndex-1 >= 0) {
-        [self.categoryCollection setContentOffset:CGPointMake((categoryIndex-1)*screen_width*5/6, 0)];
+        [self.categoryCollection setContentOffset:CGPointMake((categoryIndex-1)*self.categoryCollection.frame.size.width, 0)];
         categoryIndex --;
     }
 }
 - (void)offsetToRight{
     if (categoryIndex+1 < 4) {
-        [self.categoryCollection setContentOffset:CGPointMake((categoryIndex+1)*screen_width*5/6, 0)];
+        [self.categoryCollection setContentOffset:CGPointMake((categoryIndex+1)*self.categoryCollection.frame.size.width, 0)];
         categoryIndex ++;
     }
 }
@@ -1107,13 +1101,13 @@
     }
     add.hidesBottomBarWhenPushed = YES;
     //查找种类图标名
-    for(int i = 0;i < self.categoryData.count;i++){
-        if ([self.categoryData[i].categoryName isEqualToString:cell.model.category]) {
-            add.foodCategoryIconname = self.categoryData[i].categoryIconName;
-            break;
-        }
-    }
-    NSLog(@"<<<<<<<<<<<<<<<<<%@",add.foodCategoryIconname);
+//    for(int i = 0;i < self.categoryData.count;i++){
+//        if ([self.categoryData[i].categoryName isEqualToString:cell.model.category]) {
+//            add.foodCategoryIconname = self.categoryData[i].categoryIconName;
+//            break;
+//        }
+//    }
+    //NSLog(@"<<<<<<<<<<<<<<<<<%@",add.foodCategoryIconname);
     [self.navigationController pushViewController:add animated:YES];
 }
 
@@ -1134,11 +1128,12 @@
 
 //fosaDelegate协议方法
 - (void)JumpByFoodName:(NSString *)foodname{
+    NSLog(@"食物跳转：%@",foodname);
     foodAddingViewController *add = [foodAddingViewController new];
     add.foodStyle = @"Info";
     add.hidesBottomBarWhenPushed = YES;
     add.model = [self CheckFoodInfoWithName:foodname];
-    add.foodCategoryIconname = @"Biscuit";
+    //add.foodCategoryIconname = @"Biscuit";
     //add.navigationItem.hidesBackButton = YES;
     [self.navigationController pushViewController:add animated:YES];
 }
@@ -1219,57 +1214,57 @@
 }
 
 
-- (void)sendReminderNotification{
-    //保存成功之后，检查是否设置了提醒日期，若是，则准备注册通知
-    NSLog(@"-----------------------发送提醒通知------------------------");
-    UIImage *image;
-    NSArray *tempArray;
-    NSString *tempStr;
-    NSDateFormatter *format = [NSDateFormatter new];
-    NSDateFormatter *format2 = [NSDateFormatter new];
-    [format setDateFormat:@"dd MM/yyyy hh:mm a"];
-    [format2 setDateFormat:@"dd/MM/yyyy/HH:mm"];
-    format.AMSymbol = @"AM";
-    format.PMSymbol = @"PM";
-    
-    FosaIMGManager *imgManager = [FosaIMGManager new];
-    [imgManager InitImgManager];
-    FoodModel *model;
-    //设定通知
-    NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
-    //获取用户设置，是否设定免打扰
-    NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
-    if ([autoNotification isEqualToString:@"NO"] || autoNotification == nil) {
-        for (int i = 0; i < self.collectionDataSource.count; i++) {
-            if (self.collectionDataSource[i].remindDate.length > 0) {
-                model = self.collectionDataSource[i];
-                NSString *body = [NSString stringWithFormat:@"FOSA remind you to eat your food %@ in time",model.foodName];
-                                //获取通知的图片
-                //获取通知的图片
-                image = [imgManager getImgWithName:model.foodPhoto];//[self getImage:self.collectionDataSource[i].foodPhoto];
-                    //另存通知图片
-                [imgManager savePhotoWithImage:image name:model.foodName];
-
-                tempArray = [model.remindDate componentsSeparatedByString:@","];
-                tempStr = [NSString stringWithFormat:@"%@/%@ %@",tempArray[1],tempArray[2],tempArray[3]];
-                NSDate *date = [format dateFromString:tempStr];
-
-                NSDate *currentDate = [NSDate new];
-                double dateTime = [date timeIntervalSince1970];
-                double currentDateTime = [currentDate timeIntervalSince1970];
-                NSLog(@"=============%d",(int)(dateTime-currentDateTime));
-                if (dateTime-currentDateTime > 0) {
-                    NSString *identifier = [NSString stringWithFormat:@"%@Remind",model.foodName];
-                    if ([model.repeat isEqualToString:@"Every three hours"]){
-                        [self.notification sendNotification:model body:body image:image time:(dateTime-currentDateTime) identifier:identifier];
-                    }else{
-                            [self.notification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image identifier:identifier];
-                    }
-                }
-            }
-        }
-    }
-}
+//- (void)sendReminderNotification{
+//    //保存成功之后，检查是否设置了提醒日期，若是，则准备注册通知
+//    NSLog(@"-----------------------发送提醒通知------------------------");
+//    UIImage *image;
+//    NSArray *tempArray;
+//    NSString *tempStr;
+//    NSDateFormatter *format = [NSDateFormatter new];
+//    NSDateFormatter *format2 = [NSDateFormatter new];
+//    [format setDateFormat:@"dd MM/yyyy hh:mm a"];
+//    [format2 setDateFormat:@"dd/MM/yyyy/HH:mm"];
+//    format.AMSymbol = @"AM";
+//    format.PMSymbol = @"PM";
+//
+//    FosaIMGManager *imgManager = [FosaIMGManager new];
+//    [imgManager InitImgManager];
+//    FoodModel *model;
+//    //设定通知
+//    NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
+//    //获取用户设置，是否设定免打扰
+//    NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
+//    if ([autoNotification isEqualToString:@"NO"] || autoNotification == nil) {
+//        for (int i = 0; i < self.collectionDataSource.count; i++) {
+//            if (self.collectionDataSource[i].remindDate.length > 0) {
+//                model = self.collectionDataSource[i];
+//                NSString *body = [NSString stringWithFormat:@"FOSA remind you to eat your food %@ in time",model.foodName];
+//                                //获取通知的图片
+//                //获取通知的图片
+//                image = [imgManager getImgWithName:model.foodPhoto];//[self getImage:self.collectionDataSource[i].foodPhoto];
+//                    //另存通知图片
+//                [imgManager savePhotoWithImage:image name:model.foodName];
+//
+//                tempArray = [model.remindDate componentsSeparatedByString:@","];
+//                tempStr = [NSString stringWithFormat:@"%@/%@ %@",tempArray[1],tempArray[2],tempArray[3]];
+//                NSDate *date = [format dateFromString:tempStr];
+//
+//                NSDate *currentDate = [NSDate new];
+//                double dateTime = [date timeIntervalSince1970];
+//                double currentDateTime = [currentDate timeIntervalSince1970];
+//                NSLog(@"=============%d",(int)(dateTime-currentDateTime));
+//                if (dateTime-currentDateTime > 0) {
+//                    NSString *identifier = [NSString stringWithFormat:@"%@Remind",model.foodName];
+//                    if ([model.repeat isEqualToString:@"Every three hours"]){
+//                        [self.notification sendNotification:model body:body image:image time:(dateTime-currentDateTime) identifier:identifier];
+//                    }else{
+//                            [self.notification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image identifier:identifier];
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 - (void)SendExpiryNotification{
     [self CreatLoadView];
@@ -1285,6 +1280,8 @@
     NSDate *currentDate = [[NSDate alloc]init];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yy/MM/dd"];
+    NSLog(@"%@",[formatter stringFromDate:currentDate]);
+    currentDate = [formatter dateFromString:[formatter stringFromDate:currentDate]];
     NSDateFormatter *formatter1 = [[NSDateFormatter alloc]init];
     [formatter1 setDateFormat:@"yyyy-MM-dd"];
     NSLog(@"currentDate:%@",currentDate);
@@ -1294,13 +1291,14 @@
         NSArray<NSString *> *dateArray = [self.collectionDataSource[i].expireDate componentsSeparatedByString:@"/"];
         NSString *RDate = [NSString stringWithFormat:@"%@/%@/%@",dateArray[2],dateArray[1],dateArray[0]];
         foodDate = [formatter dateFromString:RDate];
-        NSLog(@"---------------RDate:%@",foodDate);
+        //NSLog(@"---------------RDate:%@",foodDate);
         //比较过期日期与今天的日期
         NSComparisonResult result = [currentDate compare:foodDate];
         NSLog(@"==============================%ld",(long)result)
         if (result == NSOrderedSame) {
+            
                 //isSend = true;
-            NSString *body = [NSString stringWithFormat:@"FOSA remind you :%@ will expir today",self.collectionDataSource[i].foodName];
+            NSString *body = [NSString stringWithFormat:@"will expir today (%@)",[self getWeekDayOfDate:self.collectionDataSource[i].expireDate]];
                 //发送通知
             //获取通知的图片
             image = [imgManager getImgWithName:self.collectionDataSource[i].foodPhoto];//[self getImage:self.collectionDataSource[i].foodPhoto];
@@ -1308,21 +1306,48 @@
             [imgManager savePhotoWithImage:image name:self.collectionDataSource[i].foodName];
             //[self Savephoto:image name:self.collectionDataSource[i].foodName];
             [self.notification sendNotification:self.collectionDataSource[i] body:body image:image time:2];
-        }else if(result == NSOrderedDescending){
-            NSString *body = [NSString stringWithFormat:@"FOSA remind you :%@ has expired on %@",self.collectionDataSource[i].foodName,[formatter1 stringFromDate:foodDate]];
-            //发送通知
-            //获取通知的图片
-            image = [imgManager getImgWithName:self.collectionDataSource[i].foodPhoto];//[self getImage:self.collectionDataSource[i].foodPhoto];
-            //另存通知图片
-            [imgManager savePhotoWithImage:image name:self.collectionDataSource[i].foodName]; //[self Savephoto:image name:self.collectionDataSource[i].foodName];
-            [self.notification sendNotification:self.collectionDataSource[i] body:body image:image time:2];
         }
+//        else if(result == NSOrderedDescending){
+//            NSString *body = [NSString stringWithFormat:@"FOSA remind you :%@ has expired on %@",self.collectionDataSource[i].foodName,[formatter1 stringFromDate:foodDate]];
+//            //发送通知
+//            //获取通知的图片
+//            image = [imgManager getImgWithName:self.collectionDataSource[i].foodPhoto];//[self getImage:self.collectionDataSource[i].foodPhoto];
+//            //另存通知图片
+//            [imgManager savePhotoWithImage:image name:self.collectionDataSource[i].foodName]; //[self Savephoto:image name:self.collectionDataSource[i].foodName];
+//            [self.notification sendNotification:self.collectionDataSource[i] body:body image:image time:2];
+//        }
     }
 //    if (!isSend) {
 //        [self SystemAlert:@"No Result Found"];
 //    }
     [self performSelector:@selector(stoploading) withObject:nil afterDelay:1.0];
 }
+/**
+ 根据日期字符串获取对应的星期
+ */
+- (NSString *)getWeekDayOfDate:(NSString *)date{
+    NSArray * arrWeekDay=[NSArray arrayWithObjects:@"Sun",@"Mon",@"Tue",@"Wed",@"Thu",@"Fri",@"Sat", nil];
+    
+    NSDateFormatter *formatter = [NSDateFormatter new];
+    [formatter setDateFormat:@"dd/MM/yyyy/HH:mm"];
+    NSDate *tempDate = [formatter dateFromString:date];
+    
+     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+       NSDateComponents *comps = [[NSDateComponents alloc] init];
+       /*
+        NSInteger unitFlags = NSYearCalendarUnit |
+        NSMonthCalendarUnit |
+        NSDayCalendarUnit |
+        NSWeekdayCalendarUnit |
+        NSHourCalendarUnit |
+        NSMinuteCalendarUnit |
+        NSSecondCalendarUnit;
+        */
+    NSInteger unitFlags = NSCalendarUnitYear |NSCalendarUnitMonth | NSCalendarUnitDay |NSCalendarUnitWeekday | NSCalendarUnitHour |NSCalendarUnitMinute |NSCalendarUnitSecond;
+    comps = [calendar components:unitFlags fromDate:tempDate];
+    return [arrWeekDay objectAtIndex:comps.weekday-1];
+}
+
 - (void)stoploading{
     [self.FOSAloadingView stopAnimating];
 }

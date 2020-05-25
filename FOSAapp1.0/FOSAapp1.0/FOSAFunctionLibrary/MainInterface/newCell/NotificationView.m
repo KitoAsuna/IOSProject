@@ -194,7 +194,7 @@
 }
 
 - (void)closeNotificationView{
-    [self saveReminder];
+//    [self saveReminder];
     if ([self.closeDelegate respondsToSelector:@selector(closeNotificationList)]) {
         [self.closeDelegate closeNotificationList];
     }

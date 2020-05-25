@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <UserNotifications/UserNotifications.h>
 #import "FoodModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -25,8 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img time:(long int)timeInterval;
 - (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img time:(long int)timeInterval identifier:(NSString *)identifier;
 - (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(UIImage *)image identifier:(NSString *)identifier;
-- (void)removeReminder:(NSArray *)array;
+- (void)removeReminder:(UNNotificationResponse *)response;
 - (UIImage *)GenerateQRCodeByMessage:(NSString *)message;
+- (void)addNotificationAttachmentContent:(UNMutableNotificationContent *)content attachmentName:(NSString *)attachmentName  options:(NSDictionary *)options withCompletion:(void(^)(NSError * error , UNNotificationAttachment * notificationAtt))completion;
 @end
 
 NS_ASSUME_NONNULL_END

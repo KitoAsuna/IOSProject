@@ -399,7 +399,7 @@
         self.backbtn.hidden = NO;
         self.mainImgBtn.hidden = NO;
         if (![device isEqualToString:@"null"]) {
-            [self SystemAlert:@"Binding device successfully"];
+            [self SystemAlert:@"Match QR success"];
             self.likeBtn.hidden = NO;
         }
     }
@@ -587,12 +587,21 @@
     self.foodDescribedLabel.textColor = [UIColor grayColor];
     [self.foodDescribedView addSubview:self.foodDescribedLabel];
     self.foodDescribedTextView.frame = CGRectMake(screen_width*2/33, contentHeight/10, screen_width*29/33, contentHeight*3/10);
+    
+    UIView * view = [[UIView alloc] initWithFrame:CGRectMake(100, 50, 100, Height(30))];
+    view.backgroundColor = FOSAGray;
+    UIButton *doneBtn = [[UIButton alloc]initWithFrame:CGRectMake(screen_width-Height(80), 0, Height(50), Height(30))];
+    [doneBtn setTintColor:FOSABlue];
+    [doneBtn setTitle:@"done" forState:UIControlStateNormal];
+    [doneBtn addTarget:self action:@selector(resignKeyBoard) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:doneBtn];
+    self.foodDescribedTextView.inputAccessoryView = view;
     self.foodDescribedTextView.layer.cornerRadius = 5;
     self.foodDescribedTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     self.foodDescribedTextView.textColor = [UIColor blackColor];
     self.foodDescribedTextView.font = [UIFont systemFontOfSize:font(15)];
     self.foodDescribedTextView.delegate = self;
-    self.foodDescribedTextView.returnKeyType = UIReturnKeyDone;
+    //self.foodDescribedTextView.returnKeyType = UIReturnKeyDone;
     self.foodDescribedTextView.textContainerInset = UIEdgeInsetsMake(5, 5, 0, 0);//上、左、下、右
     [self.foodDescribedView addSubview:self.foodDescribedTextView];
 
@@ -729,7 +738,6 @@
 
         NSArray<NSString *> *storageTimeArray;
         storageTimeArray = [self.model.storageDate componentsSeparatedByString:@"/"];
-
         NSLog(@"--->>>%@",self.model.expireDate);
         if (![self.model.expireDate isEqualToString:@""]) {
             NSArray<NSString *> *expireTimeArray;
@@ -738,6 +746,9 @@
             self.expireDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",expireTimeArray[0],expireTimeArray[1],expireTimeArray[2]];
             self.expireTimeLabel.text = expireTimeArray[3];
         }
+        
+        remindStr = self.model.remindDate;
+        NSLog(@"提醒日期:%@",remindStr);
 
         self.showFoodNameLabel.text = self.model.foodName;
         self.showFoodNameLabel.font = [UIFont systemFontOfSize:22 weight:20];
@@ -758,8 +769,14 @@
         self.foodDescribedTextView.text = self.model.aboutFood;
         self.locationTextView.text = self.model.location;
         self.foodCell.kind.text = self.model.category;
-        self.foodCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.foodCategoryIconname]];
-        NSLog(@"-------------------------%@",self.foodCategoryIconname);
+        
+        for (int i = 0; i < self.categoryData.count; i++) {
+            if ([self.categoryData[i].categoryName isEqualToString:selectCategory]) {
+                self.foodCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryData[i].categoryIconName]];
+                break;
+            }
+        }
+//        NSLog(@"-------------------------%@",self.foodCategoryIconname);
         //self.foodCell.categoryPhoto.image = [UIImage imageNamed:@"BiscuitW"];
         //字数指示器
         if ((unsigned long)self.foodDescribedTextView.text.length > 80) {
@@ -838,14 +855,13 @@
     [self.view addSubview:DatePicker];
     self.fosaDatePicker = DatePicker;
     self.fosaDatePicker.hidden = YES;
-    remindStr = @"";
 }
 #pragma mark -- FosaDatePickerViewDelegate
 /**
  保存按钮代理方法
  @param timer 选择的数据
  */
-- (void)datePickerViewSaveBtnClickDelegate:(NSString *)timer remindDate:(nonnull NSString *)remindTimer {
+- (void)datePickerViewSaveBtnClickDelegate:(NSString *)timer remindDate:(NSString *)remindTimer {
     NSLog(@"保存点击");
     //处理日期字符串
     NSArray *array = [timer componentsSeparatedByString:@"/"];
@@ -963,7 +979,7 @@
 //    // 注册Cell
 //        [self.categoryCollection registerClass:[foodKindCollectionViewCell class] forCellWithReuseIdentifier:identifier];
 //    }
-    
+
     foodKindCollectionViewCell *cell = [self.categoryCollection dequeueReusableCellWithReuseIdentifier:kindID forIndexPath:indexPath];
     cell.kind.text = self.categoryData[indexPath.row].categoryName;
     if ([self.foodStyle isEqualToString:@"edit"] && [self.categoryData[indexPath.row].categoryName isEqualToString:selectCategory]) {
@@ -1019,8 +1035,8 @@
     }
     if([text isEqualToString:@"\n"]){ //判断输入的字是否是回车，即按下return
         //在这里做你响应return键的代码
-        [self.foodDescribedTextView resignFirstResponder];
-        return NO; //这里返回NO，就代表return键值失效，即页面上按下return，不会出现换行，如果为yes，则输入页面会换行
+//        [self.foodDescribedTextView resignFirstResponder];
+//        return NO; //这里返回NO，就代表return键值失效，即页面上按下return，不会出现换行，如果为yes，则输入页面会换行
     }
     return YES;
 }
@@ -1071,7 +1087,9 @@
 }
 
 #pragma mark - 响应事件
-
+- (void)resignKeyBoard{
+    [self.foodDescribedTextView resignFirstResponder];
+}
 - (void)offsetToLeft{
     if (categoryIndex-1 >= 0) {
         [self.categoryCollection setContentOffset:CGPointMake((categoryIndex-1)*self.categoryCollection.frame.size.width, 0)];
@@ -1238,7 +1256,7 @@
 - (void)jumptoPhoto:(UITapGestureRecognizer *)tap{
     CGPoint touchPoint = [tap locationInView:self.picturePlayer];
     NSLog(@"%f-----%f",touchPoint.x,touchPoint.y);
-    if (touchPoint.y < self.headerView.frame.size.height*4/5) {
+    if (touchPoint.y < self.headerView.frame.size.height*4/5 && touchPoint.x > self.headerView.frame.size.width/3+(screen_width*currentPictureIndex) && touchPoint.x < self.headerView.frame.size.width*2/3+(screen_width*currentPictureIndex)) {
         if ([self.foodStyle isEqualToString:@"Info"]) {
             NSLog(@"放大图片");
             [self EnlargePhoto];
@@ -1255,22 +1273,22 @@
         }
     }
 }
-- (void)jumptoPhoto{
-    if ([self.foodStyle isEqualToString:@"Info"]) {
-        NSLog(@"放大图片");
-        [self EnlargePhoto];
-    }else{
-        takePictureViewController *photo = [[takePictureViewController alloc]init];
-        photo.photoBlock = ^(UIImage *img){
-            //通过block将相机拍摄的图片放置在对应的位置
-        if (img != nil) {
-                self.imageviewArray[self->currentPictureIndex].image = img;
-                self.foodImgArray[self->currentPictureIndex] = img;
-            }
-        };
-        [self.navigationController pushViewController:photo animated:NO];
-    }
-}
+//- (void)jumptoPhoto{
+//    if ([self.foodStyle isEqualToString:@"Info"]) {
+//        NSLog(@"放大图片");
+//        [self EnlargePhoto];
+//    }else{
+//        takePictureViewController *photo = [[takePictureViewController alloc]init];
+//        photo.photoBlock = ^(UIImage *img){
+//            //通过block将相机拍摄的图片放置在对应的位置
+//        if (img != nil) {
+//                self.imageviewArray[self->currentPictureIndex].image = img;
+//                self.foodImgArray[self->currentPictureIndex] = img;
+//            }
+//        };
+//        [self.navigationController pushViewController:photo animated:NO];
+//    }
+//}
 - (void)back{
      UIAlertController *backAlert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"Do you want to leave the page?" preferredStyle:UIAlertControllerStyleAlert];
     [backAlert addAction:[UIAlertAction actionWithTitle:@"YES" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -1295,7 +1313,7 @@
 }
 - (void)jumpToShare{
     NSLog(@"点击了分享");
-    NSString *body = [NSString stringWithFormat:@"This is my food %@,you can scan the QRCode check it",self.foodTextView.text];
+    NSString *body = @"Scan QR for more detail";
     UIView *view = [self CreatNotificatonViewWithContent:body];
     UIImage *sharephoto1 = [imgManager saveViewAsPictureWithView:view];
     NSArray *activityItems = @[sharephoto1];
@@ -1315,7 +1333,7 @@
 }
 - (void)deleteFoodRecord{
     //功能有待完善，添加点击放大图片的功能
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You will delete this food record" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"Delete this record" preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self DeleteRecord];
     }]];
@@ -1368,7 +1386,7 @@
     NSLog(@"=================》》》》%@",expireStr);
     NSString *storagedate = [NSString stringWithFormat:@"%@/%@",self.storageDateLabel.text,self.storageTimeLabel.text];
     NSString *expiredate;
-    if ([self.expireDateLabel.text isEqualToString:@"Tap to add"]) {
+   if([self.expireDateLabel.text isEqualToString:@"Tap to add"]) {
         expiredate = @"";
     }else{
         expiredate = [NSString stringWithFormat:@"%@/%@",self.expireDateLabel.text,self.expireTimeLabel.text];
@@ -1615,7 +1633,7 @@
         NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
         if ([autoNotification isEqualToString:@"NO"] || autoNotification == nil) {
             FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
-            NSString *body = [NSString stringWithFormat:@"Your food %@ will expire today",self.foodTextView.text];
+            NSString *body = [NSString stringWithFormat:@"Your food %@ will expire today (%@)",self.foodTextView.text,[self getWeekDayOfDate:model.expireDate]];
              //获取通知的图片
             UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
             //另存通知图片
@@ -1641,6 +1659,32 @@
     [self presentViewController:alert animated:true completion:nil];
     [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
 }
+/**
+ 根据日期字符串获取对应的星期
+ */
+- (NSString *)getWeekDayOfDate:(NSString *)date{
+    NSArray * arrWeekDay=[NSArray arrayWithObjects:@"Sun",@"Mon",@"Tue",@"Wed",@"Thu",@"Fri",@"Sat", nil];
+    
+    NSDateFormatter *formatter = [NSDateFormatter new];
+    [formatter setDateFormat:@"dd/MM/yyyy/HH:mm"];
+    NSDate *tempDate = [formatter dateFromString:date];
+    
+     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+       NSDateComponents *comps = [[NSDateComponents alloc] init];
+       /*
+        NSInteger unitFlags = NSYearCalendarUnit |
+        NSMonthCalendarUnit |
+        NSDayCalendarUnit |
+        NSWeekdayCalendarUnit |
+        NSHourCalendarUnit |
+        NSMinuteCalendarUnit |
+        NSSecondCalendarUnit;
+        */
+    NSInteger unitFlags = NSCalendarUnitYear |NSCalendarUnitMonth | NSCalendarUnitDay |NSCalendarUnitWeekday | NSCalendarUnitHour |NSCalendarUnitMinute |NSCalendarUnitSecond;
+    comps = [calendar components:unitFlags fromDate:tempDate];
+    return arrWeekDay[comps.weekday];
+}
+
 
 #pragma mark - 生成分享视图
 //分享视图与食物二维码
@@ -1669,17 +1713,17 @@
     UIImageView *logo = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*2/5, mainHeight-mainwidth/5, mainwidth/5, mainwidth/5)];
     
     //FOSA
-    UILabel *brand = [[UILabel alloc]initWithFrame:CGRectMake(mainwidth/3, NavigationBarH, mainwidth/3, mainHeight/16)];
+    UILabel *foodName = [[UILabel alloc]initWithFrame:CGRectMake(mainwidth/15, CGRectGetMaxY(image.frame)+5, mainwidth/3, mainHeight/32)];
 
     //食物信息二维码
     UIImageView *InfoCodeView = [[UIImageView alloc]initWithFrame:CGRectMake(mainwidth*4/5-20, mainHeight*5/8+5, mainwidth/5, mainwidth/5)];
 
     //提醒内容
-    UITextView *Nbody = [[UITextView alloc]initWithFrame:CGRectMake(mainwidth/15, CGRectGetMaxY(image.frame), mainwidth*3/5, mainwidth/5)];
+    UITextView *Nbody = [[UITextView alloc]initWithFrame:CGRectMake(mainwidth/15, CGRectGetMaxY(foodName.frame), mainwidth*3/5, mainwidth/5)];
     Nbody.userInteractionEnabled = NO;
 
     [notification addSubview:logo];
-    [notification addSubview:brand];
+    [notification addSubview:foodName];
     [notification addSubview:InfoCodeView];
     [notification addSubview:image];
     [notification addSubview:Nbody];
@@ -1698,9 +1742,9 @@
     InfoCodeView.contentMode = UIViewContentModeScaleAspectFill;
     InfoCodeView.clipsToBounds = YES;
     
-    brand.font  = [UIFont systemFontOfSize:font(20)];
-    brand.textAlignment = NSTextAlignmentCenter;
-    brand.text  = @"FOSA";
+    foodName.font  = [UIFont systemFontOfSize:font(20)];
+    //foodName.textAlignment = NSTextAlignmentCenter;
+    foodName.text  = self.foodTextView.text;
     
     Nbody.font   = [UIFont systemFontOfSize:12];
     Nbody.text = body;
@@ -1735,10 +1779,10 @@
 //弹出系统提示
 -(void)SystemAlert:(NSString *)message{
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:message preferredStyle:UIAlertControllerStyleAlert];
-    
-    if ([message isEqualToString:@"Delete data successfully"] ) {
+
+    if ([message isEqualToString:@"Delete data successfully"] || [message isEqualToString:@"Match QR success"]) {
         [self presentViewController:alert animated:true completion:nil];
-        [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
+        [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:2];
     }else{
         [alert addAction:[UIAlertAction actionWithTitle:@"Get It" style:UIAlertActionStyleDefault handler:nil]];
         [self presentViewController:alert animated:true completion:nil];

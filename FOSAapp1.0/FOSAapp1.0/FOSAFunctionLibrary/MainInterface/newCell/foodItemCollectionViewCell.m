@@ -50,8 +50,8 @@
     self.likebtn.frame = CGRectMake(width/30, width*23/30, width/10, width/10);
 
     self.foodNamelabel.frame = CGRectMake(width/30, CGRectGetMaxY(self.foodImgView.frame)+(height*49/60-width*9/10)/2, width*3/5, (height-width*9/10)*7/12);
-    //self.foodNamelabel.font = [UIFont systemFontOfSize:font(31)];
-    self.foodNamelabel.adjustsFontSizeToFitWidth = YES;
+    self.foodNamelabel.font = [UIFont systemFontOfSize:font(15)];
+    //self.foodNamelabel.adjustsFontSizeToFitWidth = YES;
     self.locationLabel.frame = CGRectMake(width/30, CGRectGetMaxY(self.foodNamelabel.frame), width*3/5, (height-width*9/10)/3);
     self.locationLabel.font = [UIFont systemFontOfSize:font(10)];
     self.locationLabel.textColor = FOSAGray;

@@ -7,7 +7,6 @@
 //
 
 #import "FosaNotification.h"
-#import <UserNotifications/UserNotifications.h>
 #import "foodAddingViewController.h"
 #import <CoreImage/CoreImage.h>
 #import "FMDB.h"
@@ -65,52 +64,55 @@
    //获取通知相关内容
     UNNotificationRequest *request = response.notification.request; // 原始请求
     UNNotificationContent *content = request.content; // 原始内容
-    NSString *foodName = content.subtitle;  // 标题
-    NSString *body = content.body;    // 推送消息体
-    
-    //在此，可判断response的种类和request的触发器是什么，可根据远程通知和本地通知分别处理，再根据action进行后续回调
-    if ([response isKindOfClass:[UNTextInputNotificationResponse class]]) {
-        UNTextInputNotificationResponse * textResponse = (UNTextInputNotificationResponse*)response;
-        NSString * text = textResponse.userText;
-        NSLog(@"%@",text);
-    }else{
-        if ([response.actionIdentifier isEqualToString:@"see1"]){
-            NSLog(@"Save UIView as photo");
-            UIImage *shareImage = [UIImage imageNamed:[NSString stringWithFormat:@"%@1",foodName]];
-            UIImage *notificationImage = [self SaveViewAsPicture:[self CreatNotificatonView:foodName body:body image:shareImage]];
-            UIImageWriteToSavedPhotosAlbum(notificationImage, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
-        }else if ([response.actionIdentifier isEqualToString:@"see2"]) {
+//    NSString *foodName = content.subtitle;  // 标题
+//    NSString *body = content.body;    // 推送消息体
+//
+//    //在此，可判断response的种类和request的触发器是什么，可根据远程通知和本地通知分别处理，再根据action进行后续回调
+//    if ([response isKindOfClass:[UNTextInputNotificationResponse class]]) {
+//        UNTextInputNotificationResponse * textResponse = (UNTextInputNotificationResponse*)response;
+//        NSString * text = textResponse.userText;
+//        NSLog(@"%@",text);
+//    }else{
+//        if ([response.actionIdentifier isEqualToString:@"see1"]){
+//            NSLog(@"Save UIView as photo");
+//            UIImage *shareImage = [UIImage imageNamed:[NSString stringWithFormat:@"%@1",foodName]];
+//            UIImage *notificationImage = [self SaveViewAsPicture:[self CreatNotificatonView:foodName body:body image:shareImage]];
+//            UIImageWriteToSavedPhotosAlbum(notificationImage, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
+       // }else
+        if ([response.actionIdentifier isEqualToString:@"close"]) {
             //I don't care~
-            [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[response.notification.request.identifier]];
-            [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[response.notification.request.identifier]];
-            NSLog(@"删除通知:%@",response.notification.request.identifier);
+            [self removeReminder:response];
 
         }else{
             NSLog(@"-----------------我点击了通知，打开特定的界面------------------");
             if ([self.fosadelegate respondsToSelector:@selector(JumpByFoodName:)]) {
                 NSLog(@"我将跳转页面");
-                [self.fosadelegate JumpByFoodName:content.subtitle];
+                [self.fosadelegate JumpByFoodName:[content.userInfo valueForKey:@"foodName"]];
             }
         }
-    }
+    //}
     completionHandler();
 }
-- (void)removeReminder:(NSMutableArray *)array{
-    [self.center removeDeliveredNotificationsWithIdentifiers:array];
-    [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:array];
-    for (int i = 0; i < array.count; i++) {
-        NSLog(@"Identifiers:%@",array[i]);
-    }
+- (void)removeReminder:(UNNotificationResponse *)response{
+//    [self.center removeDeliveredNotificationsWithIdentifiers:array];
+//    [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:array];
+//    for (int i = 0; i < array.count; i++) {
+//        NSLog(@"Identifiers:%@",array[i]);
+//    }
+    [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[response.notification.request.identifier]];
+    [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[response.notification.request.identifier]];
+    NSLog(@"删除通知:%@",response.notification.request.identifier);
 }
 
 - (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(UIImage *)image identifier:(NSString *)identifier{
     NSLog(@"我将发送一个系统通知----------按指定日期发送通知");
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-    content.title = @"FOSA Reminder";
+    content.title = [NSString stringWithFormat:@"Reminder: %@",model.foodName];
     content.subtitle = model.foodName;
     content.body = body;
     content.badge = @0;
     content.userInfo = @{@"repeat":model.repeat,@"request":identifier};
+    content.launchImageName = model.foodPhoto;
     //获取沙盒中的图片
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
     NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodName];
@@ -179,7 +181,7 @@
     UNCalendarNotificationTrigger *date_trigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:components repeats:YES];
 
     NSString *requestIdentifer = identifier;
-    content.categoryIdentifier = @"seeCategory";
+    content.categoryIdentifier = @"closeCategory";
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifer content:content trigger:date_trigger];
 
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
@@ -199,7 +201,7 @@
 - (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img time:(long)timeInterval identifier:(NSString *)identifier{
     NSLog(@"我将发送一个系统通知------按间隔时间发送通知:%ld",timeInterval);
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-    content.title = @"FOSA Reminder";
+    content.title = [NSString stringWithFormat:@"Reminder: %@",model.foodName];
     content.subtitle = model.foodName;
     content.body = body;
     content.badge = @0;
@@ -223,7 +225,7 @@
     UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:timeInterval repeats:NO];
 
     NSString *requestIdentifer = identifier;
-    content.categoryIdentifier = @"seeCategory";
+    content.categoryIdentifier = @"closeCategory";
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifer content:content trigger:time_trigger];
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
         if (error) {
@@ -242,11 +244,12 @@
 - (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img time:(long int)timeInterval{
     NSLog(@"我将发送一个系统通知");
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-    content.title = @"FOSA Reminder";
-    content.subtitle = model.foodName;
+    content.title = [NSString stringWithFormat:@"Reminder: %@",model.foodName];
+    //content.subtitle = model.foodName;
     content.body = body;
     content.badge = @0;
-    content.userInfo = @{@"repeat":model.repeat};
+    content.userInfo = @{@"repeat":model.repeat,@"foodName":model.foodName};
+
     //获取沙盒中的图片
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
     NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodName];
@@ -268,7 +271,7 @@
     //设置时间间隔的触发器
     UNTimeIntervalNotificationTrigger *time_trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:timeInterval repeats:NO];
     NSString *requestIdentifer = model.foodName;
-    content.categoryIdentifier = @"seeCategory";
+    content.categoryIdentifier = @"closeCategory";
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifer content:content trigger:time_trigger];
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
         NSLog(@"%@",error);
@@ -280,17 +283,37 @@
     foodName = model.foodName;
     NSLog(@"这是分享图片上的食物%@图片:%@",model.foodName,self.image);
 }
+/**
+     增加通知附件
+     @param content 通知内容
+     @param attachmentName 附件名称
+     @param options 相关选项
+     @param completion 结果回调
+*/
+- (void)addNotificationAttachmentContent:(UNMutableNotificationContent *)content attachmentName:(NSString *)attachmentName  options:(NSDictionary *)options withCompletion:(void(^)(NSError * error , UNNotificationAttachment * notificationAtt))completion{
+        
+        NSArray * arr = [attachmentName componentsSeparatedByString:@"."];
+        NSError * error;
+        NSString * path = [[NSBundle mainBundle]pathForResource:arr[0] ofType:arr[1]];
+        UNNotificationAttachment * attachment = [UNNotificationAttachment attachmentWithIdentifier:[NSString stringWithFormat:@"notificationAtt_%@",arr[1]] URL:[NSURL fileURLWithPath:path] options:options error:&error];
+        if (error) {
+            NSLog(@"attachment error %@", error);
+        }
+        completion(error,attachment);
+        //获取通知下拉放大图片
+        content.launchImageName = attachmentName;
+}
 
 -(NSSet *)createNotificationCategoryActions{
     //定义按钮的交互button action
-    UNNotificationAction * likeButton = [UNNotificationAction actionWithIdentifier:@"see1" title:@"Save as Picture" options:UNNotificationActionOptionAuthenticationRequired|UNNotificationActionOptionDestructive|UNNotificationActionOptionForeground];
-    UNNotificationAction * dislikeButton = [UNNotificationAction actionWithIdentifier:@"see2" title:@"I don't care~" options:UNNotificationActionOptionAuthenticationRequired|UNNotificationActionOptionDestructive|UNNotificationActionOptionForeground];
-    //定义文本框的action
-    UNTextInputNotificationAction * text = [UNTextInputNotificationAction actionWithIdentifier:@"text" title:@"How about it~?" options:UNNotificationActionOptionAuthenticationRequired|UNNotificationActionOptionDestructive|UNNotificationActionOptionForeground];
+//    UNNotificationAction * likeButton = [UNNotificationAction actionWithIdentifier:@"see1" title:@"Save as Picture" options:UNNotificationActionOptionAuthenticationRequired|UNNotificationActionOptionDestructive|UNNotificationActionOptionForeground];
+    UNNotificationAction * closeButton = [UNNotificationAction actionWithIdentifier:@"close" title:@"Close" options:UNNotificationActionOptionAuthenticationRequired|UNNotificationActionOptionDestructive|UNNotificationActionOptionForeground];
+//    //定义文本框的action
+//    UNTextInputNotificationAction * text = [UNTextInputNotificationAction actionWithIdentifier:@"text" title:@"How about it~?" options:UNNotificationActionOptionAuthenticationRequired|UNNotificationActionOptionDestructive|UNNotificationActionOptionForeground];
     //将这些action带入category
-    UNNotificationCategory * choseCategory = [UNNotificationCategory categoryWithIdentifier:@"seeCategory" actions:@[likeButton,dislikeButton] intentIdentifiers:@[@"see1",@"see2"] options:UNNotificationCategoryOptionNone];
-    UNNotificationCategory * comment = [UNNotificationCategory categoryWithIdentifier:@"textCategory" actions:@[text] intentIdentifiers:@[@"text"] options:UNNotificationCategoryOptionNone];
-    return [NSSet setWithObjects:choseCategory,comment,nil];
+    UNNotificationCategory * closeCategory = [UNNotificationCategory categoryWithIdentifier:@"closeCategory" actions:@[closeButton] intentIdentifiers:@[@"close"] options:UNNotificationCategoryOptionNone];
+//    UNNotificationCategory * comment = [UNNotificationCategory categoryWithIdentifier:@"textCategory" actions:@[text] intentIdentifiers:@[@"text"] options:UNNotificationCategoryOptionNone];
+    return [NSSet setWithObjects:closeCategory,nil];
 }
 
 #pragma mark - 分享图片
