@@ -481,7 +481,9 @@
                LoginViewController *login = [LoginViewController new];
                [self.navigationController pushViewController:login animated:YES];
            }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self.FOSAloadingView stopAnimating];
+        }]];
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
@@ -535,7 +537,9 @@
                LoginViewController *login = [LoginViewController new];
                [self.navigationController pushViewController:login animated:YES];
            }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self.FOSAloadingView stopAnimating];
+        }]];
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
@@ -590,7 +594,9 @@
             LoginViewController *login = [LoginViewController new];
             [self.navigationController pushViewController:login animated:YES];
         }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self.FOSAloadingView stopAnimating];
+        }]];
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
@@ -645,7 +651,9 @@
             LoginViewController *login = [LoginViewController new];
             [self.navigationController pushViewController:login animated:YES];
         }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:nil]];
+       [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self.FOSAloadingView stopAnimating];
+        }]];
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
@@ -700,7 +708,9 @@
             LoginViewController *login = [LoginViewController new];
             [self.navigationController pushViewController:login animated:YES];
         }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self.FOSAloadingView stopAnimating];
+        }]];
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
