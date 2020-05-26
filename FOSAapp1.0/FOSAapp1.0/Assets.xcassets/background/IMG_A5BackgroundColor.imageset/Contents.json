@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "IMG_A5BackgroundColor.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "IMG_A5BackgroundColor.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
