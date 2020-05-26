@@ -269,6 +269,7 @@
     
     CGFloat imageX = screen_width*0.15;
     CGFloat imageY = (screen_height-screen_width*0.7)/2;
+
 //    self.scanMaskView.frame = self.view.bounds;
 //    self.scanMaskView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
     //[self.view addSubview:self.scanMaskView];
@@ -306,7 +307,9 @@
     self.flashBtn.layer.cornerRadius = _flashBtn.frame.size.width/2;
     self.flashBtn.clipsToBounds = YES;
     [self.flashBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashOff.png"] forState:UIControlStateNormal];
+    //self.flashBtn.hidden = YES;
     [self.flashBtn addTarget:self action:@selector(OpenOrCloseFlash) forControlEvents:UIControlEventTouchUpInside];
+    //[self.view addSubview:self.flashBtn];
     //UISlider
 //    self.zoomSlider.frame = CGRectMake(imageX,imageY+self.view.frame.size.width*0.7,self.view.frame.size.width*0.7+10,20);
 //    //[self.view addSubview:self.zoomSlider];
@@ -456,11 +459,11 @@
        if(self.captureDevice.torchMode == AVCaptureTorchModeOff){
             NSLog(@"open flash");
            [self.captureDevice setTorchMode:AVCaptureTorchModeOn];
-           [_flashBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashON.png"] forState:(UIControlStateNormal)];
+           [_flashBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashOn"] forState:(UIControlStateNormal)];
        }else{
             NSLog(@"close flash");
            [self.captureDevice setTorchMode:AVCaptureTorchModeOff];
-           [_flashBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashOff.png"] forState:(UIControlStateNormal)];
+           [_flashBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashOff"] forState:(UIControlStateNormal)];
            // [self.flashBtn removeFromSuperview];
        }
        [self.captureDevice unlockForConfiguration];
@@ -1075,9 +1078,11 @@ NSLog(@"************************************************************************
     if ((brightnessValue < -1) && result) {
         //提示打开闪光灯
         [self.view insertSubview:self.flashBtn atIndex:10];
+        //self.flashBtn.hidden = NO;
     }else if((brightnessValue > -1) && result) {
         if(device.torchMode == AVCaptureTorchModeOff){
             [self.flashBtn removeFromSuperview];
+            //self.flashBtn.hidden = YES;
         }
     }
 }

@@ -747,8 +747,8 @@
             self.expireTimeLabel.text = expireTimeArray[3];
         }
         
-        remindStr = self.model.remindDate;
-        NSLog(@"提醒日期:%@",remindStr);
+        
+        remindStr = @"";
 
         self.showFoodNameLabel.text = self.model.foodName;
         self.showFoodNameLabel.font = [UIFont systemFontOfSize:22 weight:20];
@@ -759,7 +759,10 @@
         }
         
         if (self.model.remindDate.length > 0) {
+            remindStr = self.model.remindDate;
             self.remindDateTextView.text = [NSString stringWithFormat:@"%@ -%@",self.model.remindDate,self.model.repeat];
+        }else{
+            self.remindDateTextView.text = @"";
         }
         self.storageDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",storageTimeArray[0],storageTimeArray[1],storageTimeArray[2]];
         
@@ -876,7 +879,6 @@
         remindStr = remindTimer;
         self.remindDateTextView.text = [NSString stringWithFormat:@"%@ -%@",remindTimer,self.fosaDatePicker.repeatWayLabel.text];//remindTimer;
     }
-    NSLog(@"%@",dateStr);
     [UIView animateWithDuration:0.3 animations:^{
        self.fosaDatePicker.frame = CGRectMake(0, screen_height, self.view.frame.size.width, screen_height*80/143);
    }];
@@ -1264,9 +1266,11 @@
             takePictureViewController *photo = [[takePictureViewController alloc]init];
             photo.photoBlock = ^(UIImage *img){
                 //通过block将相机拍摄的图片放置在对应的位置
+               
                 if (img != nil) {
-                    self.imageviewArray[self->currentPictureIndex].image = img;
-                    self.foodImgArray[self->currentPictureIndex] = img;
+                    [self->imgManager savePhotoWithImage:img name:[NSString stringWithFormat:@"%@%ld",self.foodTextView.text,self->currentPictureIndex+1]];
+                    self.imageviewArray[self->currentPictureIndex].image = [self->imgManager getImgWithName:[NSString stringWithFormat:@"%@%ld",self.foodTextView.text,self->currentPictureIndex+1]];
+                    self.foodImgArray[self->currentPictureIndex] = [self->imgManager getImgWithName:[NSString stringWithFormat:@"%@%ld",self.foodTextView.text,self->currentPictureIndex+1]];
                 }
             };
             [self.navigationController pushViewController:photo animated:NO];
@@ -1282,8 +1286,9 @@
         photo.photoBlock = ^(UIImage *img){
             //通过block将相机拍摄的图片放置在对应的位置
         if (img != nil) {
-                self.imageviewArray[self->currentPictureIndex].image = img;
-                self.foodImgArray[self->currentPictureIndex] = img;
+               [self->imgManager savePhotoWithImage:img name:[NSString stringWithFormat:@"%@%ld",self.foodTextView.text,self->currentPictureIndex+1]];
+                self.imageviewArray[self->currentPictureIndex].image = [self->imgManager getImgWithName:[NSString stringWithFormat:@"%@%ld",self.foodTextView.text,self->currentPictureIndex+1]];
+                self.foodImgArray[self->currentPictureIndex] = [self->imgManager getImgWithName:[NSString stringWithFormat:@"%@%ld",self.foodTextView.text,self->currentPictureIndex+1]];
             }
         };
         [self.navigationController pushViewController:photo animated:NO];
@@ -1322,16 +1327,14 @@
     [self presentViewController:activityVC animated:TRUE completion:nil];
 }
 - (void)saveInfoAndFinish{
-    //if ([self.foodStyle isEqualToString:@"edit"]) {
-            
-    //}else{
-    //    [self SavephotosInSanBox:self.foodImgArray];
+    [self updateNotification];
     [imgManager savePhotosWithImages:self.foodImgArray name:self.foodTextView.text];
     [self DeleteRecord];
     //}
     [self CreatDataTable];
 }
 - (void)deleteFoodRecord{
+    [self updateNotification];
     //功能有待完善，添加点击放大图片的功能
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"Delete this record" preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -1341,7 +1344,7 @@
         
     }]];
     [self presentViewController:alert animated:true completion:nil];
-    
+
 }
 
 #pragma mark - 键盘事件
@@ -1372,7 +1375,6 @@
 }
 - (void)CreatDataTable{
     NSString *Sql = @"CREATE TABLE IF NOT EXISTS FoodStorageInfo(id integer PRIMARY KEY AUTOINCREMENT, foodName text NOT NULL, device text, aboutFood text,storageDate text NOT NULL,expireDate text NOT NULL,remindDate text,location text,foodImg text NOT NULL,category text NOT NULL,repeatWay text,send text);";
-    //BOOL categoryResult = [self.db executeUpdate:Sql];
     if([fmdbManager creatTableWithSql:Sql])
     {
         NSLog(@"创建食物存储表成功");
@@ -1397,15 +1399,19 @@
     }else{
         issend = @"NO";
     }
+    NSLog(@"=========%@",remindStr);
+    if (remindStr == NULL) {
+        remindStr = @"";
+    }
     NSString *mainImg = [NSString stringWithFormat:@"%@%d",self.foodTextView.text,foodPhotoIndex];
     NSString *insertSql = [NSString stringWithFormat:@"insert into FoodStorageInfo(foodName,device,aboutFood,storageDate,expireDate,remindDate,location,foodImg,category,repeatWay,send) values('%@','%@','%@','%@','%@','%@','%@','%@','%@','%@','%@')",self.foodTextView.text,device,self.foodDescribedTextView.text,storagedate,expiredate,remindStr,self.locationTextView.text,mainImg,selectCategory,self.fosaDatePicker.repeatWayLabel.text,issend];
+    NSLog(@"插入语句:%@",insertSql);
     if ([self.foodTextView.text isEqualToString:@""]) {
         [self SystemAlert:@"Please input the name of your food!"];
     }else if(selectCategory == nil){
         [self SystemAlert:@"Please select a category for your food"];
     }else{
         if ([fmdbManager isFmdbOpen]) {
-            
             //BOOL insertResult = [self.db executeUpdate:insertSql];
             NSLog(@"~~~~~~~~~~~~~~~~~~~~设备号：%@",device);
             if ([fmdbManager insertDataWithSql:insertSql]) {
@@ -1611,11 +1617,13 @@
                     NSLog(@"重复次数:%d-------重复间隔:%d",[[userdefault valueForKey:@"repeatTimes"] intValue],[[userdefault valueForKey:@"repeatTimeInterval"] intValue]);
                     for (int i = 0; i < [[userdefault valueForKey:@"repeatTimes"] intValue]; i++) {
                         identifier = [NSString stringWithFormat:@"%@Remind%d",self.foodTextView.text,i];
-                        [self.fosaNotification sendNotification:model body:body image:image time:(dateTime-currentDateTime)+i*3600*([[userdefault valueForKey:@"repeatTimeInterval"] intValue]) identifier:identifier];
+                        NSString *imageName = [NSString stringWithFormat:@"%d%@",i,self.foodTextView.text];
+                        [imgManager savePhotoWithImage:image name:imageName];
+                        [self.fosaNotification sendNotification:model body:body image:imageName time:(dateTime-currentDateTime)+i*3600*([[userdefault valueForKey:@"repeatTimeInterval"] intValue]) identifier:identifier];
                     }
                 }else{
                     identifier = [NSString stringWithFormat:@"%@Remind",self.foodTextView.text];
-                    [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:image identifier:identifier];
+                    [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:self.foodTextView.text identifier:identifier];
                 }
             }
         }
@@ -1640,18 +1648,17 @@
             [imgManager savePhotoWithImage:image name:self.foodTextView.text];
             NSLog(@">>>=================%@",expireStr);
             NSString *identifier = [NSString stringWithFormat:@"%@Expiry",self.foodTextView.text];
-            [self.fosaNotification sendNotificationByDate:model body:body date:expireStr foodImg:image identifier:identifier];
+            [self.fosaNotification sendNotificationByDate:model body:body date:expireStr foodImg:self.foodTextView.text identifier:identifier];
             //在过期当日的早上9点，12点，下午3点，6点都发一次
             NSArray *repeatTime = @[@"09:00",@"12:00",@"15:00",@"18:00"];
             NSArray *expireArray = [expireStr componentsSeparatedByString:@"/"];
             for (int i = 0; i < 4; i++) {
-//                UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
+                NSString *imageName = [NSString stringWithFormat:@"%d%@",i,self.foodTextView.text];
 //                //另存通知图片
-//                [imgManager savePhotoWithImage:image name:[NSString stringWithFormat:@"%d%@",i,self.foodTextView.text]];
+                [imgManager savePhotoWithImage:image name:imageName];
                 NSString *expire = [NSString stringWithFormat:@"%@/%@/%@/%@",expireArray[0],expireArray[1],expireArray[2],repeatTime[i]];
-                NSLog(@"重复发送过期的通知:%@",expire);
                  NSString *identifier = [NSString stringWithFormat:@"%@Expiry%d",self.foodTextView.text,i];
-                [self.fosaNotification sendNotificationByDate:model body:body date:expire foodImg:image.copy identifier:identifier];
+                [self.fosaNotification sendNotificationByDate:model body:body date:expire foodImg:imageName identifier:identifier];
             }
         }
     }
@@ -1659,6 +1666,29 @@
     [self presentViewController:alert animated:true completion:nil];
     [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
 }
+
+/**
+ 修改信息或删除食物之后需要删除编辑之前设定的通知，然后重新发送
+ */
+- (void)updateNotification{
+    //提醒通知数组
+    NSString *identifier =  [NSString stringWithFormat:@"%@Remind",self.model.foodName];
+    NSString *identifier1 =  [NSString stringWithFormat:@"%@Remind0",self.model.foodName];
+    NSString *identifier2 =  [NSString stringWithFormat:@"%@Remind1",self.model.foodName];
+    NSString *identifier3 =  [NSString stringWithFormat:@"%@Remind2",self.model.foodName];
+    NSString *identifier4 =  [NSString stringWithFormat:@"%@Remind3",self.model.foodName];
+    NSString *identifier5 =  [NSString stringWithFormat:@"%@Remind4",self.model.foodName];
+    NSString *identifierExpire = [NSString stringWithFormat:@"%@Expiry0",self.model.foodName];
+    NSString *identifierExpire1 = [NSString stringWithFormat:@"%@Expiry1",self.model.foodName];
+    NSString *identifierExpire2 = [NSString stringWithFormat:@"%@Expiry2",self.model.foodName];
+    NSString *identifierExpire3 = [NSString stringWithFormat:@"%@Expiry3",self.model.foodName];
+    
+    [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5,identifierExpire,identifierExpire1,identifierExpire2,identifierExpire3]];
+    [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5,identifierExpire,identifierExpire1,identifierExpire2,identifierExpire3]];
+    
+    
+}
+
 /**
  根据日期字符串获取对应的星期
  */

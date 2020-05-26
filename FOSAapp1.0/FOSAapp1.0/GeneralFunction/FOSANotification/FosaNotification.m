@@ -104,21 +104,20 @@
     NSLog(@"删除通知:%@",response.notification.request.identifier);
 }
 
-- (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(UIImage *)image identifier:(NSString *)identifier{
+- (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(NSString *)image identifier:(NSString *)identifier{
     NSLog(@"我将发送一个系统通知----------按指定日期发送通知");
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
     content.title = [NSString stringWithFormat:@"Reminder: %@",model.foodName];
-    content.subtitle = model.foodName;
+    //content.subtitle = model.foodName;
     content.body = body;
     content.badge = @0;
     content.userInfo = @{@"repeat":model.repeat,@"request":identifier};
     content.launchImageName = model.foodPhoto;
     //获取沙盒中的图片
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodName];
+    NSString *photopath = [NSString stringWithFormat:@"%@.png",image];
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
-    self.image = img;
     NSLog(@"%@",imagePath);
     NSError *error = nil;
     //将本地图片的路径形成一个图片附件，加入到content中
@@ -194,21 +193,19 @@
     //生成二维码
     NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@&%@&%@",model.foodName,model.device,model.aboutFood,model.expireDate,model.storageDate,model.category,model.location,model.repeat];
     self.codeImage = [self GenerateQRCodeByMessage:message];
-    self.image = img;
     foodName = model.foodName;
-    NSLog(@"这是分享图片上的食物%@图片:%@",model.foodName,self.image);
 }
-- (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img time:(long)timeInterval identifier:(NSString *)identifier{
+- (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(NSString *)imgName time:(long)timeInterval identifier:(NSString *)identifier{
     NSLog(@"我将发送一个系统通知------按间隔时间发送通知:%ld",timeInterval);
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
     content.title = [NSString stringWithFormat:@"Reminder: %@",model.foodName];
-    content.subtitle = model.foodName;
+    //content.subtitle = model.foodName;
     content.body = body;
     content.badge = @0;
     content.userInfo = @{@"repeat":model.repeat,@"request":identifier};
     //获取沙盒中的图片
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
-    NSString *photopath = [NSString stringWithFormat:@"%@.png",model.foodName];
+    NSString *photopath = [NSString stringWithFormat:@"%@.png",imgName];
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
     NSError *error = nil;
     //将本地图片的路径形成一个图片附件，加入到content中
@@ -237,9 +234,7 @@
     //生成二维码
     NSString *message = [NSString stringWithFormat:@"FOSAINFO&%@&%@&%@&%@&%@&%@&%@",model.foodName,model.device,model.aboutFood,model.expireDate,model.storageDate,model.category,model.location];
     self.codeImage = [self GenerateQRCodeByMessage:message];
-    self.image = img;
     foodName = model.foodName;
-    NSLog(@"这是分享图片上的食物%@图片:%@",model.foodName,self.image);
 }
 - (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img time:(long int)timeInterval{
     NSLog(@"我将发送一个系统通知");
@@ -281,28 +276,27 @@
     self.codeImage = [self GenerateQRCodeByMessage:message];
     self.image = img;
     foodName = model.foodName;
-    NSLog(@"这是分享图片上的食物%@图片:%@",model.foodName,self.image);
 }
-/**
-     增加通知附件
-     @param content 通知内容
-     @param attachmentName 附件名称
-     @param options 相关选项
-     @param completion 结果回调
-*/
-- (void)addNotificationAttachmentContent:(UNMutableNotificationContent *)content attachmentName:(NSString *)attachmentName  options:(NSDictionary *)options withCompletion:(void(^)(NSError * error , UNNotificationAttachment * notificationAtt))completion{
-        
-        NSArray * arr = [attachmentName componentsSeparatedByString:@"."];
-        NSError * error;
-        NSString * path = [[NSBundle mainBundle]pathForResource:arr[0] ofType:arr[1]];
-        UNNotificationAttachment * attachment = [UNNotificationAttachment attachmentWithIdentifier:[NSString stringWithFormat:@"notificationAtt_%@",arr[1]] URL:[NSURL fileURLWithPath:path] options:options error:&error];
-        if (error) {
-            NSLog(@"attachment error %@", error);
-        }
-        completion(error,attachment);
-        //获取通知下拉放大图片
-        content.launchImageName = attachmentName;
-}
+///**
+//     增加通知附件
+//     @param content 通知内容
+//     @param attachmentName 附件名称
+//     @param options 相关选项
+//     @param completion 结果回调
+//*/
+//- (void)addNotificationAttachmentContent:(UNMutableNotificationContent *)content attachmentName:(NSString *)attachmentName  options:(NSDictionary *)options withCompletion:(void(^)(NSError * error , UNNotificationAttachment * notificationAtt))completion{
+//
+//        NSArray * arr = [attachmentName componentsSeparatedByString:@"."];
+//        NSError * error;
+//        NSString * path = [[NSBundle mainBundle]pathForResource:arr[0] ofType:arr[1]];
+//        UNNotificationAttachment * attachment = [UNNotificationAttachment attachmentWithIdentifier:[NSString stringWithFormat:@"notificationAtt_%@",arr[1]] URL:[NSURL fileURLWithPath:path] options:options error:&error];
+//        if (error) {
+//            NSLog(@"attachment error %@", error);
+//        }
+//        completion(error,attachment);
+//        //获取通知下拉放大图片
+//        content.launchImageName = attachmentName;
+//}
 
 -(NSSet *)createNotificationCategoryActions{
     //定义按钮的交互button action

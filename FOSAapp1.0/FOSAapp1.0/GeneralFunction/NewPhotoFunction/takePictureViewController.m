@@ -9,6 +9,7 @@
 #import "takePictureViewController.h"
 #import <AVFoundation/AVFoundation.h>
 
+
 @interface takePictureViewController ()<AVCapturePhotoCaptureDelegate,UIScrollViewDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic,strong)  UIView *containerView;//内容视图
@@ -101,7 +102,6 @@
     [self.view addSubview:self.containerView];
     self.session = [AVCaptureSession new];
     [self.session setSessionPreset:AVCaptureSessionPresetHigh];
-
 //    NSArray *devices = [NSArray new];
 //    devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];过期方法
     AVCaptureDeviceDiscoverySession *deviceSession = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:@[AVCaptureDeviceTypeBuiltInWideAngleCamera] mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
@@ -111,6 +111,7 @@
         if (isBack) {
             if ([device position] == AVCaptureDevicePositionBack) {
                 _device = device;
+                
                 break;
             }
         }else {
@@ -158,7 +159,7 @@
     [self.controlerView addSubview:_shutter];
     [self.shutter setBackgroundImage:[UIImage imageNamed:@"icon_takePhoto"] forState:UIControlStateNormal];
     [self.shutter addTarget:self action:@selector(clickToCapture) forControlEvents:UIControlEventTouchUpInside];
-    
+
     //分割线
     UIView *line1 = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), screen_width, self.containerView.frame.size.height/5)];
     line1.backgroundColor = FOSAGray;
@@ -180,7 +181,6 @@
     self.pictureView.userInteractionEnabled = YES;
     UITapGestureRecognizer *pictureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(clickToCheckPhoto)];
     [self.pictureView addGestureRecognizer:pictureRecognizer];
-    
     
     //确定
     self.finishBtn = [[UIButton alloc]initWithFrame:CGRectMake(screen_width*4/5, self.controlerView.frame.size.height/3-screen_width*4/50, screen_width*4/25, screen_width*4/25)];
@@ -312,11 +312,20 @@
 
 - (void)captureOutput:(AVCapturePhotoOutput *)output didFinishProcessingPhoto:(AVCapturePhoto *)photo error:(NSError *)error{
     /**
-     IOS 11之后使用该协议获取图片
-     */
+    IOS 11之后使用该协议获取图片
+    */
     NSData *imgData = [photo fileDataRepresentation];
     UIImage *image = [UIImage imageWithData:imgData];
-    self.pictureView.image = [self fixOrientation:image];
+    //NSLog(@"--------------------------------%ld",(long)image.imageOrientation);
+    //判断设备的方向
+    UIDeviceOrientation duration = [[UIDevice currentDevice] orientation];
+    NSLog(@"--------------------------------%ld",(long)duration);
+    if (duration != 3) {
+        //当前处于竖屏，进行方向纠正，横屏则不需要
+        NSLog(@"竖屏");
+        image = [self fixOrientation:image];
+    }
+    self.pictureView.image = image;//[self fixOrientation:image];
 }
 //
 //- (void)captureOutput:(AVCapturePhotoOutput *)captureOutput didFinishProcessingPhotoSampleBuffer:(nullable CMSampleBufferRef)photoSampleBuffer previewPhotoSampleBuffer:(nullable CMSampleBufferRef)previewPhotoSampleBuffer resolvedSettings:(AVCaptureResolvedPhotoSettings *)resolvedSettings bracketSettings:(nullable AVCaptureBracketedStillImageSettings *)bracketSettings error:(nullable NSError *)error{
@@ -340,8 +349,9 @@
 //纠正图片的方向
 - (UIImage *)fixOrientation:(UIImage *)aImage {
 // No-op if the orientation is already correct
-    if (aImage.imageOrientation == UIImageOrientationUp)
+    if (aImage.imageOrientation == UIImageOrientationUp){
         return aImage;
+    }
     // We need to calculate the proper transformation to make the image upright.
     // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
     CGAffineTransform transform = CGAffineTransformIdentity;
@@ -401,6 +411,7 @@
     CGImageRelease(cgimg);
     return img;
 }
+
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [self.session stopRunning];

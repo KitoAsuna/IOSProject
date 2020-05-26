@@ -1298,7 +1298,7 @@
         if (result == NSOrderedSame) {
             
                 //isSend = true;
-            NSString *body = [NSString stringWithFormat:@"will expir today (%@)",[self getWeekDayOfDate:self.collectionDataSource[i].expireDate]];
+            NSString *body = [NSString stringWithFormat:@"will expire today (%@)",[self getWeekDayOfDate:self.collectionDataSource[i].expireDate]];
                 //发送通知
             //获取通知的图片
             image = [imgManager getImgWithName:self.collectionDataSource[i].foodPhoto];//[self getImage:self.collectionDataSource[i].foodPhoto];
@@ -1327,13 +1327,14 @@
  */
 - (NSString *)getWeekDayOfDate:(NSString *)date{
     NSArray * arrWeekDay=[NSArray arrayWithObjects:@"Sun",@"Mon",@"Tue",@"Wed",@"Thu",@"Fri",@"Sat", nil];
-    
+ 
     NSDateFormatter *formatter = [NSDateFormatter new];
-    [formatter setDateFormat:@"dd/MM/yyyy/HH:mm"];
+    [formatter setDateFormat:@"dd/MM/yy/HH:mm"];
     NSDate *tempDate = [formatter dateFromString:date];
-    
-     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-       NSDateComponents *comps = [[NSDateComponents alloc] init];
+
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    calendar.timeZone = [NSTimeZone localTimeZone];
+    NSDateComponents *comps = [[NSDateComponents alloc] init];
        /*
         NSInteger unitFlags = NSYearCalendarUnit |
         NSMonthCalendarUnit |

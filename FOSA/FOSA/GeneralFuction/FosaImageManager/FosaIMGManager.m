@@ -257,8 +257,11 @@ centerImgView.layer.cornerRadius = radius_img;
 //纠正图片的方向
 - (UIImage *)fixOrientation:(UIImage *)aImage {
 // No-op if the orientation is already correct
-    if (aImage.imageOrientation == UIImageOrientationUp)
+    if (aImage.imageOrientation == UIImageOrientationUp){
+        NSLog(@"不需要纠正");
         return aImage;
+    }
+        
     // We need to calculate the proper transformation to make the image upright.
     // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
     CGAffineTransform transform = CGAffineTransformIdentity;

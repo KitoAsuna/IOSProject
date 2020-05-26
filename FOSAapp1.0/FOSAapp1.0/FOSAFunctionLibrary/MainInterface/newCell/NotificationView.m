@@ -199,39 +199,6 @@
         [self.closeDelegate closeNotificationList];
     }
 }
-//- (void)sendReminderNotification{
-//    NSLog(@"%@",remindArray);
-//    NSArray *tempArray;
-//    NSString *tempStr;
-//    NSDateFormatter *format = [NSDateFormatter new];
-//    NSDateFormatter *format2 = [NSDateFormatter new];
-//    [format setDateFormat:@"dd MM/yyyy hh:mm a"];
-//    [format2 setDateFormat:@"dd/MM/yyyy/HH:mm"];
-//    format.AMSymbol = @"AM";
-//    format.PMSymbol = @"PM";
-//    //设定通知
-//    NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
-//    //获取用户设置，是否设定免打扰
-//    NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
-//    if ([autoNotification isEqualToString:@"NO"] || autoNotification == nil) {
-//        //[self.fosaNotification initNotification];
-//        for (int i = 0; i < remindArray.count; i++) {
-//            NSString *body = [NSString stringWithFormat:@"FOSA remind you to eat your food %@ in time",remindArray[i].foodName];
-//            //获取通知的图片
-//            UIImage *image = [self getImage:remindArray[i].foodName];
-//            NSLog(@"%@",image)
-//            //另存通知图片
-//            [self Savephoto:image name:remindArray[i].foodName];
-//
-//            tempArray = [remindArray[i].remindDate componentsSeparatedByString:@","];
-//            tempStr = [NSString stringWithFormat:@"%@/%@ %@",tempArray[1],tempArray[2],tempArray[3]];
-//            NSDate *date = [format dateFromString:tempStr];
-//            //NSLog(@"<<<<<<<<<<<<<<<<<<<<<<remindDate :%@",[format2 stringFromDate:date]);
-//
-//            [self.fosaNotification sendNotificationByDate:remindArray[i] body:body date:[format2 stringFromDate:date] foodImg:image identifier:remindArray[i].foodName];
-//        }
-//    }
-//}
 
 - (void)deleteReminder{
     NSLog(@"%@",selectArray);
@@ -272,7 +239,7 @@
         }
         [requestArray addObject:cancelArray[i].foodName];
     }
-    [self.fosaNotification removeReminder:requestArray];
+    //[self.fosaNotification removeReminder:requestArray];
 }
 
 //获取数据库的食物

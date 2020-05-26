@@ -24,8 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (UIImage *)SaveViewAsPicture:(UIView *)view;
 - (void)initNotification;
 - (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img time:(long int)timeInterval;
-- (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img time:(long int)timeInterval identifier:(NSString *)identifier;
-- (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(UIImage *)image identifier:(NSString *)identifier;
+- (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(NSString *)img time:(long int)timeInterval identifier:(NSString *)identifier;
+- (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(NSString *)image identifier:(NSString *)identifier;
 - (void)removeReminder:(UNNotificationResponse *)response;
 - (UIImage *)GenerateQRCodeByMessage:(NSString *)message;
 - (void)addNotificationAttachmentContent:(UNMutableNotificationContent *)content attachmentName:(NSString *)attachmentName  options:(NSDictionary *)options withCompletion:(void(^)(NSError * error , UNNotificationAttachment * notificationAtt))completion;
