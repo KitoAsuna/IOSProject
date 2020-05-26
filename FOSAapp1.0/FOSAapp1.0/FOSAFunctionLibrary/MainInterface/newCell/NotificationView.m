@@ -194,7 +194,7 @@
 }
 
 - (void)closeNotificationView{
-//    [self saveReminder];
+    [self saveReminder];
     if ([self.closeDelegate respondsToSelector:@selector(closeNotificationList)]) {
         [self.closeDelegate closeNotificationList];
     }
@@ -222,6 +222,7 @@
 - (void)saveReminder{
     NSLog(@"cancelArray:%@",cancelArray);
     NSLog(@"remindArray:%@",remindArray);
+    
     if ([self.fmdbManager isFmdbOpen] && remindArray.count > 0) {
            for (int i = 0; i < remindArray.count; i++) {
                NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set send = '%@' where foodName = '%@'",@"YES",remindArray[i].foodName];
@@ -231,14 +232,25 @@
            }
     }
     //取消没有开启的通知
-    NSMutableArray *requestArray = [NSMutableArray new];
+    //NSMutableArray *requestArray = [NSMutableArray new];
     for (int i = 0; i < cancelArray.count; i++) {
         NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set send = '%@' where foodName = '%@'",@"NO",cancelArray[i].foodName];
         if ([self.fmdbManager updateDataWithSql:updateSql]) {
             NSLog(@"设置reminder为NO，更新成功");
         }
-        [requestArray addObject:cancelArray[i].foodName];
+        //[requestArray addObject:cancelArray[i].foodName];
+        //提醒通知数组
+        NSString *identifier =  [NSString stringWithFormat:@"%@Remind",cancelArray[i].foodName];
+        NSString *identifier1 =  [NSString stringWithFormat:@"%@Remind0",cancelArray[i].foodName];
+        NSString *identifier2 =  [NSString stringWithFormat:@"%@Remind1",cancelArray[i].foodName];
+        NSString *identifier3 =  [NSString stringWithFormat:@"%@Remind2",cancelArray[i].foodName];
+        NSString *identifier4 =  [NSString stringWithFormat:@"%@Remind3",cancelArray[i].foodName];
+        NSString *identifier5 =  [NSString stringWithFormat:@"%@Remind4",cancelArray[i].foodName];
+        [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5]];
+        [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5]];
     }
+    
+    
     //[self.fosaNotification removeReminder:requestArray];
 }
 
@@ -250,6 +262,10 @@
     self.dataSource = [self.fmdbManager selectDataWithTableName:@"FoodStorageInfo" sql:sql];
     NSLog(@"%@",self.dataSource);
     [self.notificationList reloadData];
+}
+
+- (void)sendRemindNotification:(FoodModel *)model{
+    
 }
 //取出保存在本地的图片
 - (UIImage*)getImage:(NSString *)filepath{

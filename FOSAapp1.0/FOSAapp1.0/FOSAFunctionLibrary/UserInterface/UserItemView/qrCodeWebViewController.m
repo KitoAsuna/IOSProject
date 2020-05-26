@@ -694,9 +694,8 @@
             }else{
                 typeStr = [NSString stringWithFormat:@"type1%@",color];
             }
-            
             NSString *message = [NSString stringWithFormat:@"FS91000000000000000%d",j];
-            UIImageView *qrview = [[UIImageView alloc]initWithFrame:CGRectMake(width*(30.6/216.0+(i%5)*33.7/216.0), height*(137.315/279.0+(i/5)*31.2/279.0), width*(20/216.0), height*(20/279.0))];
+            UIImageView *qrview = [[UIImageView alloc]initWithFrame:CGRectMake(width*(30.7/216.0+(i%5)*33.65/216.0), height*(137.6/279.0+(i/5)*31.2/279.0), width*(20/216.0), height*(20/279.0))];
             qrview.image = [FosaIMGManager GenerateQRCodeWithIcon:[UIImage imageNamed:typeStr] Message:message];
             [qrcodeImage addSubview:qrview];
         }

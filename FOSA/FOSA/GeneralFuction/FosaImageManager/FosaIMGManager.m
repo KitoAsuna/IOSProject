@@ -68,7 +68,7 @@
 }
 - (UIImage *)saveViewAsPictureWithView:(UIView *)view{
     //UIGraphicsBeginImageContextWithOptions(区域大小, 是否是非透明的, 屏幕密度);
-    UIGraphicsBeginImageContextWithOptions(view.frame.size, YES, [UIScreen mainScreen].scale);
+    UIGraphicsBeginImageContextWithOptions(view.frame.size, YES, 4);
     [view.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *imageRet = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -166,11 +166,11 @@ typedef NS_OPTIONS(NSUInteger, QRCodeLogoType) {
     [view addSubview:bacImageView];
     //logoImage.size.width;
     float width_logo = width / 4;
-    UIView *logoBacView = [[UIView alloc]initWithFrame:CGRectMake((width - width_logo)/2 , (height - width_logo)/2, width_logo + 10,width_logo + 10)];
+    UIView *logoBacView = [[UIView alloc]initWithFrame:CGRectMake((width - width_logo)/2 , (height - width_logo)/2, width_logo + 20,width_logo + 20)];
     logoBacView.backgroundColor = [UIColor whiteColor];
     logoBacView.layer.masksToBounds = YES;
     [bacImageView addSubview:logoBacView];
-    UIImageView *centerImgView = [[UIImageView alloc]initWithFrame:CGRectMake(5,5, width_logo,width_logo)];
+    UIImageView *centerImgView = [[UIImageView alloc]initWithFrame:CGRectMake(10,10, width_logo,width_logo)];
     centerImgView.image = logoImage;
     centerImgView.layer.masksToBounds = YES;
     centerImgView.backgroundColor = [UIColor whiteColor];

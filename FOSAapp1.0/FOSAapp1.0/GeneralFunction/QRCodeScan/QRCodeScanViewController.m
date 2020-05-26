@@ -576,7 +576,6 @@ NSLog(@"************************************************************************
         if (_ScanModel == 0) {//当前是单个扫码模式，对每一个二维码进行逐个处理
             [self.captureSession stopRunning];
             [self ScanResultOperationOnLandScape:result code:(AVMetadataMachineReadableCodeObject *)mobject];
-            
         }else if(_ScanModel == 1){//当前是多个扫码模式
             [self ScanResultOperationOnPortait:metadataObjects];
         }
@@ -597,6 +596,7 @@ NSLog(@"************************************************************************
                         }
                     }else if([result hasPrefix:@"Fosa"]||[result hasPrefix:@"FS9"]||[result hasPrefix:@"FOSASealer"]){
                         [self ScanSuccess:@"ding.wav"];
+                        [self performSelectorOnMainThread:@selector(setFocusCursorWithPoint:) withObject:(AVMetadataMachineReadableCodeObject *) mobject waitUntilDone:NO];     //在主线程中标记二维码的位置（还不够准确）
                         [self performSelectorOnMainThread:@selector(showOneMessage:) withObject:result waitUntilDone:NO]; //在主线程中展示这个物品的通知
                     }else if ([result hasPrefix:@"FOSAINFO"]) {
                         foodAddingViewController *food = [foodAddingViewController new];
@@ -1022,13 +1022,14 @@ NSLog(@"************************************************************************
 #pragma mark - 设置在二维码位置显示聚焦光标
 - (void)setFocusCursorWithPoint:(AVMetadataMachineReadableCodeObject *)objc
 {
+    self.focusCursor.image = [UIImage imageNamed:@"icon_greenfocus"];
     CGPoint point = [self getCenterOfQRcode:objc];
     CGPoint center = CGPointZero;
     center.x = [UIScreen mainScreen].bounds.size.width*(1-point.y);
     center.y = [UIScreen mainScreen].bounds.size.height*(point.x);
 
     self.focusCursor.center = center;
-    self.focusCursor.transform = CGAffineTransformMakeScale(3,3);
+    self.focusCursor.transform = CGAffineTransformMakeScale(2,2);
     self.focusCursor.alpha = 1.0;
     [UIView animateWithDuration:1 animations:^{
         self.focusCursor.transform = CGAffineTransformIdentity;

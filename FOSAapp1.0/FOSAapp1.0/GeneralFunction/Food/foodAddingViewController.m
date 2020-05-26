@@ -1596,7 +1596,6 @@
             NSString *body = [NSString stringWithFormat:@"FOSA remind you to eat your food %@ in time",self.foodTextView.text];
              //获取通知的图片
             UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
-           // NSLog(@"%@",image)
             //另存通知图片
             //[self Savephoto:image name:self.foodTextView.text];
             [imgManager savePhotoWithImage:image name:self.foodTextView.text];
@@ -1685,8 +1684,6 @@
     
     [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5,identifierExpire,identifierExpire1,identifierExpire2,identifierExpire3]];
     [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5,identifierExpire,identifierExpire1,identifierExpire2,identifierExpire3]];
-    
-    
 }
 
 /**
