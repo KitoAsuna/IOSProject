@@ -10,7 +10,6 @@
 #import "categoryModel.h"
 
 
-
 @interface FosaFMDBManager(){
     FMDatabase *db;
     NSString *docPath;

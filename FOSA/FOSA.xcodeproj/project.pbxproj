@@ -43,6 +43,7 @@
 		45E525A824248EA30028FF8E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E525A724248EA30028FF8E /* main.m */; };
 		45E525B224248EA30028FF8E /* FOSATests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E525B124248EA30028FF8E /* FOSATests.m */; };
 		45E525BD24248EA30028FF8E /* FOSAUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E525BC24248EA30028FF8E /* FOSAUITests.m */; };
+		45F9F345247E2375000A9BC8 /* categoryModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F9F344247E2375000A9BC8 /* categoryModel.m */; };
 		7DEF86B51CAFA6B30561F6BC /* libPods-FOSA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F0E4794E3A712BEC56A053F /* libPods-FOSA.a */; };
 		CC50FE42A9256089E8D23BEF /* libPods-FOSA-FOSAUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4F8AE940766D7006F02E277 /* libPods-FOSA-FOSAUITests.a */; };
 /* End PBXBuildFile section */
@@ -139,6 +140,8 @@
 		45E525B824248EA30028FF8E /* FOSAUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FOSAUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		45E525BC24248EA30028FF8E /* FOSAUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FOSAUITests.m; sourceTree = "<group>"; };
 		45E525BE24248EA30028FF8E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		45F9F343247E2375000A9BC8 /* categoryModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = categoryModel.h; sourceTree = "<group>"; };
+		45F9F344247E2375000A9BC8 /* categoryModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = categoryModel.m; sourceTree = "<group>"; };
 		67EFA1173D8FB7C5DBBFCD51 /* libPods-FOSATests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FOSATests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F0E4794E3A712BEC56A053F /* libPods-FOSA.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FOSA.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E26D66240BADB03D72479C5 /* Pods-FOSATests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FOSATests.debug.xcconfig"; path = "Target Support Files/Pods-FOSATests/Pods-FOSATests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -288,6 +291,8 @@
 			children = (
 				452F782F24372463002C6083 /* FoodModel.h */,
 				452F783024372463002C6083 /* FoodModel.m */,
+				45F9F343247E2375000A9BC8 /* categoryModel.h */,
+				45F9F344247E2375000A9BC8 /* categoryModel.m */,
 			);
 			path = FosaViewAndDataStruct;
 			sourceTree = "<group>";
@@ -641,6 +646,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				452F77E12436DADF002C6083 /* FosaTabBar.m in Sources */,
+				45F9F345247E2375000A9BC8 /* categoryModel.m in Sources */,
 				452F782E24370629002C6083 /* FosaFMDBManager.m in Sources */,
 				452F78082436EF03002C6083 /* RegisterViewController.m in Sources */,
 				451AF746243AB731006141D2 /* qrResultViewController.m in Sources */,
@@ -843,7 +849,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = NFW4WTJX6R;
+				DEVELOPMENT_TEAM = TS9KK624SM;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/FOSA/MacroHeader.h";
 				INFOPLIST_FILE = FOSA/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -862,7 +868,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = NFW4WTJX6R;
+				DEVELOPMENT_TEAM = TS9KK624SM;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/FOSA/MacroHeader.h";
 				INFOPLIST_FILE = FOSA/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

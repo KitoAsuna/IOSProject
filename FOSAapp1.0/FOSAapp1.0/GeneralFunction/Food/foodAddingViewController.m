@@ -437,8 +437,8 @@
     self.likeBtn.hidden = YES;
 /**help*/
     
-    self.helpBtn.frame = CGRectMake(0, 0, NavigationBarH/2, NavigationBarH/2);
-    [self.helpBtn setBackgroundImage:[UIImage imageNamed:@"icon_helpW"]  forState:UIControlStateNormal];
+    self.helpBtn.frame = CGRectMake(screen_width-NavigationBarH, NavigationBarH/6, NavigationBarH, NavigationBarH*2/3);
+    [self.helpBtn setImage:[UIImage imageNamed:@"icon_helpW"]  forState:UIControlStateNormal];
     [self.helpBtn addTarget:self action:@selector(selectToHelp) forControlEvents:UIControlEventTouchUpInside];
     
     if ([self.foodStyle isEqualToString:@"adding"]) {
@@ -452,8 +452,8 @@
     }else if([self.foodStyle isEqualToString:@"Info"]){
         //self.editBtn.frame = CGRectMake(0, 0, NavigationBarH*2, NavigationBarH/2);
         //添加约束
-        [[self.editBtn.widthAnchor constraintEqualToConstant:NavigationBarH*5/3] setActive:YES];
-        [[self.editBtn.heightAnchor constraintEqualToConstant:NavigationBarH*5/9] setActive:YES];
+        [[self.editBtn.widthAnchor constraintEqualToConstant:NavigationBarH] setActive:YES];
+        [[self.editBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3] setActive:YES];
         self.editBtn.layer.cornerRadius = NavigationBarH*5/18;
         [self.editBtn setTitle:@"Edit" forState:UIControlStateNormal];
         self.editBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
@@ -696,7 +696,7 @@
     [self.rightIndex setBackgroundImage:[UIImage imageNamed:@"icon_rightindex"] forState:UIControlStateNormal];
     [self.rightIndex addTarget:self action:@selector(offsetToRight) forControlEvents:UIControlEventTouchUpInside];
     [self.footerView addSubview:self.rightIndex];
-    
+
     //食物种类选择栏 可滚动
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -852,7 +852,7 @@
                //clickRecognizer.view.tag = i;
         [self.imageviewArray[i] addGestureRecognizer:clickRecognizer];
         [self.picturePlayer addSubview:self.imageviewArray[i]];
-        self.mainImgBtnArray[i].frame = CGRectMake(screen_width-NavigationBarH*9/8, NavigationBarH*2, NavigationBarH*2/3, NavigationBarH*2/3);
+        self.mainImgBtnArray[i].frame = CGRectMake(screen_width-NavigationBarH*11/9, NavigationBarH*2, NavigationBarH*2/3, NavigationBarH*2/3);
         [self.mainImgBtnArray[i] setBackgroundImage:[UIImage imageNamed:@"icon_setMainImg"] forState:UIControlStateNormal];
         [self.mainImgBtnArray[i] addTarget:self action:@selector(setImgAsMainBackground) forControlEvents:UIControlEventTouchUpInside];
         [self.imageviewArray[i] addSubview:self.mainImgBtnArray[i]];

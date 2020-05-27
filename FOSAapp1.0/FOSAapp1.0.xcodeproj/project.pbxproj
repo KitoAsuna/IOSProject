@@ -1393,6 +1393,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hs.FOSA1.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1415,6 +1416,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hs.FOSA1.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
