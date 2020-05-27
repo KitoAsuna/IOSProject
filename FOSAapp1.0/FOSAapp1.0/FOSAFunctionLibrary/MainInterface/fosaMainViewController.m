@@ -1327,7 +1327,6 @@
  */
 - (NSString *)getWeekDayOfDate:(NSString *)date{
     NSArray * arrWeekDay=[NSArray arrayWithObjects:@"Sun",@"Mon",@"Tue",@"Wed",@"Thu",@"Fri",@"Sat", nil];
- 
     NSDateFormatter *formatter = [NSDateFormatter new];
     [formatter setDateFormat:@"dd/MM/yy/HH:mm"];
     NSDate *tempDate = [formatter dateFromString:date];

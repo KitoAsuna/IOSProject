@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface foodAddingViewController : UIViewController
 
 //导航栏
-@property (nonatomic,strong) UIButton *likeBtn,*helpBtn,*backbtn,*mainImgBtn;
+@property (nonatomic,strong) UIButton *likeBtn,*helpBtn,*backbtn,*mainImgBtn1,*mainImgBtn2,*mainImgBtn3;
 //头部视图
 @property (nonatomic,strong) UIView *headerView;//头部底层视图
 @property (nonatomic,strong) UIScrollView *picturePlayer;//图片轮播器

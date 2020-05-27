@@ -41,6 +41,7 @@
 //图片轮播器
 @property (nonatomic,strong) UIImageView *imageview1,*imageview2,*imageview3;
 @property (nonatomic,strong) NSMutableArray<UIImageView *> *imageviewArray;
+@property (nonatomic,strong) NSMutableArray<UIButton *>    *mainImgBtnArray;
 //当前选中的种类cell
 @property (nonatomic,strong) foodKindCollectionViewCell *selectedCategory;
 
@@ -98,6 +99,25 @@
         _headerView = [[UIView alloc]init];
     }
     return _headerView;
+}
+
+- (UIButton *)mainImgBtn1{
+    if (_mainImgBtn1 == nil) {
+        _mainImgBtn1 = [UIButton new];
+    }
+    return _mainImgBtn1;
+}
+- (UIButton *)mainImgBtn2{
+    if (_mainImgBtn2 == nil) {
+        _mainImgBtn2 = [UIButton new];
+    }
+    return _mainImgBtn2;
+}
+- (UIButton *)mainImgBtn3{
+    if (_mainImgBtn3 == nil) {
+        _mainImgBtn3 = [UIButton new];
+    }
+    return _mainImgBtn3;
 }
 
 - (UIScrollView *)picturePlayer{
@@ -397,7 +417,7 @@
     
     if (![self.foodStyle isEqualToString:@"Info"]) {
         self.backbtn.hidden = NO;
-        self.mainImgBtn.hidden = NO;
+        //self.mainImgBtn.hidden = NO;
         if (![device isEqualToString:@"null"]) {
             [self SystemAlert:@"Match QR success"];
             self.likeBtn.hidden = NO;
@@ -415,11 +435,6 @@
     [self.navigationController.navigationBar addSubview:self.likeBtn];
     //[self.likeBtn addTarget:self action:@selector(selectToLike) forControlEvents:UIControlEventTouchUpInside];
     self.likeBtn.hidden = YES;
-    self.mainImgBtn = [UIButton new];
-    self.mainImgBtn.frame = CGRectMake(screen_width-NavigationBarH*5/2, NavigationBarH/6, NavigationBarH*2/3, NavigationBarH*2/3);
-    [self.mainImgBtn setBackgroundImage:[UIImage imageNamed:@"icon_setMainImg"] forState:UIControlStateNormal];
-    [self.navigationController.navigationBar addSubview:self.mainImgBtn];
-    [self.mainImgBtn addTarget:self action:@selector(setImgAsMainBackground) forControlEvents:UIControlEventTouchUpInside];
 /**help*/
     
     self.helpBtn.frame = CGRectMake(0, 0, NavigationBarH/2, NavigationBarH/2);
@@ -724,10 +739,15 @@
 }
 
 - (void)showFoodInfoInView{
-    if ([self.foodStyle isEqualToString:@"Info"]) {
+    if ([self.foodStyle isEqualToString:@"Info"]){
         //编辑按钮
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.editBtn];
-        self.mainImgBtn.hidden = YES;
+        //根据食物的默认图片设置标识
+        NSString *index = [self.model.foodPhoto substringFromIndex:self.model.foodPhoto.length-1];
+        NSLog(@"默认图片:%@",index);
+        [self.mainImgBtnArray[index.intValue-1] setBackgroundImage:[UIImage imageNamed:@"icon_setMainImgG"] forState:UIControlStateNormal];
+        [self.picturePlayer setContentOffset:CGPointMake(screen_width*(index.intValue-1), 0)];
+        self.pageControl.currentPage = index.intValue-1;
         //禁止界面互动
         self.foodTextView.userInteractionEnabled = NO;
         self.foodDescribedTextView.userInteractionEnabled = NO;
@@ -735,6 +755,9 @@
         self.expireView.userInteractionEnabled = NO;
         self.locationView.userInteractionEnabled = NO;
         self.remindView.userInteractionEnabled = NO;
+        self.mainImgBtn1.userInteractionEnabled = NO;
+        self.mainImgBtn2.userInteractionEnabled = NO;
+        self.mainImgBtn3.userInteractionEnabled = NO;
 
         NSArray<NSString *> *storageTimeArray;
         storageTimeArray = [self.model.storageDate componentsSeparatedByString:@"/"];
@@ -746,10 +769,7 @@
             self.expireDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",expireTimeArray[0],expireTimeArray[1],expireTimeArray[2]];
             self.expireTimeLabel.text = expireTimeArray[3];
         }
-        
-        
         remindStr = @"";
-
         self.showFoodNameLabel.text = self.model.foodName;
         self.showFoodNameLabel.font = [UIFont systemFontOfSize:22 weight:20];
         
@@ -757,7 +777,6 @@
             self.likeBtn.hidden = NO;
             device = self.model.device;
         }
-        
         if (self.model.remindDate.length > 0) {
             remindStr = self.model.remindDate;
             self.remindDateTextView.text = [NSString stringWithFormat:@"%@ -%@",self.model.remindDate,self.model.repeat];
@@ -765,14 +784,14 @@
             self.remindDateTextView.text = @"";
         }
         self.storageDateLabel.text = [NSString stringWithFormat:@"%@/%@/%@",storageTimeArray[0],storageTimeArray[1],storageTimeArray[2]];
-        
+
         self.storageTimeLabel.text = storageTimeArray[3];
 
         self.foodTextView.text = self.model.foodName;
         self.foodDescribedTextView.text = self.model.aboutFood;
         self.locationTextView.text = self.model.location;
         self.foodCell.kind.text = self.model.category;
-        
+
         for (int i = 0; i < self.categoryData.count; i++) {
             if ([self.categoryData[i].categoryName isEqualToString:selectCategory]) {
                 self.foodCell.categoryPhoto.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@W",self.categoryData[i].categoryIconName]];
@@ -789,6 +808,7 @@
         }
     }else{
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.helpBtn];
+        [self.mainImgBtnArray[0] setBackgroundImage:[UIImage imageNamed:@"icon_setMainImgG"] forState:UIControlStateNormal];
     }
 }
 
@@ -798,8 +818,8 @@
     //初始化图片管理者对象
     imgManager = [FosaIMGManager new];
     [imgManager InitImgManager];
-    
     self.imageviewArray = [[NSMutableArray alloc]initWithObjects:self.imageview1,self.imageview2,self.imageview3, nil];
+    self.mainImgBtnArray = [[NSMutableArray alloc]initWithObjects:self.mainImgBtn1,self.mainImgBtn2,self.mainImgBtn3, nil];
     foodPhotoIndex = 1;
     int headerWidth  = self.headerView.frame.size.width;
     int headerHeight = self.headerView.frame.size.height;
@@ -832,6 +852,10 @@
                //clickRecognizer.view.tag = i;
         [self.imageviewArray[i] addGestureRecognizer:clickRecognizer];
         [self.picturePlayer addSubview:self.imageviewArray[i]];
+        self.mainImgBtnArray[i].frame = CGRectMake(screen_width-NavigationBarH*9/8, NavigationBarH*2, NavigationBarH*2/3, NavigationBarH*2/3);
+        [self.mainImgBtnArray[i] setBackgroundImage:[UIImage imageNamed:@"icon_setMainImg"] forState:UIControlStateNormal];
+        [self.mainImgBtnArray[i] addTarget:self action:@selector(setImgAsMainBackground) forControlEvents:UIControlEventTouchUpInside];
+        [self.imageviewArray[i] addSubview:self.mainImgBtnArray[i]];
     }
     NSLog(@"====================>>>>>>>>>>:%@",self.foodImgArray);
     [self.headerView addSubview:self.picturePlayer];
@@ -878,6 +902,8 @@
     if (remindTimer.length > 0) {
         remindStr = remindTimer;
         self.remindDateTextView.text = [NSString stringWithFormat:@"%@ -%@",remindTimer,self.fosaDatePicker.repeatWayLabel.text];//remindTimer;
+    }else{
+        self.remindDateTextView.text = @"";
     }
     [UIView animateWithDuration:0.3 animations:^{
        self.fosaDatePicker.frame = CGRectMake(0, screen_height, self.view.frame.size.width, screen_height*80/143);
@@ -1117,20 +1143,22 @@
         self.likeBtn.accessibilityValue = @"0";
     }
 }
+
+//设置默认食物图片
 - (void)setImgAsMainBackground{
     NSLog(@"currentIndex:%ld",(long)currentPictureIndex);
-    [self.mainImgBtn setBackgroundImage:[UIImage imageNamed:@"icon_setMainImgG"] forState:UIControlStateNormal];
-    if (currentPictureIndex != 0) {
+    [self.mainImgBtnArray[0] setBackgroundImage:[UIImage imageNamed:@"icon_setMainImg"] forState:UIControlStateNormal];
+    [self.mainImgBtnArray[1] setBackgroundImage:[UIImage imageNamed:@"icon_setMainImg"] forState:UIControlStateNormal];
+    [self.mainImgBtnArray[2] setBackgroundImage:[UIImage imageNamed:@"icon_setMainImg"] forState:UIControlStateNormal];
+    if ((int)currentPictureIndex+1 == foodPhotoIndex) {
+        //重复点同一个则取消当前，并选择第一张为默认
+        [self.mainImgBtnArray[0] setBackgroundImage:[UIImage imageNamed:@"icon_setMainImgG"] forState:UIControlStateNormal];
+        foodPhotoIndex = 1;
+    }else{
+        [self.mainImgBtnArray[currentPictureIndex] setBackgroundImage:[UIImage imageNamed:@"icon_setMainImgG"] forState:UIControlStateNormal];
         foodPhotoIndex = (int)currentPictureIndex+1;
-        NSString *mainImg = [NSString stringWithFormat:@"%@%ld",self.foodTextView.text,currentPictureIndex];
-        NSString *updateSql = [NSString stringWithFormat:@"update FoodStorageInfo set foodImg = '%@' where foodName = '%@'",mainImg,self.foodTextView.text];
-        NSLog(@"foodImg:%@",updateSql);
-        if ([fmdbManager isFmdbOpen]) {
-            if([fmdbManager updateDataWithSql:updateSql]){
-                NSLog(@"修改成功");
-            }
-        }
     }
+
 }
 - (void)EditInfo{
     isEdit = true;
@@ -1142,6 +1170,9 @@
     self.locationView.userInteractionEnabled = YES;
     self.picturePlayer.userInteractionEnabled = YES;
     self.remindView.userInteractionEnabled = YES;
+    self.mainImgBtn1.userInteractionEnabled = YES;
+    self.mainImgBtn2.userInteractionEnabled = YES;
+    self.mainImgBtn3.userInteractionEnabled = YES;
     
     [UIView animateWithDuration:0.5 animations:^{
         self.leftIndex.hidden = NO;
@@ -1153,7 +1184,7 @@
         self.shareBtn.hidden = YES;
         self.foodCell.hidden = YES;
         self.deleteBtn.hidden = YES;
-        self.mainImgBtn.hidden = NO;
+        //self.mainImgBtn.hidden = NO;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.helpBtn];
     }];
     [self.categoryCollection reloadData];
@@ -1177,7 +1208,7 @@
         self.foodCell.hidden = NO;
         self.deleteBtn.hidden = NO;
         self.refreshBtn.hidden = YES;
-        self.mainImgBtn.hidden = YES;
+        //self.mainImgBtn.hidden = YES;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.editBtn];
     }];
 }
@@ -1314,7 +1345,6 @@
         NSLog(@"我获得了设备号：%@",self->device);
     };
     [self.navigationController pushViewController:scan animated:NO];
-    //[self presentViewController:scan animated:YES completion:nil];
 }
 - (void)jumpToShare{
     NSLog(@"点击了分享");
@@ -1335,7 +1365,6 @@
 }
 - (void)deleteFoodRecord{
     [self updateNotification];
-    //功能有待完善，添加点击放大图片的功能
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"Delete this record" preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self DeleteRecord];
@@ -1360,18 +1389,6 @@
 
 - (void)OpenSqlDatabase:(NSString *)dataBaseName{
     fmdbManager = [FosaFMDBManager initFMDBManagerWithdbName:@"FOSA"];
-//    //获取数据库地址
-//    docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject];
-//    NSLog(@"%@",docPath);
-//    //设置数据库名
-//    NSString *fileName = [docPath stringByAppendingPathComponent:dataBaseName];
-//    //创建数据库
-//    self.db = [FMDatabase databaseWithPath:fileName];
-//    if([self.db open]){
-//        NSLog(@"打开数据库成功");
-//    }else{
-//        NSLog(@"打开数据库失败");
-//    }
 }
 - (void)CreatDataTable{
     NSString *Sql = @"CREATE TABLE IF NOT EXISTS FoodStorageInfo(id integer PRIMARY KEY AUTOINCREMENT, foodName text NOT NULL, device text, aboutFood text,storageDate text NOT NULL,expireDate text NOT NULL,remindDate text,location text,foodImg text NOT NULL,category text NOT NULL,repeatWay text,send text);";
@@ -1427,16 +1444,6 @@
 //获取食品种类
 - (void)getCategoryArray{
    [self OpenSqlDatabase:@"FOSA"];
-//    NSString *selSql = @"select * from category";
-//    FMResultSet *set = [self.db executeQuery:selSql];
-//    [self.categoryData removeAllObjects];
-//    while ([set next]) {
-//        NSString *kind = [set stringForColumn:@"categoryName"];
-//        NSString *icon = [set stringForColumn:@"categoryIcon"];
-//        NSLog(@"%@",kind);
-//        categoryModel *model = [categoryModel modelWithName:kind iconName:icon];
-//        [self.categoryData addObject:model];
-//    }
       NSString *selSql = @"select * from category";
     if ([fmdbManager isFmdbOpen]) {
         self.categoryData = [fmdbManager selectDataWithTableName:@"category" sql:selSql];
@@ -1603,7 +1610,7 @@
             tempArray = [remindStr componentsSeparatedByString:@","];
             tempStr = [NSString stringWithFormat:@"%@/%@ %@",tempArray[1],tempArray[2],tempArray[3]];
             NSDate *date = [format dateFromString:tempStr];
-            
+
             NSDate *currentDate = [NSDate new];
             double dateTime = [date timeIntervalSince1970];
             double currentDateTime = [currentDate timeIntervalSince1970];
@@ -1681,7 +1688,7 @@
     NSString *identifierExpire1 = [NSString stringWithFormat:@"%@Expiry1",self.model.foodName];
     NSString *identifierExpire2 = [NSString stringWithFormat:@"%@Expiry2",self.model.foodName];
     NSString *identifierExpire3 = [NSString stringWithFormat:@"%@Expiry3",self.model.foodName];
-    
+
     [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5,identifierExpire,identifierExpire1,identifierExpire2,identifierExpire3]];
     [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5,identifierExpire,identifierExpire1,identifierExpire2,identifierExpire3]];
 }
@@ -1836,7 +1843,7 @@
     [fmdbManager closeDB];
     self.likeBtn.hidden = YES;
     self.backbtn.hidden = YES;
-    self.mainImgBtn.hidden = YES;
+    //self.mainImgBtn.hidden = YES;
 }
 
 /**隐藏底部横条，点击屏幕可显示*/

@@ -388,55 +388,66 @@
  生成二维码图片
  */
 - (void)generateQrCodeImage{
-         [self CreatLoadView];
-         imgManager = [FosaIMGManager new];
-         [imgManager InitImgManager];
-         switch (selectSize) {
-             case 0:
-                 if (selectColor == 0) {
-                     [self generateQrCodeImageOf3RWithImg:[UIImage imageNamed:@"IMG_3RBackground"]];
-                 }else{
-                     [self generateQrCodeImageOf3RWithImg:[UIImage imageNamed:@"IMG_3RBackgroundColor"]];
-                 }
-                 break;
-        case 1:
-            if (selectColor == 0) {
-                [self generateQrCodeImageOf4RWithImg:[UIImage imageNamed:@"IMG_4RBackground"]];
-            }else{
-                [self generateQrCodeImageOf4RWithImg:[UIImage imageNamed:@"IMG_4RBackgroundColor"]];
-            }
-            break;
-        case 2:
-            if (selectColor == 0) {
-                [self generateQrCodeImageOfA4WithImg:[UIImage imageNamed:@"IMG_A4Background"]];
-            }else{
-                [self generateQrCodeImageOfA4WithImg:[UIImage imageNamed:@"IMG_A4BackgroundColor"]];
-            }
-            break;
-        case 3:
-            if (selectColor == 0) {
-                [self generateQrCodeImageOfA5WithImg:[UIImage imageNamed:@"IMG_A5Background"]];
-            }else{
-                [self generateQrCodeImageOfA5WithImg:[UIImage imageNamed:@"IMG_A5BackgroundColor"]];
-            }
-            break;
-        case 4:
-            if (selectColor == 0) {
-                [self generateQrCodeImageOfUSWithImg:[UIImage imageNamed:@"IMG_USBackground"]];
-            }else{
-                [self generateQrCodeImageOfUSWithImg:[UIImage imageNamed:@"IMG_USBackgroundColor"]];
-            }
-            break;
-        default:
-            break;
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"]) {
+        [self CreatLoadView];
+             imgManager = [FosaIMGManager new];
+             [imgManager InitImgManager];
+             switch (selectSize) {
+                 case 0:
+                     if (selectColor == 0) {
+                         [self generateQrCodeImageOf3RWithImg:[UIImage imageNamed:@"IMG_3RBackground"]];
+                     }else{
+                         [self generateQrCodeImageOf3RWithImg:[UIImage imageNamed:@"IMG_3RBackgroundColor"]];
+                     }
+                     break;
+            case 1:
+                if (selectColor == 0) {
+                    [self generateQrCodeImageOf4RWithImg:[UIImage imageNamed:@"IMG_4RBackground"]];
+                }else{
+                    [self generateQrCodeImageOf4RWithImg:[UIImage imageNamed:@"IMG_4RBackgroundColor"]];
+                }
+                break;
+            case 2:
+                if (selectColor == 0) {
+                    [self generateQrCodeImageOfA4WithImg:[UIImage imageNamed:@"IMG_A4Background"]];
+                }else{
+                    [self generateQrCodeImageOfA4WithImg:[UIImage imageNamed:@"IMG_A4BackgroundColor"]];
+                }
+                break;
+            case 3:
+                if (selectColor == 0) {
+                    [self generateQrCodeImageOfA5WithImg:[UIImage imageNamed:@"IMG_A5Background"]];
+                }else{
+                    [self generateQrCodeImageOfA5WithImg:[UIImage imageNamed:@"IMG_A5BackgroundColor"]];
+                }
+                break;
+            case 4:
+                if (selectColor == 0) {
+                    [self generateQrCodeImageOfUSWithImg:[UIImage imageNamed:@"IMG_USBackground"]];
+                }else{
+                    [self generateQrCodeImageOfUSWithImg:[UIImage imageNamed:@"IMG_USBackgroundColor"]];
+                }
+                break;
+            default:
+                break;
+        }
+    }else{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Go to Login" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+               LoginViewController *login = [LoginViewController new];
+               [self.navigationController pushViewController:login animated:YES];
+           }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self.FOSAloadingView stopAnimating];
+        }]];
+        [self presentViewController:alert animated:YES completion:nil];
     }
 }
 /**
  3R
  */
 - (void)generateQrCodeImageOf3RWithImg:(UIImage *)backImg{
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"]) {
-        
+
         UIImageView *qrcodeImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, NavigationBarH*3, screen_width, screen_width*(152.0/102))];
         qrcodeImage.backgroundColor = [UIColor blackColor];
         qrcodeImage.image = backImg;
@@ -475,24 +486,11 @@
         }
         UIImage *qrLabelImg = [imgManager saveViewAsPictureWithView:qrcodeImage];
         UIImageWriteToSavedPhotosAlbum(qrLabelImg, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
-    }else{
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Go to Login" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-               LoginViewController *login = [LoginViewController new];
-               [self.navigationController pushViewController:login animated:YES];
-           }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self.FOSAloadingView stopAnimating];
-        }]];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
 }
 /**
  4R
  */
 - (void)generateQrCodeImageOf4RWithImg:(UIImage *)backImg{
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"]) {
-
         UIImageView *qrcodeImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, NavigationBarH*3, screen_width, screen_width*(131.67/89))];
         qrcodeImage.backgroundColor = [UIColor blackColor];
         qrcodeImage.image = backImg;
@@ -531,23 +529,11 @@
         }
         UIImage *qrLabelImg = [imgManager saveViewAsPictureWithView:qrcodeImage];
         UIImageWriteToSavedPhotosAlbum(qrLabelImg, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
-    }else{
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Go to Login" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-               LoginViewController *login = [LoginViewController new];
-               [self.navigationController pushViewController:login animated:YES];
-           }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self.FOSAloadingView stopAnimating];
-        }]];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
 }
 /*
  A4
  */
 - (void)generateQrCodeImageOfA4WithImg:(UIImage *)backImg{
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"]) {
 
         UIImageView *qrcodeImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, NavigationBarH*3, screen_width, screen_width*(297.0/210))];
         qrcodeImage.backgroundColor = [UIColor blackColor];
@@ -588,24 +574,11 @@
         }
         UIImage *qrLabelImg = [imgManager saveViewAsPictureWithView:qrcodeImage];
         UIImageWriteToSavedPhotosAlbum(qrLabelImg, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
-    }else{
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Go to Login" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            LoginViewController *login = [LoginViewController new];
-            [self.navigationController pushViewController:login animated:YES];
-        }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self.FOSAloadingView stopAnimating];
-        }]];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
 }
 /**
  A5
  */
 - (void)generateQrCodeImageOfA5WithImg:(UIImage *)backImg{
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"]) {
-        
         UIImageView *qrcodeImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, NavigationBarH*3, screen_width, screen_width*(206.79/140.478))];
         qrcodeImage.backgroundColor = [UIColor blackColor];
         qrcodeImage.image = backImg;
@@ -645,23 +618,12 @@
         }
         UIImage *qrLabelImg = [imgManager saveViewAsPictureWithView:qrcodeImage];
         UIImageWriteToSavedPhotosAlbum(qrLabelImg, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
-    }else{
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Go to Login" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            LoginViewController *login = [LoginViewController new];
-            [self.navigationController pushViewController:login animated:YES];
-        }]];
-       [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self.FOSAloadingView stopAnimating];
-        }]];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
 }
 /**
  US Letter
  */
 - (void)generateQrCodeImageOfUSWithImg:(UIImage *)backImg{
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"]) {
+//    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"currentUser"]) {
         
         UIImageView *qrcodeImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, NavigationBarH*3, screen_width, screen_width*(279.0/216.0))];
         qrcodeImage.backgroundColor = [UIColor blackColor];
@@ -669,7 +631,7 @@
         qrcodeImage.contentMode = UIViewContentModeScaleAspectFill;
         CGFloat height = qrcodeImage.frame.size.height;
         CGFloat width  = qrcodeImage.frame.size.width;
-        
+
         int kind1 = [counter[0] intValue];
         int kind2 = [counter[1] intValue];
         int kind3 = [counter[2] intValue];
@@ -701,17 +663,17 @@
         }
         UIImage *qrLabelImg = [imgManager saveViewAsPictureWithView:qrcodeImage];
         UIImageWriteToSavedPhotosAlbum(qrLabelImg, self,@selector(image:didFinishSavingWithError:contextInfo:),nil);
-    }else{
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Go to Login" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            LoginViewController *login = [LoginViewController new];
-            [self.navigationController pushViewController:login animated:YES];
-        }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self.FOSAloadingView stopAnimating];
-        }]];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
+//    }else{
+//        UIAlertController *alert = [UIAlertController alertControllerWithTitle:AlertTitle message:@"You must login your account before using this function" preferredStyle:UIAlertControllerStyleAlert];
+//        [alert addAction:[UIAlertAction actionWithTitle:@"Go to Login" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//            LoginViewController *login = [LoginViewController new];
+//            [self.navigationController pushViewController:login animated:YES];
+//        }]];
+//        [alert addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//            [self.FOSAloadingView stopAnimating];
+//        }]];
+//        [self presentViewController:alert animated:YES completion:nil];
+//    }
 }
 
 #pragma mark - <保存到相册>

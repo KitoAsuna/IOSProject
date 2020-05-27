@@ -280,8 +280,8 @@
     UISwitch *switchButton = (UISwitch*)sender;
     BOOL isButtonOn = [switchButton isOn];
     if (isButtonOn) {
+        self.reminderDate = @"";
         [UIView animateWithDuration:0.2 animations:^{
-            //self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.pickerView.frame)+10, screen_width, self->height*3/10);
             self.AlarView.hidden = NO;
             self.repeatView.hidden = NO;
             self.repeatWayLabel.hidden = NO;
@@ -766,7 +766,7 @@
     NSInteger year  = [comps year];
     NSInteger month = [comps month];
     NSInteger day   = [comps day];
-    NSInteger minute    = [comps minute];
+//    NSInteger minute    = [comps minute];
 //    NSString *minu;
 //    if (minute < 10) {
 //        minu = [NSString stringWithFormat:@"0%ld",minute];
