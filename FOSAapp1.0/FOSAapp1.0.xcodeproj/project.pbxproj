@@ -1428,7 +1428,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = NFW4WTJX6R;
+				DEVELOPMENT_TEAM = TS9KK624SM;
 				INFOPLIST_FILE = FOSAapp1.0Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1448,7 +1448,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = NFW4WTJX6R;
+				DEVELOPMENT_TEAM = TS9KK624SM;
 				INFOPLIST_FILE = FOSAapp1.0Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1467,7 +1467,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = NFW4WTJX6R;
+				DEVELOPMENT_TEAM = TS9KK624SM;
 				INFOPLIST_FILE = FOSAapp1.0UITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1485,7 +1485,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = NFW4WTJX6R;
+				DEVELOPMENT_TEAM = TS9KK624SM;
 				INFOPLIST_FILE = FOSAapp1.0UITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

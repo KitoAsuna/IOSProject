@@ -893,6 +893,7 @@
 //    [self.progressView removeFromSuperview];
 //}
 - (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     [self.FOSAloadingView stopAnimating];
 }
 @end

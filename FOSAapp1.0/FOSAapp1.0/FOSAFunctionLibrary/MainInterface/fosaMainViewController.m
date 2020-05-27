@@ -1333,7 +1333,7 @@
 
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     calendar.timeZone = [NSTimeZone localTimeZone];
-    NSDateComponents *comps = [[NSDateComponents alloc] init];
+   
        /*
         NSInteger unitFlags = NSYearCalendarUnit |
         NSMonthCalendarUnit |
@@ -1344,7 +1344,7 @@
         NSSecondCalendarUnit;
         */
     NSInteger unitFlags = NSCalendarUnitYear |NSCalendarUnitMonth | NSCalendarUnitDay |NSCalendarUnitWeekday | NSCalendarUnitHour |NSCalendarUnitMinute |NSCalendarUnitSecond;
-    comps = [calendar components:unitFlags fromDate:tempDate];
+    NSDateComponents *comps = [calendar components:unitFlags fromDate:tempDate];
     return [arrWeekDay objectAtIndex:comps.weekday-1];
 }
 

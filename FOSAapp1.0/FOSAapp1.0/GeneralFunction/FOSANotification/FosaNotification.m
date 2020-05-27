@@ -117,7 +117,6 @@
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
     NSString *photopath = [NSString stringWithFormat:@"%@.png",image];
     NSString *imagePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",photopath]];
-    UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
     NSLog(@"%@",imagePath);
     NSError *error = nil;
     //将本地图片的路径形成一个图片附件，加入到content中

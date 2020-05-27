@@ -280,7 +280,7 @@
     UISwitch *switchButton = (UISwitch*)sender;
     BOOL isButtonOn = [switchButton isOn];
     if (isButtonOn) {
-        self.reminderDate = @"";
+        self.reminderDate = [self getTimeAndWeekDay:self.remindDatepicker.date];
         [UIView animateWithDuration:0.2 animations:^{
             self.AlarView.hidden = NO;
             self.repeatView.hidden = NO;
@@ -289,6 +289,7 @@
             self.remindDatepicker.frame = CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, self->height/4);
         }];
     }else {
+        self.reminderDate = @"";
         [UIView animateWithDuration:0.2 animations:^{
             self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.pickerView.frame)+10, screen_width, self->height/10);
             self.remindDatepicker.frame = CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, 0);
@@ -750,7 +751,6 @@
     format.PMSymbol = @"PM";
     NSString *timeStr = [format stringFromDate:date];
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *comps = [[NSDateComponents alloc] init];
     /*
      NSInteger unitFlags = NSYearCalendarUnit |
      NSMonthCalendarUnit |
@@ -761,7 +761,7 @@
      NSSecondCalendarUnit;
      */
     NSInteger unitFlags = NSCalendarUnitYear |NSCalendarUnitMonth | NSCalendarUnitDay |NSCalendarUnitWeekday | NSCalendarUnitHour |NSCalendarUnitMinute |NSCalendarUnitSecond;
-    comps = [calendar components:unitFlags fromDate:date];
+    NSDateComponents *comps = [calendar components:unitFlags fromDate:date];
     NSInteger week  = [comps weekday]-1;
     NSInteger year  = [comps year];
     NSInteger month = [comps month];

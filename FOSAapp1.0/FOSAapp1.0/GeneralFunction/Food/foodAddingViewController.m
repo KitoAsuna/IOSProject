@@ -1615,23 +1615,25 @@
             double dateTime = [date timeIntervalSince1970];
             double currentDateTime = [currentDate timeIntervalSince1970];
             NSLog(@"=============%d",(int)(dateTime-currentDateTime));
-            if (dateTime-currentDateTime > 0) {
+            //if (dateTime-currentDateTime > 0) {
                 FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
                 //||[self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Never"]
                 NSString *identifier;
                 if ([self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Custom reminder"]){
-                    NSLog(@"重复次数:%d-------重复间隔:%d",[[userdefault valueForKey:@"repeatTimes"] intValue],[[userdefault valueForKey:@"repeatTimeInterval"] intValue]);
+//                    NSLog(@"重复次数:%d-------重复间隔:%d",[[userdefault valueForKey:@"repeatTimes"] intValue],[[userdefault valueForKey:@"repeatTimeInterval"] intValue]);
                     for (int i = 0; i < [[userdefault valueForKey:@"repeatTimes"] intValue]; i++) {
-                        identifier = [NSString stringWithFormat:@"%@Remind%d",self.foodTextView.text,i];
-                        NSString *imageName = [NSString stringWithFormat:@"%d%@",i,self.foodTextView.text];
-                        [imgManager savePhotoWithImage:image name:imageName];
-                        [self.fosaNotification sendNotification:model body:body image:imageName time:(dateTime-currentDateTime)+i*3600*([[userdefault valueForKey:@"repeatTimeInterval"] intValue]) identifier:identifier];
+                        if ((dateTime-currentDateTime)+i*3600*([[userdefault valueForKey:@"repeatTimeInterval"] intValue]) > 0) {
+                            identifier = [NSString stringWithFormat:@"%@Remind%d",self.foodTextView.text,i];
+                            NSString *imageName = [NSString stringWithFormat:@"%d%@",i,self.foodTextView.text];
+                            [imgManager savePhotoWithImage:image name:imageName];
+                            [self.fosaNotification sendNotification:model body:body image:imageName time:(dateTime-currentDateTime)+i*3600*([[userdefault valueForKey:@"repeatTimeInterval"] intValue]) identifier:identifier];
+                        }
                     }
                 }else{
                     identifier = [NSString stringWithFormat:@"%@Remind",self.foodTextView.text];
                     [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:self.foodTextView.text identifier:identifier];
                 }
-            }
+            //}
         }
     }
 //    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];
@@ -1704,7 +1706,6 @@
     NSDate *tempDate = [formatter dateFromString:date];
     
      NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-       NSDateComponents *comps = [[NSDateComponents alloc] init];
        /*
         NSInteger unitFlags = NSYearCalendarUnit |
         NSMonthCalendarUnit |
@@ -1715,7 +1716,7 @@
         NSSecondCalendarUnit;
         */
     NSInteger unitFlags = NSCalendarUnitYear |NSCalendarUnitMonth | NSCalendarUnitDay |NSCalendarUnitWeekday | NSCalendarUnitHour |NSCalendarUnitMinute |NSCalendarUnitSecond;
-    comps = [calendar components:unitFlags fromDate:tempDate];
+    NSDateComponents *comps = [calendar components:unitFlags fromDate:tempDate];
     return arrWeekDay[comps.weekday];
 }
 

@@ -91,9 +91,9 @@
 
 - (FoodModel *)selectModelWithSql:(NSString *)selectSql{
     FMResultSet *set = [db executeQuery:selectSql];
-    FoodModel *model;
+    FoodModel *model = [FoodModel new];
     if (set.columnCount == 0) {
-        return nil;
+        return model;
     }else{
         if([set next]) {
             NSString *foodName       = [set stringForColumn:@"foodName"];
