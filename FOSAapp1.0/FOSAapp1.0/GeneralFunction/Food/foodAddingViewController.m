@@ -562,7 +562,7 @@
     self.foodNameView.frame = CGRectMake(0, 0, screen_width, contentHeight/5);
     [self.contentView addSubview:self.foodNameView];
 
-    self.foodNameLabel.frame = CGRectMake(screen_width*2/33+Width(10), contentHeight/30, screen_width/3, contentHeight*2/30);
+    self.foodNameLabel.frame = CGRectMake(screen_width*2/33+Width(10), contentHeight/30, screen_width/3, contentHeight/15);
     self.foodNameLabel.text = @"Name";
     self.foodNameLabel.font = [UIFont systemFontOfSize:font(15)];
     self.foodNameLabel.textColor = [UIColor grayColor];
@@ -617,7 +617,7 @@
     self.foodDescribedTextView.font = [UIFont systemFontOfSize:font(15)];
     self.foodDescribedTextView.delegate = self;
     //self.foodDescribedTextView.returnKeyType = UIReturnKeyDone;
-    self.foodDescribedTextView.textContainerInset = UIEdgeInsetsMake(5, 5, 0, 0);//上、左、下、右
+    self.foodDescribedTextView.textContainerInset = UIEdgeInsetsMake(5, Width(6), 0, Width(6));//上、左、下、右
     [self.foodDescribedView addSubview:self.foodDescribedTextView];
 
     //输入字数提示
@@ -649,7 +649,7 @@
     self.remindDateTextView.userInteractionEnabled = NO;
     self.remindDateTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     self.remindDateTextView.font = [UIFont systemFontOfSize:font(13)];
-    [self.remindDateTextView setValue:[NSNumber numberWithInt:font(10)] forKey:@"paddingLeft"];//设置输入文本的起始位置
+    [self.remindDateTextView setValue:[NSNumber numberWithInt:Width(11)] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.remindDateTextView.userInteractionEnabled = YES;
     UITapGestureRecognizer *dateReconizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectExpireDate)];
     [self.remindDateTextView addGestureRecognizer:dateReconizer];
@@ -669,7 +669,7 @@
     self.locationTextView.layer.cornerRadius = 5;
     self.locationTextView.returnKeyType = UIReturnKeyDone;
     self.locationTextView.delegate = self;
-    [self.locationTextView setValue:[NSNumber numberWithInt:10] forKey:@"paddingLeft"];
+    [self.locationTextView setValue:[NSNumber numberWithInt:Width(10)] forKey:@"paddingLeft"];
     self.locationTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     [self.locationView addSubview:self.locationTextView];
 }

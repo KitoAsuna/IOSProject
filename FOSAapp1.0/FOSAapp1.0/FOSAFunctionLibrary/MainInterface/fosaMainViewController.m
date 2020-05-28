@@ -807,7 +807,6 @@
 }
 
 - (FoodModel *)CheckFoodInfoWithName:(NSString *)foodName{
-
     [self OpenSqlDatabase:@"FOSA"];
     NSString *sql = [NSString stringWithFormat:@"select * from FoodStorageInfo where foodName = '%@';",foodName];
     NSLog(@"%@",sql);
@@ -817,7 +816,7 @@
         return nil;
     }else{
         if([set next]) {
-           NSString *foodName       = [set stringForColumn:@"foodName"];
+            NSString *foodName       = [set stringForColumn:@"foodName"];
             NSString *device        = [set stringForColumn:@"device"];
             NSString *aboutFood     = [set stringForColumn:@"aboutFood"];
             NSString *storageDate   = [set stringForColumn:@"storageDate"];
@@ -827,7 +826,6 @@
             NSString *category      = [set stringForColumn:@"category"];
             NSString *remindDate    = [set stringForColumn:@"remindDate"];
             NSString *repeat        = [set stringForColumn:@"repeatWay"];
-
             model = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate    foodIcon:foodImg category:category Location:location repeatWay:repeat];
         }
     }

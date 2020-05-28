@@ -184,7 +184,8 @@
             self.userIcon.image = [UIImage imageNamed:@"icon_UserDefault"];
         }
     }else{
-        self.userName.text = @"Login/Sign Up";
+        self.userName.text = @"   Login/Sign Up";
+        self.userName.font = [UIFont systemFontOfSize:font(20)];
         self.userIcon.image = [UIImage imageNamed:@"icon_UserDefault"];
     }
 }
@@ -226,7 +227,7 @@
      NSInteger row = indexPath.row;
     //取消点击cell时显示的背景
     
-    cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
+    cell.textLabel.font = [UIFont systemFontOfSize:font(20)];
     cell.imageView.image = [UIImage imageNamed:ItemLogoArray[row]];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.textLabel.text = ItemArray[row];

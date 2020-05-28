@@ -201,7 +201,7 @@
 //点击确定
 - (void)clickToFinish{
     NSLog(@"%@",self.pictureView.image);
-    self.photoBlock(self.pictureView.image);
+    self.photoBlock([self fixOrientation:self.pictureView.image]);
     [self.navigationController popViewControllerAnimated:NO];
 }
 
@@ -320,12 +320,36 @@
     //判断设备的方向
     UIDeviceOrientation duration = [[UIDevice currentDevice] orientation];
     NSLog(@"--------------------------------%ld",(long)duration);
-    if (duration != 3) {
-        //当前处于竖屏，进行方向纠正，横屏则不需要
-        NSLog(@"竖屏");
-        image = [self fixOrientation:image];
+    image = [self fixOrientation:image];
+    switch ((int)duration) {
+        case 1://手机向上
+            image = [self fixOrientation:image];
+            break;
+        case 2://手机向下
+            //旋转180度
+            image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationDown];
+            break;
+        case 3://手机向左
+            //顺时针旋转90度
+            image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationLeft];
+            break;
+        case 4://手机向右
+            //逆时针旋转90度
+            image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationRight];
+            break;
+        default:
+            break;
     }
+    
+    NSLog(@"图片方向:%ld",image.imageOrientation);
+    
+//    if (duration != 3) {
+//        //当前处于竖屏，进行方向纠正，横屏则不需要
+//        NSLog(@"竖屏");
+//        image = [self fixOrientation:image];
+//    }
     self.pictureView.image = image;//[self fixOrientation:image];
+    
 }
 //
 //- (void)captureOutput:(AVCapturePhotoOutput *)captureOutput didFinishProcessingPhotoSampleBuffer:(nullable CMSampleBufferRef)photoSampleBuffer previewPhotoSampleBuffer:(nullable CMSampleBufferRef)previewPhotoSampleBuffer resolvedSettings:(AVCaptureResolvedPhotoSettings *)resolvedSettings bracketSettings:(nullable AVCaptureBracketedStillImageSettings *)bracketSettings error:(nullable NSError *)error{

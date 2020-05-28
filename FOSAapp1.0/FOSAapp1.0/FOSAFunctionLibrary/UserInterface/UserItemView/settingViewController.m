@@ -128,23 +128,21 @@
      NSInteger row = indexPath.row;
     //取消点击cell时显示的背景色
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
+    cell.textLabel.font = [UIFont systemFontOfSize:font(20)];
     cell.textLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     cell.backgroundColor = FOSAWhite;//[UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     cell.textLabel.text = self.dataSource[row];
-    cell.textLabel.font = [UIFont systemFontOfSize:font(15)];
     //cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     switch (row) {
         case 0:
             cell.detailTextLabel.text = @"English";
-            cell.detailTextLabel.font = [UIFont systemFontOfSize:font(15)];
+            cell.detailTextLabel.font = [UIFont systemFontOfSize:font(20)];
             break;
         case 1:
             if (_mswitch == nil) {
                 autoNotification = [self.userDefaults valueForKey:@"autonotification"];
                 self.mswitch = [UISwitch new];
-                self.mswitch.frame = CGRectMake(0, 0, 100, 100);
-                self.mswitch.center = CGPointMake(screen_width-Width(40), cell.frame.size.height/2);
+                self.mswitch.center = CGPointMake(screen_width-Width(40), self.settingTable.frame.size.height/(self.dataSource.count*2));
                 if ([autoNotification isEqualToString:@"YES"]) {
                     [self.mswitch setOn:YES];
                 }
