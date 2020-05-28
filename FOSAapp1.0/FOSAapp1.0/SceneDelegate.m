@@ -20,10 +20,6 @@
             NSString *currentVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"];
             NSString *localVersion = [userDefault valueForKey:@"localVersion"];
             if (![currentVersion isEqualToString:localVersion]) {
-                //新特性界面
-//                UIViewController *newVc = [[UIViewController alloc]init];
-//                newVc.view.backgroundColor = [UIColor redColor];
-//                self.window.rootViewController = newVc;
                 [userDefault setObject:currentVersion forKey:@"localVersion"];
             }else{
                 //添加根控制器

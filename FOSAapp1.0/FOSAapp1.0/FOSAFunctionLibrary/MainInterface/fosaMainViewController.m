@@ -574,16 +574,16 @@
         }else{
             cell.badgeBtn.hidden = YES;
         }
-        if (categoryEdit){
-            cell.editbtn.hidden = NO;
-            cell.kind.userInteractionEnabled = YES;
-            cell.kind.returnKeyType = UIReturnKeyDone;
-            cell.kind.tag = indexPath.row;
-            cell.kind.delegate = self;
-        }else{
-            cell.editbtn.hidden = YES;
-            cell.kind.userInteractionEnabled = NO;
-        }
+//        if (categoryEdit){
+//            cell.editbtn.hidden = NO;
+//            cell.kind.userInteractionEnabled = YES;
+//            cell.kind.returnKeyType = UIReturnKeyDone;
+//            cell.kind.tag = indexPath.row;
+//            cell.kind.delegate = self;
+//        }else{
+//            cell.editbtn.hidden = YES;
+//            cell.kind.userInteractionEnabled = NO;
+//        }
         return cell;
     }else{
         long int index = indexPath.section*2+indexPath.row;
@@ -753,7 +753,6 @@
         if (!isSelectCategory) {
             [self.AllFoodArray addObject:model];
         }
-        
         NSLog(@"*********************************************foodName    = %@",foodName);
         //NSLog(@"device      = %@",device);
         //NSLog(@"aboutFood   = %@",aboutFood);
