@@ -7,11 +7,9 @@
 //
 
 #import "RegisterViewController.h"
-#import "FMDB.h"
 #import "AFNetworking.h"
 
 @interface RegisterViewController ()<UITextFieldDelegate>{
-    FMDatabase *db;
     NSString *docPath;
     Boolean isSecure;
 }
