@@ -852,7 +852,7 @@
                //clickRecognizer.view.tag = i;
         [self.imageviewArray[i] addGestureRecognizer:clickRecognizer];
         [self.picturePlayer addSubview:self.imageviewArray[i]];
-        self.mainImgBtnArray[i].frame = CGRectMake(screen_width-NavigationBarH*11/9, NavigationBarH*2, NavigationBarH*2/3, NavigationBarH*2/3);
+        self.mainImgBtnArray[i].frame = CGRectMake(screen_width-NavigationBarH*12/10, NavigationBarH*2, NavigationBarH*2/3, NavigationBarH*2/3);
         [self.mainImgBtnArray[i] setBackgroundImage:[UIImage imageNamed:@"icon_setMainImg"] forState:UIControlStateNormal];
         [self.mainImgBtnArray[i] addTarget:self action:@selector(setImgAsMainBackground) forControlEvents:UIControlEventTouchUpInside];
         [self.imageviewArray[i] addSubview:self.mainImgBtnArray[i]];
@@ -1642,8 +1642,8 @@
 }
 
 - (void)sendNotificationByExpireday{
-    NSLog(@"-----------------------发送过期通知------------------------");
-    if (![self.foodStyle isEqualToString:@"edit"]) {
+    NSLog(@"-----------------------发送过期通知------------------%@------",self.foodStyle);
+//    if (![self.foodStyle isEqualToString:@"edit"]) {
         NSUserDefaults *userdefault = [NSUserDefaults standardUserDefaults];
         //获取用户设置，是否自动发送
         NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
@@ -1657,7 +1657,7 @@
             NSLog(@">>>=================%@",expireStr);
             NSString *identifier = [NSString stringWithFormat:@"%@Expiry",self.foodTextView.text];
             [self.fosaNotification sendNotificationByDate:model body:body date:expireStr foodImg:self.foodTextView.text identifier:identifier];
-            //在过期当日的早上9点，12点，下午3点，6点都发一次
+            //在过期当日的早上12点，6点都发一次
             NSArray *repeatTime = @[@"09:00",@"12:00",@"15:00",@"18:00"];
             NSArray *expireArray = [expireStr componentsSeparatedByString:@"/"];
             for (int i = 0; i < 4; i++) {
@@ -1669,7 +1669,7 @@
                 [self.fosaNotification sendNotificationByDate:model body:body date:expire foodImg:imageName identifier:identifier];
             }
         }
-    }
+    //}
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Success" preferredStyle:UIAlertControllerStyleAlert];
     [self presentViewController:alert animated:true completion:nil];
     [self performSelector:@selector(dismissAlertView:) withObject:alert afterDelay:1];
@@ -1688,11 +1688,9 @@
     NSString *identifier5 =  [NSString stringWithFormat:@"%@Remind4",self.model.foodName];
     NSString *identifierExpire = [NSString stringWithFormat:@"%@Expiry0",self.model.foodName];
     NSString *identifierExpire1 = [NSString stringWithFormat:@"%@Expiry1",self.model.foodName];
-    NSString *identifierExpire2 = [NSString stringWithFormat:@"%@Expiry2",self.model.foodName];
-    NSString *identifierExpire3 = [NSString stringWithFormat:@"%@Expiry3",self.model.foodName];
 
-    [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5,identifierExpire,identifierExpire1,identifierExpire2,identifierExpire3]];
-    [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5,identifierExpire,identifierExpire1,identifierExpire2,identifierExpire3]];
+    [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5,identifierExpire,identifierExpire1]];
+    [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5,identifierExpire,identifierExpire1]];
 }
 
 /**
