@@ -734,13 +734,15 @@ NSLog(@"************************************************************************
 //打开扫描到的网页
 - (void)OpenURL:(NSString *)url{
     NSLog(@"%@",url);
-    qrCodeWebViewController *webView = [qrCodeWebViewController new];
-    webView.urlString = url;
-    [self.navigationController pushViewController:webView animated:YES];
-//    NSURL *URL = [[NSURL alloc]initWithString:url];
-//   [[UIApplication sharedApplication]openURL:URL options:@{} completionHandler:^(BOOL success) {
-//       NSLog(@"Open Successfully");
-//    }];
+//    qrCodeWebViewController *webView = [qrCodeWebViewController new];
+//    webView.urlString = url;
+//    [self.navigationController pushViewController:webView animated:YES];
+    NSURL *URL = [[NSURL alloc]initWithString:url];
+   [[UIApplication sharedApplication]openURL:URL options:@{} completionHandler:^(BOOL success) {
+       NSLog(@"Open Successfully");
+       self->stopAnimation = false;
+       [self.captureSession startRunning];
+    }];
 ////
 ////    函数异步执行，在主队列中调用 completionHandler 中的回调。
 ////    参数：
