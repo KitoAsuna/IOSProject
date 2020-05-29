@@ -21,7 +21,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-       self.navigationItem.title = @"Language";
+       self.navigationItem.title = @"Repeat";
        self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0];
        [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0],NSForegroundColorAttributeName, nil]];
        [self creatRepeatTable];
@@ -34,7 +34,6 @@
     self.repeatTable.delegate = self;
     self.repeatTable.dataSource = self;
     self.repeatTable.bounces = NO;
-    self.repeatTable.layer.cornerRadius = 15;
     self.repeatTable.showsVerticalScrollIndicator = NO;
     [self.repeatTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
     self.repeatTable.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
@@ -89,10 +88,9 @@
     //取消点击cell时显示的背景色
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.font = [UIFont systemFontOfSize:20*(([UIScreen mainScreen].bounds.size.width/414.0))];
-    //cell.detailTextLabel.text = @"1111";
     cell.textLabel.text = self.dataSource[row];
     cell.textLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
-    cell.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
+    cell.backgroundColor = FOSAWhite;
     //返回cell
     return cell;
 }
