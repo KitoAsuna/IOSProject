@@ -97,7 +97,7 @@
 - (void)InitData{
 //    ItemArray = @[@"Tutorial",@"Language/Location",@"Setting",@"About FOSA",@"About Apps"];
 //    ItemLogoArray = @[@"icon_tutorial",@"icon_language",@"icon_setting",@"icon_logo",@"icon_app"];
-    ItemArray = @[@"Tutorial",@"Settings",@"About FOSA",@"About Apps"];
+    ItemArray = @[@"Tutorial",@"Settings",@"About FOSA",@"About"];
     ItemLogoArray = @[@"icon_tutorial",@"icon_setting",@"icon_logo",@"icon_app"];
 }
 
@@ -222,7 +222,7 @@
     UITableViewCell *cell = [tableView  dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
         //创建cell
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
     }
      NSInteger row = indexPath.row;
     //取消点击cell时显示的背景
@@ -233,6 +233,10 @@
     cell.textLabel.text = ItemArray[row];
     cell.textLabel.textColor = FOSAGray;
     cell.backgroundColor = FOSAWhite;
+    if(row == 3){
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"Version %@",[NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"]];
+        cell.detailTextLabel.textColor = FOSAColor(153, 153, 153);
+    }
     //添加选中效果
     //返回cell
     return cell;
@@ -250,11 +254,6 @@
             tutorial.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:tutorial animated:YES];
             break;
-//        case 1:
-//            language.hidesBottomBarWhenPushed = YES;
-//            [self.navigationController pushViewController:language animated:YES];
-//
-//            break;
         case 1:
             setting.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:setting animated:YES];
@@ -291,7 +290,6 @@
 }
 
 - (void)jumpToQrCodeGenerator:(UIGestureRecognizer *)sender{
-    NSLog(@"Click************");
     qrCodeWebViewController *qrCodeGenerator = [qrCodeWebViewController new];
     qrCodeGenerator.urlString = @"https://fosahome.com/qrlabel/";
     qrCodeGenerator.hidesBottomBarWhenPushed = YES;
@@ -306,7 +304,6 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.navigationController.navigationBar.hidden = NO;
-    [UIApplication sharedApplication].statusBarHidden = NO;
 }
 
 @end

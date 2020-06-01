@@ -1651,7 +1651,7 @@
         NSString *autoNotification = [userdefault valueForKey:@"autonotification"];
         if ([autoNotification isEqualToString:@"NO"] || autoNotification == nil) {
             FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
-            NSString *body = [NSString stringWithFormat:@"Your food %@ will expire today (%@)",self.foodTextView.text,[self getWeekDayOfDate:model.expireDate]];
+            NSString *body = [NSString stringWithFormat:@"%@ will expire today (%@)",self.foodTextView.text,[self getWeekDayOfDate:model.expireDate]];
              //获取通知的图片
             UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
             //另存通知图片

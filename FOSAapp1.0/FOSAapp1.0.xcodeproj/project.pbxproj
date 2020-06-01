@@ -108,6 +108,7 @@
 		45A506E623B8402E0046FC09 /* FOSAapp1_0Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A506E523B8402E0046FC09 /* FOSAapp1_0Tests.m */; };
 		45A506F123B8402E0046FC09 /* FOSAapp1_0UITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A506F023B8402E0046FC09 /* FOSAapp1_0UITests.m */; };
 		45AD4D2C243D6F6100955B1E /* fosaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AD4D2B243D6F6100955B1E /* fosaView.m */; };
+		45B3122F2484E7CA009039A1 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45B3122E2484E7CA009039A1 /* WebViewController.m */; };
 		45CE418623F3971100B9F884 /* fosaLauch.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CE418523F3971100B9F884 /* fosaLauch.png */; };
 		45D3745B23C075B200192014 /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D3745123C075B100192014 /* AFURLResponseSerialization.m */; };
 		45D3745C23C075B200192014 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D3745223C075B100192014 /* AFHTTPSessionManager.m */; };
@@ -343,6 +344,8 @@
 		45A506F223B8402E0046FC09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45AD4D2A243D6F6100955B1E /* fosaView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fosaView.h; sourceTree = "<group>"; };
 		45AD4D2B243D6F6100955B1E /* fosaView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fosaView.m; sourceTree = "<group>"; };
+		45B3122D2484E7CA009039A1 /* WebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		45B3122E2484E7CA009039A1 /* WebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		45CE418523F3971100B9F884 /* fosaLauch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fosaLauch.png; sourceTree = "<group>"; };
 		45D3744D23C075B100192014 /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFSecurityPolicy.h; sourceTree = "<group>"; };
 		45D3744E23C075B100192014 /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
@@ -629,6 +632,8 @@
 				4580513E245911CE00A2D6D2 /* qrSelectorViewController.m */,
 				4521C186246B9A2F003E378F /* qrSizeTableViewCell.h */,
 				4521C187246B9A2F003E378F /* qrSizeTableViewCell.m */,
+				45B3122D2484E7CA009039A1 /* WebViewController.h */,
+				45B3122E2484E7CA009039A1 /* WebViewController.m */,
 			);
 			path = UserItemView;
 			sourceTree = "<group>";
@@ -1129,6 +1134,7 @@
 				45D3747723C075BA00192014 /* UIRefreshControl+AFNetworking.m in Sources */,
 				45D3747623C075B900192014 /* UIProgressView+AFNetworking.m in Sources */,
 				450D586623C9B7D70032E905 /* LoadCircleView.m in Sources */,
+				45B3122F2484E7CA009039A1 /* WebViewController.m in Sources */,
 				4513DD5E23BF3BC00005A1E2 /* FosaNotification.m in Sources */,
 				4513DD3223BED3550005A1E2 /* PhotoViewController2.m in Sources */,
 				458778DA244400930097594A /* repeatWayViewController.m in Sources */,

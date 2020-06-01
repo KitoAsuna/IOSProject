@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AboutAppsViewController : UIViewController
 
 @property (nonatomic,strong) UIImageView *logo;
-@property (nonatomic,strong) UILabel *versionTitleLable,*versionLable;
-
+@property (nonatomic,strong) UILabel *appTitleLable,*versionLable;
+@property (nonatomic,strong) UILabel *privacyLabel,*copyrightLabel;
 @end
 
 NS_ASSUME_NONNULL_END

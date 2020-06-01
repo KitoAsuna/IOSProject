@@ -248,7 +248,7 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-
+    self.navigationController.navigationBar.translucent = NO;
     self.scanBtn.hidden = NO;
     isSelectCategory = false;
     if (self.selectedCategoryCell != nil) {
@@ -287,7 +287,7 @@
 
 - (void)creatMainBackgroundPlayer{
     isUpdate = false;
-    self.headerView.frame = CGRectMake(0, NavigationHeight, screen_width, screen_width/3);
+    self.headerView.frame = CGRectMake(0, 0, screen_width, screen_width/3);
     [self.view addSubview:self.headerView];
     //背景轮播
     int headerWidth  = self.headerView.frame.size.width;
@@ -1401,6 +1401,7 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     isUpdate = true;
+    self.navigationController.navigationBar.translucent = YES;
     [self.db close];
     self.scanBtn.hidden = YES;
 }

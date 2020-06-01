@@ -113,6 +113,7 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     //[self creatWebView];
+    
     [self InitData];
     [self creatQrGenerator];
 }
@@ -894,6 +895,7 @@
 //}
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    self.navigationController.navigationBar.translucent = NO;
     [self.FOSAloadingView stopAnimating];
 }
 @end

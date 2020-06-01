@@ -160,6 +160,7 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    self.navigationController.navigationBar.translucent = YES;
     if (!isFirstOpen) {
 //        if (self.ScanModel == 0) {
 //            stopAnimation = false;
