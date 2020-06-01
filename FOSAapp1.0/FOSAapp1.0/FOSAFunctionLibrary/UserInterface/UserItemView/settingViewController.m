@@ -43,7 +43,7 @@
     self.dataSource = [NSMutableArray new];
     [self.dataSource addObjectsFromArray:@[@"Language",@"Do Not Disturb"]];
     self.setDic = [[NSDictionary alloc]init];
-    self.settingTable = [[UITableView alloc]initWithFrame:CGRectMake(0, NavigationBarHeight*3, screen_width, screen_height/8) style:UITableViewStylePlain];
+    self.settingTable = [[UITableView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), screen_width, screen_height/8) style:UITableViewStylePlain];
     self.settingTable.delegate = self;
     self.settingTable.dataSource = self;
     self.settingTable.bounces = NO;

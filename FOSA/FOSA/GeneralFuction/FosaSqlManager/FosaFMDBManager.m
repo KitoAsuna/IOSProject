@@ -88,6 +88,31 @@
     return resultArray;
 }
 
+- (NSMutableArray *)selectDataWithTableNameByReminder:(NSString *)tableName sql:(NSString *)selectSql{
+    NSMutableArray *resultArray = [NSMutableArray new];
+    FMResultSet *set = [db executeQuery:selectSql];
+    while ([set next]) {
+               NSString *foodName    = [set stringForColumn:@"foodName"];
+               NSString *device      = [set stringForColumn:@"device"];
+               NSString *aboutFood   = [set stringForColumn:@"aboutFood"];
+               NSString *storageDate = [set stringForColumn:@"storageDate"];
+               NSString *expireDate  = [set stringForColumn:@"expireDate"];
+               NSString *foodImg     = [set stringForColumn:@"foodImg"];
+               NSString *category    = [set stringForColumn:@"category"];
+               NSString *location    = [set stringForColumn:@"location"];
+               NSString *remindDate  = [set stringForColumn:@"remindDate"];
+               NSString *repeatWay   = [set stringForColumn:@"repeatWay"];
+               NSString *send        = [set stringForColumn:@"send"];
+               if (![remindDate isEqualToString:@""] && [send isEqualToString:@"YES"]) {
+                   if ([self adjustRemindDate:remindDate repeat:repeatWay]) {
+                       FoodModel *model      = [FoodModel modelWithName:foodName DeviceID:device Description:aboutFood StrogeDate:storageDate ExpireDate:expireDate remindDate:remindDate foodIcon:foodImg category:category Location:location repeatWay:repeatWay send:send];
+                       [resultArray addObject:model];
+                   }
+               }
+           }
+    return resultArray;
+}
+
 - (FoodModel *)selectModelWithSql:(NSString *)selectSql{
     FMResultSet *set = [db executeQuery:selectSql];
     FoodModel *model = [FoodModel new];

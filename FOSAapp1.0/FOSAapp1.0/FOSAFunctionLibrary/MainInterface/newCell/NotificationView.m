@@ -249,8 +249,6 @@
         [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5]];
         [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[identifier,identifier1,identifier2,identifier3,identifier4,identifier5]];
     }
-    
-    
     //[self.fosaNotification removeReminder:requestArray];
 }
 
@@ -259,7 +257,7 @@
     self.fmdbManager = [FosaFMDBManager initFMDBManagerWithdbName:@"FOSA"];
     [self.dataSource removeAllObjects];
     NSString *sql = @"select * from FoodStorageInfo";
-    self.dataSource = [self.fmdbManager selectDataWithTableName:@"FoodStorageInfo" sql:sql];
+    self.dataSource = [self.fmdbManager selectDataWithTableNameByReminder:@"FoodStorageInfo" sql:sql];
     NSLog(@"%@",self.dataSource);
     [self.notificationList reloadData];
 }
