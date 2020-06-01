@@ -562,12 +562,12 @@
     self.foodNameView.frame = CGRectMake(0, 0, screen_width, contentHeight/5);
     [self.contentView addSubview:self.foodNameView];
 
-    self.foodNameLabel.frame = CGRectMake(screen_width*2/33+Width(10), contentHeight/30, screen_width/3, contentHeight/15);
+    self.foodNameLabel.frame = CGRectMake(screen_width*2/33+Width(10), Height(5), screen_width/3, contentHeight*2/30);
     self.foodNameLabel.text = @"Name";
     self.foodNameLabel.font = [UIFont systemFontOfSize:font(15)];
     self.foodNameLabel.textColor = [UIColor grayColor];
     [self.foodNameView addSubview:self.foodNameLabel];
-    self.foodTextView.frame = CGRectMake(screen_width*2/33, contentHeight/10, screen_width*51/66, contentHeight/10);
+    self.foodTextView.frame = CGRectMake(screen_width*2/33, CGRectGetMaxY(self.foodNameLabel.frame), screen_width*51/66, contentHeight/10);
     self.foodTextView.layer.cornerRadius = 5;
     self.foodTextView.font = [UIFont systemFontOfSize:font(15)];
     [self.foodTextView addTarget:self action:@selector(textFieldEditChange:) forControlEvents:UIControlEventEditingChanged];
@@ -577,11 +577,11 @@
     self.foodTextView.returnKeyType = UIReturnKeyDone;
     self.foodTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     [self.foodNameView addSubview:self.foodTextView];
-    self.shareBtn.frame = CGRectMake(screen_width*31/33-contentHeight/10, contentHeight/10, contentHeight/10, contentHeight/10);
+    self.shareBtn.frame = CGRectMake(screen_width*31/33-contentHeight/10, CGRectGetMaxY(self.foodNameLabel.frame), contentHeight/10, contentHeight/10);
     [self.shareBtn setImage:[UIImage imageNamed:@"icon_share"] forState:UIControlStateNormal];
     [self.shareBtn addTarget:self action:@selector(jumpToShare) forControlEvents:UIControlEventTouchUpInside];
     [self.foodNameView addSubview:self.shareBtn];
-    self.scanBtn.frame = CGRectMake(screen_width*31/33-contentHeight/10, contentHeight/10, contentHeight/10, contentHeight/10);
+    self.scanBtn.frame = CGRectMake(screen_width*31/33-contentHeight/10, CGRectGetMaxY(self.foodNameLabel.frame), contentHeight/10, contentHeight/10);
     [self.scanBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
     [self.scanBtn addTarget:self action:@selector(jumpToScan) forControlEvents:UIControlEventTouchUpInside];
     [self.foodNameView addSubview:self.scanBtn];
@@ -596,17 +596,18 @@
     //描述
     self.foodDescribedView.frame = CGRectMake(0, CGRectGetMaxY(self.foodNameView.frame), screen_width, contentHeight*2/5);
     [self.contentView addSubview:self.foodDescribedView];
-    self.foodDescribedLabel.frame = CGRectMake(screen_width*2/33+Width(10), contentHeight/30, screen_width/3, contentHeight/15);
+    self.foodDescribedLabel.frame = CGRectMake(screen_width*2/33+Width(10), 0, screen_width/3, contentHeight/15);
     self.foodDescribedLabel.text = @"Description";
     self.foodDescribedLabel.font = [UIFont systemFontOfSize:font(15)];
     self.foodDescribedLabel.textColor = [UIColor grayColor];
     [self.foodDescribedView addSubview:self.foodDescribedLabel];
-    self.foodDescribedTextView.frame = CGRectMake(screen_width*2/33, contentHeight/10, screen_width*29/33, contentHeight*3/10);
+    self.foodDescribedTextView.frame = CGRectMake(screen_width*2/33, CGRectGetMaxY(self.foodDescribedLabel.frame), screen_width*29/33, contentHeight*3/10);
     
     UIView * view = [[UIView alloc] initWithFrame:CGRectMake(100, 50, 100, Height(30))];
-    view.backgroundColor = FOSAGray;
-    UIButton *doneBtn = [[UIButton alloc]initWithFrame:CGRectMake(screen_width-Height(80), 0, Height(50), Height(30))];
-    [doneBtn setTintColor:FOSABlue];
+    view.backgroundColor = FOSAColor(230, 230, 230);
+    UIButton *doneBtn = [[UIButton alloc]initWithFrame:CGRectMake(screen_width-Height(70), 0, Height(50), Height(30))];
+    [doneBtn setTitleColor:FOSABlue forState:UIControlStateNormal];
+    [doneBtn setTitleColor:FOSABlueHL forState:UIControlStateHighlighted];
     [doneBtn setTitle:@"done" forState:UIControlStateNormal];
     [doneBtn addTarget:self action:@selector(resignKeyBoard) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:doneBtn];
@@ -617,7 +618,7 @@
     self.foodDescribedTextView.font = [UIFont systemFontOfSize:font(15)];
     self.foodDescribedTextView.delegate = self;
     //self.foodDescribedTextView.returnKeyType = UIReturnKeyDone;
-    self.foodDescribedTextView.textContainerInset = UIEdgeInsetsMake(5, Width(6), 0, Width(6));//上、左、下、右
+    self.foodDescribedTextView.textContainerInset = UIEdgeInsetsMake(Height(10), Width(6), 0, 0);//上、左、下、右
     [self.foodDescribedView addSubview:self.foodDescribedTextView];
 
     //输入字数提示
@@ -637,19 +638,19 @@
     
     self.remindView.frame = CGRectMake(0, CGRectGetMaxY(self.foodDescribedView.frame), screen_width, contentHeight/5);
     [self.contentView addSubview:self.remindView];
-    self.remindLabel.frame = CGRectMake(screen_width*2/33+Width(10), contentHeight/30, screen_width/3, contentHeight/15);
+    self.remindLabel.frame = CGRectMake(screen_width*2/33+Width(10), 0, screen_width/3, contentHeight/15);
     self.remindLabel.text = @"Reminder";
     self.remindLabel.font = [UIFont systemFontOfSize:font(15)];
     self.remindLabel.textColor = [UIColor grayColor];
     [self.remindView addSubview:self.remindLabel];
     
-    self.remindDateTextView.frame = CGRectMake(screen_width*2/33, contentHeight/10, screen_width*29/33, contentHeight/10);
+    self.remindDateTextView.frame = CGRectMake(screen_width*2/33, CGRectGetMaxY(self.remindLabel.frame), screen_width*29/33, contentHeight/10);
     self.remindDateTextView.adjustsFontSizeToFitWidth = YES;
     self.remindDateTextView.layer.cornerRadius = 5;
     self.remindDateTextView.userInteractionEnabled = NO;
     self.remindDateTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
-    self.remindDateTextView.font = [UIFont systemFontOfSize:font(13)];
-    [self.remindDateTextView setValue:[NSNumber numberWithInt:Width(11)] forKey:@"paddingLeft"];//设置输入文本的起始位置
+    self.remindDateTextView.font = [UIFont systemFontOfSize:font(15)];
+    [self.remindDateTextView setValue:[NSNumber numberWithInt:font(11)] forKey:@"paddingLeft"];//设置输入文本的起始位置
     self.remindDateTextView.userInteractionEnabled = YES;
     UITapGestureRecognizer *dateReconizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectExpireDate)];
     [self.remindDateTextView addGestureRecognizer:dateReconizer];
@@ -659,20 +660,21 @@
     
     self.locationView.frame = CGRectMake(0, CGRectGetMaxY(self.remindView.frame), screen_width, contentHeight/5);
     [self.contentView addSubview:self.locationView];
-    self.locationLabel.frame = CGRectMake(screen_width*2/33+Width(10), contentHeight/30, screen_width/3, contentHeight/15);
+    self.locationLabel.frame = CGRectMake(screen_width*2/33+Width(10), 0, screen_width/3, contentHeight/15);
     self.locationLabel.text = @"Location";
     self.locationLabel.font = [UIFont systemFontOfSize:font(15)];
     self.locationLabel.textColor = [UIColor grayColor];
     [self.locationView addSubview:self.locationLabel];
-    self.locationTextView.frame = CGRectMake(screen_width*2/33, contentHeight/10, screen_width*29/33, contentHeight/10);
+    self.locationTextView.frame = CGRectMake(screen_width*2/33, CGRectGetMaxY(self.locationLabel.frame), screen_width*29/33, contentHeight/10);
     self.locationTextView.font = [UIFont systemFontOfSize:font(15)];
     self.locationTextView.layer.cornerRadius = 5;
     self.locationTextView.returnKeyType = UIReturnKeyDone;
     self.locationTextView.delegate = self;
-    [self.locationTextView setValue:[NSNumber numberWithInt:Width(10)] forKey:@"paddingLeft"];
+    [self.locationTextView setValue:[NSNumber numberWithInt:11] forKey:@"paddingLeft"];
     self.locationTextView.backgroundColor = [UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1];
     [self.locationView addSubview:self.locationTextView];
 }
+
 
 - (void)creatFooterView{
     selectCategory = self.model.category;
@@ -852,7 +854,7 @@
                //clickRecognizer.view.tag = i;
         [self.imageviewArray[i] addGestureRecognizer:clickRecognizer];
         [self.picturePlayer addSubview:self.imageviewArray[i]];
-        self.mainImgBtnArray[i].frame = CGRectMake(screen_width-NavigationBarH*12/10, NavigationBarH*2, NavigationBarH*2/3, NavigationBarH*2/3);
+        self.mainImgBtnArray[i].frame = CGRectMake(screen_width-NavigationBarH*13/10, NavigationBarH*2, NavigationBarH*2/3, NavigationBarH*2/3);
         [self.mainImgBtnArray[i] setBackgroundImage:[UIImage imageNamed:@"icon_setMainImg"] forState:UIControlStateNormal];
         [self.mainImgBtnArray[i] addTarget:self action:@selector(setImgAsMainBackground) forControlEvents:UIControlEventTouchUpInside];
         [self.imageviewArray[i] addSubview:self.mainImgBtnArray[i]];

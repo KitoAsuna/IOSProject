@@ -167,7 +167,6 @@
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"Get it" style:UIAlertActionStyleDefault handler:nil];
         [alert addAction:action];
     }
-    
     [self presentViewController:alert animated:true completion:nil];
 }
 
