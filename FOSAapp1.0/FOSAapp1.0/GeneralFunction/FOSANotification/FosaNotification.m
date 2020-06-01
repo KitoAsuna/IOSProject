@@ -107,7 +107,7 @@
 - (void)sendNotificationByDate:(FoodModel *)model body:(NSString *)body date:(NSString *)mdate foodImg:(NSString *)image identifier:(NSString *)identifier{
     NSLog(@"我将发送一个系统通知----------按指定日期发送通知");
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-    content.title = [NSString stringWithFormat:@"Reminder: %@",model.foodName];
+    content.title = @"Reminder";
     //content.subtitle = model.foodName;
     content.body = body;
     content.badge = @0;
@@ -197,7 +197,7 @@
 - (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(NSString *)imgName time:(long)timeInterval identifier:(NSString *)identifier{
     NSLog(@"我将发送一个系统通知------按间隔时间发送通知:%ld",timeInterval);
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-    content.title = [NSString stringWithFormat:@"Reminder: %@",model.foodName];
+    content.title = @"Reminder";
     //content.subtitle = model.foodName;
     content.body = body;
     content.badge = @0;
@@ -238,7 +238,7 @@
 - (void)sendNotification:(FoodModel *)model body:(NSString *)body image:(UIImage *)img time:(long int)timeInterval{
     NSLog(@"我将发送一个系统通知");
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-    content.title = [NSString stringWithFormat:@"Reminder: %@",model.foodName];
+    content.title = @"Reminder";
     //content.subtitle = model.foodName;
     content.body = body;
     content.badge = @0;

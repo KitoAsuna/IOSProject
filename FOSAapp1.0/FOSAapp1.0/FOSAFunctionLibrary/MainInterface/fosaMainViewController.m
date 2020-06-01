@@ -1295,7 +1295,7 @@
         if (result == NSOrderedSame) {
             
                 //isSend = true;
-            NSString *body = [NSString stringWithFormat:@"will expire today (%@)",[self getWeekDayOfDate:self.collectionDataSource[i].expireDate]];
+            NSString *body = [NSString stringWithFormat:@"%@ will expire today (%@)",self.collectionDataSource[i].foodName,[self getWeekDayOfDate:self.collectionDataSource[i].expireDate]];
                 //发送通知
             //获取通知的图片
             image = [imgManager getImgWithName:self.collectionDataSource[i].foodPhoto];//[self getImage:self.collectionDataSource[i].foodPhoto];
