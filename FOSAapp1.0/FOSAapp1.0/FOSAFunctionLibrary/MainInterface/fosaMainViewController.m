@@ -1222,14 +1222,14 @@
         foodDate = [formatter dateFromString:RDate];
         //比较过期日期与今天的日期
         NSComparisonResult result = [currentDate compare:foodDate];
-        NSLog(@"==============================%ld",(long)result)
+        NSLog(@"==============================%ld",(long)result);
         if (result == NSOrderedSame) {
-            
-                //isSend = true;
+            //isSend = true;
             NSString *body = [NSString stringWithFormat:@"%@ will expire today (%@)",self.collectionDataSource[i].foodName,[self getWeekDayOfDate:self.collectionDataSource[i].expireDate]];
-                //发送通知
+            //发送通知
             //获取通知的图片
-            image = [imgManager getImgWithName:self.collectionDataSource[i].foodPhoto];//[self getImage:self.collectionDataSource[i].foodPhoto];
+            image = [imgManager getImgWithName:self.collectionDataSource[i].foodPhoto];
+            //[self getImage:self.collectionDataSource[i].foodPhoto];
             //另存通知图片
             [imgManager savePhotoWithImage:image name:self.collectionDataSource[i].foodName];
             //[self Savephoto:image name:self.collectionDataSource[i].foodName];
