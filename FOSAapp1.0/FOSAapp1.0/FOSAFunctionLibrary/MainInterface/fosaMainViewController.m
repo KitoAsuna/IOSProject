@@ -21,6 +21,7 @@
 #import "FosaFMDBManager.h"
 #import "FosaIMGManager.h"
 
+
 @interface fosaMainViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,fosaDelegate,closeViewDelegate>{
     NSString *categoryID;//种类cell
     NSString *foodItemID;//食物cell
@@ -235,54 +236,58 @@
     NSString *currentVersion = [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"];
     NSString *localVersion = [userDefault valueForKey:@"localVersion"];
     if (![currentVersion isEqualToString:localVersion]) {
-        NSLog(@"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        NSLog(@"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         [userDefault setObject:currentVersion forKey:@"localVersion"];
         [self showUsingTips];
     }else{
         NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-    }
-    if (isFirst) {
-        [self SendExpiryNotification];
-        isFirst = false;
     }
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.translucent = NO;
     self.scanBtn.hidden = NO;
+    self.navigationRemindBtn.hidden = NO;
+    self.sortbtn.hidden = NO;
     isSelectCategory = false;
     if (self.selectedCategoryCell != nil) {
         self.selectedCategoryCell.rootView.backgroundColor = [UIColor whiteColor];
         self.selectedCategoryCell.kind.textColor = [UIColor grayColor];
     }
-//    if (isUpdate) {
-//        NSLog(@"异步刷新界面");
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self CollectionReload];
-            [self categoryReLoad];
-        });
-//    }
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self CollectionReload];
+        [self categoryReLoad];
+        if (self->isFirst) {
+            [self SendExpiryNotification];
+            self->isFirst = false;
+        }
+    });
+    
 }
 
 - (void)creatNavigationButton{
     self.notification = [[FosaNotification alloc]init];
     [self.navigationRemindBtn setImage:[UIImage imageNamed:@"icon_sendNotification"] forState:UIControlStateNormal];
-    [self.navigationRemindBtn.widthAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
-    [self.navigationRemindBtn.heightAnchor constraintEqualToConstant:NavigationBarH*2/3].active = YES;
+    self.navigationRemindBtn.frame = CGRectMake(-screen_width/20, NavigationBarH/8, screen_width/4, NavigationBarH*3/4);
+    self.navigationRemindBtn.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [self.navigationController.navigationBar addSubview:self.navigationRemindBtn];
     [self.navigationRemindBtn addTarget:self action:@selector(openNotificationList) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.navigationRemindBtn];
 
-    self.scanBtn.frame = CGRectMake(0, 0,NavigationBarH*3/5, NavigationBarH*3/5);
+
+    self.scanBtn.frame = CGRectMake(0, 0,screen_width/4, NavigationBarH*3/4);
+    self.scanBtn.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.scanBtn.center = self.navigationController.navigationBar.center;
     [self.scanBtn setImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
     [self.navigationController.navigationBar addSubview:self.scanBtn];
     [self.scanBtn addTarget:self action:@selector(clickToScan) forControlEvents:UIControlEventTouchUpInside];
 
-    [self.sortbtn.widthAnchor constraintEqualToConstant:NavigationBarH/2].active = YES;
-    [self.sortbtn.heightAnchor constraintEqualToConstant:NavigationBarH/2].active = YES;
+    self.sortbtn.frame = CGRectMake(screen_width*4/5, NavigationBarH/6, screen_width/4, NavigationBarH*2/3);
+    self.sortbtn.imageView.contentMode = UIViewContentModeScaleAspectFit;
     [self.sortbtn setImage:[UIImage imageNamed:@"icon_sort"] forState:UIControlStateNormal];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.sortbtn];
     [self.sortbtn addTarget:self action:@selector(selectToSort) forControlEvents:UIControlEventTouchUpInside];
+    [self.navigationController.navigationBar addSubview:self.sortbtn];
+
 }
 
 - (void)creatMainBackgroundPlayer{
@@ -360,7 +365,7 @@
     self.categoryCollection.delegate = self;
     self.categoryCollection.dataSource = self;
     self.categoryCollection.showsHorizontalScrollIndicator = NO;
-    self.categoryCollection.bounces = NO;
+    self.categoryCollection.bounces = YES;
     self.categoryCollection.pagingEnabled = YES;
     [self.categoryCollection registerClass:[categoryCollectionViewCell class] forCellWithReuseIdentifier:categoryID];
     [self.categoryView addSubview:self.categoryCollection];
@@ -1164,6 +1169,7 @@
 }
 
 - (void)openNotificationList{
+    self.navigationRemindBtn.alpha = 0.5;
 //    notificationViewController *notify = [notificationViewController new];
 //    notify.hidesBottomBarWhenPushed = YES;
 //    [self presentViewController:notify animated:YES completion:nil];
@@ -1182,6 +1188,8 @@
         self.notifiView.closeDelegate = self;
         self.notifiView.layer.cornerRadius = 15;
         [self.tabBarController.view addSubview:self.notifiView];
+    } completion:^(BOOL finished) {
+        self.navigationRemindBtn.alpha = 1.0;
     }];
 }
 #pragma mark - closeViewDelegate
@@ -1335,6 +1343,8 @@
     self.navigationController.navigationBar.translucent = YES;
     [self.db close];
     self.scanBtn.hidden = YES;
+    self.navigationRemindBtn.hidden = YES;
+    self.sortbtn.hidden = YES;
 }
 
 @end

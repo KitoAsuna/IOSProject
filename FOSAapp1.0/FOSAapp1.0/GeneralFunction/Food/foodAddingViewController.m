@@ -878,7 +878,15 @@
 }
 #pragma mark - 初始化日期选择器
 -(void)InitialDatePicker{
-    FosaDatePickerView *DatePicker = [[FosaDatePickerView alloc]initWithFrame:CGRectMake(0, screen_height, self.view.frame.size.width, screen_height*80/143) expireDate:expireStr remindDate:self.remindDateTextView.text  repeatWay:self.model.repeat];
+//    NSString *currentReminder;
+//    if (self.model != nil) {
+//        NSLog(@"当前的提醒时间：%@",self.model.remindDate);
+//        currentReminder = self.model.remindDate;
+//    }else{
+//        currentReminder = self.remindDateTextView.text;
+//    }
+    NSLog(@"===========%@",remindStr);
+    FosaDatePickerView *DatePicker = [[FosaDatePickerView alloc]initWithFrame:CGRectMake(0, screen_height, self.view.frame.size.width, screen_height*80/143) expireDate:expireStr remindDate:remindStr repeatWay:self.model.repeat];
     DatePicker.delegate = self;
     DatePicker.title = @"Expiration date";
     [self.view addSubview:DatePicker];
@@ -1268,6 +1276,7 @@
     [self.view addSubview:self.toturialPageControl];
     [self.view addSubview:self.skipBtn];
 }
+
 - (void)skipTutorial{
     [self.toturialPicturePlayer removeFromSuperview];
     [self.toturialPageControl removeFromSuperview];
@@ -1276,7 +1285,7 @@
 }
 
 - (void)selectExpireDate{
-    
+
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:@"dd/MM/yyyy/HH:mm"];
     NSDate *date = [dateFormatter dateFromString:expireStr];
@@ -1284,6 +1293,7 @@
     [UIView animateWithDuration:0.3 animations:^{
         self.fosaDatePicker.center = CGPointMake(screen_width/2, screen_height*103/143);
         self.fosaDatePicker.date = [dateFormatter stringFromDate:date];
+        self.fosaDatePicker.reminderDate = self->remindStr;
         [self.fosaDatePicker show];
        }];
 }
@@ -1291,7 +1301,7 @@
 - (void)jumptoPhoto:(UITapGestureRecognizer *)tap{
     CGPoint touchPoint = [tap locationInView:self.picturePlayer];
     NSLog(@"%f-----%f",touchPoint.x,touchPoint.y);
-    if (touchPoint.y < self.headerView.frame.size.height*4/5 && touchPoint.x > self.headerView.frame.size.width/3+(screen_width*currentPictureIndex) && touchPoint.x < self.headerView.frame.size.width*2/3+(screen_width*currentPictureIndex)) {
+    if (touchPoint.y < self.headerView.frame.size.height*4/5 && touchPoint.x > self.headerView.frame.size.width/5+(screen_width*currentPictureIndex) && touchPoint.x < self.headerView.frame.size.width*4/5+(screen_width*currentPictureIndex)) {
         if ([self.foodStyle isEqualToString:@"Info"]) {
             NSLog(@"放大图片");
             [self EnlargePhoto];
@@ -1299,7 +1309,6 @@
             takePictureViewController *photo = [[takePictureViewController alloc]init];
             photo.photoBlock = ^(UIImage *img){
                 //通过block将相机拍摄的图片放置在对应的位置
-               
                 if (img != nil) {
                     [self->imgManager savePhotoWithImage:img name:[NSString stringWithFormat:@"%@%ld",self.foodTextView.text,self->currentPictureIndex+1]];
                     self.imageviewArray[self->currentPictureIndex].image = [self->imgManager getImgWithName:[NSString stringWithFormat:@"%@%ld",self.foodTextView.text,self->currentPictureIndex+1]];

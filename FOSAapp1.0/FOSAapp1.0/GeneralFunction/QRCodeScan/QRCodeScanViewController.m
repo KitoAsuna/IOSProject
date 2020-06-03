@@ -310,7 +310,7 @@
     [self.flashBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashOff.png"] forState:UIControlStateNormal];
     //self.flashBtn.hidden = YES;
     [self.flashBtn addTarget:self action:@selector(OpenOrCloseFlash) forControlEvents:UIControlEventTouchUpInside];
-    //[self.view addSubview:self.flashBtn];
+    [self.view addSubview:self.flashBtn];
     //UISlider
 //    self.zoomSlider.frame = CGRectMake(imageX,imageY+self.view.frame.size.width*0.7,self.view.frame.size.width*0.7+10,20);
 //    //[self.view addSubview:self.zoomSlider];
@@ -379,6 +379,7 @@
     self.flashBtn.clipsToBounds = YES;
     [self.flashBtn setBackgroundImage:[UIImage imageNamed:@"icon_flashOff.png"] forState:UIControlStateNormal];
     [self.flashBtn addTarget:self action:@selector(OpenOrCloseFlash) forControlEvents:UIControlEventTouchUpInside];
+    //[self.view addSubview:self.flashBtn];
 //    self.zoomSlider.frame = CGRectMake(imageX-10,screen_height-NavigationBarHeight*2,self.view.frame.size.width*0.5,20);
 //    [self.view addSubview:self.zoomSlider];
 //    self.zoomSlider.minimumValue = 0;
@@ -1068,28 +1069,28 @@ NSLog(@"************************************************************************
     self.focusCursor3.alpha = 1.0;
 }
 
-#pragma mark- AVCaptureVideoDataOutputSampleBufferDelegate的方法
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
-    CFDictionaryRef metadataDict = CMCopyDictionaryOfAttachments(NULL,sampleBuffer, kCMAttachmentMode_ShouldPropagate);
-    NSDictionary *metadata = [[NSMutableDictionary alloc] initWithDictionary:(__bridge NSDictionary*)metadataDict];
-    CFRelease(metadataDict);
-    NSDictionary *exifMetadata = [[metadata objectForKey:(NSString *)kCGImagePropertyExifDictionary] mutableCopy];
-    float brightnessValue = [[exifMetadata objectForKey:(NSString *)kCGImagePropertyExifBrightnessValue] floatValue];
-                //NSLog(@"%f",brightnessValue);
-    // 根据brightnessValue的值来打开和关闭闪光灯
-    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    BOOL result = [device hasTorch];// 判断设备是否有闪光灯
-    if ((brightnessValue < -1) && result) {
-        //提示打开闪光灯
-        [self.view insertSubview:self.flashBtn atIndex:10];
-        //self.flashBtn.hidden = NO;
-    }else if((brightnessValue > -1) && result) {
-        if(device.torchMode == AVCaptureTorchModeOff){
-            [self.flashBtn removeFromSuperview];
-            //self.flashBtn.hidden = YES;
-        }
-    }
-}
+//#pragma mark- AVCaptureVideoDataOutputSampleBufferDelegate的方法
+//- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
+//    CFDictionaryRef metadataDict = CMCopyDictionaryOfAttachments(NULL,sampleBuffer, kCMAttachmentMode_ShouldPropagate);
+//    NSDictionary *metadata = [[NSMutableDictionary alloc] initWithDictionary:(__bridge NSDictionary*)metadataDict];
+//    CFRelease(metadataDict);
+//    NSDictionary *exifMetadata = [[metadata objectForKey:(NSString *)kCGImagePropertyExifDictionary] mutableCopy];
+//    float brightnessValue = [[exifMetadata objectForKey:(NSString *)kCGImagePropertyExifBrightnessValue] floatValue];
+//                //NSLog(@"%f",brightnessValue);
+//    // 根据brightnessValue的值来打开和关闭闪光灯
+//    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+//    BOOL result = [device hasTorch];// 判断设备是否有闪光灯
+//    if ((brightnessValue < -1) && result) {
+//        //提示打开闪光灯
+//        [self.view insertSubview:self.flashBtn atIndex:10];
+//        //self.flashBtn.hidden = NO;
+//    }else if((brightnessValue > -1) && result) {
+//        if(device.torchMode == AVCaptureTorchModeOff){
+//            [self.flashBtn removeFromSuperview];
+//            //self.flashBtn.hidden = YES;
+//        }
+//    }
+//}
 //   隐藏扫码标识
 - (void)unShowFocus{
     self.focusCursor.alpha = 0;

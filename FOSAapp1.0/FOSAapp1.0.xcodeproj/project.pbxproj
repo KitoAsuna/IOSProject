@@ -35,6 +35,7 @@
 		450A1FB0244AC45D00370FE2 /* FosaIMGManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 450A1FAE244AC45D00370FE2 /* FosaIMGManager.m */; };
 		450A3C2723C4687E000D55C8 /* ResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 450A3C2523C4687E000D55C8 /* ResultViewController.m */; };
 		450D586623C9B7D70032E905 /* LoadCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 450D586523C9B7D70032E905 /* LoadCircleView.m */; };
+		45120830248776AD00D93125 /* FosaButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4512082F248776AD00D93125 /* FosaButton.m */; };
 		4513DD2523BECB3B0005A1E2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4513DD2423BECB3B0005A1E2 /* SystemConfiguration.framework */; };
 		4513DD2723BECB570005A1E2 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4513DD2623BECB570005A1E2 /* MobileCoreServices.framework */; };
 		4513DD3123BED3550005A1E2 /* PhotoViewController1.m in Sources */ = {isa = PBXBuildFile; fileRef = 4513DD2923BED3550005A1E2 /* PhotoViewController1.m */; };
@@ -185,6 +186,8 @@
 		450A3C2623C4687E000D55C8 /* ResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResultViewController.h; sourceTree = "<group>"; };
 		450D586423C9B7D70032E905 /* LoadCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadCircleView.h; sourceTree = "<group>"; };
 		450D586523C9B7D70032E905 /* LoadCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadCircleView.m; sourceTree = "<group>"; };
+		4512082E248776AD00D93125 /* FosaButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FosaButton.h; sourceTree = "<group>"; };
+		4512082F248776AD00D93125 /* FosaButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FosaButton.m; sourceTree = "<group>"; };
 		4513DD2423BECB3B0005A1E2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		4513DD2623BECB570005A1E2 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		4513DD2923BED3550005A1E2 /* PhotoViewController1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController1.m; sourceTree = "<group>"; };
@@ -628,6 +631,8 @@
 				45AD4D2B243D6F6100955B1E /* fosaView.m */,
 				45822170243EC841002970EC /* alarmView.h */,
 				45822171243EC841002970EC /* alarmView.m */,
+				4512082E248776AD00D93125 /* FosaButton.h */,
+				4512082F248776AD00D93125 /* FosaButton.m */,
 			);
 			path = FOSAView;
 			sourceTree = "<group>";
@@ -1050,6 +1055,7 @@
 				45D3745F23C075B200192014 /* AFNetworkReachabilityManager.m in Sources */,
 				452E80652456ABE2004148A5 /* repeatPickerView.m in Sources */,
 				45D3745D23C075B200192014 /* AFURLSessionManager.m in Sources */,
+				45120830248776AD00D93125 /* FosaButton.m in Sources */,
 				45A506DC23B8402E0046FC09 /* main.m in Sources */,
 				45A506CE23B8402C0046FC09 /* SceneDelegate.m in Sources */,
 				4513DD5923BF38D20005A1E2 /* ScanInfoView.m in Sources */,

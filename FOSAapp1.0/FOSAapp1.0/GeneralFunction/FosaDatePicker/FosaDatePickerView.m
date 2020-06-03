@@ -11,7 +11,6 @@
 
 @interface FosaDatePickerView()<UIPickerViewDelegate, UIPickerViewDataSource>{
     CGFloat height;
-    
 }
 
 @property (strong, nonatomic) UIPickerView *pickerView; // 选择器
@@ -145,7 +144,7 @@
     self.remindView.backgroundColor = FOSAWhite;
     [self addSubview:self.remindView];
     
-    self.remindLabel = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width/4, height/10)];
+    self.remindLabel = [[UILabel alloc]initWithFrame:CGRectMake(Width(15), 0, screen_width/4, height/10)];
     self.remindSwitch = [UISwitch new];
     self.remindSwitch.center = CGPointMake(screen_width-50, height/20);
     [self.remindSwitch addTarget:self action:@selector(autoSwitch:) forControlEvents:UIControlEventValueChanged];
@@ -153,7 +152,7 @@
     self.remindLabel.text = @"Remind Me";
     [self.remindView addSubview:self.remindLabel];
     [self.remindView addSubview:self.remindSwitch];
-    UIView *boundary1 = [[UIView alloc]initWithFrame:CGRectMake(font(15), CGRectGetMaxY(self.remindLabel.frame), screen_width-font(15), 1)];
+    UIView *boundary1 = [[UIView alloc]initWithFrame:CGRectMake(Width(15), CGRectGetMaxY(self.remindLabel.frame), screen_width-Width(15), 1)];
     boundary1.backgroundColor = FOSAColor(242, 242, 242);
     [self.remindView addSubview:boundary1];
 
@@ -161,16 +160,16 @@
     self.AlarView.backgroundColor = FOSAWhite;
     self.AlarView.userInteractionEnabled = YES;
 
-    self.Alarm = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width/5, height/10)];
+    self.Alarm = [[UILabel alloc]initWithFrame:CGRectMake(Width(15), 0, screen_width/5, height/10)];
     self.Alarm.text = @"Alarm";
 
     self.rightDatelabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.Alarm.frame), 0, screen_width*4/5-font(20), height/10)];
     NSDate *current = [NSDate new];
-    self.rightDatelabel.text = [self getTimeAndWeekDay:current];
+    //self.rightDatelabel.text = [self getTimeAndWeekDay:current];
     self.rightDatelabel.textColor = FOSAGray;
     self.rightDatelabel.textAlignment = NSTextAlignmentRight;
     
-    self.leftDatelabel = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width-10, height/10)];
+    self.leftDatelabel = [[UILabel alloc]initWithFrame:CGRectMake(Width(15), 0, screen_width-10, height/10)];
     self.leftDatelabel.text = [self getTimeAndWeekDay:current];
     self.leftDatelabel.textColor = FOSAColor(2, 121, 255);
     self.leftDatelabel.hidden = YES;
@@ -179,27 +178,26 @@
 
     [self.AlarView addSubview:self.rightDatelabel];
     
-    UIView *boundary2 = [[UIView alloc]initWithFrame:CGRectMake(font(15), CGRectGetMaxY(self.Alarm.frame), screen_width-font(15), 1)];
+    UIView *boundary2 = [[UIView alloc]initWithFrame:CGRectMake(Width(15), CGRectGetMaxY(self.Alarm.frame), screen_width-font(15), 1)];
     boundary2.backgroundColor = FOSAColor(242, 242, 242);
     [self.remindView addSubview:boundary2];
 
     self.remindDatepicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.AlarView.frame), screen_width, 0)];//(self.frame.size.height/2-22)/2
     self.remindDatepicker.datePickerMode = UIDatePickerModeDateAndTime;
-    self.remindDatepicker.minimumDate = [NSDate new];
     [self.remindDatepicker addTarget:self action:@selector(changeDate:) forControlEvents:UIControlEventValueChanged];
     [self.remindView addSubview:self.remindDatepicker];
-    
+
     [self.AlarView addSubview:self.Alarm];
     self.AlarView.hidden = YES;
     [self.remindView addSubview:self.AlarView];
-    
+
     self.repeatView = [[fosaView alloc]initWithFrame:CGRectMake(0, height/10, screen_width, height/10)];
     self.repeatView.backgroundColor = FOSAWhite;
     self.repeatView.userInteractionEnabled = YES;
     UITapGestureRecognizer *repeatRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectRepeatWay)];
     [self.repeatView addGestureRecognizer:repeatRecognizer];
-    
-    self.repeatLabel = [[UILabel alloc]initWithFrame:CGRectMake(font(15), 0, screen_width/4, height/10)];
+
+    self.repeatLabel = [[UILabel alloc]initWithFrame:CGRectMake(Width(15), 0, screen_width/4, height/10)];
     self.repeatLabel.text = @"Repeat";
     self.repeatView.hidden = YES;
     self.repeatWayLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width/2-height/13, 0, self.frame.size.width/2, height/10)];
@@ -224,19 +222,26 @@
     [self.repeatView addSubview:self.rightSign];
     [self.repeatView addSubview:self.repeatLabel];
     [self.remindView addSubview:self.repeatView];
-
+    
+    NSLog(@"------>%@",self.reminderDate);
     if (![self.reminderDate isEqualToString:@""]) {
         [self.remindSwitch setOn:true];
         [self autoSwitch:_remindSwitch];
         //self.leftDatelabel.text = self.reminderDate;
         self.rightDatelabel.text = self.reminderDate;
-//        NSArray *array = [self.reminderDate componentsSeparatedByString:@","];
-//        NSDateFormatter *format = [NSDateFormatter new];
-//        [format setDateFormat:@" dd  MM, yyyy ,hh:mm  a"];
-//        NSDate *date = [format dateFromString:[NSString stringWithFormat:@"%@,%@,%@",array[1],array[2],array[3]]];
-//        NSLog(@"****************%@",date);
-//        [self.remindDatepicker setDate:date];
-           //[self.remindSwitch respondsToSelector:@selector(autoSwitch:)];
+        NSArray *array = [self.reminderDate componentsSeparatedByString:@","];
+        NSDateFormatter *format = [NSDateFormatter new];
+        [format setDateFormat:@" dd  MM, yyyy ,HH:mm"];
+        NSDate *date = [format dateFromString:[NSString stringWithFormat:@"%@,%@,%@",array[1],array[2],array[3]]];
+       // NSLog(@"****************%@",date);
+//        if ([date compare:[NSDate new]] == NSOrderedAscending) {
+//            //date 在 当前时间之前
+//            self.remindDatepicker.minimumDate = date;
+//        }else{
+//            self.remindDatepicker.minimumDate = [NSDate new];
+//        }
+        self.remindDatepicker.minimumDate = date;
+        [self.remindDatepicker setDate:date];
     }
 }
 - (void)openDatePicker{

@@ -97,7 +97,7 @@
 - (void)InitData{
 //    ItemArray = @[@"Tutorial",@"Language/Location",@"Setting",@"About FOSA",@"About Apps"];
 //    ItemLogoArray = @[@"icon_tutorial",@"icon_language",@"icon_setting",@"icon_logo",@"icon_app"];
-    ItemArray = @[@"Tutorial",@"Settings",@"About FOSA",@"About Apps"];
+    ItemArray = @[@"Tutorial",@"Settings",@"About FOSA",@"About"];
     ItemLogoArray = @[@"icon_tutorial",@"icon_setting",@"icon_logo",@"icon_app"];
 }
 

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 @class FoodModel;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface foodItemCollectionViewCell : UICollectionViewCell
