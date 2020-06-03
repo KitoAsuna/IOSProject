@@ -64,7 +64,6 @@
     //添加观察者
     [self.qrWebView addObserver:self forKeyPath:@"estimatedProgress" options:0 context:nil];
 }
-
    //kvo 监听进度 必须实现此方法
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
@@ -99,7 +98,6 @@
  // 页面加载完成之后调用
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     NSLog(@"加载完成");
-    //[self.qrWebView removeObserver:self forKeyPath:NSStringFromSelector(@selector(estimatedProgress))];
     [self.progressView removeFromSuperview];
 }
 - (void)viewWillDisappear:(BOOL)animated{

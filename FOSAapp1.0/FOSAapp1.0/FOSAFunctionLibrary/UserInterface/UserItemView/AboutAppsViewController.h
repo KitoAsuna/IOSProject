@@ -14,7 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong) UIImageView *logo;
 @property (nonatomic,strong) UILabel *appTitleLable,*versionLable;
-@property (nonatomic,strong) UILabel *privacyLabel,*copyrightLabel;
+@property (nonatomic,strong) UILabel *copyrightLabel;
+@property (nonatomic,strong) UIButton *privacyBtn;
 @end
 
 NS_ASSUME_NONNULL_END

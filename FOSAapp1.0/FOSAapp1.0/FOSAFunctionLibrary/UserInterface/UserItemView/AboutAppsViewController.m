@@ -37,11 +37,11 @@
     return _appTitleLable;
 }
 
-- (UILabel *)privacyLabel{
-    if (_privacyLabel == nil) {
-        _privacyLabel = [UILabel new];
+- (UIButton *)privacyBtn{
+    if (_privacyBtn == nil) {
+        _privacyBtn = [UIButton new];
     }
-    return _privacyLabel;
+    return _privacyBtn;
 }
 
 - (UILabel *)copyrightLabel{
@@ -60,7 +60,6 @@
 - (void)CreatView{
     self.view.backgroundColor = [UIColor whiteColor];
     self.logo.frame = CGRectMake(screen_width*3/8, screen_height/8, screen_width/4, screen_width/4);
-    //self.logo.center = CGPointMake(self.view.center.x, self.view.center.y-screen_width/4);
     self.logo.image = [UIImage imageNamed:@"icon_FOSAlogoHL"];
     [self.view addSubview:self.logo];
     
@@ -79,20 +78,20 @@
     [self.view addSubview:self.versionLable];
     
     //隐私政策
-    self.privacyLabel.frame = CGRectMake(screen_width/3, screen_height*5/6, screen_width/3, Height(20));
-    self.privacyLabel.text = @"Privacy Policy";
-    self.privacyLabel.font = [UIFont systemFontOfSize:font(12)];
-    self.privacyLabel.textAlignment = NSTextAlignmentCenter;
-    UITapGestureRecognizer *privacyRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openPrivacyWeb)];
-    self.privacyLabel.userInteractionEnabled = YES;
-    [self.privacyLabel addGestureRecognizer:privacyRecognizer];
-    [self.view addSubview:self.privacyLabel];
+    self.privacyBtn.frame = CGRectMake(screen_width/3, screen_height*6/7, screen_width/3, Height(40));
+    [self.privacyBtn setTitle:@"Privacy Policy" forState:UIControlStateNormal];
+    [self.privacyBtn setTitleColor:FOSABlue forState:UIControlStateNormal];
+    [self.privacyBtn setTitleColor:FOSABlueHL forState:UIControlStateHighlighted];
+    self.privacyBtn.titleLabel.font = [UIFont systemFontOfSize:font(12)];
+    [self.privacyBtn addTarget:self action:@selector(openPrivacyWeb) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.privacyBtn];
     
     //版权
-    self.copyrightLabel.frame = CGRectMake(0, CGRectGetMaxY(self.privacyLabel.frame), screen_width, Height(20));
+    self.copyrightLabel.frame = CGRectMake(0, CGRectGetMaxY(self.privacyBtn.frame), screen_width, Height(20));
     self.copyrightLabel.font = [UIFont systemFontOfSize:font(12)];
     self.copyrightLabel.textAlignment = NSTextAlignmentCenter;
     self.copyrightLabel.text = @"Copyright © 2020 hs. All rights reserved.";
+    self.copyrightLabel.textColor = FOSAGray;
     [self.view addSubview:self.copyrightLabel];
 }
 

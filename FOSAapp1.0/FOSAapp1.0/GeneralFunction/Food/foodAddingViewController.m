@@ -702,8 +702,8 @@
     //食物种类选择栏 可滚动
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    flowLayout.itemSize = CGSizeMake((screen_width*5/6-font(45))/5, footerHeight);
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 3, 0, 2);
+    flowLayout.itemSize = CGSizeMake((screen_width*5/6-Width(45))/5, footerHeight);
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 4, 0, 4);
 
     self.categoryCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(screen_width/12, 0, screen_width*5/6, footerHeight) collectionViewLayout:flowLayout];
 

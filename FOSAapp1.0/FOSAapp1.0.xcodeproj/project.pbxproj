@@ -69,8 +69,6 @@
 		454421EE23CC1680002FADFE /* FoodMoreInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421EC23CC1680002FADFE /* FoodMoreInfoView.m */; };
 		454421F223CC6B70002FADFE /* AboutAppsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 454421F123CC6B70002FADFE /* AboutAppsViewController.m */; };
 		4544298623CF05B500662F18 /* CategoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4544298523CF05B500662F18 /* CategoryTableViewCell.m */; };
-		45514BEB23F2E285000E321E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
-		45514BEC23F2E287000E321E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
 		4557596724498D2F00E325AC /* notificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4557596624498D2F00E325AC /* notificationViewController.m */; };
 		455F4AC723D157FE00BE3822 /* saoyisao@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 455F4AC623D157FE00BE3822 /* saoyisao@3x.png */; };
 		457A143A2457F8F6003E8A8F /* userInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 457A14392457F8F6003E8A8F /* userInfoViewController.m */; };
@@ -105,8 +103,6 @@
 		45A506D423B8402C0046FC09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D223B8402C0046FC09 /* Main.storyboard */; };
 		45A506D923B8402E0046FC09 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A506D723B8402E0046FC09 /* LaunchScreen.storyboard */; };
 		45A506DC23B8402E0046FC09 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A506DB23B8402E0046FC09 /* main.m */; };
-		45A506E623B8402E0046FC09 /* FOSAapp1_0Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A506E523B8402E0046FC09 /* FOSAapp1_0Tests.m */; };
-		45A506F123B8402E0046FC09 /* FOSAapp1_0UITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A506F023B8402E0046FC09 /* FOSAapp1_0UITests.m */; };
 		45AD4D2C243D6F6100955B1E /* fosaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AD4D2B243D6F6100955B1E /* fosaView.m */; };
 		45B3122F2484E7CA009039A1 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45B3122E2484E7CA009039A1 /* WebViewController.m */; };
 		45CE418623F3971100B9F884 /* fosaLauch.png in Resources */ = {isa = PBXBuildFile; fileRef = 45CE418523F3971100B9F884 /* fosaLauch.png */; };
@@ -136,23 +132,6 @@
 		45F0C7F423F036DA002F323B /* fosaPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F0C7F323F036DA002F323B /* fosaPhotoViewController.m */; };
 		45F653EB23C75307008F08C2 /* foodKindCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F653EA23C75307008F08C2 /* foodKindCollectionViewCell.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		45A506E223B8402E0046FC09 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 45A506BE23B8402C0046FC09 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 45A506C523B8402C0046FC09;
-			remoteInfo = FOSAapp1.0;
-		};
-		45A506ED23B8402E0046FC09 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 45A506BE23B8402C0046FC09 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 45A506C523B8402C0046FC09;
-			remoteInfo = FOSAapp1.0;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		4500E0F923BACF89002EB9FE /* Img_mainimg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Img_mainimg.png; sourceTree = "<group>"; };
@@ -336,10 +315,8 @@
 		45A506D823B8402E0046FC09 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		45A506DA23B8402E0046FC09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45A506DB23B8402E0046FC09 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		45A506E123B8402E0046FC09 /* FOSAapp1.0Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FOSAapp1.0Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		45A506E523B8402E0046FC09 /* FOSAapp1_0Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FOSAapp1_0Tests.m; sourceTree = "<group>"; };
 		45A506E723B8402E0046FC09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		45A506EC23B8402E0046FC09 /* FOSAapp1.0UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FOSAapp1.0UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		45A506F023B8402E0046FC09 /* FOSAapp1_0UITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FOSAapp1_0UITests.m; sourceTree = "<group>"; };
 		45A506F223B8402E0046FC09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45AD4D2A243D6F6100955B1E /* fosaView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fosaView.h; sourceTree = "<group>"; };
@@ -410,20 +387,6 @@
 				4513DD2723BECB570005A1E2 /* MobileCoreServices.framework in Frameworks */,
 				45D3748223C075F600192014 /* Security.framework in Frameworks */,
 				4513DD2523BECB3B0005A1E2 /* SystemConfiguration.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		45A506DE23B8402E0046FC09 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		45A506E923B8402E0046FC09 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -870,8 +833,6 @@
 			isa = PBXGroup;
 			children = (
 				45A506C623B8402C0046FC09 /* FOSAapp1.0.app */,
-				45A506E123B8402E0046FC09 /* FOSAapp1.0Tests.xctest */,
-				45A506EC23B8402E0046FC09 /* FOSAapp1.0UITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -990,42 +951,6 @@
 			productReference = 45A506C623B8402C0046FC09 /* FOSAapp1.0.app */;
 			productType = "com.apple.product-type.application";
 		};
-		45A506E023B8402E0046FC09 /* FOSAapp1.0Tests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 45A506F823B8402E0046FC09 /* Build configuration list for PBXNativeTarget "FOSAapp1.0Tests" */;
-			buildPhases = (
-				45A506DD23B8402E0046FC09 /* Sources */,
-				45A506DE23B8402E0046FC09 /* Frameworks */,
-				45A506DF23B8402E0046FC09 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				45A506E323B8402E0046FC09 /* PBXTargetDependency */,
-			);
-			name = FOSAapp1.0Tests;
-			productName = FOSAapp1.0Tests;
-			productReference = 45A506E123B8402E0046FC09 /* FOSAapp1.0Tests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		45A506EB23B8402E0046FC09 /* FOSAapp1.0UITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 45A506FB23B8402E0046FC09 /* Build configuration list for PBXNativeTarget "FOSAapp1.0UITests" */;
-			buildPhases = (
-				45A506E823B8402E0046FC09 /* Sources */,
-				45A506E923B8402E0046FC09 /* Frameworks */,
-				45A506EA23B8402E0046FC09 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				45A506EE23B8402E0046FC09 /* PBXTargetDependency */,
-			);
-			name = FOSAapp1.0UITests;
-			productName = FOSAapp1.0UITests;
-			productReference = 45A506EC23B8402E0046FC09 /* FOSAapp1.0UITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1037,14 +962,6 @@
 				TargetAttributes = {
 					45A506C523B8402C0046FC09 = {
 						CreatedOnToolsVersion = 11.3;
-					};
-					45A506E023B8402E0046FC09 = {
-						CreatedOnToolsVersion = 11.3;
-						TestTargetID = 45A506C523B8402C0046FC09;
-					};
-					45A506EB23B8402E0046FC09 = {
-						CreatedOnToolsVersion = 11.3;
-						TestTargetID = 45A506C523B8402C0046FC09;
 					};
 				};
 			};
@@ -1062,8 +979,6 @@
 			projectRoot = "";
 			targets = (
 				45A506C523B8402C0046FC09 /* FOSAapp1.0 */,
-				45A506E023B8402E0046FC09 /* FOSAapp1.0Tests */,
-				45A506EB23B8402E0046FC09 /* FOSAapp1.0UITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1089,22 +1004,6 @@
 				4528AAF123BD7DF800957279 /* scanLine_Vertical.png in Resources */,
 				4528AAEF23BD7DF100957279 /* scanLine_Horizontal.png in Resources */,
 				45A30E222429DABF0059B8F7 /* foodItemCellXIB.xib in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		45A506DF23B8402E0046FC09 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				45514BEB23F2E285000E321E /* LaunchScreen.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		45A506EA23B8402E0046FC09 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				45514BEC23F2E287000E321E /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1222,36 +1121,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		45A506DD23B8402E0046FC09 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				45A506E623B8402E0046FC09 /* FOSAapp1_0Tests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		45A506E823B8402E0046FC09 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				45A506F123B8402E0046FC09 /* FOSAapp1_0UITests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		45A506E323B8402E0046FC09 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 45A506C523B8402C0046FC09 /* FOSAapp1.0 */;
-			targetProxy = 45A506E223B8402E0046FC09 /* PBXContainerItemProxy */;
-		};
-		45A506EE23B8402E0046FC09 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 45A506C523B8402C0046FC09 /* FOSAapp1.0 */;
-			targetProxy = 45A506ED23B8402E0046FC09 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		45A506D223B8402C0046FC09 /* Main.storyboard */ = {
@@ -1431,82 +1301,6 @@
 			};
 			name = Release;
 		};
-		45A506F923B8402E0046FC09 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = TS9KK624SM;
-				INFOPLIST_FILE = FOSAapp1.0Tests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hs.FOSAapp1-0Tests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FOSAapp1.0.app/FOSAapp1.0";
-			};
-			name = Debug;
-		};
-		45A506FA23B8402E0046FC09 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = TS9KK624SM;
-				INFOPLIST_FILE = FOSAapp1.0Tests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hs.FOSAapp1-0Tests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FOSAapp1.0.app/FOSAapp1.0";
-			};
-			name = Release;
-		};
-		45A506FC23B8402E0046FC09 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = TS9KK624SM;
-				INFOPLIST_FILE = FOSAapp1.0UITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hs.FOSAapp1-0UITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = FOSAapp1.0;
-			};
-			name = Debug;
-		};
-		45A506FD23B8402E0046FC09 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = TS9KK624SM;
-				INFOPLIST_FILE = FOSAapp1.0UITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hs.FOSAapp1-0UITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = FOSAapp1.0;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1524,24 +1318,6 @@
 			buildConfigurations = (
 				45A506F623B8402E0046FC09 /* Debug */,
 				45A506F723B8402E0046FC09 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		45A506F823B8402E0046FC09 /* Build configuration list for PBXNativeTarget "FOSAapp1.0Tests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				45A506F923B8402E0046FC09 /* Debug */,
-				45A506FA23B8402E0046FC09 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		45A506FB23B8402E0046FC09 /* Build configuration list for PBXNativeTarget "FOSAapp1.0UITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				45A506FC23B8402E0046FC09 /* Debug */,
-				45A506FD23B8402E0046FC09 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
