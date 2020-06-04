@@ -227,13 +227,13 @@
     if (![self.reminderDate isEqualToString:@""]) {
         [self.remindSwitch setOn:true];
         [self autoSwitch:_remindSwitch];
-        //self.leftDatelabel.text = self.reminderDate;
+
         self.rightDatelabel.text = self.reminderDate;
         NSArray *array = [self.reminderDate componentsSeparatedByString:@","];
         NSDateFormatter *format = [NSDateFormatter new];
         [format setDateFormat:@" dd  MM, yyyy ,HH:mm"];
         NSDate *date = [format dateFromString:[NSString stringWithFormat:@"%@,%@,%@",array[1],array[2],array[3]]];
-       // NSLog(@"****************%@",date);
+
         self.remindDatepicker.minimumDate = date;
         [self.remindDatepicker setDate:date];
     }
@@ -279,7 +279,9 @@
     UISwitch *switchButton = (UISwitch*)sender;
     BOOL isButtonOn = [switchButton isOn];
     if (isButtonOn) {
-        self.reminderDate = [self getTimeAndWeekDay:self.remindDatepicker.date];
+        if (self.reminderDate.length == 0) {
+            self.reminderDate = [self getTimeAndWeekDay:self.remindDatepicker.date];
+        }
         [UIView animateWithDuration:0.2 animations:^{
             self.AlarView.hidden = NO;
             self.repeatView.hidden = NO;
@@ -307,7 +309,6 @@
 - (void)changeDate:(UIDatePicker *)picker{
     NSLog(@"当前选择:%@",picker.date);
     self.rightDatelabel.text = [self getTimeAndWeekDay:picker.date];
-    self.leftDatelabel.text  = [self getTimeAndWeekDay:picker.date];
 
     self.reminderDate = [self getTimeAndWeekDay:picker.date];
     //self.selectRemindStr = self.reminderDate;

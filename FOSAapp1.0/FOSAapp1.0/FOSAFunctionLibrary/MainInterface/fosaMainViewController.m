@@ -258,10 +258,6 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self CollectionReload];
         [self categoryReLoad];
-        if (self->isFirst) {
-            [self SendExpiryNotification];
-            self->isFirst = false;
-        }
     });
     
 }
@@ -842,6 +838,11 @@
     NSLog(@"------------------------------%lu",(unsigned long)self.collectionDataSource.count);
     [self OpenSqlDatabase:@"FOSA"];
     [self SelectDataFromFoodTable];
+    //全局只执行一次
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self SendExpiryNotification];
+    });
 }
 - (void)categoryReLoad{
     [self getCategoryArray];
