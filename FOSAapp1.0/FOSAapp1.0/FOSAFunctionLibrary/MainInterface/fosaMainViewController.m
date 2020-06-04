@@ -652,10 +652,10 @@
             self.selectedCategoryCell.accessibilityValue =self.categoryData[indexPath.row].categoryIconName;
             [self CollectionReload];
         }
-
     }else if(collectionView == self.fooditemCollection){
-           foodItemCollectionViewCell *cell = (foodItemCollectionViewCell *)[self.fooditemCollection cellForItemAtIndexPath:indexPath];
+        foodItemCollectionViewCell *cell = (foodItemCollectionViewCell *)[self.fooditemCollection cellForItemAtIndexPath:indexPath];
                [self ClickFoodItem:cell];
+        
     }
 }
 
@@ -668,7 +668,9 @@
         self.selectedCategoryCell.kind.textColor = [UIColor grayColor];
         self.selectedCategoryCell.categoryPhoto.image = [UIImage imageNamed:self.selectedCategoryCell.accessibilityValue];
     }else{
-        
+        foodItemCollectionViewCell *cell = (foodItemCollectionViewCell *)[self.fooditemCollection cellForItemAtIndexPath:indexPath];
+               [self ClickFoodItem:cell];
+        cell.alpha = 1;
     }
 }
 

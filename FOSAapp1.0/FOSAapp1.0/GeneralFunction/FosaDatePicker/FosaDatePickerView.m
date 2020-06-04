@@ -234,12 +234,6 @@
         [format setDateFormat:@" dd  MM, yyyy ,HH:mm"];
         NSDate *date = [format dateFromString:[NSString stringWithFormat:@"%@,%@,%@",array[1],array[2],array[3]]];
        // NSLog(@"****************%@",date);
-//        if ([date compare:[NSDate new]] == NSOrderedAscending) {
-//            //date 在 当前时间之前
-//            self.remindDatepicker.minimumDate = date;
-//        }else{
-//            self.remindDatepicker.minimumDate = [NSDate new];
-//        }
         self.remindDatepicker.minimumDate = date;
         [self.remindDatepicker setDate:date];
     }

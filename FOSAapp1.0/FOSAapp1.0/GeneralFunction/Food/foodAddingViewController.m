@@ -702,8 +702,8 @@
     //食物种类选择栏 可滚动
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    flowLayout.itemSize = CGSizeMake((screen_width*5/6-Width(45))/5, footerHeight);
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 4, 0, 4);
+    flowLayout.itemSize = CGSizeMake((screen_width*5/6-Width(48))/5, footerHeight);
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 3, 0, 4);
 
     self.categoryCollection = [[UICollectionView alloc]initWithFrame:CGRectMake(screen_width/12, 0, screen_width*5/6, footerHeight) collectionViewLayout:flowLayout];
 
@@ -854,7 +854,7 @@
                //clickRecognizer.view.tag = i;
         [self.imageviewArray[i] addGestureRecognizer:clickRecognizer];
         [self.picturePlayer addSubview:self.imageviewArray[i]];
-        self.mainImgBtnArray[i].frame = CGRectMake(screen_width-NavigationBarH*13/10, NavigationBarH*2, NavigationBarH*2/3, NavigationBarH*2/3);
+        self.mainImgBtnArray[i].frame = CGRectMake(screen_width*55/64, NavigationBarH*2, NavigationBarH*2/3, NavigationBarH*2/3);
         [self.mainImgBtnArray[i] setBackgroundImage:[UIImage imageNamed:@"icon_setMainImg"] forState:UIControlStateNormal];
         [self.mainImgBtnArray[i] addTarget:self action:@selector(setImgAsMainBackground) forControlEvents:UIControlEventTouchUpInside];
         [self.imageviewArray[i] addSubview:self.mainImgBtnArray[i]];
