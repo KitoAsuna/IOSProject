@@ -711,7 +711,7 @@
     self.categoryCollection.delegate = self;
     self.categoryCollection.dataSource = self;
     self.categoryCollection.showsHorizontalScrollIndicator = NO;
-    self.categoryCollection.bounces = NO;
+    self.categoryCollection.bounces = YES;
     self.categoryCollection.pagingEnabled = YES;
     [self.categoryCollection registerClass:[foodKindCollectionViewCell class] forCellWithReuseIdentifier:kindID];
     [self.footerView addSubview:self.categoryCollection];
