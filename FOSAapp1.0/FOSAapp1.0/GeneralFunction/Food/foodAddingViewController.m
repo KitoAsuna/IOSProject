@@ -1613,41 +1613,40 @@
             //[self.fosaNotification initNotification];
             NSString *body = [NSString stringWithFormat:@"FOSA remind you to eat your food %@ in time",self.foodTextView.text];
              //获取通知的图片
-            UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
+            UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,foodPhotoIndex]];
 
             tempArray = [remindStr componentsSeparatedByString:@","];
             tempStr = [NSString stringWithFormat:@"%@/%@ %@",tempArray[1],tempArray[2],tempArray[3]];
             NSDate *date = [format dateFromString:tempStr];
-
-            NSDate *currentDate = [NSDate new];
+            tempArray = [[format2 stringFromDate:date] componentsSeparatedByString:@"/"];
+        
             double dateTime = [date timeIntervalSince1970];
-            double currentDateTime = [currentDate timeIntervalSince1970];
-            NSLog(@"=============%d",(int)(dateTime-currentDateTime));
-            //if (dateTime-currentDateTime > 0) {
+
             FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
-                //||[self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Never"]
-                NSString *identifier;
-                if ([self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Custom reminder"]){
+
+            NSString *identifier;
+            if ([self.fosaDatePicker.repeatWayLabel.text isEqualToString:@"Custom reminder"]){
 //                    NSLog(@"重复次数:%d-------重复间隔:%d",[[userdefault valueForKey:@"repeatTimes"] intValue],[[userdefault valueForKey:@"repeatTimeInterval"] intValue]);
-                    for (int i = 0; i < [[userdefault valueForKey:@"repeatTimes"] intValue]; i++) {
-                        int timeInterval = (dateTime-currentDateTime)+i*3600*([[userdefault valueForKey:@"repeatTimeInterval"] intValue]);
-                        NSLog(@"---------------->%d",timeInterval);
-                        if (timeInterval > 0) {
-                            identifier = [NSString stringWithFormat:@"%@Remind%d",self.foodTextView.text,i];
-                            [imgManager savePhotoWithImage:image name:identifier];
-                            [self.fosaNotification sendNotification:model body:body image:identifier time:timeInterval identifier:identifier];
-                        }
+                for (int i = 0; i < [[userdefault valueForKey:@"repeatTimes"] intValue]; i++) {
+                    date = [[NSDate alloc]initWithTimeIntervalSince1970:(dateTime+(i*3600*[[userdefault valueForKey:@"repeatTimeInterval"] intValue]))];
+                    NSLog(@"下一个提醒日期:%@",[format2 stringFromDate:date]);
+                    identifier = [NSString stringWithFormat:@"%@Remind%d",self.foodTextView.text,i];
+                    if ([imgManager savePhotoWithImage:image name:identifier]) {
+                            NSLog(@"保存图片成功");
+                    }else{
+                            NSLog(@"保存图片失败");
                     }
-                }else{
-                    //另存通知图片
-                    identifier = [NSString stringWithFormat:@"%@Remind",self.foodTextView.text];
-                    [imgManager savePhotoWithImage:image name:identifier];
+                        
                     [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:identifier identifier:identifier];
                 }
-            //}
+            }else{
+                //另存通知图片
+                identifier = [NSString stringWithFormat:@"%@Remind",self.foodTextView.text];
+                [imgManager savePhotoWithImage:image name:identifier];
+                [self.fosaNotification sendNotificationByDate:model body:body date:[format2 stringFromDate:date] foodImg:identifier identifier:identifier];
+            }
         }
     }
-
 }
 
 - (void)sendNotificationByExpireday{
@@ -1660,19 +1659,28 @@
             FoodModel *model = [FoodModel modelWithName:self.foodTextView.text DeviceID:device Description:self.foodDescribedTextView.text StrogeDate:storageStr ExpireDate:expireStr remindDate:self.remindDateTextView.text foodIcon:self.foodTextView.text category:selectCategory Location:self.locationTextView.text repeatWay:self.fosaDatePicker.repeatWayLabel.text];
             NSString *body = [NSString stringWithFormat:@"%@ will expire today (%@)",self.foodTextView.text,[self getWeekDayOfDate:model.expireDate]];
              //获取通知的图片
-            UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,1]];
+            UIImage *image = [self getImage:[NSString stringWithFormat:@"%@%d",self.foodTextView.text,foodPhotoIndex]];
             //另存通知图片
-             NSString *identifier = [NSString stringWithFormat:@"%@Expiry0",self.foodTextView.text];
-            [imgManager savePhotoWithImage:image name:identifier];
+             NSString *identifier = [NSString stringWithFormat:@"%@Expiry",self.foodTextView.text];
+            
+            if ([imgManager savePhotoWithImage:image name:identifier]) {
+                NSLog(@"保存图片成功");
+            }else{
+                NSLog(@"保存图片失败");
+            }
             NSLog(@">>>=================%@",expireStr);
             [self.fosaNotification sendNotificationByDate:model body:body date:expireStr foodImg:identifier identifier:identifier];
-            //在过期当日的早上12点，6点都发一次
-            NSArray *repeatTime = @[@"12:00",@"18:00"];
+            //在过期当日的早上12点，下午6点都发一次
+            NSArray *repeatTime = @[@"12:00",@"15:00"];
             NSArray *expireArray = [expireStr componentsSeparatedByString:@"/"];
             for (int i = 0; i < 2; i++) {
-                NSString *identifier = [NSString stringWithFormat:@"%@Expiry%d",self.foodTextView.text,i+1];
+                NSString *identifier = [NSString stringWithFormat:@"%@Expiry%d",self.foodTextView.text,i];
                //另存通知图片
-                [imgManager savePhotoWithImage:image name:identifier];
+                if ([imgManager savePhotoWithImage:image name:identifier]) {
+                    NSLog(@"保存图片成功");
+                }else{
+                    NSLog(@"保存图片失败");
+                }
                 NSString *expire = [NSString stringWithFormat:@"%@/%@/%@/%@",expireArray[0],expireArray[1],expireArray[2],repeatTime[i]];
                  
                 [self.fosaNotification sendNotificationByDate:model body:body date:expire foodImg:identifier identifier:identifier];
@@ -1702,6 +1710,7 @@
     [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[identifier,identifier0,identifier1,identifier2,identifier3,identifier4,identifier5,identifierExpire,identifierExpire1,identifierExpire2]];
     [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[identifier,identifier0,identifier1,identifier2,identifier3,identifier4,identifier5,identifierExpire,identifierExpire1,identifierExpire2]];
 }
+
 
 /**
  根据日期字符串获取对应的星期

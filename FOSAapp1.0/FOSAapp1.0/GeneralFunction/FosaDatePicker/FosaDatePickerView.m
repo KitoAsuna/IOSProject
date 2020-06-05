@@ -86,7 +86,12 @@
     self.currentTime = [NSMutableArray arrayWithArray:[newDate componentsSeparatedByString:@"/"]];
     NSLog(@"%@",self.currentTime);
     
-    self.reminderDate = remindstr;
+    if (remindstr) {
+        self.reminderDate = remindstr;
+    }else{
+        self.reminderDate = @"";
+    }
+    
     self.repeatWay = repeat;
 }
 
@@ -165,7 +170,7 @@
 
     self.rightDatelabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.Alarm.frame), 0, screen_width*4/5-font(20), height/10)];
     NSDate *current = [NSDate new];
-    //self.rightDatelabel.text = [self getTimeAndWeekDay:current];
+    self.rightDatelabel.text = [self getTimeAndWeekDay:current];
     self.rightDatelabel.textColor = FOSAGray;
     self.rightDatelabel.textAlignment = NSTextAlignmentRight;
     
@@ -351,14 +356,24 @@
     self.month = [NSString stringWithFormat:@"%ld", [self.timeArr[1] integerValue]];
     self.day = [NSString stringWithFormat:@"%ld", [self.timeArr[0] integerValue]];
     self.hour = [NSString stringWithFormat:@"%ld", [self.timeArr[3] integerValue]];
-    self.minute = self.minuteInterval == 1 ? [NSString stringWithFormat:@"%ld", [self.timeArr[4] integerValue]] : self.minuteArr[self.minuteArr.count / 2];
+    
+    if ([self.timeArr[4] integerValue] % self.minuteInterval == 0) {
+        self.minute = [NSString stringWithFormat:@"%ld", [self.timeArr[4] integerValue]];
+    }else{
+        self.minute = self.minuteArr[self.minuteArr.count / 2];
+    }
     
     [self.pickerView selectRow:[self.dayArr indexOfObject:self.day] inComponent:0 animated:YES];
     /// 重新格式化转一下，是因为如果是09月/日/时，数据源是9月/日/时,就会出现崩溃
     [self.pickerView selectRow:[self.monthArr indexOfObject:self.month] inComponent:1 animated:YES];
     [self.pickerView selectRow:[self.yearArr indexOfObject:self.year] inComponent:2 animated:YES];
     [self.pickerView selectRow:[self.hourArr indexOfObject:self.hour] inComponent:3 animated:YES];
-    [self.pickerView selectRow:self.minuteInterval == 1 ? ([self.minuteArr indexOfObject:self.minute]) : (self.minuteArr.count / 2) inComponent:4 animated:YES];
+    
+    if ([self.timeArr[4] integerValue] % self.minuteInterval == 0) {
+        [self.pickerView selectRow:[self.minuteArr indexOfObject:self.minute]  inComponent:4 animated:YES];
+    }else{
+        [self.pickerView selectRow: (self.minuteArr.count / 2) inComponent:4 animated:YES];
+    }
 
     /// 刷新日
     [self refreshDay];
